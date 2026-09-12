@@ -1,0 +1,4 @@
+symoneural-anthropic-sdk-python|recipes/symoneural-anthropic-sdk-python/symoneural-anthropic-sdk-python_git.bb|8fd10dd34b9a7ea3c2e791a4050e48b6
+symoneural-anthropic-sdk-python|appends/symoneural-anthropic-sdk-python_git.bbappend|976b557c3e4fc59609513fa46314cd3c
+symoneural-mcp-python-sdk|recipes/symoneural-mcp-python-sdk/symoneural-mcp-python-sdk_git.bb|b8b0f2b49aa998015ef8ff04f299b758
+symoneural-mcp-python-sdk|appends/symoneural-mcp-python-sdk_git.bbappend|9c13f421af3a1c50e59e7e415f8978c7

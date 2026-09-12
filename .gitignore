@@ -1,0 +1,30 @@
+# ---------------------------------------------------------------------------
+# SyMoNeuRaL repository policy
+#
+# TRACKED   : SyMoNeuRaL work product only - documents, curated recipes,
+#             bbappends, layer config, scan tools.
+# UNTRACKED : acquired upstream source (own .git, reproducible from pinned
+#             SRCREV) and ALL build output.
+#
+# Rule is deny-by-default: ignore everything heavy, then explicitly re-admit
+# the directories that are actually ours.
+# ---------------------------------------------------------------------------
+
+# Acquired upstream source - reproducible from the source lock, has own .git
+Symoneural-*/src/*/source/
+
+# ALL build output, then re-admit the devtool workspace (our recipes/appends)
+Symoneural-*/build/*
+!Symoneural-*/build/devtool-workspace/
+!Symoneural-*/build/devtool-workspace/**
+
+# Fetch + sstate caches
+Symoneural-*/downloads/
+Symoneural-*/sstate-cache*/
+
+# Staged product output
+Symoneural-*/prod/bin/*
+Symoneural-*/prod/lib/*
+
+# Generated tree inventories - large and regenerable
+*.tree.txt

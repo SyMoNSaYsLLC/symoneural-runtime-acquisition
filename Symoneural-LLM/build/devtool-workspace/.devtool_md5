@@ -1,0 +1,6 @@
+symoneural-llama-cpp|recipes/symoneural-llama-cpp/symoneural-llama-cpp_git.bb|b03fdf3907f35f56b926ebda59a42ab6
+symoneural-llama-cpp|appends/symoneural-llama-cpp_git.bbappend|330ecdd650231d3d7c3965f33855302a
+symoneural-vllm|recipes/symoneural-vllm/symoneural-vllm_git.bb|5011592e52927ad314da8276cf4cfb36
+symoneural-vllm|appends/symoneural-vllm_git.bbappend|c7ce016647aa2a70a1e0cfa42c97cdd0
+symoneural-triton|recipes/symoneural-triton/symoneural-triton_git.bb|f90e9a9d96217aaedc96a18e3a9cdb7c
+symoneural-triton|appends/symoneural-triton_git.bbappend|acce00c436d4cb39fce45f4f6ab5178a

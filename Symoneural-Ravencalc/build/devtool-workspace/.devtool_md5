@@ -1,0 +1,12 @@
+symoneural-sympy|recipes/symoneural-sympy/symoneural-sympy_git.bb|ddbe77c83dddb1bdc6137c7b6824c21c
+symoneural-sympy|appends/symoneural-sympy_git.bbappend|28006afb4170067d3efa018a2ec634a2
+symoneural-mpmath|recipes/symoneural-mpmath/symoneural-mpmath_git.bb|b044c822d251848bce02dc8a8106a910
+symoneural-mpmath|appends/symoneural-mpmath_git.bbappend|b49794ab5a8c0d50fe4a862c7248c23d
+symoneural-numpy|recipes/symoneural-numpy/symoneural-numpy_git.bb|5aed1b04704034222df2825f91ccdff2
+symoneural-numpy|appends/symoneural-numpy_git.bbappend|b0d5376bdc2af0b04511c5061d71871f
+symoneural-scikit-learn|recipes/symoneural-scikit-learn/symoneural-scikit-learn_git.bb|051ff5d5b6e594d433323d43c869e23f
+symoneural-scikit-learn|appends/symoneural-scikit-learn_git.bbappend|344c51ff01753dda3c76f90d66852fa9
+symoneural-openblas|recipes/symoneural-openblas/symoneural-openblas_git.bb|3632e01938824624b306e3c7007577bb
+symoneural-openblas|appends/symoneural-openblas_git.bbappend|b9d4b8ec5c86d0d47025d517d882c104
+symoneural-scipy|recipes/symoneural-scipy/symoneural-scipy_git.bb|663add2d1e603fd51cb453ceb452889b
+symoneural-scipy|appends/symoneural-scipy_git.bbappend|d8235def11406231ae48cb3c274cba35

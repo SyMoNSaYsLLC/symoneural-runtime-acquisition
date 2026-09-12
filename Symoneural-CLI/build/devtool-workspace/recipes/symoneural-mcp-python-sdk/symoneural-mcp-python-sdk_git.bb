@@ -1,0 +1,27 @@
+# Recipe created by recipetool
+# This is the basis of a recipe and may need further editing in order to be fully functional.
+# (Feel free to remove these comments when editing.)
+
+SUMMARY = "Model Context Protocol SDK"
+HOMEPAGE = "https://modelcontextprotocol.io"
+# NOTE: License in pyproject.toml is: MIT
+# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
+# your responsibility to verify that the values are complete and correct.
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7ae711d8a91d3871696f50e34ad3c2d7"
+
+DEPENDS = "python3-hatchling-native"
+SRC_URI = "git://github.com/modelcontextprotocol/python-sdk;protocol=https;branch=main"
+
+# Modify these as desired
+PV = "1.0+git"
+SRCREV = "9972c21aa42054fb1450c5fc614761ed11847ec6"
+
+S = "${WORKDIR}/git"
+
+inherit python_hatchling
+
+
+# WARNING: We were unable to map the following python package/module
+# dependencies to the bitbake packages which include them:
+#    uv-dynamic-versioning
