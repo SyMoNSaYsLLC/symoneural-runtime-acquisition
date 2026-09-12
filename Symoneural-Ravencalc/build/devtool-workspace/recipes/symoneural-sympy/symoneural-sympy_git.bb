@@ -2,7 +2,15 @@
 # LICENSE / LIC_FILES_CHKSUM / PV verified against the pinned upstream source tree.
 # SRCREV and SRC_URI are the acquisition pins - do not change without re-verifying.
 LICENSE = "BSD-3-Clause AND MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=ea48085d7dff75b49271b25447e8cdca"
+# LIC_FILES_CHKSUM restored to recipetool's full file list.
+# Rationale: over-declaring makes bitbake detect licence drift across ALL
+# licence-bearing files; under-declaring hides it. Curating this down to one
+# canonical file dropped OpenBLAS from 8 files to 1, losing coverage of the
+# vendored LAPACK, LAPACKE, ReLAPACK and netlib BLAS reference licences.
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ea48085d7dff75b49271b25447e8cdca \
+                    file://data/TeXmacs/LICENSE;md5=d6236a858ffac8a4743506872d5c1039 \
+                    file://sympy/parsing/latex/LICENSE.txt;md5=b70381bd640070cb20be9d6f93f47036"
+
 SRC_URI = "git://github.com/sympy/sympy;protocol=https;branch=master"
 
 # Modify these as desired
