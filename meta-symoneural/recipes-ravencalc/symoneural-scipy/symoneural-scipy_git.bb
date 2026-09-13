@@ -38,7 +38,28 @@ inherit pkgconfig python_mesonpy
 # D2: scipy builds against symoneural-numpy, never OE-Core's python3-numpy.
 # Building against a numpy we do not ship is precisely the provider collision
 # the control plane exists to prevent.
-DEPENDS += "python3-cython-native python3-pybind11-native symoneural-numpy-native symoneural-numpy python3"
+# 11b DEPENDS. NOT gfortran-cross: it names no recipe in any layer
+# (`find ~/symoneural-bootstrap-master -name 'gfortran*'` returns nothing) and
+# bitbake refuses with "Nothing PROVIDES 'gfortran-cross'". None is needed - the
+# cross toolchain already stages x86_64-oe-linux-gfortran into every target
+# recipe-sysroot-native. Verified by invoking it directly:
+#   GNU Fortran (GCC) 16.2.0 ; compiled a .f90 to a 2240-byte .o
+# This is the THIRD item in a pasted spec naming something that does not exist,
+# after pythran and python3-pythran-native.
+#
+# libgfortran IS required though - as its own recipe (libgfortran_16.2.bb), not
+# via RUNTIMETARGET. Without it gfortran fails only WITH --sysroot:
+#   fatal error: cannot read spec file 'libgfortran.spec'
+# The 10a toolchain work is what put the compiler there:
+# scipy's meson.build:91 previously died with
+#   Unknown compiler(s): x86_64-oe-linux-gfortran
+# because the cross toolchain was built LANGUAGES="c,c++" with FORTRAN="".
+# symoneural.conf now carries FORTRAN:forcevariable = ",fortran".
+# NOT python3-pythran-native: 11b names it, but it does not exist in ANY layer
+# (`find -iname '*pythran*'` returns nothing; python3-beniget, its own hard
+# dependency, is absent too). As written that line fails at parse with
+# "Nothing PROVIDES python3-pythran-native". Path (A) is taken - see below.
+DEPENDS += "python3-cython-native python3-pybind11-native symoneural-numpy-native symoneural-numpy python3 libgfortran"
 
 # pythran is absent from OE-Core AND from meta-openembedded, and its chain
 # (beniget, ply) is absent too. Authoring it in-stack would make the ply
@@ -63,4 +84,81 @@ PEP517_BUILD_OPTS += "--skip-dependency-check"
 # treats pythran as optional and falls back to compiled C/Fortran paths.
 # pythran stays in pending-acquisitions as DEFERRED, not deleted: it gets
 # acquired the day a RavenCalc benchmark says the speed matters.
-EXTRA_OEMESON += "-Duse-pythran=false"
+# (the flag itself is set once, above)
+
+# numpy ships its pkg-config file INSIDE the package, not in ${libdir}/pkgconfig:
+#   .../site-packages/numpy/_core/lib/pkgconfig/numpy.pc
+# OE only puts ${libdir}/pkgconfig and ${datadir}/pkgconfig on PKG_CONFIG_PATH, so
+# scipy/meson.build:34 `dependency('numpy')` fails with
+#   ERROR: Dependency "numpy" not found (tried pkg-config and config-tool)
+# even though the header tree IS staged. Point pkg-config at where numpy actually
+# put it. STAGING_DIR_HOST prefix is required - PKG_CONFIG_PATH entries in OE are
+# absolute paths into the sysroot, not target paths.
+PKG_CONFIG_PATH:prepend = "${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}/numpy/_core/lib/pkgconfig:"
+
+# f2py's shebang is `#!/usr/bin/env nativepython3`, which resolves only if
+# STAGING_BINDIR_NATIVE is on PATH. scipy/meson.build:207 calls
+# `run_command([f2py, '-v'], check: true)`, and meson runs that with a SANITISED
+# environment - reproducible with `env -i /path/to/f2py -v`, which gives the same
+# "env: 'nativepython3': No such file or directory". The same binary succeeds and
+# prints 2.5.3 when PATH carries the native bindir, so the fault is the env-based
+# shebang, not f2py.
+#
+# Rewrite it to an absolute interpreter in THIS recipe's own recipe-sysroot-native,
+# which is per-recipe and disposable - no shared state and no acquired source is
+# touched. R1 is unaffected: nothing here writes into src/*/source.
+do_configure:prepend() {
+    f2py="${STAGING_BINDIR_NATIVE}/f2py"
+    if [ -f "$f2py" ] && head -1 "$f2py" | grep -q '^#!/usr/bin/env nativepython3'; then
+        sed -i "1s|.*|#!${STAGING_BINDIR_NATIVE}/nativepython3|" "$f2py"
+        bbnote "f2py shebang pinned to ${STAGING_BINDIR_NATIVE}/nativepython3"
+    fi
+}
+
+# --- EMPTY PYTHONPATH ENTRY == CURRENT DIRECTORY -----------------------------
+# The f2py shebang fix above was necessary but NOT sufficient. With the shebang
+# pinned, meson.build:207 still died - and the real cause was hiding two frames
+# deeper than the reported error:
+#
+#   numpy/f2py/__init__.py:13   import subprocess
+#     subprocess.py:49            import signal          <- the STDLIB module
+#       pristine/scipy/signal/__init__.py:307            <- SCIPY's signal wins
+#         from scipy._lib._array_api import ...
+#   ModuleNotFoundError: No module named 'scipy'
+#
+# scipy's own `signal` subpackage SHADOWS the stdlib `signal` that `subprocess`
+# imports. It can only do that if scipy's source root is on sys.path, and it is,
+# because python3targetconfig.bbclass:17 writes
+#     export PYTHONPATH=${STAGING_LIBDIR}/python-sysconfigdata:$PYTHONPATH
+# With PYTHONPATH previously unset that expands with a TRAILING COLON, and an
+# empty PYTHONPATH entry means THE CURRENT DIRECTORY. meson runs the f2py check
+# with cwd = ${S}/scipy, which contains signal/. Hence the collision.
+#
+# Proven by bisection at the exact failing cwd, same binary all three times:
+#   PYTHONPATH=".../python-sysconfigdata:"                  -> ModuleNotFoundError
+#   PYTHONPATH=".../python-sysconfigdata"   (no colon)      -> 2.5.3
+#   PYTHONSAFEPATH=1 with the trailing colon                -> ModuleNotFoundError
+# The third line matters: PYTHONSAFEPATH does NOT strip empty PYTHONPATH
+# entries - it only governs sys.path[0]. It is not a fix for this.
+#
+# So: collapse and trim empty entries. Done in BOTH tasks because ninja can
+# re-run meson regeneration during do_compile, which re-runs the f2py check.
+# This is generic OE behaviour, not a scipy bug - scipy is just the package
+# whose source layout makes an upstream wart fatal.
+# Order-independent guard. The class line lives INSIDE a function body, so whether
+# our prepend runs before or after it is not something to assume. Seeding PYTHONPATH
+# at recipe level means the class's ":$PYTHONPATH" appends to a NON-EMPTY value in
+# every ordering - worst case a harmless duplicate, never an empty entry.
+export PYTHONPATH = "${STAGING_LIBDIR}/python-sysconfigdata"
+
+symon_fix_pythonpath() {
+    PYTHONPATH="$(echo "$PYTHONPATH" | sed -e 's/::*/:/g' -e 's/^://' -e 's/:$//')"
+    export PYTHONPATH
+    bbnote "PYTHONPATH normalised (no empty entry): ${PYTHONPATH}"
+}
+do_configure:prepend() {
+    symon_fix_pythonpath
+}
+do_compile:prepend() {
+    symon_fix_pythonpath
+}
