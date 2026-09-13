@@ -1,0 +1,27 @@
+#!/bin/bash
+# edit-guard - R2 by mechanism, not by discipline.
+#
+# Editing a recipe or class while a cooker is live makes bitbake reparse mid-run
+# and abort with:
+#   "When reparsing <recipe>:<task>, the basehash value changed from X to Y.
+#    The metadata is not deterministic and this needs to be fixed."
+# That has cost two whole build runs in this estate - once editing a recipe, once
+# editing symoneural-pristine.bbclass - and both times the 400+ errors looked
+# like real failures until the log was read.
+#
+# Call before ANY edit under meta-symoneural/:
+#     meta-symoneural/tools/edit-guard || exit 1
+#
+# Exit 0 = no cooker, safe to edit. Exit 1 = a build is live, do not edit.
+#
+# Matches only the real bitbake entrypoint. Shells that merely MENTION the string
+# are excluded: a `pgrep -f` pattern also matches the command line of the shell
+# running it, which is the same self-match that deadlocked a wait loop earlier.
+live=$(pgrep -af "bin/bitbake " 2>/dev/null | grep -vE "bash -c|edit-guard|pgrep" || true)
+if [ -n "$live" ]; then
+    echo "edit-guard: REFUSING - a bitbake cooker is live:" >&2
+    echo "$live" | sed 's/^/  /' | cut -c1-120 >&2
+    echo "edit-guard: wait for it to finish, then edit." >&2
+    exit 1
+fi
+exit 0

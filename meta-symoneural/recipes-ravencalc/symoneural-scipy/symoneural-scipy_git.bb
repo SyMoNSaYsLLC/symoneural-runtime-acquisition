@@ -53,3 +53,14 @@ EXTRA_OEMESON += "-Duse-pythran=false"
 # -Duse-pythran=false. Skipping the check is honest here: the dependency is
 # declared but not exercised. numpy IS exercised and is supplied above.
 PEP517_BUILD_OPTS += "--skip-dependency-check"
+
+# P1 - pythran is DISABLED, and this is a supported scipy configuration rather
+# than a patch, so the pristine guarantee holds and the gast/beniget/ply chain
+# never goes live. Verified absent from every layer:
+#   find ~/symoneural-bootstrap-master -iname '*pythran*'   ->  nothing
+#   python3-beniget ABSENT (pythran's own hard dep); gast and ply PRESENT
+# What it costs: SPEED in a few transpiled kernels. NOT CORRECTNESS - scipy
+# treats pythran as optional and falls back to compiled C/Fortran paths.
+# pythran stays in pending-acquisitions as DEFERRED, not deleted: it gets
+# acquired the day a RavenCalc benchmark says the speed matters.
+EXTRA_OEMESON += "-Duse-pythran=false"

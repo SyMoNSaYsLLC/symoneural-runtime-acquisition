@@ -9,67 +9,13 @@
   },
   "items": [
     {
-      "blocks": "Symoneural-CLI source lock",
-      "category": "ACQUISITION",
-      "description": "Not acquired. Release decision specifies v2 GA 2.0.0 at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; tag-to-commit unverified and mixed MIT / Apache-2.0 / CC-BY-4.0 treatment uncharacterised.",
-      "identifier": "mcp-typescript-sdk",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "Symoneural-Web source lock",
-      "category": "ACQUISITION",
-      "description": "On disk at 909e388c (v1.20260912.1); release decision specifies 925464ba (v1.20260911.1) paired with Wrangler 4.131.1.",
-      "identifier": "symoneural-workerd",
-      "state": "UNRESOLVED"
-    },
-    {
       "blocks": "Adaptive-Fabric build design",
       "category": "ARCHITECTURE",
       "description": "FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.",
       "identifier": "FreeToken/torch",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "Symoneural-API release posture",
-      "category": "BUILD-DESIGN",
-      "description": "pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.",
-      "identifier": "pydantic-core-ownership",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "Ravencalc scipy and scikit-learn (transitively)",
-      "category": "BUILD-DESIGN",
-      "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",
-      "identifier": "scipy-fortran",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "release licensing claim",
-      "category": "LICENCE",
-      "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",
-      "identifier": "symoneural-openblas",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "audit of SyMoNeuRaL modifications",
-      "category": "PROVENANCE",
-      "description": "RAW-GENERATED-BASELINE NOT PRESERVED. recipetool output was edited in place. Historical absence is not reconstructable and is not fabricated. STANDING REQUIREMENT: before editing any newly generated recipe, preserve its raw generated form or deterministic hash in acquisition evidence first.",
-      "identifier": "all recipes",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "build design for Build, Ravencalc and Live",
-      "category": "PROVIDER",
-      "description": "The master re-baseline made 7 directly-acquired components duplicate an OE-Core recipe at the SAME version: gstreamer(1.28.7), autoconf(2.73), automake(1.19), libtool(2.6.2), m4(1.4.21), ninja(1.13.2), numpy(2.5.3). Each needs a provider selection. Provider graph now indexes SUBMODULE as a provider kind; the cross-runtime map is acquisition/source-collisions.json.",
-      "identifier": "direct-vs-oe-core",
-      "state": "UNRESOLVED"
-    },
-    {
-      "blocks": "Node/TypeScript acquisition",
-      "category": "PROVIDER",
-      "description": "No nodejs provider in OE-Core at the locked SHA; npm.bbclass DEPENDS on nodejs-native and cites openembedded-meta.",
-      "identifier": "nodejs",
-      "state": "UNRESOLVED"
+      "resolution": "OWNED BY PHASE 19, deliberately left OPEN. Phase 11's GATE requires \"open decisions at 1 (FreeToken, owned by Phase 19)\", so closing it would make that gate unsatisfiable. Phase 19 S3 tests FreeToken UNMODIFIED on Common's torch 2.14; runs -> Adaptive-Fabric proceeds, does not run -> Adaptive-Fabric DEFERRED WITH EVIDENCE. Outcome recorded either way.",
+      "resolved_phase": "10",
+      "state": "OPEN-OWNED-BY-PHASE-19"
     }
   ],
   "phase": {
@@ -95,6 +41,104 @@
       "resolution": "PROVEN UNDER EXTERNALSRC ONLY - not yet reproduced under symoneural-pristine. Phase 5, symoneural-stratum: `--runall=fetch` rc=0, then `BB_NO_NETWORK=1 bitbake symoneural-stratum` -> do_compile Succeeded, 0 NetworkAccess denials, 102 rlibs, across rust 1.98.1 + LLVM 23 + 233 crate:// entries. That run predates symoneural-pristine. The class as first written set do_fetch[noexec]=1, which silently prevented the crate:// closure from being fetched at all (empty sources/cargo_home/bitbake; stratum failed with 'no matching package named bitcoin'). Fixed by stripping only the upstream git:// URI at parse time and letting do_fetch run. RE-PROOF REQUIRED under the class before any release claim - do not cite the Phase 5 numbers as current.",
       "resolved_phase": "10",
       "state": "RESOLVED-SCOPED"
+    },
+    {
+      "blocks": "Crypto release pin integrity",
+      "category": "PROVENANCE",
+      "description": "symoneural-stratum-crates.inc declared 233 crate:// entries against a 177-package Cargo.lock, including bitcoin/0.32.100 alongside 0.32.8. Raised as a possible stale or mis-derived closure.",
+      "identifier": "crates-inc-closure",
+      "resolution": "RESOLVED by N5. The committed symoneural-stratum-crates.inc is AUTHORITATIVE: regenerating it with `bitbake -c update_crates` from the pristine export at SRCREV produced a BYTE-IDENTICAL file (233 == 233, diff -q clean), so the closure is reproducible from the pin. The apparent 233-vs-177 discrepancy was never a pin-integrity problem. The tree carries TWO lockfiles - root Cargo.lock (177 packages) and fuzz/Cargo.lock (87) - whose union is 202 distinct (name, version) pairs, and cargo-update-recipe-crates correctly covers both. Entries in the .inc present in NEITHER lockfile: 0. The bitcoin/0.32.100, bitcoin-io/0.1.100, bitcoin-units/0.1.100 and base58ck/0.1.100 entries that looked like phantoms are real crates.io releases reached via the fuzz lockfile (both 0.32.8 and 0.32.100 fetched successfully). The 17 lockfile packages with NO crate:// entry are the workspace's own path members - stratum-core plus the 16 SV2 libraries - which are built from source, not fetched. NOTE: including the fuzz lockfile pulls crates the production build does not link. Correct, but larger than strictly needed.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "Symoneural-CLI source lock",
+      "category": "ACQUISITION",
+      "description": "Not acquired. Release decision specifies v2 GA 2.0.0 at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; tag-to-commit unverified and mixed MIT / Apache-2.0 / CC-BY-4.0 treatment uncharacterised.",
+      "identifier": "mcp-typescript-sdk",
+      "resolution": "REFERENCE-ONLY by rule (Advisor E2). Acquired and pinned at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; NOT built from source. Reason recorded verbatim: \"pnpm catalog: protocol unsupported by npm / OE npm class\". Evidence: `npm error code EUNSUPPORTEDPROTOCOL / Unsupported URL Type \"catalog:\": catalog:runtimeShared`. The tree is a pnpm workspace using catalog: and workspace: protocols; npm cannot resolve either, OE's npm.bbclass is npm, and no pnpm class exists in OE-Core. No shipped unit consumes it - Coder and Studio run on the PYTHON SDK (symoneural-mcp-python-sdk, built and passing). Revisit when a unit needs it. Not a defect in symoneural-pristine.",
+      "resolved_phase": "10",
+      "state": "REFERENCE-ONLY"
+    },
+    {
+      "blocks": "Symoneural-Web source lock",
+      "category": "ACQUISITION",
+      "description": "On disk at 909e388c (v1.20260912.1); release decision specifies 925464ba (v1.20260911.1) paired with Wrangler 4.131.1.",
+      "identifier": "symoneural-workerd",
+      "resolution": "REFERENCE-ONLY as a SOURCE BUILD by rule (Advisor E2). The workerd tree stays acquired and pinned at v1.20260911.1 per the release decision (PV now reads 1.20260911.1, confirming the SRCREV advance landed). workers-sdk is NOT built from source: same cause, `Unsupported URL Type \"catalog:\": catalog:default`. Wrangler is DEPLOY TOOLING - borrow what you only build with - so Phase 15 consumes the PUBLISHED wrangler@4.131.1 npm package via npmsw with its own lockfile, declared in the manifest as kind PACKAGE (not source), licence MIT OR Apache-2.0, paired to workerd v1.20260911.1. Not a defect in the class.",
+      "resolved_phase": "10",
+      "state": "REFERENCE-ONLY"
+    },
+    {
+      "blocks": "Node/TypeScript acquisition",
+      "category": "PROVIDER",
+      "description": "No nodejs provider in OE-Core at the locked SHA; npm.bbclass DEPENDS on nodejs-native and cites openembedded-meta.",
+      "identifier": "nodejs",
+      "resolution": "RESOLVED. The premise was stale: it was written when meta-openembedded was absent from bblayers.conf. meta-oe IS in the layer list of all nine runtimes and provides nodejs 24.21.0 + nodejs-oe-cache-native. nodejs-native was BUILT in this phase - V8 compiled to completion in the CLI cooker - which is what recipetool's create_npm.py:_ensure_npm() requires. Proven by execution, not by parsing.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "Symoneural-API release posture",
+      "category": "BUILD-DESIGN",
+      "description": "pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.",
+      "identifier": "pydantic-core-ownership",
+      "resolution": "REVERSES the earlier borrow ruling. Decision: **OWN** it. \"Own what you ship\" applies here because pydantic-core is a RUNTIME dependency of pydantic, and Symoneural-API SHIPS pydantic. Without it `import pydantic` fails at runtime and 11e cannot start - borrowing python3-pydantic-core from meta-python would have put a component we ship outside our own pin. ACTION: acquire pydantic/pydantic-core under A7 IN PHASE 11, at the version pydantic's own tag pins: core-v2.46.5. inherit python_maturin; crate closure tracked in a .inc like symoneural-stratum's. NOTE the convergence: core-v2.46.5 and v2.13.5 both point at pydantic's SRCREV 001dea020e0809844e5b17666432c9135a976f46. Per E4 PV follows the package the recipe builds, so symoneural-pydantic correctly took 2.13.5 and NOT core-v2.46.5 - and the tag set aside then is precisely the pin this acquisition needs.",
+      "resolved_phase": "10",
+      "state": "RESOLVED-OWN"
+    },
+    {
+      "blocks": "Ravencalc scipy and scikit-learn (transitively)",
+      "category": "BUILD-DESIGN",
+      "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",
+      "identifier": "scipy-fortran",
+      "resolution": "RESOLVED by rule (Advisor O4): Fortran enabled ESTATE-WIDE in 10a. symoneural.conf carries FORTRAN:forcevariable = \",fortran\" and RUNTIMETARGET:append:pn-gcc-runtime = \" libquadmath\"; the cross toolchain built rc=0 in ~10 min and 2.4 GB / 255 sstate entries were rsync'd per R10. Corroborated by symoneural-openblas, which links LAPACK with 2304 Fortran-mangled symbols (dgesvd_, dsyev_, dgetrf_, dpotrf_). The original description framed this as a TOOLCHAIN decision - rebuild gcc-cross with fortran, or accept scipy/scikit-learn as unbuildable. The first was taken. Conditionally closed: the toolchain exists and the decision is made, but it CLOSES FOR REAL when 11b actually builds scipy and scikit-learn with it. Until then the toolchain is proven, the consumer is not.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "release licensing claim",
+      "category": "LICENCE",
+      "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",
+      "identifier": "symoneural-openblas",
+      "resolution": "RESOLVED by rule (Advisor O4): NEVER FLATTEN. LICENSE = \"BSD-3-Clause AND LicenseRef-netlib-BLAS\", netlib text placed under meta-symoneural/files/custom-licenses/, and ALL EIGHT files kept in LIC_FILES_CHKSUM. Flattening to a single BSD-3-Clause token would have discarded the netlib BLAS reference terms and the ReLAPACK and LAPACK notices that the tree actually carries.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "audit of SyMoNeuRaL modifications",
+      "category": "PROVENANCE",
+      "description": "RAW-GENERATED-BASELINE NOT PRESERVED. recipetool output was edited in place. Historical absence is not reconstructable and is not fabricated. STANDING REQUIREMENT: before editing any newly generated recipe, preserve its raw generated form or deterministic hash in acquisition evidence first.",
+      "identifier": "all recipes",
+      "resolution": "ACCEPTED-HISTORICAL by rule (Advisor O4): a fact about the PAST - raw recipetool output was edited before being hashed, so the SyMoNeuRaL delta on those recipes cannot now be reconstructed by diff. Not retroactively fixable and not worth fabricating. The STANDING REQUIREMENT - hash raw recipetool output before editing - is in force from Phase 10 onward. Closed.",
+      "resolved_phase": "10",
+      "state": "ACCEPTED-HISTORICAL"
+    },
+    {
+      "blocks": "build design for Build, Ravencalc and Live",
+      "category": "PROVIDER",
+      "description": "The master re-baseline made 7 directly-acquired components duplicate an OE-Core recipe at the SAME version: gstreamer(1.28.7), autoconf(2.73), automake(1.19), libtool(2.6.2), m4(1.4.21), ninja(1.13.2), numpy(2.5.3). Each needs a provider selection. Provider graph now indexes SUBMODULE as a provider kind; the cross-runtime map is acquisition/source-collisions.json.",
+      "identifier": "direct-vs-oe-core",
+      "resolution": "RESOLVED by rule (Advisor O4): the five build tools resolve to OE-Core (D2). Their symoneural-* recipes RETIRE; the acquired trees stay pinned as REFERENCE-ONLY. NOTHING IS DELETED - the trees remain part of the 41 counted by the cleanliness gate and by source-lock.json. ACTION: D2 is the decision; WRITE provider-decisions.json IN PHASE 11 - five build tools -> OE-Core; numpy and gstreamer -> OWNED.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "Phase 11 item 11b (scipy, and scikit-learn transitively)",
+      "category": "BUILD-DESIGN",
+      "description": "Phase 11's 11b DEPENDS list names python3-pythran-native. VERIFIED ABSENT: `find ~/symoneural-bootstrap-master -iname '*pythran*'` returns NOTHING - no pythran recipe exists in openembedded-core, meta-oe or meta-python. Its own hard dependency python3-beniget is ALSO absent (gast and ply are present). As written, 11b fails at parse with \"Nothing PROVIDES python3-pythran-native\".",
+      "identifier": "scipy-pythran",
+      "resolution": "DECIDED: path (A) - disable pythran at build. Not held open further; both paths were recorded, the absence was verified three ways (no *pythran* file anywhere in the bootstrap; python3-beniget absent; gast and ply present), and the default was stated. pythran is OPTIONAL upstream, so scipy builds without it at some cost to hot-loop optimisation. ACTION for 11b: keep -Duse-pythran=false (already present in symoneural-scipy as EXTRA_OEMESON) and record 'pythran: not acquired, disabled at build'. DROP python3-pythran-native from 11b's DEPENDS - as written that line fails at parse with 'Nothing PROVIDES python3-pythran-native'. REVERSIBLE: if Garrett wants pythran, path (B) acquires pythran AND beniget under A7. Nothing here forecloses that.",
+      "state": "RESOLVED-DEFAULT-A"
+    },
+    {
+      "blocks": "Symoneural-CLI build scope; target nodejs in the estate",
+      "category": "ACQUISITION",
+      "description": "Hand-authored recipe built rc=0 with 0 errors, proving the npmsw approach works. But nothing consumes it, and building it forces a Node runtime onto the target via npm.bbclass:27 RDEPENDS:${PN}:append:class-target = \" nodejs\".",
+      "identifier": "anthropic-sdk-typescript",
+      "resolution": "REFERENCE-ONLY by ruling. Tree stays ACQUIRED and PINNED at 135f71e9297683e14614d4307081c0273ed0a09c; the recipe retires. EVIDENCE: no DEPENDS or RDEPENDS anywhere names it - the only recipe hits are its own HOMEPAGE and SYMON_TREE, and the single phase-spec hit (phase-15-report.md:113) is incidental prose, not a consumer. CLI's actual client is symoneural-anthropic-sdk-python, built clean at 2817 files. Same rule already applied to mcp typescript-sdk and workers-sdk. CONSEQUENCE: with hls.js dropping target nodejs (RDEPENDS:${PN}:remove), TARGET NODEJS IS REQUIRED BY NOTHING and never enters a shipped image. nodejs-native stays - it is what builds the hls.js bundle. COST ALREADY PAID AND CACHED: target nodejs 9.1 GB / ~1 h, nodejs-native 1.6 GB / ~30 min, both in sstate. Not wasted - the build proved the hand-authored recipe is correct, and sstate makes any future need free.",
+      "resolved_phase": "10",
+      "state": "REFERENCE-ONLY"
     }
   ],
   "schema": "symoneural-unresolved/2"

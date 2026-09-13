@@ -2,7 +2,23 @@
 
 ## STATUS: PENDING — NOT STARTED
 
-**starts after: phase 13 GATE PASSED**
+**starts after: Phase 12 gate**
+
+> **ORDERING (O1).** Each phase's own "Start after" line is authoritative. The
+> QUEUED headers' serial chain was a paste convenience and is **WITHDRAWN**.
+> Dependency graph:
+>
+> ```
+> 10 → 11 → { 11-T, 18 }
+> 11 → 12 → { 13, 14, 17 }
+> 13 → 16          14 → 15          { 15, 16, 18 } → 19
+> ```
+>
+> Builds run **concurrently in separate build dirs** when dependencies are met
+> (R3', R6'). GPU PROOF steps (12f, 13e/13f, 14e, 16 runs, 17e) execute **one at a
+> time through the governor** — train is never evicted, so a 13e run finishes
+> before 14e's contention test starts.
+
 
 Queued 2026-09-13 by Garrett with "QUEUED — do not start." Spec text is recorded
 below verbatim so the phase is self-contained when it is picked up. Nothing in

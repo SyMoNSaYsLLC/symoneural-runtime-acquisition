@@ -1,51 +1,143 @@
-# Recipe created by recipetool
-# This is the basis of a recipe and may need further editing in order to be fully functional.
-# (Feel free to remove these comments when editing.)
-
-# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
-# your responsibility to verify that the values are complete and correct.
+# hls.js - HLS client library. Recipe curated by hand from recipetool's stub.
 #
-# The following license files were not able to be identified and are
-# represented as "Unknown" below, you will need to check them yourself:
-#   LICENSE
-# LICENSE established from the licence text in the acquired tree. recipetool had
-# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
-# rejects outright: do_populate_lic dies with
-# "AttributeError: 'UnknownId' object has no attribute 'name'".
-# Built by symoneural-pristine: a DISPOSABLE `git archive` export of the
-# acquired tree. ${S} is throwaway; the acquired tree is never written to.
-# do_unpack asserts the tree HEAD equals SRCREV and refuses to build otherwise.
-inherit symoneural-pristine
-SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Streamer/src/hls/source/hls.js"
+# E1: `devtool add` returned rc=0 here and produced NOTHING usable - SRC_URI="",
+# empty do_configure/do_compile/do_install, LICENSE="Unknown". The npm handler had
+# declined silently: create_npm.py:process() returns False at
+#   if "name" not in data or "version" not in data
+# and hls.js's package.json carries NO "version" field. The generic handler then
+# emitted the stub. A zero exit code that installs nothing is the exact failure
+# R12 exists to catch, so it is recorded as a FAILURE, not a success.
+#
+# The lockfile IS represented. npm-shrinkwrap.json beside this recipe was produced
+# by `npm shrinkwrap` inside a DISPOSABLE `git archive` export, with "version"
+# injected into THAT COPY's package.json only. The acquired tree was verified clean
+# afterwards; R1 is never relaxed to make a build work.
+#
+# 1073 packages, of which 1072 are DEV-ONLY and 0 are runtime: hls.js ships a
+# browser bundle and has no runtime npm dependencies at all. The toolchain is
+# needed to BUILD it, so NPM_INSTALL_DEV = "1" - without it the closure is empty,
+# nothing builds, and ${D} comes out empty.
+#
+# This corrects the 10e premise, which expected a 2,144-package lockfile with
+# runtime dependencies to represent. dependency-graph.json independently agrees:
+# 1072 lockfile rows + 74 package.json devDeps = 1146, every one DEV-ONLY.
 
+SUMMARY = "hls.js - JavaScript HLS client using Media Source Extensions"
+HOMEPAGE = "https://github.com/video-dev/hls.js"
+
+# Apache-2.0, read from the tree (LICENSE: "Copyright (c) 2017 Dailymotion").
+# recipetool emitted the non-SPDX token "Unknown", which newer OE-Core's SPDX
+# parser rejects outright with
+#   AttributeError: 'UnknownId' object has no attribute 'name'
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8c22b1b3074f826155dbc85e6a0d4d1f"
 
-SRC_URI = "git://github.com/video-dev/hls.js;protocol=https;branch=master"
+inherit symoneural-pristine npm
 
-# Modify these as desired
-# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
-# placeholder. The placeholder is not merely cosmetic: it names every .ipk
-# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
-# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
-# died with IndexError on int(parts[index]).
-PV = "1.7.3"
+SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Streamer/src/hls/source/hls.js"
 SRCREV = "e5ff3583965e3af16c4a4b4d2b5f7bd1ffb5b7de"
+PV = "1.7.3"
 
-# NOTE: no Makefile found, unable to determine what needs to be done
+# ;dev=1 is REQUIRED and is NOT the same knob as NPM_INSTALL_DEV.
+#   npmsw.py:76  ud.dev = bb.utils.to_boolean(ud.parm.get("dev"), False)
+#   npmsw.py:55  elif not dev and data.get("dev", False): continue
+# The fetcher reads a URI PARAMETER; NPM_INSTALL_DEV is a recipe variable read
+# later by npm.bbclass. All 1072 of hls.js's packages are dev:true, so without
+# ;dev=1 the fetcher silently skipped EVERY ONE - do_fetch "succeeded" having
+# fetched nothing, and the first symptom was `rollup: not found` in the bundler.
+SRC_URI = "npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json;dev=1"
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
+NPM_INSTALL_DEV = "1"
+
+# P2 - hls.js is a BROWSER BUNDLE, not a Node program. Two consequences, and the
+# first would otherwise have produced another silent success.
+#
+# (1) npm.bbclass does NOT run the package's own build script. Without an explicit
+#     `npm run build` this recipe would report SUCCESS and ship NO dist/ at all -
+#     the same failure class as recipetool's rc=0 stub. NPM_INSTALL_DEV = "1" is
+#     what puts the bundler toolchain (rollup et al) in place for this step; it is
+#     not optional decoration.
+# NOT do_compile:append(). npm.bbclass:273 declares `python npm_do_compile()`, so
+# appending a SHELL block to it is a parse error:
+#   SyntaxError: invalid syntax  ('autogenerated', line 4, '    cd ${S}')
+# A separate shell task between compile and install is the correct shape.
+do_bundle() {
+    # npmsw unpacks into UNPACKDIR/node_modules, NOT ${S}/node_modules. Ordinary npm
+    # recipes never notice because their ${S} lives inside UNPACKDIR - but
+    # symoneural-pristine redirects ${S} to ${WORKDIR}/pristine, so the closure and
+    # the package.json end up in different trees and the bundler finds nothing.
+    # ${S} is a disposable export, so linking into it is free and changes no
+    # acquired source.
+    if [ ! -e ${S}/node_modules ]; then
+        ln -s ${UNPACKDIR}/node_modules ${S}/node_modules
+    fi
+
+    # npmsw unpacks TARBALLS. It does not run `npm install`, so node_modules/.bin
+    # does not exist - and `npm run` relies on .bin being prepended to PATH. The
+    # symptom without this is `sh: 1: rollup: not found` even though
+    # node_modules/rollup is present with bin {"rollup": "dist/bin/rollup"}.
+    # Recreate the shims npm would have made, from each package's own bin field.
+    node -e '
+      var fs = require("fs"), path = require("path");
+      var nm = process.argv[1], bin = path.join(nm, ".bin");
+      fs.mkdirSync(bin, {recursive: true});
+      var dirs = [];
+      fs.readdirSync(nm).forEach(function (d) {
+        if (d[0] === ".") return;
+        if (d[0] === "@") fs.readdirSync(path.join(nm, d)).forEach(function (x) { dirs.push(path.join(d, x)); });
+        else dirs.push(d);
+      });
+      var n = 0;
+      dirs.forEach(function (d) {
+        var pj = path.join(nm, d, "package.json");
+        if (!fs.existsSync(pj)) return;
+        var b;
+        try { b = JSON.parse(fs.readFileSync(pj, "utf8")).bin; } catch (e) { return; }
+        if (!b) return;
+        if (typeof b === "string") { var o = {}; o[path.basename(d)] = b; b = o; }
+        Object.keys(b).forEach(function (name) {
+          var target = path.join(nm, d, b[name]), link = path.join(bin, name);
+          if (!fs.existsSync(target) || fs.existsSync(link)) return;
+          fs.symlinkSync(path.relative(bin, target), link);
+          try { fs.chmodSync(target, 0o755); } catch (e) {}
+          n++;
+        });
+      });
+      console.log("created " + n + " .bin shims");
+    ' ${S}/node_modules
+
+    cd ${S}
+    npm run build
+}
+addtask bundle after do_compile before do_install
+do_bundle[dirs] = "${S}"
+
+# (2) The gate artifact is a FILE, asserted to exist and to be a real bundle
+#     rather than a stub. R12's empty-${D} check cannot see "built, but empty".
+# FULL OVERRIDE, not :append. npm_do_install ships the entire npm package into
+# /usr/lib/node_modules/hls.js - 303 files including scripts/*.sh, which fails
+# do_package_qa with
+#   requires /bin/bash, but no providers found in RDEPENDS [file-rdeps]
+# and would be wrong even if it passed: this is a BROWSER bundle, and the shipped
+# artifact is dist/hls.min.js. Shipping the Node package would also contradict
+# RDEPENDS:${PN}:remove = "nodejs" below - a package needing bash and a Node tree,
+# on a target that runs neither. O5 records the same boundary for the SBOM: the
+# 1072-package closure is BUILD-ONLY scope; it must never be claimed as shipped.
+do_install() {
+    install -d ${D}${datadir}/symoneural/site/vendor
+    install -m 0644 ${S}/dist/hls.min.js ${D}${datadir}/symoneural/site/vendor/
+    sz=$(stat -c %s ${D}${datadir}/symoneural/site/vendor/hls.min.js)
+    if [ "$sz" -lt 102400 ]; then
+        bbfatal "dist/hls.min.js is ${sz} bytes (<100 KB): the bundle did not build"
+    fi
+    bbnote "hls.min.js ${sz} bytes installed to ${datadir}/symoneural/site/vendor"
 }
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
+FILES:${PN} += "${datadir}/symoneural/site/vendor"
 
-do_install () {
-	# Specify install commands here
-	:
-}
-
+# (3) A STATIC ASSET MUST NOT PULL A NODE RUNTIME ONTO THE TARGET. npm.bbclass adds
+#     RDEPENDS:${PN}:append:class-target = " nodejs"; correct for a Node library,
+#     wrong for a .js file the BROWSER loads. symoneural-anthropic-sdk-typescript
+#     deliberately KEEPS it - that one really is a library for Node. Same class,
+#     opposite answer, decided by what the artifact IS.
+RDEPENDS:${PN}:remove = "nodejs"

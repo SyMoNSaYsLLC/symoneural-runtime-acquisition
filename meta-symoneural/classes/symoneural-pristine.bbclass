@@ -100,6 +100,50 @@ python symon_export_pristine() {
             bb.fatal("%s: git archive of submodule %s failed (rc=%d)" % (pf, sp, rc))
         n += 1
 
+    # N2 - SOURCE_DATE_EPOCH from the PIN, not from the clock or a fallback.
+    # The export has no .git, so create_source_date_epoch_stamp found nothing and
+    # silently used SOURCE_DATE_EPOCH_FALLBACK (observed: 1302044400, i.e. 2011).
+    # Every reproducible-build timestamp in the estate was that constant. The commit
+    # date OF THE PINNED SHA is the honest value: it derives from the identity.
+    epoch = git("log", "-1", "--format=%ct", want)
+    if epoch.isdigit():
+        sde = os.path.join(d.getVar("WORKDIR"), "source-date-epoch")
+        bb.utils.mkdirhier(sde)
+        with open(os.path.join(sde, "__source_date_epoch.txt"), "w") as f:
+            f.write(epoch)
+        bb.note("%s: SOURCE_DATE_EPOCH %s (commit date of %s)" % (pf, epoch, want[:12]))
+    else:
+        bb.warn("%s: could not read commit date for %s; SOURCE_DATE_EPOCH will fall back"
+                % (pf, want[:12]))
+
+    # N3 - permanent unpack-time assertions. Each of these corresponds to a defect
+    # that actually shipped and was only caught later by reading a build log.
+    #
+    # (a) the export is non-empty. do_unpack[cleandirs] once deleted the export
+    #     AFTER this ran, and the first symptom was do_populate_lic failing 45
+    #     times with "LIC_FILES_CHKSUM points to an invalid file".
+    got = sum(len(fs) for _, _, fs in os.walk(dest))
+    if got == 0:
+        bb.fatal("%s: the pristine export at %s is EMPTY. Something deleted it "
+                 "between the export and this check." % (pf, dest))
+
+    # (b) every LIC_FILES_CHKSUM path exists in the export. Catches the same class
+    #     of failure at unpack time, where the cause is still obvious.
+    missing = []
+    for ent in (d.getVar("LIC_FILES_CHKSUM") or "").split():
+        if not ent.startswith("file://"):
+            continue
+        rel = ent[len("file://"):].split(";", 1)[0]
+        if rel.startswith("${") or not rel:
+            continue
+        if not os.path.exists(os.path.join(dest, rel)):
+            missing.append(rel)
+    if missing:
+        bb.fatal("%s: LIC_FILES_CHKSUM names %d file(s) absent from the export: %s"
+                 % (pf, len(missing), ", ".join(missing[:5])))
+
+    bb.note("%s: export verified - %d files, %d licence file(s) present"
+            % (pf, got, len((d.getVar("LIC_FILES_CHKSUM") or "").split())))
     bb.note("%s: exported pristine tree at %s (+%d submodules) to %s"
             % (pf, want[:12], n, dest))
 }
@@ -143,6 +187,76 @@ export SETUPTOOLS_SCM_PRETEND_VERSION = "${PV}"
 export UV_DYNAMIC_VERSIONING_BYPASS = "${PV}"
 
 # do_fetch is NOT noexec - see the SRC_URI stripping above.
+# N3(c) - crate:// / npmsw:// recipes: the vendored dependency count must equal
+# the lockfile's. This is the check that would have caught defect 2 immediately
+# instead of two builds later: do_fetch[noexec]="1" left the vendor directory with
+# 0 crates against a 233-entry closure, and the only symptom was cargo saying
+# "no matching package named `bitcoin` found" long after the real failure.
+python do_symon_assert_vendor_closure() {
+    import os, re
+    uris = (d.getVar("SRC_URI") or "").split()
+    crates = [u for u in uris if u.startswith("crate://")]
+    if not crates:
+        return
+    vendor = os.path.join(d.getVar("WORKDIR"), "sources", "cargo_home", "bitbake")
+    have = len([x for x in os.listdir(vendor)]) if os.path.isdir(vendor) else 0
+    if have == 0:
+        bb.fatal("%s: SRC_URI declares %d crate:// entries but the vendor directory "
+                 "%s holds NONE. do_fetch/do_unpack did not populate it; cargo will "
+                 "fail later with a misleading 'no matching package' error."
+                 % (d.getVar("PF"), len(crates), vendor))
+    bb.note("%s: vendor closure %d crates on disk for %d crate:// entries"
+            % (d.getVar("PF"), have, len(crates)))
+}
+
+# P3 - the same assertion for npmsw://, but the SHAPE differs. cargo vendors FLAT
+# into sources/cargo_home/bitbake, so a directory count works. npmsw unpacks
+# NESTED into ${S}/node_modules/... (npm.bbclass:200,
+# destdir = os.path.join(d.getVar("S"), destsuffix)), so this must WALK and count
+# directories holding a package.json.
+#
+# The denominator is NOT constant: with NPM_INSTALL_DEV = "0" the dev entries are
+# CORRECTLY absent, so comparing against the raw shrinkwrap length would fail a
+# healthy recipe. Compare against non-dev entries when DEV=0, all entries when 1.
+python do_symon_assert_npm_closure() {
+    import os, json
+    uris = (d.getVar("SRC_URI") or "").split()
+    sw = [u for u in uris if u.startswith("npmsw://")]
+    if not sw:
+        return
+    path = sw[0][len("npmsw://"):].split(";", 1)[0]
+    if not os.path.isfile(path):
+        bb.fatal("%s: npmsw file %s is missing" % (d.getVar("PF"), path))
+    with open(path) as f:
+        pkgs = json.load(f).get("packages", {})
+    dev = d.getVar("NPM_INSTALL_DEV") == "1"
+    want = len([k for k, v in pkgs.items() if k and (dev or not v.get("dev"))])
+
+    # npmsw unpacks into UNPACKDIR/node_modules, not ${S}/node_modules - ordinary
+    # npm recipes have ${S} inside UNPACKDIR so the distinction never shows, but
+    # this class moves ${S} to ${WORKDIR}/pristine. Check both.
+    roots = [os.path.join(d.getVar("UNPACKDIR") or "", "node_modules"),
+             os.path.join(d.getVar("S"), "node_modules")]
+    have = 0
+    for root in roots:
+        if not os.path.isdir(root):
+            continue
+        for dirpath, _, files in os.walk(root):
+            if "package.json" in files:
+                have += 1
+        if have:
+            break
+    if want and have == 0:
+        bb.fatal("%s: shrinkwrap declares %d package(s) but node_modules holds "
+                 "NONE. The npmsw closure was not unpacked; the build would fail later "
+                 "with a confusing module-resolution error instead of this one."
+                 % (d.getVar("PF"), want))
+    bb.note("%s: npm closure %d package(s) unpacked for %d declared (NPM_INSTALL_DEV=%s)"
+            % (d.getVar("PF"), have, want, "1" if dev else "0"))
+}
+addtask symon_assert_npm_closure after do_unpack before do_configure
+addtask symon_assert_vendor_closure after do_unpack before do_configure
+
 do_patch[noexec] = "1"
 
 # R12: a recipe that installs NOTHING must fail, not pass quietly.
@@ -153,7 +267,7 @@ do_patch[noexec] = "1"
 # notices. Recipes that legitimately install nothing set SYMON_ALLOW_EMPTY_D = "1".
 SYMON_ALLOW_EMPTY_D ?= "0"
 
-python symon_assert_nonempty_d() {
+python do_symon_assert_nonempty_d() {
     import os
     if d.getVar("SYMON_ALLOW_EMPTY_D") == "1":
         return

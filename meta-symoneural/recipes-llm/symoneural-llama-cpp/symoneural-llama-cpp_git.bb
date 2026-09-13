@@ -49,7 +49,15 @@ SRC_URI = "gitsm://github.com/ggml-org/llama.cpp;protocol=https;branch=master"
 # <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
 # via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
 # died with IndexError on int(parts[index]).
-PV = "0.4.0"
+# E4: when two tags share a commit, PV follows THE PACKAGE THIS RECIPE BUILDS.
+# b10809 and v0.4.0 both point at SRCREV. This recipe builds llama.cpp itself
+# (cmake, libllama + tools), whose upstream release identity is the b<N> build
+# tag. v0.4.0 belongs to a different artifact in the same repo; gguf-py is at
+# 0.19.0 and, if it is ever needed, becomes its own recipe at its own version.
+# Deriving PV by version SHAPE picked 0.4.0 here, which was wrong - shape is the
+# right tie-break only when both tags name the same package (pydantic v2.13.5 vs
+# pydantic-core's core-v2.46.5).
+PV = "b10809"
 SRCREV = "5266f24da75dc449bd56cbed7addb9c8e4a6a73e"
 
 # NOTE: spec file indicates the license may be "MIT"

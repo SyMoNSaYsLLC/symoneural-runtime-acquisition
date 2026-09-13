@@ -396,3 +396,281 @@ were removed; the tree is pristine again.
 
 **41/41 trees clean under `--ignored` after a cargo build** — cargo writes
 `.cargo/` and `target/` and had never been exercised against an export until now.
+
+## PHASE 10e — NPM RECIPES: 0 of 4. DEFECT, WITH LOGS
+
+All four were attempted via a **disposable export** (`git archive HEAD` into
+scratch), never against the acquired tree, because `create_npm.py:_generate_shrinkwrap()`
+runs `npm shrinkwrap` inside whatever srctree it is handed. That design held:
+**all four acquired trees `dirty=0` afterwards.** Contrast the first attempt,
+which handed over the real tree and wrote `node_modules/` into pristine source.
+
+| SDK | Result | Cause |
+|---|---|---|
+| anthropic-sdk-typescript | FAIL | **recipetool defect** at our pinned OE-Core: `create.py:985` does `extravalues.pop('LICENSE','').strip()`, but the npm handler puts a **`set`** there -> `AttributeError: 'set' object has no attribute 'strip'` |
+| mcp typescript-sdk | FAIL | pnpm **`catalog:`** protocol — `npm error code EUNSUPPORTEDPROTOCOL`, `Unsupported URL Type "catalog:": catalog:runtimeShared` |
+| workers-sdk | FAIL | same: `Unsupported URL Type "catalog:": catalog:default` |
+| hls.js | FAIL (masked) | `package.json` has **no `version`** field, so `create_npm.py:process()` returns False at `if "name" not in data or "version" not in data` |
+
+### hls.js returned rc=0 and produced nothing
+
+`devtool add` exited **0** and wrote a recipe. The recipe is a stub:
+`SRC_URI = ""`, empty `do_configure`/`do_compile`/`do_install`, `LICENSE = "Unknown"`,
+no shrinkwrap. The npm handler declined and the generic handler produced the stub.
+This is the same silent-success class R12 exists to catch, and the exit code was
+actively misleading. **Counted as a failure, not a success.**
+
+### Corrections to the 10e premise
+
+| 10e assumed | On disk (verified, and the control plane agrees) |
+|---|---|
+| hls.js has a 2,144-package lockfile | **1,073** (`lockfileVersion: 2`); 1,072 non-root |
+| only workers-sdk is a pnpm workspace | **3 of 4** are — also anthropic-sdk-typescript and mcp typescript-sdk |
+| the lockfile needs representing | hls.js has **0 runtime deps**; all 1,072 entries are DEV-ONLY |
+
+`dependency-graph.json` independently records hls.js as 1,072 lockfile rows + 74
+`package.json` devDeps = 1,146, every one `DEV-ONLY`.
+
+**Conclusion.** Two of the three causes are outside our recipes: an upstream
+recipetool bug, and npm's inability to resolve pnpm's `catalog:` protocol. Neither
+is fixable by editing a SyMoNeuRaL recipe. Recorded as a defect with logs per the
+10e instruction rather than worked around.
+
+## ADVISOR NOTES N2/N3/N6 — APPLIED AND VERIFIED
+
+Applied in an edit window with no cooker live.
+
+**N2 — SOURCE_DATE_EPOCH from the pin. This was a live correctness defect.**
+The export has no `.git`, so `create_source_date_epoch_stamp` found nothing and
+silently used `SOURCE_DATE_EPOCH_FALLBACK`. Every reproducible-build timestamp in
+the estate was the constant **1302044400 = 2011-04-05**. Now taken from the commit
+date of the pinned SHA. Verified on stratum:
+
+```
+NOTE: SOURCE_DATE_EPOCH 1784734623 (commit date of c1a799139425)   -> 2026-07-22
+     fallback would have been 1302044400                            -> 2011-04-05
+```
+
+**N3 — permanent unpack-time assertions.** Each maps to a defect that shipped:
+(a) export non-empty — the `cleandirs` bug deleted it and only surfaced 45 errors
+later at `do_populate_lic`; (b) every `LIC_FILES_CHKSUM` path present in the
+export; (c) crate:// recipes must have a non-empty vendor directory — this is the
+check that would have caught defect 2 at unpack time instead of two builds later
+behind cargo's misleading "no matching package named `bitcoin`".
+Verified: `export verified - 235 files, 3 licence file(s) present`.
+
+**N6 — `meta-symoneural/tools/edit-guard`.** Exits 1 if a cooker is live. Two
+build runs were invalidated today by my own mid-build edits (one recipe, one
+class), each producing 400+ `basehash value changed` errors that read as real
+failures. Now mechanical rather than remembered. The matcher excludes shells that
+merely mention the string — the same `pgrep -f` self-match that deadlocked a wait
+loop earlier in this phase.
+
+Side effect confirming the PV sweep: stratum's work directory is now `1.11.1`,
+formerly `1.0+git`.
+
+## ADVISOR O1–O6 — APPLIED
+
+**O1 ORDERING.** Each phase's own "Start after" is authoritative; the QUEUED
+headers' serial chain is WITHDRAWN. Every PENDING report's header was rewritten
+and the conflict notices removed. Real graph:
+
+```
+10 → 11 → { 11-T, 18 }
+11 → 12 → { 13, 14, 17 }
+13 → 16          14 → 15          { 15, 16, 18 } → 19
+```
+
+This widens the estate considerably: 11-T and 18 both unblock at the Phase 11
+gate, and 13, 14 and 17 all unblock together at 12. Per R3'/R6' they run
+concurrently in separate build dirs; only the GPU PROOF steps (12f, 13e/13f, 14e,
+16 runs, 17e) serialise through the governor.
+
+**O2 scipy and pythran.** pythran exists in NO layer and is OPTIONAL upstream.
+Build scipy with PEP517 config-settings `setup-args=-Duse-pythran=false` and record
+*"pythran: not acquired, disabled at build"*. **A7 is unaffected — pythran is not
+an acquisition gap.** pybind11 comes from meta-python. Phase 11's 11b is amended
+accordingly in `generated/phase-11-report.md`. The recipe already carries
+`EXTRA_OEMESON += "-Duse-pythran=false"`; moving it to the PEP517 config-settings
+path and adding `gfortran-cross` is 11b's work.
+
+**O3 sv2-apps — my earlier reading was wrong in both directions.** The answer is
+**one recipe per CARGO WORKSPACE, packages split per binary** — two recipes, four
+packages:
+
+| recipe | packages |
+|---|---|
+| `symoneural-sv2-miner-apps` | `${PN}-jd-client`, `${PN}-translator` |
+| `symoneural-sv2-pool-apps` | `${PN}-jd-server`, `${PN}-pool` |
+
+The workspace's `Cargo.lock` is the pin; the binary is the package. "Four recipes"
+was wrong — that would duplicate the crate closure twice and force two `.inc`
+files to be kept in lockstep by hand. This supersedes the DECISIONS FOR GARRETT
+entry raised earlier, and is Phase 17 item 17a's first task.
+
+**O4 open decisions closed by rule — 6 open became 1 open of 12 tracked.**
+
+| decision | outcome |
+|---|---|
+| `scipy-fortran` | RESOLVED — Fortran enabled estate-wide in 10a |
+| `direct-vs-oe-core` | RESOLVED — five build tools resolve to OE-Core (D2); recipes retire, trees stay pinned REFERENCE-ONLY, **nothing deleted** |
+| `pydantic-core-ownership` | RESOLVED — borrow `python3-pydantic-core` from meta-python, `PROVIDER=meta-python`; a transitive dependency, not a deliverable |
+| `symoneural-openblas` | RESOLVED — **never flatten**: `BSD-3-Clause AND LicenseRef-netlib-BLAS`, netlib text under `meta-symoneural/files/custom-licenses/`, all 8 files kept |
+| `all recipes` provenance | ACCEPTED-HISTORICAL — a fact about the past; the standing requirement (hash raw recipetool output before editing) is in force from Phase 10 |
+| `FreeToken/torch` | **stays open by design** — Phase 19 S3 tests it on torch 2.14 and records the outcome either way |
+
+The openblas ruling is the one worth keeping visible: flattening to a single
+`BSD-3-Clause` token would have silently discarded the netlib BLAS reference terms
+and the ReLAPACK and LAPACK notices the tree actually carries. Over-declaring is
+safe; under-declaring hides drift.
+
+**O5 hls.js scope.** `NPM_INSTALL_DEV = "1"` pulls a 1,072-package closure that is
+**BUILD-ONLY** — the bundler toolchain. The shipped artifact is `dist/`. Recorded
+here so **the SBOM never claims 1,072 shipped packages**; Phase 15's 15e must scope
+it correctly. The N3(c) extension to `npmsw://` still stands as work owed.
+
+**O6 crates.inc — CLOSED by the finding itself.** 233 vs 177 is correct: the tree
+carries two lockfiles, root `Cargo.lock` (177) and `fuzz/Cargo.lock` (87), union
+202 distinct, and `.inc` entries present in NEITHER: **0**. Regeneration was
+byte-identical. N5 is done. `edit-guard` refusing a live edit during this session
+is N6 working as intended — it has already blocked two attempts.
+
+## npm WRITES INTO ${S} — by design, and it bounds what N3(a) may assert
+
+`npm.bbclass` runs `npm install` during `npm_do_configure`, and `npm_pack()` tars
+`${S}` plus `./node_modules` (`npm.bbclass:54`, `:200` —
+`destdir = os.path.join(d.getVar("S"), destsuffix)`). Under `symoneural-pristine`,
+`${S}` is `${WORKDIR}/pristine` — the disposable export. So an npm recipe **writes
+into the export during its own build**, and after building hls.js the export will
+carry ~1,072 extra `node_modules` directories.
+
+**This is correct, not a defect.** The export exists precisely so that writers can
+do this: the acquired tree is never opened for writing. Verified — 41/41 trees
+clean under `--ignored` after the npm work, and the one R1 violation found today
+came from the *first* 10e attempt handing recipetool the acquired tree directly,
+which is exactly what the disposable-copy design now prevents.
+
+What it **does** bound is what may be asserted later. N3(a) checks the export is
+**non-empty at unpack time**, which holds. A check of the form "the export is
+unmodified after the build" would be **wrong** and must never be added — it would
+fail on every npm recipe, and for cargo too (`.cargo/`, `target/`). Recorded so
+the mistake is not made later in good faith.
+
+### N3(c) for npmsw — the check is a walk, not a directory count
+
+cargo vendors flat into `${WORKDIR}/sources/cargo_home/bitbake`, so counting
+entries works. npmsw does **not**: each dependency unpacks into
+`${S}/node_modules/...`, nested. The npmsw assertion must walk `${S}/node_modules`
+counting directories containing a `package.json`, and compare against the shipped
+shrinkwrap — with one trap:
+
+| recipe | `NPM_INSTALL_DEV` | compare against |
+|---|---|---|
+| `symoneural-anthropic-sdk-typescript` | `0` | **non-dev** entries only (6) |
+| `symoneural-hlsjs` | `1` | **all** entries (1,072) |
+
+Asserting equality against the raw `packages` length for both would fail anthropic,
+because with `DEV="0"` its dev entries are *correctly* absent. The two recipes
+differ in `NPM_INSTALL_DEV` precisely because hls.js has 0 runtime dependencies and
+needs its bundler toolchain to build at all.
+
+## PHASE 11 SCOPE — the five build-tool recipes stay for now
+
+`direct-vs-oe-core` resolved to D2: the five build tools resolve to OE-Core, their
+`symoneural-*` recipes retire, and the trees stay pinned REFERENCE-ONLY with
+nothing deleted. **That retirement happens in Phase 11 item 11h, not here.**
+Retiring them now would change `meta-symoneural`'s recipe count mid-gate and
+invalidate the parity table just re-captured under the fixed class.
+
+## THE WORST DEFECT OF THE PHASE — every assertion task was a no-op
+
+`addtask foo` binds to a function named **`do_foo`**. The class declared
+`python symon_assert_nonempty_d()`, `python symon_assert_vendor_closure()` and
+`python symon_assert_npm_closure()` — without the `do_` prefix. Bitbake created the
+tasks, ran them, and each one silently did nothing:
+
+```
+31 log files, every one:
+WARNING: Function do_symon_assert_nonempty_d doesn't exist
+```
+
+**R12 has never executed.** It was reported in this report as working, and
+stratum's empty-`${D}` failure was attributed to it — that was actually
+`cargo_do_install`'s own "Did not find anything to install" error. The same applies
+to the cargo vendor-closure check and the npm one.
+
+Fixed by renaming all three to `do_*`. Both are now proven to run AND to catch:
+
+```
+NOTE: npm closure 1169 package(s) unpacked for 1072 declared (NPM_INSTALL_DEV=1)
+
+# negative test - do_install replaced with a stub:
+ERROR: do_install produced an EMPTY ${D}. Nothing was installed, yet the task
+       would have reported success. Either the recipe has no working install
+       step, or an inherited class was overridden by a stub.
+```
+
+A guard that reports success while doing nothing is the exact failure it was
+written to prevent. It is worth stating plainly that it went undetected because
+nothing ever *failed* — the absence of an error was read as the presence of a
+check.
+
+## 10e COMPLETE — hls.js builds a real bundle
+
+| | |
+|---|---|
+| `bitbake symoneural-hlsjs` | **rc=0, 0 errors** (clean, from `-c clean`) |
+| Gate artifact | `/usr/share/symoneural/site/vendor/hls.min.js` |
+| Size | **619,701 bytes** (gate: >= 102,400) |
+| Files shipped | **exactly 1** — no `/usr/lib/node_modules` tree |
+| Closure asserted | **1169 unpacked for 1072 declared** |
+| `RDEPENDS:symoneural-hlsjs=` | `" "` — **no nodejs** |
+
+### Four causes, each hidden by the one above it
+
+1. **`;dev=1` is a URI PARAMETER, not `NPM_INSTALL_DEV`.**
+   `npmsw.py:76 ud.dev = bb.utils.to_boolean(ud.parm.get("dev"), False)` and
+   `npmsw.py:55 elif not dev and data.get("dev", False): continue`. All 1072 of
+   hls.js's packages are `dev:true`, so the fetcher skipped **every one** and
+   `do_fetch` reported success having fetched nothing. **6 -> 982 tarballs** once
+   `;dev=1` was added. `NPM_INSTALL_DEV` is read later by npm.bbclass for a
+   different step; both knobs are required.
+2. **npmsw unpacks to `UNPACKDIR/node_modules`, not `${S}/node_modules`.**
+   Ordinary npm recipes never notice because their `${S}` lives inside UNPACKDIR;
+   `symoneural-pristine` moves `${S}` to `${WORKDIR}/pristine`, so package.json and
+   its dependencies landed in different trees. `do_bundle` symlinks; P3 checks both.
+3. **npmsw unpacks TARBALLS and never runs `npm install`**, so `node_modules/.bin`
+   does not exist — and `npm run` depends on `.bin` being on PATH. rollup 4.62.4
+   was present with `bin: {"rollup": "dist/bin/rollup"}` while the build said
+   `sh: 1: rollup: not found`. `do_bundle` recreates the shims from each package's
+   own `bin` field: **56 created**.
+4. **`do_compile:append()` as shell is a parse error.** `npm.bbclass:273` declares
+   `python npm_do_compile()`. Restructured as a separate `do_bundle` shell task
+   ordered `after do_compile before do_install`. Reading the class also confirmed
+   the premise directly: `npm_do_compile` does `npm pack` + `npm install` and
+   **never runs the package's build script**, which is why hls.js would otherwise
+   have shipped no `dist/` at all.
+
+Every one presented as a later, misleading failure rather than at its cause — the
+same shape as `do_fetch[noexec]`. With the assertions live, cause 1 now fails at
+unpack with the real reason instead of in the bundler with a false one.
+
+### Packaging boundary
+
+`npm_do_install` ships the whole npm package — 303 files including `scripts/*.sh`
+— which failed QA with `requires /bin/bash, but no providers found in RDEPENDS`.
+That failure was **correct**: shipping it would contradict
+`RDEPENDS:${PN}:remove = "nodejs"` directly above it, putting a package that needs
+bash and a Node tree onto a target that runs neither. `do_install` is a **full
+override** shipping `dist/` alone — the same boundary O5 requires for the SBOM,
+where the 1072-package closure is BUILD-ONLY scope and must never be claimed as
+shipped.
+
+### anthropic-sdk-typescript — built, then retired by ruling
+
+Built **rc=0, 0 errors**, proving the hand-authored npmsw recipe correct. Then
+ruled **REFERENCE-ONLY**: nothing consumes it, and building it forces a Node
+runtime onto the target. Recipe moved to `meta-symoneural/retired/` — **not
+deleted** — tree still pinned at `135f71e9297683e14614d4307081c0273ed0a09c` and
+clean. With hls.js dropping target nodejs, **target Node is now required by
+nothing**. `nodejs-native` stays: it builds the bundle.
