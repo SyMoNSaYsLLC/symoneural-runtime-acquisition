@@ -45,9 +45,22 @@ inferenceGatewayAuthScheme bearer
 inferenceGatewayApiKey   <a real bearer token — NOT in this repo>
 ```
 
-**Nothing is listening on 9001.** When Phase 12 builds `llama-server`, this is
-where the desktop would consume the estate's own chat unit. That file is excluded
-from config snapshots because the key is a live credential.
+**Nothing is listening on 9001.** The file is excluded from config snapshots
+because the key is a live credential.
+
+> **DO NOT wire the estate's inference into Claude Desktop.** An earlier note in
+> this session suggested pointing Claude Desktop at the estate's `llama-server`
+> once Phase 12 builds it, and called that "self-hosting". **That is backwards.**
+> SyMoNeuRaL exists so Garrett owns the whole stack — his recipes, his pins, his
+> DispatchOS, his inference, serving HIS customers on HIS hardware. The chat unit
+> serves `/api/chat` on `:8801` for tenants. Pointing a third-party desktop app at
+> it makes the estate a **backend for someone else's product**, which inverts the
+> entire reason for building it from pristine source.
+>
+> This stale `inferenceProvider: gateway` setting is the same shape and is inert
+> only because nothing listens on 9001. If Phase 12 ever brings a gateway up
+> there, the desktop would start consuming the chat unit by default. That should
+> be a deliberate decision, not an inherited one — and the default answer is no.
 
 ## The eventual product
 
