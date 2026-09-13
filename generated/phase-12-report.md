@@ -124,3 +124,100 @@ with copyleft quarantined and never linked. The CUDA EULA is proprietary and
 enters as **BINARY/REFERENCE** with its sha256 recorded — consistent with the
 standing position that the CUDA Toolkit can never be fully source-built, which is
 a property of the platform rather than a gap to close.
+
+## PRIOR-RUN EVIDENCE — recovered from Claude history 2026-09-13
+
+Reconstructed from `~/.claude/projects/-home-google-Symoneural/1889a362-...jsonl`
+(62 MB, 8,856 entries, all of 2026-09-11) plus 19 other sessions spanning
+2026-08-24 → 2026-09-13. **This model set was built once and then lost when
+`/home/google/Symoneural/` was deleted.** None of it is on disk today.
+
+### The model set as it existed, with sizes
+
+Sizes are the reliable identifier — the files were rebranded, so upstream names
+do not match.
+
+| Sept-11 name | Bytes | Size | Built | Source repo | Register row |
+|---|---:|---:|---|---|---|
+| `symon-1.0-32b-q2_k_xl.gguf` | 12,797,352,608 | 11.9 GB | Sep 8 | `unsloth/Qwen3-32B-GGUF` | **absent** |
+| `symon-1.0-27b-q2_k_xl.gguf` | 11,849,779,424 | 11.0 GB | Sep 8 | `unsloth/Qwen3.6-27B-GGUF` | `chat-27b` |
+| `symon-1.0-30b-a3b-q2_k_l.gguf` | 11,331,539,360 | 10.6 GB | **Sep 11** | `unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF` | **absent** |
+| `symon-1.0-14b-q4_k_m.gguf` | 8,988,110,976 | 8.4 GB | Sep 8 | `bartowski/Qwen2.5-14B-Instruct-GGUF` | `chat-14b` |
+| `symon-1.0-7b-q4_k_m.gguf` | 4,683,074,240 | 4.4 GB | Sep 2 | `bartowski/Qwen2.5-7B-Instruct-GGUF` | `chat` |
+| `symon-1.0-27b-vision-f16.gguf` | 927,607,360 | 885 MB | Sep 8 | `unsloth/Qwen3.6-27B-GGUF` (`mmproj-F16`) | `chat-27b` pair |
+| `symon-1.0-draft-0.5b-q4_k_m.gguf` | 397,808,192 | 379 MB | Sep 2 | `bartowski/Qwen2.5-0.5B-Instruct-GGUF` | `draft` |
+| `symoneural-lora.gguf` | 80,767,680 | 77 MB | **Aug 16** | trained here | `adapter` |
+| `symoneural-image-unet-q4_k.gguf` | — | — | — | `leejet/FLUX.1-schnell-gguf` | `image` |
+| `symoneural-image-t5-q8_0.gguf` | — | — | — | `second-state/FLUX.1-schnell-GGUF` | `image-aux` |
+
+**≈ 51 GB**, formerly at `/home/google/Symoneural/backend/models/{llm,image}/`.
+
+**Seven of ten rows already match this register.** The register names them upstream;
+the prior run renamed them. Same files.
+
+**Three are NOT in the register** — `Qwen3-32B`, `Qwen3-30B-A3B`, `gpt-oss-20b`.
+They exist only in a transcript. **DECISION FOR GARRETT: add or drop.** Recorded
+rather than added, because a models register that lists what nothing consumes is
+the same defect as a licence file that names a path the export never contains.
+
+`symoneural-lora.gguf` is dated **2026-08-16** and therefore excluded by Garrett's
+standing instruction to use nothing from August. Phase 16 retrains it; an adapter
+trained against the current stack is preferable to restoring one from a
+superseded run.
+
+### The rebrand step — 12e must record this
+
+Renaming a GGUF is not enough: `general.name` is embedded in the file. The prior
+run used llama.cpp's `gguf-py/gguf/scripts/gguf_new_metadata.py`, and the method
+was sound — recorded verbatim from the session:
+
+> *"`gguf_new_metadata.py` wrote a **copy** so the validated original was never
+> edited, then atomic-renamed."*
+
+Non-destructive by construction: validate the download, write a renamed copy,
+atomic-rename into place. The original is never mutated, so a failed rebrand
+cannot destroy a 12 GB download.
+
+**Hazard found in that run:** `general.architecture` must not be touched.
+`qwen2` and `gpt-oss` are distinct architectures and **`llama-server` exits 1 on a
+mismatch**. Rewrite `general.name` only.
+
+### VRAM was the real constraint, not model quality
+
+Across all 20 sessions:
+
+| Pattern | Hits |
+|---|---:|
+| VRAM | 5,365 |
+| out-of-memory / CUDA error | 5,319 |
+| corrupt / truncated / incomplete | 2,085 |
+| gguf not found | 1,677 |
+| llama-server exit | 292 |
+| unknown model architecture | 14 |
+
+Raw grep counts overstate — one long planning discussion inflates a total — but
+the **ratio** is informative: ~380 VRAM/OOM hits for every architecture error. The
+prior run was not fighting broken models. It was repeatedly rediscovering that a
+16 GB card cannot hold a 51 GB set, by crashing into it.
+
+This is why Phase 16a specifies a **VRAM planner validated against measured
+figures** (7B ~12 GB, 27B 14.26 GiB) rather than trial and error, and why S4 keeps
+the 27B opt-in until evaluated.
+
+### What actually protects this now
+
+The structural failure was not losing models — they are re-downloadable. It was
+that `/home/google/Symoneural/` held models, training adapters, generated outputs
+and the backend **in one tree**, so a single deletion took the reproducible and
+the irreplaceable together.
+
+| Prior run | Current design |
+|---|---|
+| models inside the project tree | `SYMON_MODELS_DIR=/home/google/symoneural-models`, outside the repo |
+| no inventory | `model-register.json`, FOUND/FETCHED/ABSENT **by sha256** |
+| outputs beside source | `run/reinforce/adapters/<job>` + run manifest |
+| VRAM found by crashing | 16a VRAM planner against measured figures |
+| one tree, one `rm` | weights never in git; repo is 12 MB of recipes |
+
+12e's `find / -xdev` sweep will find **nothing** — confirmed by search of `/home`,
+`/yocto` and `/`. Every row is a FETCH, not a MOVE.

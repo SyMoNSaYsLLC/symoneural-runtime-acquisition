@@ -16,6 +16,14 @@
       "resolution": "OWNED BY PHASE 19, deliberately left OPEN. Phase 11's GATE requires \"open decisions at 1 (FreeToken, owned by Phase 19)\", so closing it would make that gate unsatisfiable. Phase 19 S3 tests FreeToken UNMODIFIED on Common's torch 2.14; runs -> Adaptive-Fabric proceeds, does not run -> Adaptive-Fabric DEFERRED WITH EVIDENCE. Outcome recorded either way.",
       "resolved_phase": "10",
       "state": "OPEN-OWNED-BY-PHASE-19"
+    },
+    {
+      "blocks": "Phase 12 12e (models register completeness)",
+      "category": "BUILD-DESIGN",
+      "description": "The prior run built THREE models that are not in acquisition/model-register.json: symon-1.0-32b-q2_k_xl (12,797,352,608 B, unsloth/Qwen3-32B-GGUF), symon-1.0-30b-a3b-q2_k_l (11,331,539,360 B, unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF), and symon-openai-20b (openai/gpt-oss-20b). Recovered from Claude history 2026-09-11; they exist in no other record and are not on disk.",
+      "identifier": "model-register-three-extra",
+      "resolution": "ADD or DROP - Garrett's call, not inferable. Adding costs ~35 GB of fetch and three more licence characterisations (gpt-oss carries its own LICENSE and USAGE_POLICY, distinct from the Apache-2.0 Qwen rows). Dropping means the register describes what the estate actually consumes. NOT ADDED UNILATERALLY: a register listing models nothing consumes is the same class of defect as a LIC_FILES_CHKSUM naming a path the export never contains - a declaration that cannot be satisfied. Phase 12 S4 already serves the 7B by default with the 27B opt-in, so none of the three is needed for the GATE.",
+      "state": "DECISION-FOR-GARRETT"
     }
   ],
   "phase": {
