@@ -694,41 +694,25 @@
   },
   {
    "decision": "UNRESOLVED",
-   "licence_evidence": [
-    "LICENSE.txt"
-   ],
-   "location": "Symoneural-Build/src/bitbake/source/contrib/vim",
-   "name": "vim",
-   "owner_source_path": "Symoneural-Build/src/bitbake/source",
-   "owning_upstream": "Build/bitbake",
-   "relpath": "contrib/vim",
-   "scope": "UNKNOWN",
-   "upstream_project": "UNKNOWN",
-   "version": "UNKNOWN"
-  },
-  {
-   "decision": "UNRESOLVED",
-   "licence_evidence": [
-    "COPYING.txt"
-   ],
-   "location": "Symoneural-Build/src/bitbake/source/lib/bs4",
+   "licence_evidence": [],
+   "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/bs4",
    "name": "bs4",
    "owner_source_path": "Symoneural-Build/src/bitbake/source",
    "owning_upstream": "Build/bitbake",
-   "relpath": "lib/bs4",
-   "scope": "UNKNOWN",
+   "relpath": "lib/bb/_vendor/bs4",
+   "scope": "PRIVATE-VENDORED",
    "upstream_project": "UNKNOWN",
    "version": "UNKNOWN"
   },
   {
    "decision": "UNRESOLVED",
    "licence_evidence": [],
-   "location": "Symoneural-Build/src/bitbake/source/lib/ply",
+   "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/ply",
    "name": "ply",
    "owner_source_path": "Symoneural-Build/src/bitbake/source",
    "owning_upstream": "Build/bitbake",
-   "relpath": "lib/ply",
-   "scope": "UNKNOWN",
+   "relpath": "lib/bb/_vendor/ply",
+   "scope": "PRIVATE-VENDORED",
    "upstream_project": "UNKNOWN",
    "version": "UNKNOWN"
   },
@@ -737,12 +721,12 @@
    "licence_evidence": [
     "LICENSE.txt"
    ],
-   "location": "Symoneural-Build/src/bitbake/source/lib/progressbar",
+   "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/progressbar",
    "name": "progressbar",
    "owner_source_path": "Symoneural-Build/src/bitbake/source",
    "owning_upstream": "Build/bitbake",
-   "relpath": "lib/progressbar",
-   "scope": "UNKNOWN",
+   "relpath": "lib/bb/_vendor/progressbar",
+   "scope": "PRIVATE-VENDORED",
    "upstream_project": "UNKNOWN",
    "version": "UNKNOWN"
   },
@@ -751,11 +735,49 @@
    "licence_evidence": [
     "LICENSE"
    ],
-   "location": "Symoneural-Build/src/bitbake/source/lib/simplediff",
+   "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/simplediff",
    "name": "simplediff",
    "owner_source_path": "Symoneural-Build/src/bitbake/source",
    "owning_upstream": "Build/bitbake",
-   "relpath": "lib/simplediff",
+   "relpath": "lib/bb/_vendor/simplediff",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "LICENSE"
+   ],
+   "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/tomli",
+   "name": "tomli",
+   "owner_source_path": "Symoneural-Build/src/bitbake/source",
+   "owning_upstream": "Build/bitbake",
+   "relpath": "lib/bb/_vendor/tomli",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Build/src/bitbake/source/vendor/licenses",
+   "name": "licenses",
+   "owner_source_path": "Symoneural-Build/src/bitbake/source",
+   "owning_upstream": "Build/bitbake",
+   "relpath": "vendor/licenses",
+   "scope": "UNKNOWN",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Build/src/bitbake/source/vendor/patches",
+   "name": "patches",
+   "owner_source_path": "Symoneural-Build/src/bitbake/source",
+   "owning_upstream": "Build/bitbake",
+   "relpath": "vendor/patches",
    "scope": "UNKNOWN",
    "upstream_project": "UNKNOWN",
    "version": "UNKNOWN"
@@ -792,6 +814,18 @@
    "owner_source_path": "Symoneural-Build/src/devtools/source/openembedded-core",
    "owning_upstream": "Build/openembedded-core",
    "relpath": "scripts/contrib/bb-perf",
+   "scope": "UNKNOWN",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Build/src/devtools/source/openembedded-core/scripts/contrib/oe-image-files-spdx",
+   "name": "oe-image-files-spdx",
+   "owner_source_path": "Symoneural-Build/src/devtools/source/openembedded-core",
+   "owning_upstream": "Build/openembedded-core",
+   "relpath": "scripts/contrib/oe-image-files-spdx",
    "scope": "UNKNOWN",
    "upstream_project": "UNKNOWN",
    "version": "UNKNOWN"

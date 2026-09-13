@@ -75,11 +75,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b97a012949927931feb7793eee5ed924 \
                     file://scripts/lib/recipetool/licenses.csv;md5=676b85a735db52e9884e2b43ac0bb6d9 \
                     file://scripts/pybootchartgui/COPYING;md5=44ac4678311254db62edf8fd39cb8124"
 
-SRC_URI = "git://git.openembedded.org/openembedded-core;protocol=https;branch=scarthgap"
+SRC_URI = "git://git.openembedded.org/openembedded-core;protocol=https;branch=master"
 
 # Modify these as desired
-PV = "5.0.19"
-SRCREV = "2814f0962f56c8d1afa4de76d2895ba9b5cb767d"
+PV = "master+git"
+SRCREV = "fe7a24bc67118e7e184b5f5247258715e3904e7c"
 
 S = "${WORKDIR}/git"
 

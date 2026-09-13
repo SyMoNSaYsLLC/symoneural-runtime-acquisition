@@ -183,16 +183,6 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "9a8bb0266376912777a9634ba661d969",
-   "owner_component": "bitbake",
-   "owner_runtime": "Build",
-   "path": "contrib/vim/LICENSE.txt",
-   "sha256": "86c5794e2eb553f1abcbc5eaf3cc7c28318d58e3d7cbbfd0da8c5dc3c20ece6c",
-   "status": "UNRESOLVED"
-  },
-  {
-   "apparent_scope": "NESTED/DEPENDENCY",
-   "declared_identifier": "UNRESOLVED",
    "md5": "751419260aa954499f7abaabaa882bbe",
    "owner_component": "bitbake",
    "owner_runtime": "Build",
@@ -213,20 +203,10 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "83e365dc17176bd72ba7d08ca0555efa",
-   "owner_component": "bitbake",
-   "owner_runtime": "Build",
-   "path": "lib/bs4/COPYING.txt",
-   "sha256": "424336c2b3446b3c179f07217271bb914dc881a65c2bf7021da98c77e776d2c9",
-   "status": "UNRESOLVED"
-  },
-  {
-   "apparent_scope": "NESTED/DEPENDENCY",
-   "declared_identifier": "UNRESOLVED",
    "md5": "6d38698d6f983adff50eb75d8cb26e6b",
    "owner_component": "bitbake",
    "owner_runtime": "Build",
-   "path": "lib/progressbar/LICENSE.txt",
+   "path": "lib/bb/_vendor/progressbar/LICENSE.txt",
    "sha256": "cd9ae4bad4124563ef2556118ea2d52df165ac42639dee68c02137789ac7aa56",
    "status": "UNRESOLVED"
   },
@@ -236,8 +216,48 @@
    "md5": "9476fb642383515b0a38a680778c01d5",
    "owner_component": "bitbake",
    "owner_runtime": "Build",
-   "path": "lib/simplediff/LICENSE",
+   "path": "lib/bb/_vendor/simplediff/LICENSE",
    "sha256": "4b8682932a656cded5c78d200061da0b1df86909a56bcc68cde53c98deea92bb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aaaaf0879d17df0110d1aa8c8c9f46f5",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "lib/bb/_vendor/tomli/LICENSE",
+   "sha256": "b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7f4e492fb5a2f2b6c482cb0980b8f25f",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "packaging-pypi/bitbake-setup/LICENSE",
+   "sha256": "4cc5001c365086e0a5f8102ec468b1da08daea81e0e240fcd712eed2084b44cc",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cecb03f754c9edab5fd0718adedda413",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "vendor/licenses/ply/LICENSE",
+   "sha256": "c48c966eb0864c7b3323cca89904e2fa45ce48c841bca2e8abbf6020e32fe45e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "95792ff3fe8e11aa49ceb247e66e4810",
+   "owner_component": "fastapi",
+   "owner_runtime": "API",
+   "path": ".pdm-build/fastapi-0.141.1.dist-info/licenses/LICENSE",
+   "sha256": "4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e",
    "status": "UNRESOLVED"
   },
   {
@@ -1583,11 +1603,11 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "ee97da3360b2843ce4dafb1044b3430b",
+   "md5": "7f4cc7a623766989e4f2147044683f32",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta-selftest/recipes-test/license/incompatible-license-alias.bb",
-   "sha256": "32302802a93232b43b6a748640906b65cd928f5d30ba7c370fd6d0836c11f4b6",
+   "sha256": "0391707c715134b1a2dc1fc53987110daa4d1b7bcdeb7063d59c5c2ded9e7da4",
    "status": "UNRESOLVED"
   },
   {
@@ -1603,21 +1623,21 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "bc35b224c9babe95f8894f02f25295ba",
+   "md5": "8c4994d2fe6cfaba399806a7c0f88e3a",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta-selftest/recipes-test/license/incompatible-licenses.bb",
-   "sha256": "dfeb86a61231991fdcb6f177cbd3760e3fc95a61406fed2434b58abfe739c726",
+   "sha256": "7cdd30f060e7b53b17033a8047c5a3fb9c7d3f384fb83e3d3ea74d8d7a59ddea",
    "status": "UNRESOLVED"
   },
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "aa6008f9fdef840618ca50c0bd2223e1",
+   "md5": "f440216cf997a27a5872ecda767bc352",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta-selftest/recipes-test/license/incompatible-nonspdx-license.bb",
-   "sha256": "5239c2b98cc267aa7420570c4b9ca5fdd71dd4213c8aeeb38f22af684f62252f",
+   "sha256": "1f2b515e0fcbbce319d8573123f32b272f8f8dc8a9e2c08d5862fc4c9bfd077a",
    "status": "UNRESOLVED"
   },
   {
@@ -1653,41 +1673,61 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "f6874105d12cd5272df05c3fe3acf45d",
+   "md5": "02492767e453161b612b74f467110dbc",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/classes-global/license.bbclass",
-   "sha256": "39c65690f560b7c18edfdc1605102cbcf2a3d4de4dbf376b4f05be2aa12ab546",
+   "sha256": "fc049aba72761192c70a1700077ee82fd966b1e7b657b5aa57f5ed880890a779",
    "status": "UNRESOLVED"
   },
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "0333342b182983e6afe17c39996a6f85",
+   "md5": "fa92dfa594e036b8234092805e6c7b61",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/classes-recipe/license_image.bbclass",
-   "sha256": "db88a752a7fb1d4cb1921c243dee8b5a75ba2554748f31b2613b714b18c1a504",
+   "sha256": "24598d8a28d1485d298ff6114ce25dde6976a0fc9aadfd3c6d5aa77e43b5b408",
    "status": "UNRESOLVED"
   },
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "1181cc8a51717e2817bfa03c9fb4b8a9",
+   "md5": "e6b02610a8d6dde4924676c4e76f2c31",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/conf/licenses.conf",
-   "sha256": "ffaabdb8a084f2e928a9ba57ecebe13dd4ed12d34f0fc1b3527dff423881ce41",
+   "sha256": "e592bf4d642caf82eea1069d437f0891683be3679a97dd5900d685c8dfb0a323",
    "status": "UNRESOLVED"
   },
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "a75c9b468eb49436c29a1d290ede2cac",
+   "md5": "dbec4628583e92ef1abd9feb17945566",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/files/license-hashes.csv",
+   "sha256": "13c4f906cef65339a600a5c4dc06433d12fdcf37993e1632f4e55176b546cf82",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "500b10836bc38e699ec838e3d90c71ec",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/lib/oe/license.py",
-   "sha256": "96e97e69cc50725532f99d955d2773f52ef9d25904a7975265d5f4c81cc7783f",
+   "sha256": "71705349b20c60860cc1538f9d87e708eb31f96dd15703c07a830d9717753dd0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "45e9fb1e182135ff3a5f5225d4cc0ac5",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/lib/oe/license_finder.py",
+   "sha256": "0f8e8ba9d3300ed7f5ac1ed0d5e1f7e0dd5682b6db262e4a81848b15f24228f6",
    "status": "UNRESOLVED"
   },
   {
@@ -1713,21 +1753,11 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "931d1ca5a023e75f9e7da5fb892d0dc5",
+   "md5": "e9d2e420c0c1bf75a205c99bf909efed",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/lib/oeqa/selftest/cases/oelib/license.py",
-   "sha256": "6414b86150dc51c242c54d06895645c23ccdf7d6afb307dd457282685ec21044",
-   "status": "UNRESOLVED"
-  },
-  {
-   "apparent_scope": "NESTED/DEPENDENCY",
-   "declared_identifier": "UNRESOLVED",
-   "md5": "751419260aa954499f7abaabaa882bbe",
-   "owner_component": "openembedded-core",
-   "owner_runtime": "Build",
-   "path": "meta/recipes-bsp/usbinit/usbinit/COPYING.GPL",
-   "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+   "sha256": "6ea40980763bf301ad5f00ab3a520155a38df78ff2cfed915193d75d5cb5fa67",
    "status": "UNRESOLVED"
   },
   {
@@ -1773,11 +1803,11 @@
   {
    "apparent_scope": "NESTED/DEPENDENCY",
    "declared_identifier": "UNRESOLVED",
-   "md5": "c608985dd5f7f215e669e7639a0b1d2e",
+   "md5": "b9ee6208caa6e66c68dfad6f31d73f92",
    "owner_component": "openembedded-core",
    "owner_runtime": "Build",
    "path": "meta/recipes-devtools/docbook-xml/docbook-xml-dtd4/LICENSE-OASIS",
-   "sha256": "bb55b7380d78acbffd15985b5afcef31d4df4a1356dfef517c4b6ec457c7571e",
+   "sha256": "3e23d7672f96faee7f804120a1c5f2c5bf00a8b73e6fc68bee6a0f1f7c2371f2",
    "status": "UNRESOLVED"
   },
   {
@@ -1798,16 +1828,6 @@
    "owner_runtime": "Build",
    "path": "meta/recipes-kernel/linux/linux-dummy/COPYING.GPL",
    "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
-   "status": "UNRESOLVED"
-  },
-  {
-   "apparent_scope": "NESTED/DEPENDENCY",
-   "declared_identifier": "UNRESOLVED",
-   "md5": "676b85a735db52e9884e2b43ac0bb6d9",
-   "owner_component": "openembedded-core",
-   "owner_runtime": "Build",
-   "path": "scripts/lib/recipetool/licenses.csv",
-   "sha256": "985802c5e112a715d8db3d2a789a36611e98d42602ad7bbfa65c3e899e180131",
    "status": "UNRESOLVED"
   },
   {

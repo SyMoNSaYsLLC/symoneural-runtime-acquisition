@@ -2298,7 +2298,7 @@
     {
      "kind": "VENDORED",
      "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/ply",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/ply",
      "resolved_revision": "UNKNOWN",
      "runtime": "Build",
      "upstream_url": "UNKNOWN"
@@ -4073,6 +4073,41 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "tomli",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-tomli",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-tomli_2.4.1.bb",
+     "resolved_revision": "2.4.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "bitbake",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/tomli",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "DIRECT-VERSUS-OE-CORE",
    "classification_flags": [
     "DIRECT-VERSUS-OE-CORE",
@@ -4105,41 +4140,6 @@
    ],
    "runtimes": [
     "API"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "vim",
-   "provider_count": 2,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "OE-CORE-RECIPE",
-     "owning_component": "vim",
-     "path": "openembedded-core/meta/recipes-support/vim/vim_9.2.bb",
-     "resolved_revision": "9.2",
-     "runtime": "<build-stack>",
-     "upstream_url": "openembedded-core"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/contrib/vim",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Build",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Build"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -4517,7 +4517,7 @@
      "kind": "DIRECT-ACQUISITION",
      "owning_component": "bitbake",
      "path": "Symoneural-Build/src/bitbake/source",
-     "resolved_revision": "0880963fea4d91a034e4a6e007d23f98658ab986",
+     "resolved_revision": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
      "runtime": "Build",
      "upstream_url": "https://git.openembedded.org/bitbake"
     }
@@ -4612,7 +4612,7 @@
     {
      "kind": "VENDORED",
      "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/bs4",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/bs4",
      "resolved_revision": "UNKNOWN",
      "runtime": "Build",
      "upstream_url": "UNKNOWN"
@@ -6423,6 +6423,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "licenses",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "bitbake",
+     "path": "Symoneural-Build/src/bitbake/source/vendor/licenses",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "llama-cpp",
    "provider_count": 1,
    "provider_kinds": [
@@ -7167,6 +7191,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "oe-image-files-spdx",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "openembedded-core",
+     "path": "Symoneural-Build/src/devtools/source/openembedded-core/scripts/contrib/oe-image-files-spdx",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "onnx",
    "provider_count": 1,
    "provider_kinds": [
@@ -7249,7 +7297,7 @@
      "kind": "DIRECT-ACQUISITION",
      "owning_component": "openembedded-core",
      "path": "Symoneural-Build/src/devtools/source/openembedded-core",
-     "resolved_revision": "2814f0962f56c8d1afa4de76d2895ba9b5cb767d",
+     "resolved_revision": "fe7a24bc67118e7e184b5f5247258715e3904e7c",
      "runtime": "Build",
      "upstream_url": "https://git.openembedded.org/openembedded-core"
     }
@@ -7304,6 +7352,30 @@
    ],
    "runtimes": [
     "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "patches",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "bitbake",
+     "path": "Symoneural-Build/src/bitbake/source/vendor/patches",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -7416,7 +7488,7 @@
     {
      "kind": "VENDORED",
      "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/progressbar",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/progressbar",
      "resolved_revision": "UNKNOWN",
      "runtime": "Build",
      "upstream_url": "UNKNOWN"
@@ -7896,7 +7968,7 @@
     {
      "kind": "VENDORED",
      "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/simplediff",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/simplediff",
      "resolved_revision": "UNKNOWN",
      "runtime": "Build",
      "upstream_url": "UNKNOWN"

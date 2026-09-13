@@ -19,11 +19,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7e4cfe1c8dee5c6fe34c79c38d7b6b52 \
                     file://lib/toaster/toastergui/static/jquery-treetable-license/GPL-LICENSE.txt;md5=4e5d6fc4fb57eb64189113f37a5a7f0b \
                     file://lib/toaster/toastergui/static/jquery-treetable-license/MIT-LICENSE.txt;md5=327473913c507bd955504292ca0ebaa3"
 
-SRC_URI = "git://git.openembedded.org/bitbake;protocol=https;branch=2.8"
+SRC_URI = "git://git.openembedded.org/bitbake;protocol=https;branch=master"
 
 # Modify these as desired
-PV = "2.8.1"
-SRCREV = "0880963fea4d91a034e4a6e007d23f98658ab986"
+PV = "2.16.0+git"
+SRCREV = "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a"
 
 S = "${WORKDIR}/git"
 

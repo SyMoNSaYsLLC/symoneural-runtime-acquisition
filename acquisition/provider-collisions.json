@@ -664,7 +664,7 @@
     {
      "identity": "Build/bitbake",
      "kind": "VENDORED",
-     "location": "Symoneural-Build/src/bitbake/source/lib/ply",
+     "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/ply",
      "state": "AVAILABLE",
      "version": "UNKNOWN"
     }
@@ -1709,6 +1709,38 @@
   },
   {
    "consumers": [
+    "Build/bitbake",
+    "python3-tomli"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "tomli",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "python3-tomli",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-tomli_2.4.1.bb",
+     "state": "AVAILABLE",
+     "version": "2.4.1"
+    },
+    {
+     "identity": "Build/bitbake",
+     "kind": "VENDORED",
+     "location": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/tomli",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "API/uvicorn",
     "python3-uvicorn"
    ],
@@ -1735,38 +1767,6 @@
      "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-uvicorn_0.49.0.bb",
      "state": "AVAILABLE",
      "version": "0.49.0"
-    }
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "consumers": [
-    "Build/bitbake",
-    "vim"
-   ],
-   "decision": "UNRESOLVED",
-   "evidence": "tools/scan-oe-providers.py",
-   "link_scope": "UNKNOWN",
-   "logical_dependency": "vim",
-   "provider_count": 2,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "identity": "vim",
-     "kind": "OE-CORE-RECIPE",
-     "location": "openembedded-core/meta/recipes-support/vim/vim_9.2.bb",
-     "state": "AVAILABLE",
-     "version": "9.2"
-    },
-    {
-     "identity": "Build/bitbake",
-     "kind": "VENDORED",
-     "location": "Symoneural-Build/src/bitbake/source/contrib/vim",
-     "state": "AVAILABLE",
-     "version": "UNKNOWN"
     }
    ],
    "selected_provider": "UNRESOLVED"

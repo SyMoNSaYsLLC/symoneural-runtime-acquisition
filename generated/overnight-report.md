@@ -149,3 +149,20 @@ ever matters for reproducibility, 1.26.3 needs packaging.
 Contrast worth noting: for mcp-python-sdk I first reached for the same skip, then found
 `python3-uv-dynamic-versioning 0.14.1` in meta-python and used the real backend instead.
 Skipping is a last resort, not a first one — the derived version is now real rather than faked.
+
+## PHASE 8 — Build runtime matches the stack in use · **GATE PASSED**
+
+| Tree | Was | Now |
+|---|---|---|
+| `src/bitbake/source` | `0880963f` (2.8, scarthgap era) | **`046a90b0`** |
+| `src/devtools/.../openembedded-core` | `2814f096` (scarthgap) | **`fe7a24bc`** |
+
+Both clean, both VERIFIED, recipe SRCREV and `branch=` advanced to match (the
+estate-correctness rule — source and recipe must agree). Intent was declared in
+`source-manifest.json` before either fetch.
+
+**Bootstrap untouched** — still `046a90b0` / `fe7a24bc`, exactly as required.
+**The five build-tool trees are retained**; D2 changed only the provider selection,
+not the acquisition.
+
+The project's copy of its own build stack is no longer a stale souvenir of it.

@@ -118,7 +118,7 @@
   {
    "component": "bitbake",
    "declared_capabilities": [
-    "UNKNOWN"
+    "PYTHON-PACKAGE"
    ],
    "native_source_files": 0,
    "runtime": "Build",
@@ -135,7 +135,7 @@
     "RUST-RLIB",
     "SHARED-LIBRARY"
    ],
-   "native_source_files": 26,
+   "native_source_files": 30,
    "runtime": "Build",
    "source_path": "Symoneural-Build/src/devtools/source/openembedded-core",
    "symoneural_decision": "NOT-YET-DECIDED"
