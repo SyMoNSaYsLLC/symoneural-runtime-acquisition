@@ -275,7 +275,37 @@ SRCREV = "2b3ec34829036a65cd9d1398ea72a0167dc37470"
 
 # NOTE: recipetool emitted "inherit distutils3"; that class was REMOVED in scarthgap.
 # setuptools3 is its replacement. Mechanical fix only - this recipe is DRAFT, NON-AUTHORITATIVE.
-inherit setuptools3
+# torch 2.14 REMOVED setup.py support. Building with setuptools3 fails at once:
+#   error: `python setup.py --verbose` is deprecated: PyTorch is built with
+#   sdist: python -m build --sdist
+# Its pyproject.toml declares scikit-build-core + cmake, so the generic PEP 517
+# path is the correct one - pyproject-build reads build-backend from the file.
+inherit python_pep517
+
+DEPENDS += "cmake-native python3-scikit-build-core-native python3-setuptools-native \
+            python3-pyyaml-native python3-packaging-native symoneural-numpy-native"
+
+# `spin` is in torch's [build-system] requires and exists in NO layer
+# (meta-python ships scikit-build and scikit-build-core, not spin). spin is a
+# developer task-runner - it drives `spin build`, not the wheel build itself - so
+# the backend never invokes it. Declared but not exercised, which is exactly the
+# case --skip-dependency-check is for, and the same reasoning scipy uses for
+# pythran. If the build later fails FOR WANT OF spin, this is wrong and spin
+# becomes an acquisition.
+PEP517_BUILD_OPTS += "--skip-dependency-check"
+
+# CPU-ONLY, deliberately. nvcc exists on this HOST (/usr/local/cuda/bin/nvcc) but
+# there is no CUDA in the TARGET sysroot - no cuda recipe is staged - so a
+# cross-compiled CUDA torch is not buildable today. That is Phase 12's work.
+# Building CPU-only now produces a real ipk and unblocks Common's chain
+# (accelerate RDEPENDS on pytorch); the CUDA variant replaces it in Phase 12.
+export USE_CUDA = "0"
+export USE_CUDNN = "0"
+export USE_ROCM = "0"
+export USE_DISTRIBUTED = "0"
+export BUILD_TEST = "0"
+export USE_NCCL = "0"
+export MAX_JOBS = "12"
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.

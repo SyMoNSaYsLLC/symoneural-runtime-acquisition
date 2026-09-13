@@ -72,4 +72,21 @@ RDEPENDS:${PN}:class-target += " \
     python3-setuptools python3-shell python3-xml \
 "
 
+
+# D2 - ONE PROVIDER, AND IT IS OURS.
+# Both cythons installing /usr/bin/cygdb3 is not a packaging accident, it is the
+# provider collision itself, and it surfaced as a hard abort:
+#   The file /usr/bin/cygdb3 is installed by both python3-cython-native and
+#   symoneural-cython-native, aborting
+# Two recipes were reaching for different cythons in the same native sysroot:
+#   python3-pyyaml-native   -> python3-cython-native      (OE-Core's)
+#   symoneural-numpy-native -> symoneural-cython-native   (the estate's)
+#
+# Declaring PROVIDES lets anything asking for python3-cython be satisfied by the
+# estate's recipe, so only one cython is ever staged. Paired with
+# PREFERRED_PROVIDER in local.conf, which is where it has to live while
+# symoneural.conf remains inert (no local.conf sets DISTRO - that is item X2).
+PROVIDES += "python3-cython"
+RPROVIDES:${PN} += "python3-cython"
+
 BBCLASSEXTEND = "native nativesdk"

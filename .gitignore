@@ -15,8 +15,6 @@ Symoneural-*/src/*/source/
 
 # ALL build output, then re-admit the devtool workspace (our recipes/appends)
 Symoneural-*/build/*
-!Symoneural-*/build/devtool-workspace/
-!Symoneural-*/build/devtool-workspace/**
 
 # Fetch + sstate caches
 Symoneural-*/downloads/

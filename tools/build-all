@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# build-all - sweep every runtime, build every recipe in its layer.
+#
+# The estate's rule is ONE bitbake per build directory, so different runtimes can
+# run concurrently and recipes within one runtime run in a single bitbake
+# invocation (bitbake schedules them itself - that is its job, not ours).
+#
+# Everything goes through symonbake, so every build is nice 10 / ionice idle and
+# the desktop stays usable.
+set -uo pipefail
+ROOT=/home/google/SymonSaysLLC
+LOGS="${BUILD_ALL_LOGS:-/tmp/claude-1000/-home-google-SymonSaysLLC/aa121b2c-575f-422d-93f3-e402bdaf7a4f/scratchpad/buildall}"
+MAXJOBS="${BUILD_ALL_JOBS:-3}"
+mkdir -p "$LOGS"
+
+# runtime dir : layer dir
+MAP="
+Symoneural-Ravencalc:recipes-ravencalc
+Symoneural-API:recipes-api
+Symoneural-CLI:recipes-cli
+Symoneural-Crypto:recipes-crypto
+Symoneural-LLM:recipes-llm
+Symoneural-Remix:recipes-remix
+Symoneural-Streamer:recipes-streamer
+Symoneural-Web:recipes-web
+Symoneural-Adaptive-Fabric:recipes-adaptive-fabric
+"
+
+run_one() {
+    local rt="$1" layer="$2"
+    local recipes
+    recipes=$(find "$ROOT/meta-symoneural/$layer" -name '*.bb' 2>/dev/null \
+              | sed 's|.*/||; s|_.*||' | sort -u | tr '\n' ' ')
+    [ -z "$recipes" ] && { echo "SKIP $rt (no recipes)" ; return 0; }
+    echo "START $rt : $recipes"
+    "$ROOT/tools/symonbake" "$rt" $recipes > "$LOGS/$rt.log" 2>&1
+    local rc=$?
+    echo "$rc" > "$LOGS/$rt.rc"
+    if [ $rc -eq 0 ]; then echo "OK   $rt"; else echo "FAIL $rt (rc=$rc)"; fi
+    return $rc
+}
+
+echo "build-all starting - max $MAXJOBS concurrent build directories"
+echo "logs: $LOGS"
+echo
+for line in $MAP; do
+    rt="${line%%:*}"; layer="${line##*:}"
+    [ -d "$ROOT/$rt/build/devtool-master/conf" ] || { echo "SKIP $rt (no build dir)"; continue; }
+    while [ "$(jobs -rp | wc -l)" -ge "$MAXJOBS" ]; do sleep 5; done
+    run_one "$rt" "$layer" &
+    sleep 2
+done
+wait
+
+echo
+echo "================ SUMMARY ================"
+for f in "$LOGS"/*.rc; do
+    [ -f "$f" ] || continue
+    rt=$(basename "$f" .rc); rc=$(cat "$f")
+    if [ "$rc" = "0" ]; then printf '  OK    %s\n' "$rt"
+    else printf '  FAIL  %-28s rc=%s  log: %s/%s.log\n' "$rt" "$rc" "$LOGS" "$rt"; fi
+done
