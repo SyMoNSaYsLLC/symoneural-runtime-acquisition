@@ -75,6 +75,13 @@ __pycache__/
 *.jks
 id_rsa*
 id_ed25519*
+# Key files whose name does not end in a dotted extension. `*.key` matches
+# "foo.key" but NOT ".audit-key" - hyphen before the word, no dot. Found by
+# testing the pattern against a real filename rather than reading it.
+*-key
+.audit-key
+*_key
+*.hmac
 *.kdbx
 .netrc
 .npmrc

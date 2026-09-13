@@ -1,0 +1,62 @@
+#!/bin/bash
+# symonbake - run bitbake without starving the desktop.
+#
+# The Claude Desktop freezes that corrupt Kate and Dolphin windows are CPU
+# starvation, not GPU or RAM. Evidence from Garrett's captures during a lockup:
+#   memory 7.83G / 94.1G (8% used)      load 3.78 / 11.47 / 14.46 on 20 cores
+#   165 tasks, 814 threads
+# kwin_x11 segfaulted three times on 11 September under that pressure, and a
+# starved compositor is how UNRELATED windows corrupt.
+#
+# BB_NUMBER_THREADS=10 x PARALLEL_MAKE="-j 12" per build directory means three
+# concurrent directories can ask for ~30 tasks x 12 jobs against 20 cores.
+#
+# nice -n 10  : builds yield CPU to anything interactive
+# ionice -c3  : builds yield disk I/O too (idle class)
+# Throughput barely changes; the desktop stays usable.
+#
+#   tools/symonbake <build-dir> <bitbake args...>
+#   tools/symonbake Symoneural-Ravencalc symoneural-scipy
+set -u
+BOOT=~/symoneural-bootstrap-master
+RT="${1:?usage: symonbake <runtime-dir> <bitbake args...>}"; shift
+BD="/home/google/SymonSaysLLC/${RT}/build/devtool-master"
+[ -d "$BD" ] || { echo "no build dir: $BD" >&2; exit 1; }
+
+# refuse a second bitbake in the SAME directory (the estate's own rule)
+if pgrep -af "bin/bitbake " 2>/dev/null | grep -v 'bash -c' | grep -q "$BD"; then
+    echo "symonbake: a bitbake is already live in $BD - refusing" >&2
+    exit 1
+fi
+
+# warn past two concurrent build directories
+live=$(pgrep -af "bin/bitbake " 2>/dev/null | grep -vc 'bash -c' || true)
+[ "${live:-0}" -ge 2 ] && echo "symonbake: WARNING ${live} bitbake runs already live; 20 cores" >&2
+
+cd "$BOOT" || exit 1
+# shellcheck disable=SC1091
+source openembedded-core/oe-init-build-env "$BD" >/dev/null 2>&1 || exit 1
+# `bitbake` is a shell wrapper that re-execs python and spawns bitbake-server as
+# a separate process, so nice-ing the wrapper alone leaves the server at 0.
+# POLL for the server rather than sleeping a fixed interval - a fixed sleep fires
+# before the server exists and silently does nothing (verified: renice itself
+# works fine, "old priority 0, new priority 10").
+nice -n 10 ionice -c3 bitbake "$@" &
+BB=$!
+(
+  for _ in $(seq 1 60); do
+      pids=$(pgrep -f "bitbake-server|bin/bitbake " 2>/dev/null)
+      if [ -n "$pids" ]; then
+          for p in $pids; do
+              renice -n 10 -p "$p" >/dev/null 2>&1
+              ionice -c3 -p "$p"   >/dev/null 2>&1
+          done
+      fi
+      kill -0 $BB 2>/dev/null || break
+      sleep 5
+  done
+) &
+NICER=$!
+wait $BB; rc=$?
+kill $NICER 2>/dev/null
+exit $rc

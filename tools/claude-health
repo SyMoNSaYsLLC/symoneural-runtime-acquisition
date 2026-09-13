@@ -1,0 +1,38 @@
+#!/bin/bash
+# claude-health - is Claude Desktop about to freeze?
+#
+# The freezes that corrupt Kate and Dolphin windows are CPU/thread starvation,
+# not GPU and not RAM. Evidence from a real lockup on this box:
+#   memory  7.83G / 94.1G  (8% used)     load  3.78 / 11.47 / 14.46 on 20 cores
+#   165 tasks, 814 threads
+# kwin_x11 segfaulted three times on 11 September under that pressure; a starved
+# compositor is how UNRELATED windows corrupt.
+#
+# Electron spawns a renderer per surface and a utility per service, and agent
+# work accumulates them. They are not reaped until the app restarts.
+#
+# Run it when things feel slow. It never kills anything.
+THR_PROC=30; THR_THREAD=500; THR_LOAD=12
+
+procs=$(pgrep -fc claude-desktop 2>/dev/null | head -1 | tr -d " "); procs=${procs:-0}
+rend=$(ps -eo args 2>/dev/null | grep -c -- '--type=renderer' | tr -d ' ')
+thr=$(ps -eo nlwp,args 2>/dev/null | grep claude-desktop | grep -v grep | awk '{s+=$1} END {print s+0}')
+rss=$(ps -eo rss,args 2>/dev/null | grep claude-desktop | grep -v grep | awk '{s+=$1} END {printf "%.1f", s/1048576}')
+load=$(cut -d' ' -f1 /proc/loadavg)
+cores=$(nproc)
+builds=$(pgrep -af 'bin/bitbake ' 2>/dev/null | grep -v 'bash -c' | wc -l | tr -d ' ')
+
+printf 'claude-desktop  procs=%-4s renderers=%-4s threads=%-5s rss=%sGB\n' "$procs" "$rend" "$thr" "${rss:-0}"
+printf 'system          load=%-6s cores=%-4s live bitbake runs=%s\n' "$load" "$cores" "$builds"
+echo
+warn=0
+awk -v l="$load" -v c="$cores" 'BEGIN{exit !(l > c*0.6)}' && {
+    echo "  ! load ${load} is high for ${cores} cores - run tools/nice-builds"; warn=1; }
+[ "${thr:-0}" -gt "$THR_THREAD" ] && {
+    echo "  ! ${thr} threads (>${THR_THREAD}) - RESTART Claude Desktop; they are not reaped"; warn=1; }
+[ "${procs:-0}" -gt "$THR_PROC" ] && {
+    echo "  ! ${procs} processes (>${THR_PROC}) - helper accumulation, restart the app"; warn=1; }
+[ "${builds:-0}" -gt 2 ] && {
+    echo "  ! ${builds} concurrent builds - two is the practical ceiling at -j 12"; warn=1; }
+[ "$warn" = "0" ] && echo "  healthy"
+exit 0
