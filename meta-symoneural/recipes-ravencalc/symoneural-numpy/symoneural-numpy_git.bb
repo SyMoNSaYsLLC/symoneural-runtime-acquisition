@@ -59,7 +59,7 @@ SRCREV = "dd88c0c19b54ad9ed3533224221285bf0873249a"
 # class actually runs.
 # Mirrors OE-Core's own python3-numpy_2.5.3 (identical upstream version, known to
 # cross-build): pkgconfig is what lets meson's Cython link test find target python3,
-# and cython.bbclass supplies python3-cython-native plus metadata stripping.
+# and cython.bbclass supplies symoneural-cython-native plus metadata stripping.
 inherit pkgconfig python_mesonpy
 
 # NOT `inherit cython`. That class is INCOMPATIBLE with externalsrc: its
@@ -68,7 +68,7 @@ inherit pkgconfig python_mesonpy
 # changed no content but rewrote files and stripped the exec bit from
 # numpy/_core/src/umath/loops_hyperbolic.dispatch.cpp.src - a real mutation of
 # acquired source. We take only what was actually needed from it:
-DEPENDS += "python3-cython-native"
+DEPENDS += "symoneural-cython-native"
 
 
 

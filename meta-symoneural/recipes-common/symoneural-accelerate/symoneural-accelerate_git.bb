@@ -38,7 +38,25 @@ inherit setuptools3
 
 # WARNING: the following rdepends are from setuptools install_requires. These
 # upstream names may not correspond exactly to bitbake package names.
-RDEPENDS:${PN} += "python3-huggingface_hub python3-numpy python3-packaging python3-psutil python3-pyyaml python3-safetensors python3-torch"
+# D2 - USE WHAT THE ESTATE OWNS. Four of these were OE-Core recipes for things
+# SyMoNeuRaL already acquires, pins and builds. Shipping accelerate against
+# OE-Core's numpy/torch/safetensors while the estate builds its own is exactly
+# the provider collision the control plane exists to prevent: two copies of the
+# same library, only one of them pinned by us, and the runtime picking whichever
+# the feed resolved first.
+#
+#   python3-numpy           -> symoneural-numpy
+#   python3-safetensors     -> symoneural-safetensors
+#   python3-torch           -> symoneural-pytorch
+#   python3-huggingface_hub -> symoneural-huggingface-hub
+#
+# The remaining three are NOT owned yet and stay borrowed for now:
+# packaging, psutil, pyyaml. They are pure-python utilities the estate does not
+# acquire; each is a candidate for acquisition, recorded rather than silently
+# accepted. RDEPENDS is RUNTIME, so by "own what you ship" they should eventually
+# be estate-owned too.
+RDEPENDS:${PN} += "symoneural-huggingface-hub symoneural-numpy symoneural-safetensors symoneural-pytorch"
+RDEPENDS:${PN} += "python3-packaging python3-psutil python3-pyyaml"
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.

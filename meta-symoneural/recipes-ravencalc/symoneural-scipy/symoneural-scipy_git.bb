@@ -59,7 +59,45 @@ inherit pkgconfig python_mesonpy
 # (`find -iname '*pythran*'` returns nothing; python3-beniget, its own hard
 # dependency, is absent too). As written that line fails at parse with
 # "Nothing PROVIDES python3-pythran-native". Path (A) is taken - see below.
-DEPENDS += "python3-cython-native python3-pybind11-native symoneural-numpy-native symoneural-numpy python3 libgfortran"
+# symoneural-openblas: scipy/meson.build:296 does dependency('OpenBLAS') and dies
+# with "not found (tried pkg-config)". openblas WAS already built in the estate -
+# image/usr/lib/pkgconfig/openblas.pc exists and libopenblas0 / libopenblas-dev
+# were produced - but it was absent from this recipe's DEPENDS, so it was never
+# staged into scipy's recipe-sysroot. Verified by listing the staged .pc files:
+# numpy.pc present, openblas.pc absent. Declaring it here is what stages it.
+#
+# D2 again, in the same shape as numpy: scipy links the ESTATE openblas, never a
+# host or OE-Core BLAS. Building RavenCalc numerics against a BLAS we do not ship
+# is the provider collision the control plane exists to prevent.
+# symoneural-pybind11 (TARGET, not just -native): scipy/fft/_duccfft dies with
+#   cc1plus: error: include location "/usr/include/python3.14" is unsafe for
+#   cross-compilation [-Werror=poison-system-directories]
+# while 773 other objects compile clean. The difference is in the recipe:
+#   pyduccfft   dependencies: [fft_deps, pybind11_dep, duccfft_dep]   <- fails
+#   sparsetools dependencies: np_dep                                  <- fine
+# so pybind11_dep is what leaks the path.
+#
+# scipy/meson.build:97 is `dependency('pybind11', ...)`. pybind11.pc exists ONLY
+# in recipe-sysroot-native (usr/share/pkgconfig/), which TARGET pkg-config does
+# not search, so meson fell through to the config-tool and used the NATIVE
+# pybind11-config. That tool emits python include paths from sysconfig, and
+# because PYTHONPATH points at the TARGET python-sysconfigdata it emits the
+# target path `/usr/include/python3.14` with NO sysroot prefix. Confirmed by the
+# meson log: "pybind11-config found: YES (.../recipe-sysroot-native/usr/bin/...)".
+#
+# Declaring the target recipe stages a sysroot-relative pybind11.pc into
+# recipe-sysroot, which pkg-config finds FIRST, so the include paths are prefixed
+# correctly and the poison check has nothing to object to.
+#
+# NOT -Wno-error=poison-system-directories. The path happens to be harmless today
+# only because /usr/include/python3.14 does not exist on this host (which runs
+# 3.13.5) - so gcc silently skips it. Suppressing the check would make the build
+# correct BY ACCIDENT, and it would start picking up wrong headers the moment
+# anything creates that directory. The guard is right; the include was wrong.
+#
+# Same class of defect as f2py: pybind11-config carries the identical broken
+# `#!/usr/bin/env nativepython3` shebang. Going through pkg-config sidesteps it.
+DEPENDS += "symoneural-cython-native symoneural-pybind11-native symoneural-numpy-native symoneural-numpy python3 libgfortran symoneural-openblas symoneural-pybind11"
 
 # pythran is absent from OE-Core AND from meta-openembedded, and its chain
 # (beniget, ply) is absent too. Authoring it in-stack would make the ply
@@ -161,4 +199,62 @@ do_configure:prepend() {
 }
 do_compile:prepend() {
     symon_fix_pythonpath
+}
+
+# --- BUILD PATHS IN scipy/__config__.py --------------------------------------
+# do_compile now SUCCEEDS and the four ipks build. The remaining failure is QA:
+#   do_package_qa: File .../scipy/__pycache__/__config__.cpython-314.pyc
+#   contains a reference to the build host HOME directory [buildpaths]
+#
+# scipy's __config__.py is a build-PROVENANCE record - it is what
+# scipy.show_config() prints. Upstream deliberately embeds the compiler command
+# lines, --sysroot, the -ffile-prefix-map values (which ironically contain the
+# very paths they exist to map away), the pkg-config dirs and the interpreter
+# path. Eight occurrences of ${WORKDIR}, all informational strings; nothing in
+# scipy reads them at runtime.
+#
+# NOT OEQA_BUILDPATHS_SKIP, which the QA message suggests. That switches the
+# buildpaths check off for the ENTIRE package, so a genuine host-path leak in a
+# compiled .so would stop being reported too. The check is correct and worth
+# keeping armed; it is this one generated file that needs fixing.
+#
+# So: rewrite the paths in the .py, and drop the stale .pyc that carries the same
+# strings in its constant pool (a .pyc cannot be sed-ed safely - its strings are
+# length-prefixed). Python regenerates bytecode on import, so nothing is lost but
+# first-import speed.
+#
+# This edits ${D}, never ${S}. R1 is unaffected: the acquired tree is untouched,
+# and ${S} is a disposable git-archive export in any case.
+# Cython writes the absolute path of the .pyx into the .c it generates (two
+# `#line`-style references in a 2 MB file). Those land in the -src debug package:
+#   QA Issue: .../unuran_wrapper.c contains reference to TMPDIR [buildpaths]
+#
+# OE already prefix-maps the DWARF to /usr/src/debug/<pn>/<pv> via
+# -ffile-prefix-map, so the compiled object refers to that path, not to WORKDIR.
+# The generated .c was simply written before the compiler ever saw it. Rewriting
+# it to the SAME prefix makes the shipped debug source agree with the DWARF that
+# points at it - strictly more correct than leaving them inconsistent.
+#
+# Runs at the end of do_compile because the files live in ${B} and are collected
+# into the debug-src package during do_package. ${B} is the disposable meson
+# build directory; ${S} and the acquired tree are untouched (R1).
+do_compile:append() {
+    n=$(grep -rlF "${WORKDIR}" "${B}" --include='*.c' --include='*.cxx' --include='*.cpp' 2>/dev/null | wc -l)
+    if [ "$n" -gt 0 ]; then
+        grep -rlF "${WORKDIR}" "${B}" --include='*.c' --include='*.cxx' --include='*.cpp' 2>/dev/null \
+          | xargs -r sed -i "s|${WORKDIR}/pristine|/usr/src/debug/${PN}/${PV}|g; s|${WORKDIR}|/usr/src/debug/${PN}/${PV}|g"
+        bbnote "rewrote build paths in $n generated source file(s) to the debug prefix"
+    fi
+}
+
+do_install:append() {
+    cfg="${D}${PYTHON_SITEPACKAGES_DIR}/scipy/__config__.py"
+    if [ -f "$cfg" ]; then
+        sed -i -e "s|${WORKDIR}|/build/symoneural-scipy|g" "$cfg"
+        rm -f "${D}${PYTHON_SITEPACKAGES_DIR}/scipy/__pycache__/__config__."*.pyc
+        if grep -q "${WORKDIR}" "$cfg" 2>/dev/null; then
+            bbfatal "build paths still present in __config__.py after sanitising"
+        fi
+        bbnote "sanitised build paths in scipy/__config__.py; dropped stale .pyc"
+    fi
 }

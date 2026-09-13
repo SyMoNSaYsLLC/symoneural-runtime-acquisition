@@ -53,4 +53,64 @@ inherit pkgconfig python_mesonpy
 # --- SYMONEURAL BUILD DEPS ---------------------------------------------------
 # D2: scikit-learn builds against the numpy and scipy SyMoNeuRaL ships, not
 # OE-Core's python3-numpy.
-DEPENDS += "python3-cython-native symoneural-numpy-native symoneural-numpy symoneural-scipy python3"
+DEPENDS += "symoneural-cython-native symoneural-numpy-native symoneural-numpy symoneural-scipy python3"
+
+# pyproject-build validates [build-system] requires against the NATIVE interpreter
+# even under --no-isolation, and reports:
+#   Unmet dependencies (checked against .../recipe-sysroot-native/usr/bin/nativepython3):
+#     scipy<1.19.0,>=1.10.0   found: not installed
+# scipy IS provided - it is in DEPENDS above and staged into the TARGET sysroot,
+# where a cross-compiled extension actually needs it. The check looks in the
+# native environment, which is the wrong place for a cross build; there is no
+# symoneural-scipy-native and building one would mean compiling scipy twice to
+# satisfy a check rather than a consumer.
+#
+# Same reasoning and same flag as symoneural-scipy uses for pythran: the
+# dependency is declared and genuinely supplied, the validator is looking in the
+# wrong sysroot. Skipping is honest here; it would not be if scipy were absent.
+PEP517_BUILD_OPTS += "--skip-dependency-check"
+
+# scikit-learn's Cython sources CIMPORT scipy's declarations:
+#   sklearn/utils/_cython_blas.pyx:3: 'scipy/linalg/cython_blas.pxd' not found
+# That is the real reason the build wanted scipy "installed" natively - it needs
+# scipy's .pxd HEADERS, not just a version number.
+#
+# scipy is staged into the TARGET sysroot (correct - that is where its compiled
+# extensions belong), but Cython runs NATIVELY and resolves cimports against the
+# native interpreter's path. The headers are therefore invisible to it.
+#
+# Injecting an include path is not available: scikit-learn hardcodes cython_args
+# in sklearn/meson.build with no meson option to extend it, so EXTRA_OEMESON
+# cannot reach it.
+#
+# So mirror the declarations into the native sysroot. Only *.pxd and *.pxi - 12
+# files, pure Cython declaration text, architecture-INDEPENDENT. No compiled
+# extension and no target .so crosses into the native environment, which is the
+# thing that must not happen and is why this is not a blanket copy of
+# site-packages.
+#
+# NOT symoneural-scipy-native: that would compile the whole of scipy a second
+# time, natively, to satisfy a header lookup. Same cost as the real build for no
+# additional artifact.
+# NOTE: no $(( )) arithmetic anywhere below. BitBake parses $( as its own
+# expansion and dies with "NotImplementedError: $((" before the shell ever sees
+# it. Counting is done with wc -l instead.
+do_configure:prepend() {
+    tgt="${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages"
+    nat="${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
+    if [ ! -d "$tgt/scipy" ]; then
+        bbfatal "scipy not staged in the target sysroot - check DEPENDS"
+    fi
+    cd "$tgt" || bbfatal "cannot enter $tgt"
+    find scipy \( -name '*.pxd' -o -name '*.pxi' \) -print > "${WORKDIR}/.pxd-list"
+    while read -r f; do
+        install -d "$nat/`dirname "$f"`"
+        install -m 0644 "$tgt/$f" "$nat/$f"
+    done < "${WORKDIR}/.pxd-list"
+    # Cython needs each directory to resolve as a package on the path.
+    find "$nat/scipy" -type d -print > "${WORKDIR}/.pxd-dirs" 2>/dev/null || true
+    while read -r d; do
+        [ -e "$d/__init__.py" ] || : > "$d/__init__.py"
+    done < "${WORKDIR}/.pxd-dirs"
+    bbnote "mirrored `wc -l < ${WORKDIR}/.pxd-list` scipy .pxd/.pxi declarations into the native sysroot"
+}
