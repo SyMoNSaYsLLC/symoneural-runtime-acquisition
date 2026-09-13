@@ -25,3 +25,11 @@ inherit python_hatchling
 # WARNING: We were unable to map the following python package/module
 # dependencies to the bitbake packages which include them:
 #    uv-dynamic-versioning
+
+
+# meta-python supplies python3-uv-dynamic-versioning 0.14.1, so the real backend
+# is used rather than skipping the build-requires check. The version is derived
+# properly instead of being faked.
+# uv-dynamic-versioning drags its own closure into the NATIVE sysroot; a native
+# recipe's RDEPENDS do not populate it, so the transitive deps are explicit.
+DEPENDS += "python3-uv-dynamic-versioning-native python3-jinja2-native python3-tomlkit-native python3-dunamai-native"

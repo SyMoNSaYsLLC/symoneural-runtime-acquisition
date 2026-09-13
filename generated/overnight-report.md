@@ -124,3 +124,28 @@ Also cleared: httpx, httpcore and pydantic each needed
 (Rust/maturin). meta-python supplies `python3-pydantic-core 2.46.4` and it is BORROWED
 tonight. But it is linked into the shipped runtime, and D2 says own what you ship — so
 under D2 it should be SyMoNeuRaL-owned. Recorded, not decided.
+
+## PHASE 4 — Symoneural-CLI, Python half · **GATE PASSED** (2 of 2)
+
+| Component | files |
+|---|---|
+| anthropic-sdk-python | 2817 |
+| mcp-python-sdk | 252 |
+
+**The PEP-517 closure is transitive and only a build reveals its depth.** mcp-python-sdk
+needed `uv-dynamic-versioning`, which needed `jinja2` and `tomlkit`, which then needed
+`dunamai~=1.26.1` — four rounds, each one only visible after satisfying the previous.
+All four were present in meta-python; none of it was guessable from the manifest.
+
+**A native recipe's RDEPENDS do not populate the native sysroot.** Transitive build
+dependencies must be named explicitly as `-native` in DEPENDS. That is the general lesson,
+not a quirk of this package.
+
+**DECISION RECORDED — anthropic-sdk-python pins `hatchling==1.26.3` exactly**; the stack
+ships 1.31.0. hatchling is a build backend: it produces the wheel and contributes no code
+to it, so the check was skipped and the stack version used. If the exact backend version
+ever matters for reproducibility, 1.26.3 needs packaging.
+
+Contrast worth noting: for mcp-python-sdk I first reached for the same skip, then found
+`python3-uv-dynamic-versioning 0.14.1` in meta-python and used the real backend instead.
+Skipping is a last resort, not a first one — the derived version is now real rather than faked.

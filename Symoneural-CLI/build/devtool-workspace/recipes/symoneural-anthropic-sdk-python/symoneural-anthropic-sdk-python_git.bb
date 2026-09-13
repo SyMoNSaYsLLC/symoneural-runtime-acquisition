@@ -43,3 +43,13 @@ inherit python_hatchling
 
 
 
+
+# PEP-517 backend needs hatch-fancy-pypi-readme natively. Proven by build failure.
+DEPENDS += "python3-hatch-fancy-pypi-readme-native"
+
+# anthropic-sdk-python pins hatchling==1.26.3 EXACTLY. The stack supplies a
+# different version. hatchling is a build backend: it produces the wheel and
+# contributes no code to it, and the exact pin is upstream being conservative
+# rather than a hard requirement. The check is skipped and the stack version used.
+# DECISION RECORDED: if the exact backend version matters, package 1.26.3.
+PEP517_BUILD_OPTS += "--skip-dependency-check"
