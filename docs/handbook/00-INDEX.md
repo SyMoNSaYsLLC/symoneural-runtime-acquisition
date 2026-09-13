@@ -65,3 +65,37 @@ every snapshot and from git for this reason.
 (auto-approves any `@symoneural.com` address, valid to 28 Oct 2026) and still
 needs rotating. Reprinting it here would widen an exposure that is already open.
 Rotate it with the ⟳ beside the copy button in the org settings.
+
+---
+
+## Toolchain finding — Darwin Swift SDK, 2026-09-13
+
+`~/.swiftpm/swift-sdks/darwin.artifactbundle` — **3.2 GB, installed, populated,
+and unusable.** Two separate defects, found only by trying to compile:
+
+**1. Host-triple mismatch, fixed.** The bundle declared support for
+`x86_64-unknown-linux-gnu`; this host reports `x86_64-pc-linux-gnu`. One token —
+`pc` vs `unknown` — and `swift build --swift-sdk darwin` answered *"No Swift SDK
+found"* while `swift sdk list` happily printed `darwin`. Added the host triple to
+`info.json` (backed up alongside).
+
+**2. Compiler generation mismatch, NOT fixable by configuration.**
+
+```
+host Swift  6.0.3 (swift-6.0.3-RELEASE, Debian)
+SDK         MacOSX26.5.sdk / prebuilt-modules 26.5   (Xcode 26.5 generation)
+result      swift-frontend: Assertion `idx < size()' failed, SmallVector.h:294
+```
+
+The compiler is far older than the SDK and aborts parsing its module data. No
+flag fixes this; it needs a Swift toolchain matched to the SDK generation.
+
+**Why this belongs in the handbook rather than a bug report:** it is the estate's
+thesis in miniature. A *prebuilt* toolchain carries assumptions about the
+toolchain that produced it, and when those assumptions do not hold, the artifact
+is inert in a way that looks installed. Building from pinned source is what makes
+the version relationship something we choose rather than something we discover.
+
+Five target triples are present in the bundle and would be available once the
+compiler matches: `x86_64-apple-macosx`, `arm64-apple-macosx`, `arm64-apple-ios`,
+`x86_64-apple-ios-simulator`, `arm64-apple-ios-simulator`.
