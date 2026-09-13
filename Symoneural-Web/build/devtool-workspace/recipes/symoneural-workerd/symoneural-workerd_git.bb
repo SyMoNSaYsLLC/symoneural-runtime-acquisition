@@ -31,7 +31,7 @@ SRC_URI = "git://github.com/cloudflare/workerd;protocol=https;branch=main"
 
 # Modify these as desired
 PV = "1.0+git"
-SRCREV = "909e388c86905a217391cb557ac3260f1daff3d0"
+SRCREV = "925464ba9fe5751e4468626ce77f7a5810df274f"
 
 S = "${WORKDIR}/git"
 
