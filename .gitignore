@@ -11,7 +11,11 @@
 # ---------------------------------------------------------------------------
 
 # Acquired upstream source - reproducible from the source lock, has own .git
-Symoneural-*/src/*/source/
+# Acquired upstream source IS committed - it is the product being built.
+# Only each tree's own .git is excluded; nesting a repository would make it a
+# submodule and the pin would then have two sources of truth.
+Symoneural-*/src/*/source/*/.git/
+Symoneural-*/src/*/source/*/.git
 
 # ALL build output, then re-admit the devtool workspace (our recipes/appends)
 Symoneural-*/build/*
