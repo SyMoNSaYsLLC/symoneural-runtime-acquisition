@@ -1,0 +1,444 @@
+#!/usr/bin/env python3
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
+# pyre-strict
+
+# pyre-ignore-all-errors[56]
+
+import random
+import unittest
+from itertools import accumulate
+
+import hypothesis.strategies as st
+import numpy as np
+import torch
+from fbgemm_gpu.split_table_batched_embeddings_ops_common import CacheAlgorithm
+from fbgemm_gpu.split_table_batched_embeddings_ops_training import DEFAULT_ASSOC
+from fbgemm_gpu.tbe.utils import generate_requests, TBERequest, to_device
+from hypothesis import given, settings, Verbosity
+from torch import Tensor
+
+from ..common import MAX_EXAMPLES  # noqa E402
+from .cache_common import generate_cache_tbes, gpu_unavailable, optests
+
+VERBOSITY: Verbosity = Verbosity.verbose
+
+
+@optests.generate_opcheck_tests(fast=True)
+class LXUCacheTest(unittest.TestCase):
+    @unittest.skipIf(*gpu_unavailable)
+    @given(
+        associativity=st.sampled_from([1, DEFAULT_ASSOC]),
+    )
+    @settings(deadline=None)
+    def test_lxu_cache_lookup(self, associativity: int) -> None:
+        max_index: int = 8000
+        # Use single cache set to avoid dealing with cache set hash algorithm.
+        lxu_cache_state_gpu = (
+            torch.arange(associativity, dtype=torch.int64).unsqueeze(0).cuda()
+        )
+
+        # Testing all miss.
+        linear_cache_indices_0 = (
+            torch.tensor([32, 33, 34, 35, 36, 100, 1000, 1725])
+            if associativity <= 32
+            else torch.tensor([64, 65, 66, 67, 68, 100, 1000, 1725])
+        ).cuda()
+        lxu_locations = torch.ops.fbgemm.lxu_cache_lookup(
+            linear_cache_indices_0, lxu_cache_state_gpu, max_index
+        )
+        torch.testing.assert_close(
+            lxu_locations,
+            torch.full_like(lxu_locations, -1),
+        )
+
+        # Testing all hits.
+        cache_indices_1 = torch.randint(0, associativity, (associativity,))
+        linear_cache_indices_1 = cache_indices_1.cuda()
+        lxu_locations = torch.ops.fbgemm.lxu_cache_lookup(
+            linear_cache_indices_1, lxu_cache_state_gpu, max_index
+        )
+        torch.testing.assert_close(
+            lxu_locations.cpu(),
+            cache_indices_1.int(),
+        )
+
+        # Testing mixture.
+        miss_cache_indices_0 = torch.randint(associativity, max_index // 2, (10,))
+        hit_cache_indices_0 = torch.randint(0, associativity, (8,))
+        miss_cache_indices_1 = torch.randint(max_index // 2, max_index, (16,))
+        hit_cache_indices_1 = torch.randint(0, associativity, (8,))
+        linear_cache_indices_2 = torch.cat(
+            [
+                miss_cache_indices_0,
+                hit_cache_indices_0,
+                miss_cache_indices_1,
+                hit_cache_indices_1,
+            ]
+        ).cuda()
+        lxu_locations = torch.ops.fbgemm.lxu_cache_lookup(
+            linear_cache_indices_2, lxu_cache_state_gpu, max_index
+        )
+
+        expected_result = torch.cat(
+            [
+                torch.full_like(miss_cache_indices_0, -1),
+                hit_cache_indices_0,
+                torch.full_like(miss_cache_indices_1, -1),
+                hit_cache_indices_1,
+            ]
+        ).int()
+        torch.testing.assert_close(
+            lxu_locations.cpu(),
+            expected_result,
+        )
+
+    @unittest.skipIf(*gpu_unavailable)
+    @given(
+        cache_sets=st.integers(min_value=10, max_value=300),
+    )
+    @settings(verbosity=VERBOSITY, max_examples=MAX_EXAMPLES, deadline=None)
+    def test_lxu_cache_locking_counter_decrement(
+        self,
+        cache_sets: int,
+    ) -> None:
+        warp_size = DEFAULT_ASSOC
+        N = cache_sets * warp_size
+        lxu_cache_locking_counter = torch.randint(
+            low=1,
+            high=3,
+            size=[cache_sets, warp_size],
+            device="cuda",
+            dtype=torch.int32,
+        )
+        counter_ref = lxu_cache_locking_counter.tolist()
+        lxu_cache_locations_list = []
+        lxu_cache_locations_set = set()
+        for _ in range(3 * N):
+            location = random.randrange(-1, N)
+            lxu_cache_locations_list.append(location)
+            lxu_cache_locations_set.add(location)
+
+        for idx in lxu_cache_locations_set:
+            if idx >= 0:
+                q, r = idx // warp_size, idx % warp_size
+                counter_ref[q][r] -= 1
+
+        counter_ref = torch.tensor(counter_ref, device="cuda", dtype=torch.int32)
+        lxu_cache_locations = torch.tensor(
+            lxu_cache_locations_list, device="cuda", dtype=torch.int32
+        )
+        torch.ops.fbgemm.lxu_cache_locking_counter_decrement(
+            lxu_cache_locking_counter, lxu_cache_locations
+        )
+        self.assertTrue(torch.equal(lxu_cache_locking_counter, counter_ref))
+
+    @unittest.skipIf(*gpu_unavailable)
+    @given(
+        T=st.integers(min_value=1, max_value=3),
+        D=st.integers(min_value=2, max_value=32),
+        B=st.integers(min_value=1, max_value=32),
+        log_E=st.integers(min_value=3, max_value=4),
+        L=st.integers(min_value=1, max_value=10),
+    )
+    @settings(verbosity=VERBOSITY, max_examples=MAX_EXAMPLES, deadline=None)
+    def test_lxu_cache_locking_counter_increment(
+        self,
+        T: int,
+        D: int,
+        B: int,
+        log_E: int,
+        L: int,
+    ) -> None:
+        """
+        Test that lxu_cache_locking_counter is correctly incremented during
+        cache prefetch (lru_cache_populate with lock_cache_line=True) and
+        correctly decremented back to zero after forward+backward.
+        """
+        cc, _, min_Es, _ = generate_cache_tbes(
+            T,
+            D,
+            log_E,
+            mixed=False,
+            cache_algorithm=CacheAlgorithm.LRU,
+            prefetch_pipeline=True,
+            use_int_weight=True,
+        )
+
+        requests = generate_requests(2, B, T, L, min_Es, reuse=0.1)
+        # Cast to long to match TBE expectations
+        for i, req in enumerate(requests):
+            indices, offsets, weights, Bs_feature_rank = req.unpack_4()
+            requests[i] = TBERequest(
+                indices.long(), offsets.long(), weights, Bs_feature_rank
+            )
+
+        # Verify counter starts at zero
+        counter = cc.lxu_cache_locking_counter
+        assert isinstance(counter, Tensor)
+        self.assertTrue(
+            torch.all(counter == 0),
+            "Counter should be zero initially",
+        )
+
+        # Prefetch first batch (calls lru_cache_populate with lock_cache_line=True)
+        indices_0, offsets_0, _, _ = requests[0].unpack_4()
+        cc.prefetch(indices_0, offsets_0)
+
+        # After prefetch, some counters should be incremented (> 0)
+        counter = cc.lxu_cache_locking_counter
+        assert isinstance(counter, Tensor)
+        self.assertTrue(
+            torch.any(counter > 0),
+            "After prefetch with lock_cache_line=True, "
+            "some counters should be incremented",
+        )
+
+        # All counter values should be non-negative
+        self.assertTrue(
+            torch.all(counter >= 0),
+            "All counter values should be non-negative after increment",
+        )
+
+        # Prefetch second batch (this also decrements counters for batch 0)
+        indices_1, offsets_1, _, _ = requests[1].unpack_4()
+        cc.prefetch(indices_1, offsets_1)
+
+        # Run forward + backward for both batches
+        output_0 = cc(indices_0, offsets_0)
+        output_0.backward(torch.randn_like(output_0))
+
+        output_1 = cc(indices_1, offsets_1)
+        output_1.backward(torch.randn_like(output_1))
+
+        # Flush to finalize
+        cc.flush()
+
+        # After full cycle, counter should be back to zero
+        counter = cc.lxu_cache_locking_counter
+        assert isinstance(counter, Tensor)
+        self.assertTrue(
+            torch.all(counter == 0),
+            "Counter should be zero after full prefetch-forward-backward cycle",
+        )
+
+    @unittest.skipIf(*gpu_unavailable)
+    @given(
+        T=st.integers(min_value=1, max_value=10),
+        D=st.integers(min_value=2, max_value=128),
+        B=st.integers(min_value=1, max_value=128),
+        log_E=st.integers(min_value=3, max_value=5),
+        L=st.integers(min_value=0, max_value=20),
+    )
+    @settings(verbosity=Verbosity.verbose, max_examples=MAX_EXAMPLES, deadline=None)
+    def test_unique_lxu_cache_lookup(
+        self,
+        T: int,
+        D: int,
+        B: int,
+        log_E: int,
+        L: int,
+    ) -> None:
+        E = int(10**log_E)
+
+        indices = to_device(
+            torch.randint(low=0, high=E, size=(T * L * B,)),
+            use_cpu=False,
+        ).long()
+        offsets = to_device(
+            torch.tensor([0] + list(accumulate([L] * (T * L)))),
+            use_cpu=False,
+        ).long()
+
+        # pyre-fixme[53]: Captured variable `lxu_cache_state` is not annotated.
+        def unique_lookup(
+            indices: Tensor,
+            offsets: Tensor,
+            cache_hash_size_cumsum: Tensor,
+            total_cache_hash_size: int,
+        ) -> tuple[Tensor, Tensor]:
+            linear_cache_indices = torch.ops.fbgemm.linearize_cache_indices(
+                cache_hash_size_cumsum,
+                indices,
+                offsets,
+            )
+
+            uniq_indices, uniq_indices_length, _ = torch.ops.fbgemm.get_unique_indices(
+                linear_cache_indices, total_cache_hash_size, compute_count=False
+            )
+
+            uniq_lxu_cache_locations = torch.ops.fbgemm.lxu_cache_lookup(
+                uniq_indices,
+                lxu_cache_state,
+                total_cache_hash_size,
+                gather_cache_stats=False,
+                num_uniq_cache_indices=uniq_indices_length,
+            )
+
+            return uniq_lxu_cache_locations, uniq_indices_length
+
+        # pyre-fixme[53]: Captured variable `lxu_cache_state` is not annotated.
+        def duplicate_lookup(
+            indices: Tensor,
+            offsets: Tensor,
+            cache_hash_size_cumsum: Tensor,
+            total_cache_hash_size: int,
+        ) -> Tensor:
+            linear_cache_indices = torch.ops.fbgemm.linearize_cache_indices(
+                cache_hash_size_cumsum,
+                indices,
+                offsets,
+            )
+
+            lxu_cache_locations = torch.ops.fbgemm.lxu_cache_lookup(
+                linear_cache_indices,
+                lxu_cache_state,
+                total_cache_hash_size,
+                gather_cache_stats=False,
+            )
+            return lxu_cache_locations
+
+        cache_sets = int((E * T) * 0.2)
+        lxu_cache_state = torch.zeros(
+            cache_sets,
+            DEFAULT_ASSOC,
+            device="cuda",
+            dtype=torch.int64,
+        ).fill_(-1)
+
+        hash_sizes = torch.tensor([E] * T, dtype=torch.long, device="cuda")
+        cache_hash_size_cumsum = torch.ops.fbgemm.asynchronous_complete_cumsum(
+            hash_sizes
+        )
+        total_cache_hash_size = cache_hash_size_cumsum[-1].item()
+
+        linear_cache_indices = torch.ops.fbgemm.linearize_cache_indices(
+            cache_hash_size_cumsum,
+            indices,
+            offsets,
+        )
+
+        # Emulate cache population
+        uniq_indices_cpu = linear_cache_indices.unique().cpu()
+        index_cache_set_map = uniq_indices_cpu.clone()
+        index_cache_set_map.apply_(
+            lambda x: torch.ops.fbgemm.lxu_cache_slot(x, cache_sets)
+        )
+        index_cache_set_map = index_cache_set_map.tolist()
+        uniq_indices_cpu = uniq_indices_cpu.tolist()
+
+        slots = {}
+        for idx, c in zip(uniq_indices_cpu, index_cache_set_map):
+            if c not in slots:
+                slots[c] = 0
+            slot = slots[c]
+            if slot < DEFAULT_ASSOC:
+                lxu_cache_state[c][slot] = idx
+            slots[c] = slot + 1
+
+        # Run unique lookup
+        uniq_lookup_output, uniq_indices_length = unique_lookup(
+            indices, offsets, cache_hash_size_cumsum, total_cache_hash_size
+        )
+
+        # Run duplicate lookup
+        duplicate_lookup_output = duplicate_lookup(
+            indices, offsets, cache_hash_size_cumsum, total_cache_hash_size
+        )
+
+        # Start running validation
+
+        # Compute unique indices using PyTorch ops
+        sorted_linear_cache_indices, inverse_sorted_cache_indices = torch.sort(
+            linear_cache_indices
+        )
+        ref_uniq_cache_indices, cache_indices_counts = torch.unique_consecutive(
+            sorted_linear_cache_indices, return_inverse=False, return_counts=True
+        )
+
+        # Convert to lists
+        cache_indices_counts = cache_indices_counts.cpu().tolist()
+        uniq_lookup_output = uniq_lookup_output.cpu().tolist()
+
+        # Validate the number of unique cache indices
+        ref_num_uniq_indices = ref_uniq_cache_indices.numel()
+        assert ref_num_uniq_indices == uniq_indices_length.item()
+
+        # Expand
+        reshaped_uniq_lookup_output = uniq_lookup_output[:ref_num_uniq_indices]
+        sorted_lxu_cache_locations = to_device(
+            torch.tensor(
+                np.repeat(reshaped_uniq_lookup_output, cache_indices_counts),
+                dtype=duplicate_lookup_output.dtype,
+            ),
+            use_cpu=False,
+        )
+
+        _, cache_location_indices = torch.sort(inverse_sorted_cache_indices)
+
+        expanded_lxu_cache_locations = torch.index_select(
+            sorted_lxu_cache_locations, 0, cache_location_indices
+        )
+
+        assert torch.equal(expanded_lxu_cache_locations, duplicate_lookup_output)
+
+    @unittest.skipIf(*gpu_unavailable)
+    @unittest.skipIf(
+        torch.version.hip is None,
+        "Only relevant on ROCm (TBE cache kernels require warpSize == 64)",
+    )
+    def test_warp_size_guard_positive_path_rocm(self) -> None:
+        """
+        Positive-path smoke test for the ROCm TBE cache ops. On warpSize 64
+        CDNA hosts (the only AMD hardware currently in CI), LRU/LFU prefetch
+        and forward cache lookup must succeed without raising. Exercises:
+          * LRU populate via prefetch() -> lru_cache_populate_cuda
+          * LFU populate via prefetch() -> lfu_cache_populate_cuda
+          * Cache lookup via forward() -> lxu_cache_lookup_cuda
+
+        These ops each hold a runtime check requiring warpSize == 64 on
+        ROCm; this test is the regression guard that the check stays a
+        no-op on CDNA. Negative-path testing (raising on warpSize != 64)
+        requires either RDNA hardware or an injectable
+        at::cuda::warp_size() indirection; defer until gfx11xx lands in CI.
+        """
+        T = 2
+        D = 4
+        B = 4
+        L = 4
+        log_E = 3
+
+        for cache_algorithm in (CacheAlgorithm.LRU, CacheAlgorithm.LFU):
+            cc, _, min_Es, _ = generate_cache_tbes(
+                T,
+                D,
+                log_E,
+                mixed=False,
+                cache_algorithm=cache_algorithm,
+                use_int_weight=True,
+            )
+
+            requests = generate_requests(1, B, T, L, min_Es, reuse=0.1)
+            indices, offsets, _, _ = requests[0].unpack_4()
+            indices = indices.long()
+            offsets = offsets.long()
+
+            # Exercises {lru,lfu}_cache_populate_cuda via prefetch — hits
+            # the TORCH_CHECK(warp_size == 64) guard.
+            cc.prefetch(indices, offsets)
+
+            # Exercises lxu_cache_lookup_cuda via the forward lookup path —
+            # hits the TORCH_CHECK(warp_size == 64) guard.
+            output = cc(indices, offsets)
+
+            # Reaching this line means all three guards passed on CDNA.
+            self.assertIsInstance(output, torch.Tensor)
+            self.assertGreater(output.numel(), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,81 @@
+[tool.black]
+line-length = 79
+target-version = ["py36"]
+include = '\.py?$'
+exclude = '''
+/(
+    thirdparty |
+    \.eggs |
+    \.git |
+    \.hg |
+    \.mypy_cache |
+    \.tox |
+    \.venv |
+    _build |
+    buck-out |
+    build |
+    dist
+)/
+'''
+
+[build-system]
+requires = ["setuptools", "wheel", "Cython>=3.1"]
+
+[project]
+name = "nvtx"
+version = "0.2.15"
+description="Python NVTX - Python code annotation library"
+readme = "README.md"
+license = "Apache-2.0 WITH LLVM-exception"
+license-files = ["LICENSE.txt"]
+authors = [{name = "NVIDIA Corporation"}]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/NVIDIA/NVTX"
+Documentation = "https://nvidia.github.io/NVTX/python/"
+Repository = "https://github.com/NVIDIA/NVTX"
+License = "https://nvidia.github.io/NVTX/LICENSE.txt"
+Issues = "https://github.com/NVIDIA/NVTX/issues"
+
+[project.optional-dependencies]
+test = ["pytest", "setuptools"]
+docs = ["sphinx", "nvidia_sphinx_theme"]
+
+[tool.setuptools.package-data]
+"nvtx._lib" = ["*.pxd"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",  # Recomended by pytest: https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html#choosing-a-test-layout-import-rules
+]
+
+[tool.cibuildwheel]
+skip = ["*musllinux*", "cp38-*"]
+build = "cp*"
+test-command = """
+pytest {package}/tests
+pytest --enable-injection {package}/tests
+"""
+test-extras = "test"
+enable = "cpython-freethreading"
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64", "aarch64"]
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
+
+[tool.cibuildwheel.macos]
+archs = ["all"]

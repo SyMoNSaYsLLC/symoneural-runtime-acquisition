@@ -1,0 +1,1927 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
+# pyre-strict
+
+import contextlib
+import functools
+import logging
+import math
+import os
+import random
+from contextlib import nullcontext
+from typing import Callable, Optional
+
+import click
+import fbgemm_gpu
+import numpy as np
+import torch
+from torch.profiler import profile, schedule
+
+logger: logging.Logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+# pyre-fixme[16]: Module `fbgemm_gpu` has no attribute `open_source`.
+open_source: bool = getattr(fbgemm_gpu, "open_source", False)
+
+if open_source:
+    # pyre-ignore[21]
+    from bench_utils import benchmark_torch_function
+else:
+    from fbgemm_gpu.bench.bench_utils import benchmark_torch_function
+
+    torch.ops.load_library("//deeplearning/fbgemm/fbgemm_gpu:sparse_ops")
+    torch.ops.load_library("//deeplearning/fbgemm/fbgemm_gpu:sparse_ops_cpu")
+    torch.ops.load_library("//deeplearning/fbgemm/fbgemm_gpu/codegen:index_select_ops")
+
+
+@click.group()
+def cli() -> None:
+    pass
+
+
+@cli.command()
+@click.option("--world-size", default=128)
+@click.option("--num-tables", default=10)
+@click.option("--min-len", default=10000)
+@click.option("--max-len", default=20000)
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="device_trace_{ospid}.json",
+)
+@click.option(
+    "--device",
+    type=click.Choice(["cpu", "cuda"]),
+    default="cuda",
+    help="Device to run the benchmark on. Default is cuda.",
+)
+def device(
+    world_size: int,
+    num_tables: int,
+    min_len: int,
+    max_len: int,
+    export_trace: bool,
+    trace_url: str,
+    device: str,
+) -> None:
+    if device == "cuda" and not torch.cuda.is_available():
+        raise click.UsageError("CUDA requested but not available.")
+
+    num_segments = num_tables * world_size
+    lengths = torch.randint(min_len, max_len, size=(num_segments,))
+    offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(lengths)
+    permute = list(range(num_segments))
+    random.shuffle(permute)
+    permute_tensor = torch.tensor(permute)
+    permuted_length = torch.index_select(lengths, 0, permute_tensor)
+    permuted_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(permuted_length)
+    jagged_size = offsets[-1]
+
+    if int(jagged_size.item()) > 2**31 - 1:
+        raise ValueError(
+            f"jagged_size ({int(jagged_size.item())}) exceeds int32 max. "
+            f"Reduce world_size, num_tables, or length range."
+        )
+
+    permute_tensor = permute_tensor.to(device)
+    offsets = offsets.to(device)
+    permuted_offsets = permuted_offsets.to(device)
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    with context_factory(_kineto_trace_handler):
+        time, output = benchmark_torch_function(
+            torch.ops.fbgemm.expand_into_jagged_permute,
+            (permute_tensor, offsets, permuted_offsets, jagged_size),
+        )
+
+    num_bytes = (
+        permute_tensor.numel() * permute_tensor.element_size()
+        + offsets.numel() * offsets.element_size()
+        + permuted_offsets.numel() * permuted_offsets.element_size()
+        + output.numel() * output.element_size()
+    )
+    logging.info(f"expand_into_jagged_permute {time} sec {num_bytes / time / 1e9} GB/s")
+
+
+@cli.command()
+@click.option("--row-size", default=25600)
+@click.option("--batch-size", default=4096)
+@click.option("--unique-batch-size", default=1024)
+@click.option("--input-precision", type=str, default="fp32")
+@click.option(
+    "--device",
+    type=click.Choice(["cpu", "cuda"]),
+    default="cuda",
+    help="Device to run benchmark on.",
+)
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="batch_reuse_index_select_{phase}_trace_{ospid}.json",
+)
+def batch_reuse_index_select_device(
+    row_size: int,
+    batch_size: int,
+    unique_batch_size: int,
+    input_precision: str,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    # A function for generating indices in batch_reuse
+    # pyre-fixme[11]: Annotation `array` is not defined as a type.
+    def gen_inverse_index(curr_size: int, final_size: int) -> np.array:
+        inverse_index = list(range(curr_size))
+        np_arr = np.array(inverse_index)
+        for _ in range(final_size - curr_size):
+            inverse_index.append(np.random.randint(0, curr_size))
+            np_arr = np.array(inverse_index)
+            np.random.shuffle(np_arr)
+        return np_arr
+
+    dtype = torch.float
+    if input_precision == "fp32":
+        dtype = torch.float
+    elif input_precision == "fp16":
+        dtype = torch.half
+    else:
+        raise RuntimeError(f"Does not support data type {input_precision}")
+
+    # Fixed: use device-aware tensor creation instead of torch.cuda.IntTensor
+    # (see tritonbench batch_reuse_index_select operator for the corrected version)
+    indices = torch.tensor(
+        gen_inverse_index(unique_batch_size, batch_size),
+        dtype=torch.int32,
+        device=device,
+    )
+
+    input = torch.rand(
+        unique_batch_size,
+        row_size,
+        dtype=dtype,
+        device=device,
+    )
+    input.requires_grad = True
+    num_bytes = 2 * batch_size * row_size * input.element_size()
+
+    def _kineto_trace_handler(p: profile, phase: str) -> None:
+        p.export_chrome_trace(trace_url.format(phase=phase, ospid=os.getpid()))
+
+    def _export_kineto_trace(
+        fn: Callable[[], None],
+        phase: str,
+        num_warmup: int = 2,
+        num_active: int = 1,
+    ) -> None:
+        """Run a separate profiling pass with proper schedule-based tracing.
+
+        The bare ``profile(on_trace_ready=...)`` pattern fails because Kineto's
+        default 5-second GPU warmup period expires after the fast benchmark
+        finishes, resulting in 0 GPU records.  Using ``schedule()`` with
+        explicit ``prof.step()`` calls avoids this entirely.
+        """
+        if not export_trace:
+            return
+        total_iters = num_warmup + num_active
+        is_cuda = device != "cpu"
+        # pyre-fixme[16]: Module `profiler` has no attribute `ProfilerActivity`.
+        activities = [torch.profiler.ProfilerActivity.CPU]
+        if is_cuda:
+            # pyre-fixme[16]: Module `profiler` has no attribute `ProfilerActivity`.
+            activities.append(torch.profiler.ProfilerActivity.CUDA)
+        with profile(
+            activities=activities,
+            schedule=schedule(wait=0, warmup=num_warmup, active=num_active, repeat=1),
+            record_shapes=True,
+            on_trace_ready=lambda p: _kineto_trace_handler(p, phase),
+        ) as prof:
+            for _ in range(total_iters):
+                fn()
+                if is_cuda:
+                    torch.cuda.synchronize(device)
+                prof.step()
+
+    time, output = benchmark_torch_function(
+        torch.ops.fbgemm.index_select_dim0, (input, indices, 0, unique_batch_size)
+    )
+    _export_kineto_trace(
+        lambda: torch.ops.fbgemm.index_select_dim0(
+            input, indices, 0, unique_batch_size
+        ),
+        "fwd",
+    )
+    logging.info(
+        f"index_select_dim0 forward: {dtype}, {num_bytes} bytes read/write, {time * 1e3} ms, {num_bytes / time / 1e9} GB/s"
+    )
+
+    grad = torch.rand_like(output, dtype=dtype, device=device)
+    num_bytes = (input.numel() + output.numel()) * input.element_size()
+    time, _ = benchmark_torch_function(
+        functools.partial(output.backward, retain_graph=True), (grad,)
+    )
+    _export_kineto_trace(
+        lambda: output.backward(grad, retain_graph=True),
+        "bwd",
+    )
+    logging.info(
+        f"index_select_dim0 backward: {dtype}, {num_bytes} bytes read/write, {time * 1e3} ms, {num_bytes / time / 1e9} GB/s"
+    )
+
+
+@cli.command()
+@click.option("--max-seq-length", default=500)
+@click.option("--batch-size", default=4096)
+@click.option("--num-cols", default=256)
+@click.option("--num-jagged-tensor-rows", default=4096)
+@click.option("--num-zero-padding", default=1024)
+@click.option("--index-dtype", type=click.Choice(["int", "long"]), default="int")
+@click.option(
+    "--jagged-tensor-dtype", type=click.Choice(["float", "half"]), default="float"
+)
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="jagged_index_select_2d_{phase}_trace_{ospid}.json",
+)
+@click.option(
+    "--device",
+    type=click.Choice(["cpu", "cuda"]),
+    default="cuda",
+    help="Device to run the benchmark on. Default is cuda.",
+)
+def jagged_index_select_2d_bench(
+    max_seq_length: int,
+    batch_size: int,
+    num_cols: int,
+    num_jagged_tensor_rows: int,
+    num_zero_padding: int,
+    index_dtype: str,
+    jagged_tensor_dtype: str,
+    export_trace: bool,
+    trace_url: str,
+    device: str,
+) -> None:
+    if device == "cuda" and not torch.cuda.is_available():
+        raise click.UsageError("CUDA requested but not available.")
+
+    if num_zero_padding > batch_size:
+        raise ValueError(
+            f"num_zero_padding ({num_zero_padding}) must be <= batch_size ({batch_size})"
+        )
+
+    def jagged_index_select_2d_ref(
+        values: torch.Tensor, lengths: torch.Tensor, inverse_lookup: torch.Tensor
+    ) -> torch.Tensor:
+        offsets = torch.ops.fbgemm.asynchronous_exclusive_cumsum(lengths)
+        end_offsets = offsets + lengths
+        full_start_offset = torch.index_select(offsets, 0, inverse_lookup)
+        full_end_offset = torch.index_select(end_offsets, 0, inverse_lookup)
+        index_ranges = torch.stack(
+            (full_start_offset, full_end_offset), dim=0
+        ).transpose(0, 1)
+
+        to_be_merged_tensors = []
+        for row in index_ranges:
+            to_be_merged_tensors.append(torch.arange(row[0], row[1], device=device))
+        all_indices = torch.cat(to_be_merged_tensors, dim=0)
+        new_embeddings = torch.index_select(values, 0, all_indices)
+        return new_embeddings
+
+    index_t = {"int": torch.int, "long": torch.long}[index_dtype]
+    scalar_t = {"float": torch.float, "half": torch.half}[jagged_tensor_dtype]
+
+    lengths = torch.randint(
+        low=0,
+        high=max_seq_length,
+        size=(num_jagged_tensor_rows,),
+        dtype=index_t,
+        device=device,
+    )
+
+    jagged_size = int(lengths.sum().item())
+    values_numel = jagged_size * num_cols
+    if values_numel > 2**31 - 1:
+        raise ValueError(
+            f"values numel ({values_numel}) exceeds int32 max. "
+            f"The CUDA kernel uses 32-bit indexing. "
+            f"Reduce num_jagged_tensor_rows, max_seq_length, or num_cols."
+        )
+
+    indices, _ = torch.sort(
+        torch.randint(
+            low=0,
+            high=num_jagged_tensor_rows,
+            size=(batch_size,),
+            dtype=index_t,
+            device=device,
+        )
+    )
+    values = torch.rand(
+        jagged_size,
+        num_cols,
+        dtype=scalar_t,
+        device=device,
+    )
+    values.requires_grad = True
+
+    indices[batch_size - num_zero_padding :] = 0
+
+    def _kineto_trace_handler(p: profile, phase: str) -> None:
+        p.export_chrome_trace(trace_url.format(phase=phase, ospid=os.getpid()))
+
+    def _export_kineto_trace(
+        fn: Callable[[], None],
+        phase: str,
+        num_warmup: int = 2,
+        num_active: int = 1,
+    ) -> None:
+        """Run a separate profiling pass with proper schedule-based tracing."""
+        if not export_trace:
+            return
+        total_iters = num_warmup + num_active
+        is_cuda = device != "cpu"
+        # pyre-fixme[16]: Module `profiler` has no attribute `ProfilerActivity`.
+        activities = [torch.profiler.ProfilerActivity.CPU]
+        if is_cuda:
+            # pyre-fixme[16]: Module `profiler` has no attribute `ProfilerActivity`.
+            activities.append(torch.profiler.ProfilerActivity.CUDA)
+        with profile(
+            activities=activities,
+            schedule=schedule(wait=0, warmup=num_warmup, active=num_active, repeat=1),
+            record_shapes=True,
+            on_trace_ready=lambda p: _kineto_trace_handler(p, phase),
+        ) as prof:
+            for _ in range(total_iters):
+                fn()
+                if is_cuda:
+                    torch.cuda.synchronize(device)
+                prof.step()
+
+    time, (output, _) = benchmark_torch_function(
+        torch.ops.fbgemm.jagged_index_select,
+        (values, lengths, indices),
+        num_warmups=10,
+        iters=100,
+        device=device,
+    )
+    _export_kineto_trace(
+        lambda: torch.ops.fbgemm.jagged_index_select(values, lengths, indices),
+        "fwd",
+        num_warmup=10,
+        num_active=5,
+    )
+
+    # Skip the reference implementation when tracing — it has an O(batch_size)
+    # Python for-loop that creates thousands of tensors per call, making it
+    # extremely slow for large configs.  We only need fbgemm kernel timings.
+    time_ref = None
+    output_ref = None
+    if not export_trace:
+        time_ref, output_ref = benchmark_torch_function(
+            jagged_index_select_2d_ref,
+            (values, lengths, indices),
+            num_warmups=10,
+            iters=100,
+            device=device,
+        )
+
+    logging.info(
+        f"jagged_index_select_2d_bench "
+        f"(max_seq_length={max_seq_length}, "
+        f"batch_size={batch_size}, "
+        f"num_cols={num_cols}, "
+        f"num_jagged_tensor_rows={num_jagged_tensor_rows}, "
+        f"num_zero_padding={num_zero_padding}, "
+        f"index_dtype={index_dtype}, "
+        f"jagged_tensor_dtype={jagged_tensor_dtype})"
+    )
+    ref_str = f", ref {time_ref * 1e3:.3f} ms" if time_ref is not None else ""
+    logging.info(f"forward: fbgemm {time * 1e3:.3f} ms{ref_str}")
+
+    grad = torch.rand_like(output)
+    time, _ = benchmark_torch_function(
+        functools.partial(output.backward, retain_graph=True),
+        (grad,),
+        num_warmups=10,
+        iters=100,
+        device=device,
+    )
+    _export_kineto_trace(
+        lambda: output.backward(grad, retain_graph=True),
+        "bwd",
+        num_warmup=10,
+        num_active=5,
+    )
+
+    time_ref = None
+    if not export_trace and output_ref is not None:
+        time_ref, _ = benchmark_torch_function(
+            functools.partial(output_ref.backward, retain_graph=True),
+            (grad,),
+            num_warmups=10,
+            iters=100,
+            device=device,
+        )
+    ref_str = f", ref {time_ref * 1e3:.3f} ms" if time_ref is not None else ""
+    logging.info(f"backward: fbgemm {time * 1e3:.3f} ms{ref_str}")
+
+
+@cli.command()
+@click.option("--row-size", default=512)
+@click.option("--batch-size", default=4096)
+@click.option("--unique-batch-size", default=1024)
+@click.option("--input-precision", type=str, default="fp32")
+@click.option("--sort-indices", type=bool, default=True)
+@click.option("--num-groups", default=32)
+@click.option(
+    "--device",
+    type=str,
+    default="cuda",
+    help="Device to run on (cuda or cpu). Default is cuda.",
+)
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="group_index_select_2d_{phase}_trace_{ospid}.json",
+)
+@click.option(
+    "--input-dims",
+    type=str,
+    default=None,
+    help="JSON list of [num_rows, row_size] per group, e.g. '[[27330,96],[4914,96]]'. "
+    "When provided, --row-size, --batch-size, --unique-batch-size, and --num-groups are ignored.",
+)
+@click.option(
+    "--input-strides",
+    type=str,
+    default=None,
+    help="JSON list of [stride0, stride1] per group. Defaults to contiguous strides if not provided.",
+)
+@click.option(
+    "--index-dim", type=int, default=None, help="Number of indices per group."
+)
+@click.option(
+    "--manual-seed/--skip-manual-seed",
+    default=True,
+    help="Use manual seed for reproduction.",
+)
+def group_index_select_2d_bench(
+    row_size: int,
+    batch_size: int,
+    unique_batch_size: int,
+    input_precision: str,
+    sort_indices: bool,
+    num_groups: int,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+    input_dims: Optional[str],
+    input_strides: Optional[str],
+    index_dim: Optional[int],
+    manual_seed: bool,
+) -> None:
+    # Input validation (backported from tritonbench implementation)
+    if unique_batch_size > batch_size:
+        raise ValueError(
+            f"unique_batch_size ({unique_batch_size}) must be <= batch_size "
+            f"({batch_size})"
+        )
+
+    # set manual seed for reproducibility
+    if manual_seed:
+        torch.manual_seed(42)
+        np.random.seed(42)
+
+    def gen_inverse_index(curr_size: int, final_size: int) -> np.array:
+        inverse_index = list(range(curr_size))
+        np_arr = np.array(inverse_index)
+        for _ in range(final_size - curr_size):
+            inverse_index.append(np.random.randint(0, curr_size))
+            np_arr = np.array(inverse_index)
+            np.random.shuffle(np_arr)
+        return np_arr
+
+    dtype = torch.float
+    if input_precision == "fp32":
+        dtype = torch.float
+    elif input_precision == "fp16":
+        dtype = torch.half
+    else:
+        raise RuntimeError(f"Does not support data type {input_precision}")
+
+    offset_indices_group = []
+    indices_group = []
+    for i in range(num_groups):
+        # Fixed: use torch.tensor with explicit device instead of torch.cuda.IntTensor
+        indices = torch.tensor(
+            gen_inverse_index(unique_batch_size, batch_size),
+            dtype=torch.int32,
+            device=device,
+        )
+        if sort_indices:
+            indices, _ = indices.sort()
+        indices_group.append(indices)
+        indices = torch.add(indices, batch_size * i)
+        offset_indices_group.append(indices)
+
+    offset_indices = torch.concat(offset_indices_group)
+
+    input = torch.rand(
+        num_groups * batch_size,
+        row_size,
+        dtype=dtype,
+        device=device,
+    )
+    input.requires_grad = True
+
+    num_bytes = 2 * batch_size * row_size * input.element_size() * num_groups
+
+    bench_kwargs = {"num_warmups": 10, "iters": 100}
+
+    def _kineto_trace_handler(p: profile, phase: str) -> None:
+        p.export_chrome_trace(trace_url.format(phase=phase, ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    # Benchmark forward
+    time_ref, output_ref = benchmark_torch_function(
+        torch.index_select,
+        (input, 0, offset_indices),
+        # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+        # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+        **bench_kwargs,
+    )
+
+    input_group = input.split(batch_size, 0)
+    with context_factory(lambda p: _kineto_trace_handler(p, "fwd")):
+        time, output_group = benchmark_torch_function(
+            torch.ops.fbgemm.group_index_select_dim0,
+            (input_group, indices_group),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+    logging.info(
+        f"forward: PyTorch batch {time_ref:.5f} sec ({num_bytes / time_ref / 1e9:.5f} GB/s), "
+        f"fbgemm group {time:.5f} sec ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+    # Benchmark backward
+    grad = torch.rand_like(output_ref)
+    time_ref, _ = benchmark_torch_function(
+        functools.partial(output_ref.backward, retain_graph=True),
+        (grad,),
+        # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+        # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+        **bench_kwargs,
+    )
+
+    # pyre-fixme[6]: For 1st argument expected `Union[List[Tensor],
+    #  typing.Tuple[Tensor, ...]]` but got `Tensor`.
+    cat_output = torch.cat(output_group)
+    with context_factory(lambda p: _kineto_trace_handler(p, "bwd")):
+        time, _ = benchmark_torch_function(
+            functools.partial(cat_output.backward, retain_graph=True),
+            (grad,),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+    logging.info(
+        f"backward: PyTorch batch {time_ref:.5f} sec ({num_bytes / time_ref / 1e9:.5f} GB/s), "
+        f"fbgemm group {time:.5f} sec ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option("--num-vecs", default=2048)
+@click.option("--num-entries-per-vec", default=1024)
+@click.option("--dtype", type=str, default="long")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="asynchronous_complete_cumsum_2d_trace_{ospid}.json",
+)
+def asynchronous_complete_cumsum_2d_bench(
+    num_vecs: int,
+    num_entries_per_vec: int,
+    dtype: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    # Reference code from TorchRec https://github.com/pytorch/torchrec/pull/332
+    @torch.jit.script
+    def asynchronous_complete_cumsum_2d_ref(lengths: torch.Tensor) -> torch.Tensor:
+        f, b = lengths.shape
+        offsets_0 = lengths.new_zeros((f, 1))
+        offsets_1 = torch.cumsum(lengths, dim=-1).to(lengths.dtype)
+        offsets = torch.cat([offsets_0, offsets_1], dim=-1)
+        return offsets
+
+    assert dtype == "int" or dtype == "long", "Only int and long are supported"
+    index_dtype = torch.int64 if dtype == "long" else torch.int32
+
+    # Input validation — backported from tritonbench implementation.
+    # The kernel may use PackedTensorAccessor32 with int32 indexing.
+    numel = num_vecs * num_entries_per_vec
+    if numel >= 2**31:
+        raise ValueError(
+            f"Input numel = {num_vecs} * {num_entries_per_vec} = {numel} "
+            f"exceeds int32 max ({2**31 - 1}). Reduce num_vecs or num_entries_per_vec."
+        )
+
+    # Fix: use dtype= directly instead of .type() to avoid creating a
+    # default-dtype intermediate tensor.
+    x = torch.randint(
+        low=0,
+        high=100,
+        size=(num_vecs, num_entries_per_vec),
+        dtype=index_dtype,
+    )
+    x = x.cuda()
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    time_ref, _ = benchmark_torch_function(
+        asynchronous_complete_cumsum_2d_ref, (x,), num_warmups=100, iters=1000
+    )
+
+    with context_factory(_kineto_trace_handler):
+        # Reduce iterations when tracing to keep trace files manageable.
+        # With 1000 iters, this kernel produces 10GB+ trace files that
+        # overwhelm JSON parsers.
+        trace_warmups = 10 if export_trace else 100
+        trace_iters = 100 if export_trace else 1000
+        time, _ = benchmark_torch_function(
+            torch.ops.fbgemm.asynchronous_complete_cumsum,
+            (x,),
+            num_warmups=trace_warmups,
+            iters=trace_iters,
+        )
+
+    logging.info(
+        f"asynchronous_complete_cumsum_2d_bench: input shape {x.shape}, dtype {dtype}"
+    )
+    logging.info(f"ref time: {time_ref:.5f} sec")
+    logging.info(f"fbgemm_gpu time: {time:.5f} sec")
+
+
+@cli.command()
+@click.option("--batch-size", default=8192)
+@click.option("--table-size", default=20)
+@click.option("--length", default=50)
+@click.option("--num-ads", default=100)
+@click.option("--dtype", type=click.Choice(["float", "long"]), default="long")
+@click.option("--itype", type=click.Choice(["int", "long"]), default="int")
+@click.option("--broadcast-indices", type=bool, default=True)
+@click.option("--device", type=str, default="cpu")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="reorder_batched_ad_indices_trace_{ospid}.json",
+)
+def reorder_batched_ad_indices_bench(
+    batch_size: int,
+    table_size: int,
+    length: int,
+    num_ads: int,
+    dtype: str,
+    itype: str,
+    broadcast_indices: bool,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    assert dtype == "float" or dtype == "long", "Only int and long are supported"
+    data_type = torch.int64 if dtype == "long" else torch.float
+    data_size = 8 if dtype == "long" else 4
+
+    assert itype == "int" or itype == "long", "Only int and long are supported"
+    index_type = torch.int64 if itype == "long" else torch.int32
+
+    if broadcast_indices:
+        cat_ad_indices = (
+            torch.randint(
+                low=0,
+                high=100,
+                size=(batch_size * table_size * length,),
+            )
+            .int()
+            .to(device)
+            .to(data_type)
+        )
+        cat_ad_lengths = (
+            torch.cat(
+                [
+                    torch.tensor([length for _ in range(table_size)])
+                    for _ in range(batch_size)
+                ],
+                0,
+            )
+            .int()
+            .to(device)
+        )
+    else:
+        cat_ad_indices = (
+            torch.randint(
+                low=0,
+                high=100,
+                size=(batch_size * table_size * num_ads * length,),
+            )
+            .int()
+            .to(device)
+            .to(data_type)
+        )
+        cat_ad_lengths = (
+            torch.cat(
+                [
+                    torch.tensor([length for _ in range(table_size * num_ads)])
+                    for _ in range(batch_size)
+                ],
+                0,
+            )
+            .int()
+            .to(device)
+        )
+
+    batch_offsets = (
+        torch.tensor([num_ads * b for b in range(batch_size + 1)]).int()
+    ).to(
+        device
+    )  # Fixed: removed unconditional .cuda() call
+    num_ads_in_batch = batch_size * num_ads
+    reordered_cat_ad_lengths = torch.ops.fbgemm.reorder_batched_ad_lengths(
+        cat_ad_lengths, batch_offsets, num_ads_in_batch, broadcast_indices
+    ).to(device)
+
+    cat_ad_offsets = (
+        torch.ops.fbgemm.asynchronous_complete_cumsum(cat_ad_lengths)
+        .to(index_type)
+        .to(device)
+    )
+    reordered_cat_ad_offsets = (
+        torch.ops.fbgemm.asynchronous_complete_cumsum(reordered_cat_ad_lengths)
+        .to(index_type)
+        .to(device)
+    )
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    with context_factory(_kineto_trace_handler):
+        time, _ = benchmark_torch_function(
+            torch.ops.fbgemm.reorder_batched_ad_indices,
+            (
+                cat_ad_offsets,
+                cat_ad_indices,
+                reordered_cat_ad_offsets,
+                batch_offsets,
+                num_ads_in_batch,
+                broadcast_indices,
+                batch_size * table_size * num_ads * length,
+            ),
+            num_warmups=100,
+            iters=1000,
+        )
+    num_bytes = batch_size * table_size * (num_ads + 1) * length * data_size
+    logging.info(
+        f"fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option("--batch-size", default=8192)
+@click.option("--table-size", default=20)
+@click.option("--length", default=50)
+@click.option("--num-ads", default=100)
+@click.option("--broadcast-indices", type=bool, default=True)
+@click.option("--device", type=str, default="cpu")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="reorder_batched_ad_lengths_trace_{ospid}.json",
+)
+def reorder_batched_ad_lengths_bench(
+    batch_size: int,
+    table_size: int,
+    length: int,
+    num_ads: int,
+    broadcast_indices: bool,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    # Input validation (backported from tritonbench implementation)
+    num_ads_in_batch = batch_size * num_ads
+    if num_ads_in_batch >= 2**31 - 1:
+        raise ValueError(
+            f"num_ads_in_batch = batch_size * num_ads = {batch_size} * {num_ads} "
+            f"= {num_ads_in_batch} exceeds int32 max ({2**31 - 1}). "
+            f"The kernel uses int32 indexing. Reduce batch_size or num_ads."
+        )
+    if broadcast_indices:
+        num_lengths = batch_size * table_size
+    else:
+        num_lengths = batch_size * table_size * num_ads
+    if num_lengths >= 2**31 - 1:
+        raise ValueError(
+            f"Number of length entries = {num_lengths} exceeds int32 max "
+            f"({2**31 - 1}). Reduce batch_size, table_size, or num_ads."
+        )
+    output_size = batch_size * table_size * num_ads
+    if output_size >= 2**31 - 1:
+        raise ValueError(
+            f"Output size = batch_size * table_size * num_ads = {output_size} "
+            f"exceeds int32 max ({2**31 - 1}). Reduce parameters."
+        )
+
+    if broadcast_indices:
+        cat_ad_lengths = (
+            torch.cat(
+                [
+                    torch.tensor([length for _ in range(table_size)])
+                    for _ in range(batch_size)
+                ],
+                0,
+            )
+            .int()
+            .to(device)
+        )
+    else:
+        cat_ad_lengths = (
+            torch.cat(
+                [
+                    torch.tensor([length for _ in range(table_size * num_ads)])
+                    for _ in range(batch_size)
+                ],
+                0,
+            )
+            .int()
+            .to(device)
+        )
+
+    # Fixed: use .to(device) directly instead of .int().cuda().to(device)
+    # which unconditionally moved to CUDA before moving to the target device
+    batch_offsets = (
+        torch.tensor([num_ads * b for b in range(batch_size + 1)]).int()
+    ).to(device)
+    num_ads_in_batch = batch_size * num_ads
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    with context_factory(_kineto_trace_handler):
+        time, _ = benchmark_torch_function(
+            torch.ops.fbgemm.reorder_batched_ad_lengths,
+            (
+                cat_ad_lengths,
+                batch_offsets,
+                num_ads_in_batch,
+                broadcast_indices,
+            ),
+            num_warmups=100,
+            iters=1000,
+        )
+    num_bytes = batch_size * table_size * (num_ads + 1) * length * 4
+    logging.info(
+        f"fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option(
+    "--batch-size", default=32
+)  # 32 is the representative inference batch size
+@click.option("--table-size", default=20)
+@click.option("--length", default=512)  # long sequence representative case
+@click.option("--num-items", default=100)
+@click.option("--dim", default=256)
+@click.option("--dtype", type=click.Choice(["half", "float"]), default="half")
+@click.option("--itype", type=click.Choice(["int", "long"]), default="int")
+@click.option("--device", type=str, default="cpu")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="reorder_batched_sequence_embeddings_trace_{ospid}.json",
+)
+def reorder_batched_sequence_embeddings_bench(
+    batch_size: int,
+    table_size: int,
+    length: int,
+    num_items: int,
+    dim: int,
+    dtype: str,
+    itype: str,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    assert (
+        dtype == "float" or dtype == "half"
+    ), "Only 32/16bits floating point number are supported"
+    data_type = torch.half if dtype == "half" else torch.float
+
+    assert itype == "int" or itype == "long", "Only int and long are supported"
+    index_type = torch.int64 if itype == "long" else torch.int32
+
+    # The CUDA kernel uses PackedTensorAccessor32 for the 2D embedding tensor
+    # (B*T*A*L, D), so the total numel must fit in int32.
+    tensor_numel = batch_size * table_size * num_items * length * dim
+    assert tensor_numel < 2**31 - 1, (
+        f"B*T*A*L*D = {tensor_numel} exceeds int32 max ({2**31 - 1}). "
+        f"The CUDA kernel uses PackedTensorAccessor32, which requires "
+        f"tensor numel < 2^31. Reduce parameters (currently B={batch_size}, "
+        f"T={table_size}, A={num_items}, L={length}, D={dim})."
+    )
+
+    cat_sequence_embeddings = torch.rand(
+        batch_size * table_size * num_items * length,
+        dim,
+        dtype=data_type,
+    ).to(device)
+    cat_sequence_embeddings_lengths = (
+        torch.cat(
+            [
+                torch.tensor([length for _ in range(table_size * num_items)])
+                for _ in range(batch_size)
+            ],
+            0,
+        )
+        .to(index_type)
+        .to(device)
+    )
+
+    batch_offsets = (
+        torch.tensor([num_items * b for b in range(batch_size + 1)])
+        .to(index_type if device == "cpu" else torch.int32)
+        .to(device)
+    )
+    num_items_in_batch = batch_size * num_items
+    reordered_cat_sequence_embeddings_lengths = (
+        torch.ops.fbgemm.reorder_batched_ad_lengths(
+            cat_sequence_embeddings_lengths,
+            batch_offsets,
+            num_items_in_batch,
+        ).to(device)
+    )
+
+    cat_sequence_embeddings_offsets = (
+        torch.ops.fbgemm.asynchronous_complete_cumsum(cat_sequence_embeddings_lengths)
+        .to(index_type)
+        .to(device)
+    )
+    reordered_cat_sequence_embeddings_offsets = (
+        torch.ops.fbgemm.asynchronous_complete_cumsum(
+            reordered_cat_sequence_embeddings_lengths
+        )
+        .to(index_type)
+        .to(device)
+    )
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    with context_factory(_kineto_trace_handler):
+        time, _ = benchmark_torch_function(
+            torch.ops.fbgemm.reorder_batched_sequence_embeddings,
+            (
+                cat_sequence_embeddings_offsets,
+                cat_sequence_embeddings,
+                reordered_cat_sequence_embeddings_offsets,
+                batch_offsets,
+                num_items_in_batch,
+            ),
+            num_warmups=100,
+            iters=1000,
+        )
+    num_bytes = (
+        batch_size
+        * table_size
+        * num_items
+        * length
+        * dim
+        * cat_sequence_embeddings.element_size()
+    )
+    logging.info(
+        f"fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option("--num-inputs", default=1024)
+@click.option("--rows", default=100)
+@click.option("--columns", default=128)
+@click.option("--num-indices", default=2048)
+@click.option("--timeline", is_flag=True, default=False)
+def index_select_bench(
+    num_inputs: int, rows: int, columns: int, num_indices: int, timeline: bool
+) -> None:
+    input_rows = [rows] * num_inputs
+    input_columns = [columns] * num_inputs
+    input_num_indices = [num_indices] * num_inputs
+    inputs = [
+        torch.rand(
+            rows,
+            cols,
+            dtype=torch.float,
+            device=torch.accelerator.current_accelerator(),
+        )
+        for rows, cols in zip(input_rows, input_columns)
+    ]
+    for i in range(len(inputs)):
+        inputs[i].requires_grad = True
+    indices = [
+        torch.randint(
+            low=0,
+            high=rows,
+            size=(num,),
+            dtype=torch.long,
+            device=torch.accelerator.current_accelerator(),
+        )
+        for num, rows in zip(input_num_indices, input_rows)
+    ]
+
+    concat_inputs = torch.concat([input.flatten().clone().detach() for input in inputs])
+    concat_inputs.requires_grad = True
+    concat_indices = torch.concat(indices)
+
+    gis_inputs = [input.clone().detach() for input in inputs]
+    for i in range(len(gis_inputs)):
+        gis_inputs[i].requires_grad = True
+
+    # Add optimizer to perform zero grad in order to reset gradients
+    # before the accumulation phase
+    optim_index: torch.optim.Optimizer = torch.optim.SGD(inputs, lr=0.1)
+    optim_batch: torch.optim.Optimizer = torch.optim.SGD([concat_inputs], lr=0.1)
+    optim_group: torch.optim.Optimizer = torch.optim.SGD(gis_inputs, lr=0.1)
+
+    def index_select_fwd_ref(
+        inputs: list[torch.Tensor], indices: list[torch.Tensor]
+    ) -> list[torch.Tensor]:
+        outputs = []
+        for input, index in zip(inputs, indices):
+            optim_index.zero_grad()
+            outputs.append(torch.index_select(input, 0, index))
+        return outputs
+
+    def index_select_bwd_ref(
+        outputs: list[torch.Tensor], grads: list[torch.Tensor]
+    ) -> None:
+        for output, grad in zip(outputs, grads):
+            optim_index.zero_grad()
+            output.backward(grad, retain_graph=True)
+
+    def batch_index_select_fwd(
+        concat_inputs: list[torch.Tensor],
+        concat_indices: list[int],
+        input_num_indices: list[int],
+        input_rows: list[int],
+        input_columns: list[int],
+    ) -> torch.autograd.Variable:
+        optim_batch.zero_grad()
+        return torch.ops.fbgemm.batch_index_select_dim0(
+            concat_inputs, concat_indices, input_num_indices, input_rows, input_columns
+        )
+
+    def group_index_select_fwd(
+        gis_inputs: list[torch.Tensor], indices: list[int]
+    ) -> torch.autograd.Variable:
+        optim_group.zero_grad()
+        return torch.ops.fbgemm.group_index_select_dim0(gis_inputs, indices)
+
+    def batch_group_index_select_bwd(
+        output: torch.autograd.Variable,
+        grads: list[torch.Tensor],
+        optim: torch.optim.Optimizer,
+    ) -> torch.autograd.Variable:
+        optim.zero_grad()
+        return output.backward(grads, retain_graph=True)
+
+    bench_kwargs = {"num_warmups": 10, "iters": 10 if timeline else 100}
+    profile_ctx = profile if timeline else contextlib.nullcontext
+
+    with profile_ctx() as prof:
+        time_pyt, out_pyt = benchmark_torch_function(
+            index_select_fwd_ref,
+            (inputs, indices),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+        time_bis, out_bis = benchmark_torch_function(
+            batch_index_select_fwd,
+            (
+                concat_inputs,
+                concat_indices,
+                input_num_indices,
+                input_rows,
+                input_columns,
+            ),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+        time_gis, out_gis = benchmark_torch_function(
+            group_index_select_fwd,
+            (gis_inputs, indices),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+    if timeline:
+        prof.export_chrome_trace("index_select_fwd_trace.json")
+
+    grads = [torch.rand_like(out) for out in out_pyt]
+    concat_grads = torch.concat([grad.flatten() for grad in grads])
+    concat_out_gis = torch.concat([out.flatten() for out in out_gis])
+
+    with profile_ctx() as prof:
+        time_bwd_pyt, _ = benchmark_torch_function(
+            index_select_bwd_ref,
+            (out_pyt, grads),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+        time_bwd_bis, _ = benchmark_torch_function(
+            batch_group_index_select_bwd,
+            (
+                out_bis,
+                concat_grads,
+                optim_batch,
+            ),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+        time_bwd_gis, _ = benchmark_torch_function(
+            batch_group_index_select_bwd,
+            (
+                concat_out_gis,
+                concat_grads,
+                optim_group,
+            ),
+            # pyre-fixme[6]: For 3rd argument expected `bool` but got `int`.
+            # pyre-fixme[6]: For 3rd argument expected `str` but got `int`.
+            **bench_kwargs,
+        )
+
+    if timeline:
+        prof.export_chrome_trace("index_select_bwd_trace.json")
+
+    logging.info(
+        f"torch.index_select forward {time_pyt * 1e6:.2f} us, backward {time_bwd_pyt * 1e6:.2f} us\n"
+        f"torch.ops.fbgemm.batch_index_select forward {time_bis * 1e6:.2f} us, backward {time_bwd_bis * 1e6:.2f} us\n"
+        f"torch.ops.fbgemm.group_index_select_dim0 forward {time_gis * 1e6:.2f} us, backward {time_bwd_gis * 1e6:.2f} us"
+    )
+
+
+@cli.command()
+@click.option("--batch-size", default=8192)
+@click.option("--table-size", default=20)
+@click.option("--length", default=50)
+@click.option("--num-ads", default=100)
+@click.option("--dtype", type=click.Choice(["float", "long"]), default="long")
+@click.option("--itype", type=click.Choice(["int", "long"]), default="int")
+@click.option("--broadcast-indices", type=bool, default=True)
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="cat_reorder_batched_ad_indices_{pass}_trace_{ospid}.json",
+)
+def cat_reorder_batched_ad_indices_bench(
+    batch_size: int,
+    table_size: int,
+    length: int,
+    num_ads: int,
+    dtype: str,
+    itype: str,
+    broadcast_indices: bool,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    assert dtype == "float" or dtype == "long", "Only int and long are supported"
+    data_type = torch.int64 if dtype == "long" else torch.float
+    data_size = 8 if dtype == "long" else 4
+
+    assert itype == "int" or itype == "long", "Only int and long are supported"
+
+    if broadcast_indices:
+        ad_indices = [
+            (
+                torch.randint(
+                    low=0,
+                    high=100,
+                    size=(table_size * length,),
+                )
+                .int()
+                .to(data_type)
+            )
+            for _ in range(batch_size)
+        ]
+        ad_lengths = [
+            torch.tensor([length for _ in range(table_size)]).int()
+            for _ in range(batch_size)
+        ]
+    else:
+        ad_indices = [
+            (
+                torch.randint(
+                    low=0,
+                    high=100,
+                    size=(table_size * num_ads * length,),
+                )
+                .int()
+                .to(data_type)
+            )
+            for _ in range(batch_size)
+        ]
+        ad_lengths = [
+            torch.tensor([length for _ in range(table_size * num_ads)]).int()
+            for _ in range(batch_size)
+        ]
+
+    batch_offsets = torch.tensor([num_ads * b for b in range(batch_size + 1)]).int()
+    num_ads_in_batch = batch_size * num_ads
+
+    # pyre-ignore
+    def pass_1(ad_indices, ad_lengths, batch_offsets, num_ads_in_batch):
+        cat_ad_lengths = torch.cat(ad_lengths, 0).to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+        cat_ad_indices = torch.cat(ad_indices, 0).to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+        batch_offsets = batch_offsets.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+        reordered_cat_ad_lengths = torch.ops.fbgemm.reorder_batched_ad_lengths(
+            cat_ad_lengths, batch_offsets, num_ads_in_batch, broadcast_indices
+        )
+        cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(cat_ad_lengths)
+        reordered_cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(
+            reordered_cat_ad_lengths
+        )
+        reordered_cat_ad_indices = torch.ops.fbgemm.reorder_batched_ad_indices(
+            cat_ad_offsets,
+            cat_ad_indices,
+            reordered_cat_ad_offsets,
+            batch_offsets,
+            num_ads_in_batch,
+            broadcast_indices,
+            batch_size * table_size * num_ads * length,
+        )
+
+        return reordered_cat_ad_indices, reordered_cat_ad_lengths
+
+    # process length on device and process indices on device
+    # pyre-ignore
+    def pass_2(ad_indices, ad_lengths, batch_offsets, num_ads_in_batch):
+        cat_ad_lengths = torch.cat(ad_lengths, 0)
+
+        reordered_cat_ad_lengths = torch.ops.fbgemm.reorder_batched_ad_lengths(
+            cat_ad_lengths, batch_offsets, num_ads_in_batch, broadcast_indices
+        )
+        cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(cat_ad_lengths)
+        reordered_cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(
+            reordered_cat_ad_lengths
+        )
+        cat_ad_indices = torch.cat(ad_indices, 0)
+
+        reordered_cat_ad_indices = torch.ops.fbgemm.reorder_batched_ad_indices(
+            cat_ad_offsets.to(
+                torch.accelerator.current_accelerator(), non_blocking=True
+            ),
+            cat_ad_indices.to(
+                torch.accelerator.current_accelerator(), non_blocking=True
+            ),
+            reordered_cat_ad_offsets.to(
+                torch.accelerator.current_accelerator(), non_blocking=True
+            ),
+            batch_offsets.to(
+                torch.accelerator.current_accelerator(), non_blocking=True
+            ),
+            num_ads_in_batch,
+            broadcast_indices,
+            batch_size * table_size * num_ads * length,
+        )
+
+        return reordered_cat_ad_indices, reordered_cat_ad_lengths.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+
+    # minimize GPU workload + unfused cat + reorder
+    # pyre-ignore
+    def pass_3(ad_indices, ad_lengths, batch_offsets, num_ads_in_batch):
+        cat_ad_lengths = torch.cat(ad_lengths, 0)
+        reordered_cat_ad_lengths = torch.ops.fbgemm.reorder_batched_ad_lengths(
+            cat_ad_lengths, batch_offsets, num_ads_in_batch, broadcast_indices
+        )
+
+        cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(cat_ad_lengths)
+        reordered_cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(
+            reordered_cat_ad_lengths
+        )
+        cat_ad_indices = torch.cat(ad_indices, 0)
+
+        reordered_cat_ad_indices = torch.ops.fbgemm.reorder_batched_ad_indices(
+            cat_ad_offsets,
+            cat_ad_indices,
+            reordered_cat_ad_offsets,
+            batch_offsets,
+            num_ads_in_batch,
+            broadcast_indices,
+            batch_size * table_size * num_ads * length,
+        )
+
+        return reordered_cat_ad_indices.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        ), reordered_cat_ad_lengths.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+
+    # minimize GPU workload + fuse cat + reorder
+    # pyre-ignore
+    def pass_4(ad_indices, ad_lengths, batch_offsets, num_ads_in_batch):
+        cat_ad_lengths = torch.cat(ad_lengths, 0)
+        reordered_cat_ad_lengths = torch.ops.fbgemm.reorder_batched_ad_lengths(
+            cat_ad_lengths, batch_offsets, num_ads_in_batch, broadcast_indices
+        )
+
+        cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(cat_ad_lengths)
+        reordered_cat_ad_offsets = torch.ops.fbgemm.asynchronous_complete_cumsum(
+            reordered_cat_ad_lengths
+        )
+
+        reordered_cat_ad_indices = torch.ops.fbgemm.cat_reorder_batched_ad_indices(
+            cat_ad_offsets,
+            ad_indices,
+            reordered_cat_ad_offsets,
+            batch_offsets,
+            num_ads_in_batch,
+            broadcast_indices,
+            batch_size * table_size * num_ads * length,
+        )
+
+        return reordered_cat_ad_indices.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        ), reordered_cat_ad_lengths.to(
+            torch.accelerator.current_accelerator(), non_blocking=True
+        )
+
+    num_bytes = batch_size * table_size * (num_ads + 1) * length * data_size
+
+    def _kineto_trace_handler(p: profile, pass_name: str) -> None:
+        p.export_chrome_trace(
+            trace_url.format(**{"pass": pass_name}, ospid=os.getpid())
+        )
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    # pyre-ignore
+    def ben(fn, name, ad_indices, ad_lengths, batch_offsets, num_ads_in_batch):
+        with context_factory(lambda p: _kineto_trace_handler(p, name)):
+            time, _ = benchmark_torch_function(
+                fn,
+                (ad_indices, ad_lengths, batch_offsets, num_ads_in_batch),
+                num_warmups=50,
+                iters=500,
+            )
+        logging.info(
+            f"{name} fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+        )
+
+    ben(pass_1, "pass_1", ad_indices, ad_lengths, batch_offsets, num_ads_in_batch)
+    ben(pass_2, "pass_2", ad_indices, ad_lengths, batch_offsets, num_ads_in_batch)
+    ben(pass_3, "pass_3", ad_indices, ad_lengths, batch_offsets, num_ads_in_batch)
+    ben(pass_4, "pass_4", ad_indices, ad_lengths, batch_offsets, num_ads_in_batch)
+
+
+@cli.command()
+@click.option("--num-segments", default=100)
+@click.option("--max-segment-length", default=10000)
+@click.option(
+    "--index-dtype", type=click.Choice(["int", "int64", "float"]), default="float"
+)
+@click.option("--has-weight", is_flag=True, default=False)
+@click.option("--device", type=click.Choice(["cpu", "cuda"]), default="cuda")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="permute_1d_sparse_data_trace_{ospid}.json",
+)
+def permute_1d_sparse_data_bench(
+    num_segments: int,
+    max_segment_length: int,
+    index_dtype: str,
+    has_weight: bool,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    """Benchmark permute_1D_sparse_data operator.
+
+    This operator permutes sparse features (indices and optional weights) according
+    to a given permutation. Commonly used in recommendation systems to reorder
+    embedding tables.
+    """
+    if index_dtype == "int":
+        index_dtype = torch.int32
+    elif index_dtype == "int64":
+        index_dtype = torch.int64
+    elif index_dtype == "float":
+        index_dtype = torch.float32
+    else:
+        raise RuntimeError(f"Does not support data type {index_dtype}")
+
+    # Generate variable-length segments to test vectorization
+    emb_dim = 256
+    lengths = (
+        torch.randint(
+            low=max_segment_length // 2,
+            high=max_segment_length,
+            size=(num_segments,),
+            dtype=torch.int32,
+            device=device,
+        )
+        * emb_dim
+    )
+    total_indices = int(lengths.sum().item())
+    # Generate indices
+    if index_dtype == torch.float32:
+        indices = torch.rand(total_indices, dtype=index_dtype, device=device)
+    else:
+        indices = torch.randint(
+            low=0,
+            high=2**31 - 1,
+            size=(total_indices,),
+            dtype=index_dtype,
+            device=device,
+        )
+
+    # Generate optional weights
+    weights = (
+        torch.rand(total_indices, dtype=torch.float32, device=device)
+        if has_weight
+        else None
+    )
+    # Generate random permutation
+    permute_list = list(range(num_segments))
+    random.shuffle(permute_list)
+    permute = torch.IntTensor(permute_list).to(device)
+
+    def _kineto_trace_handler(p: profile) -> None:
+        p.export_chrome_trace(trace_url.format(ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    # Wrap the operator to flush CPU L3 cache between iterations when tracing.
+    # This produces realistic cold-cache measurements consistent with the GPU path
+    # (which already flushes L2 via flush_gpu_cache_size_mb in benchmark_torch_function).
+    # The aten::zero_ ops appear as separate cpu_op events in the trace and are
+    # filtered out by kernel-pattern matching in the comparison scripts.
+    if export_trace and device == "cpu":
+        _cpu_cache: torch.Tensor = torch.empty(
+            256 * 1024 * 1024 // 4, dtype=torch.float, device="cpu"
+        )
+
+        # pyre-ignore[3, 2]
+        def _bench_fn(permute, lengths, indices, weights, none_arg):
+            _cpu_cache.zero_()
+            return torch.ops.fbgemm.permute_1D_sparse_data(
+                permute, lengths, indices, weights, none_arg
+            )
+
+    else:
+        _bench_fn = torch.ops.fbgemm.permute_1D_sparse_data
+
+    # Benchmark the operation
+    with context_factory(_kineto_trace_handler):
+        time, (permuted_lengths, permuted_indices, permuted_weights) = (
+            benchmark_torch_function(
+                _bench_fn,
+                (permute, lengths, indices, weights, None),
+                num_warmups=100,
+                iters=1000,
+            )
+        )
+
+    # Calculate memory bandwidth
+    num_bytes = (
+        permute.numel() * permute.element_size()
+        + lengths.numel() * lengths.element_size()
+        + indices.numel() * indices.element_size()
+        + permuted_lengths.numel() * permuted_lengths.element_size()
+        + permuted_indices.numel() * permuted_indices.element_size()
+    )
+    if has_weight:
+        assert weights is not None
+        assert permuted_weights is not None
+        num_bytes += (
+            weights.numel() * weights.element_size()
+            + permuted_weights.numel() * permuted_weights.element_size()
+        )
+
+    logging.info(
+        f"permute_1D_sparse_data_bench ("
+        f"num_segments={num_segments}, "
+        f"max_segment_length={max_segment_length}, "
+        f"total_indices={total_indices}, "
+        f"dtype={index_dtype}, "
+        f"with_weights={has_weight}, "
+        f"device={device})"
+    )
+    logging.info(
+        f"fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option("--num-segments", default=40)
+@click.option("--batch-size", default=128)
+@click.option("--max-segment-length", default=2000)
+@click.option(
+    "--index-dtype", type=click.Choice(["int", "int64", "float"]), default="float"
+)
+@click.option("--has-weight", is_flag=True, default=False)
+@click.option("--device", type=click.Choice(["cpu", "cuda"]), default="cuda")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of kineto trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="permute_2d_sparse_data_trace_{ospid}.json",
+    help="Output path for trace file. {ospid} will be replaced with process ID.",
+)
+def permute_2d_sparse_data_bench(
+    num_segments: int,
+    batch_size: int,
+    max_segment_length: int,
+    index_dtype: str,
+    has_weight: bool,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    """Benchmark permute_2D_sparse_data operator.
+
+    This operator permutes 2D sparse features (indices and optional weights) according
+    to a given permutation. The lengths tensor must be 2D with shape [T, B] where
+    T is the number of tables and B is the batch size. Commonly used in recommendation
+    systems to reorder embedding tables.
+    """
+    if index_dtype == "int":
+        index_dtype = torch.int32
+    elif index_dtype == "int64":
+        index_dtype = torch.int64
+    elif index_dtype == "float":
+        index_dtype = torch.float32
+    else:
+        raise RuntimeError(f"Does not support data type {index_dtype}")
+
+    # Generate variable-length segments to test vectorization
+    # lengths must be 2D with shape [T, B] for permute_2D_sparse_data
+    # Use int64 to avoid integer overflow when summing large configurations
+    # (e.g., num_segments=40, batch_size=512, max_segment_length=2000, emb_dim=256
+    # can exceed INT32_MAX ~2.1 billion)
+    emb_dim = 256
+    lengths = (
+        torch.randint(
+            low=max_segment_length // 2,
+            high=max_segment_length,
+            size=(num_segments, batch_size),
+            dtype=torch.int64,
+            device=device,
+        )
+        * emb_dim
+    )
+    total_indices = int(lengths.sum().item())
+    if index_dtype == torch.float32:
+        indices = torch.rand(total_indices, dtype=index_dtype, device=device)
+    else:
+        indices = torch.randint(
+            low=0,
+            high=2**31 - 1,
+            size=(total_indices,),
+            dtype=index_dtype,
+            device=device,
+        )
+
+    # Generate optional weights
+    weights = (
+        torch.rand(total_indices, dtype=torch.float32, device=device)
+        if has_weight
+        else None
+    )
+
+    # Generate random permutation over tables (num_segments), not over T*B
+    permute_list = list(range(num_segments))
+    random.shuffle(permute_list)
+    permute = torch.tensor(permute_list, dtype=torch.int32, device=device)
+
+    # Wrap the operator to flush CPU L3 cache between iterations when tracing.
+    # This produces realistic cold-cache measurements consistent with the GPU path
+    # (which already flushes L2 via flush_gpu_cache_size_mb in benchmark_torch_function).
+    # The aten::zero_ ops appear as separate cpu_op events in the trace and are
+    # filtered out by kernel-pattern matching in the comparison scripts.
+    if export_trace and device == "cpu":
+        _cpu_cache: torch.Tensor = torch.empty(
+            256 * 1024 * 1024 // 4, dtype=torch.float, device="cpu"
+        )
+
+        # pyre-ignore[3, 2]
+        def _bench_fn_2d(permute, lengths, indices, weights, none_arg):
+            _cpu_cache.zero_()
+            return torch.ops.fbgemm.permute_2D_sparse_data(
+                permute, lengths, indices, weights, none_arg
+            )
+
+    else:
+        _bench_fn_2d = torch.ops.fbgemm.permute_2D_sparse_data
+
+    # Benchmark the operation
+    # Create a context factory for kineto tracing if export_trace is enabled
+    if export_trace:
+        import os
+
+        from torch.profiler import profile
+
+        def _kineto_trace_handler(p: profile) -> None:
+            trace_url_expanded = trace_url.replace("{ospid}", str(os.getpid()))
+            p.export_chrome_trace(trace_url_expanded)
+
+        # pyre-ignore[3]
+        def context_factory():
+            return profile(on_trace_ready=_kineto_trace_handler)
+
+        with context_factory():
+            time, (permuted_lengths, permuted_indices, permuted_weights) = (
+                benchmark_torch_function(
+                    _bench_fn_2d,
+                    (permute, lengths, indices, weights, None),
+                    num_warmups=100,
+                    iters=1000,
+                    device=device,
+                )
+            )
+    else:
+        time, (permuted_lengths, permuted_indices, permuted_weights) = (
+            benchmark_torch_function(
+                _bench_fn_2d,
+                (permute, lengths, indices, weights, None),
+                num_warmups=100,
+                iters=1000,
+                device=device,
+            )
+        )
+
+    # Calculate memory bandwidth
+    num_bytes = (
+        permute.numel() * permute.element_size()
+        + lengths.numel() * lengths.element_size()
+        + indices.numel() * indices.element_size()
+        + permuted_lengths.numel() * permuted_lengths.element_size()
+        + permuted_indices.numel() * permuted_indices.element_size()
+    )
+    if has_weight:
+        assert weights is not None
+        assert permuted_weights is not None
+        num_bytes += (
+            weights.numel() * weights.element_size()
+            + permuted_weights.numel() * permuted_weights.element_size()
+        )
+
+    logging.info(
+        f"permute_2D_sparse_data_bench ("
+        f"num_tables={num_segments}, "
+        f"batch_size={batch_size}, "
+        f"max_segment_length={max_segment_length}, "
+        f"total_indices={total_indices}, "
+        f"dtype={index_dtype}, "
+        f"with_weights={has_weight}, "
+        f"device={device})"
+    )
+    logging.info(
+        f"fbgemm_gpu time: {time * 1000:.5f} ms ({num_bytes / time / 1e9:.5f} GB/s)"
+    )
+
+
+@cli.command()
+@click.option("--row-size", default=2560000)
+@click.option("--batch-size", default=2048)
+@click.option("--indices-num", default=300000)
+@click.option("--lengths-num", default=300000)
+@click.option("--bucket-num", default=16)
+@click.option("--input-precision", type=str, default="long")
+@click.option("--sequence/--no-sequence", default=False)
+@click.option("--device", type=click.Choice(["cpu", "cuda"]), default="cpu")
+@click.option(
+    "--export-trace",
+    is_flag=True,
+    default=False,
+    help="Enable export of trace for profiling. Default is False.",
+)
+@click.option(
+    "--trace-url",
+    type=str,
+    default="block_bucketize_sparse_features_{name}_trace_{ospid}.json",
+)
+def block_bucketize_sparse_features_bench(
+    row_size: int,
+    batch_size: int,
+    indices_num: int,
+    lengths_num: int,
+    bucket_num: int,
+    input_precision: str,
+    sequence: bool,
+    device: str,
+    export_trace: bool,
+    trace_url: str,
+) -> None:
+    dtype = torch.int
+    if input_precision == "int":
+        dtype = torch.int
+    elif input_precision == "long":
+        dtype = torch.long
+    else:
+        raise RuntimeError(f"Does not support data type {input_precision}")
+
+    lengths_num = lengths_num // batch_size * (batch_size)
+    assert lengths_num <= indices_num
+    avg_len = indices_num // lengths_num
+    indices = torch.randint(0, row_size, (indices_num,), dtype=dtype)
+    weights = torch.randint(0, row_size, (indices_num,), dtype=torch.float)
+    lengths = [0] * lengths_num
+    total = 0
+    for i in range(lengths_num):
+        length = int(random.gauss(mu=avg_len, sigma=1.0))
+        lengths[i] = min(length, indices_num - total)
+        total += lengths[i]
+        if total > indices_num:
+            break
+    if total < indices_num:
+        lengths[-1] += indices_num - total
+    lengths = torch.tensor(lengths, dtype=dtype)
+    bucket_size = math.ceil(row_size / bucket_num)
+    block_sizes = torch.tensor([bucket_size] * batch_size, dtype=dtype)
+
+    bucket_pos = [j * bucket_size for j in range(bucket_num + 1)]
+    block_bucketize_pos = [
+        torch.tensor(bucket_pos, device=device, dtype=dtype)
+    ] * batch_size
+    test_param = {"uneven": block_bucketize_pos, "even": None}
+    print(f"device {device}")
+
+    def _kineto_trace_handler(p: profile, name: str) -> None:
+        p.export_chrome_trace(trace_url.format(name=name, ospid=os.getpid()))
+
+    # pyre-ignore[3]
+    def context_factory(on_trace_ready: Callable[[profile], None]):
+        return profile(on_trace_ready=on_trace_ready) if export_trace else nullcontext()
+
+    for name, is_block_bucketize_pos in test_param.items():
+        with context_factory(lambda p, n=name: _kineto_trace_handler(p, n)):
+            time, output = benchmark_torch_function(
+                torch.ops.fbgemm.block_bucketize_sparse_features,
+                (
+                    lengths if device == "cpu" else lengths.to(device),
+                    indices if device == "cpu" else indices.to(device),
+                    False,
+                    sequence,
+                    block_sizes if device == "cpu" else block_sizes.to(device),
+                    bucket_num,
+                    (
+                        weights
+                        if device == "cpu"
+                        else (weights.to(device) if weights is not None else None)
+                    ),
+                    None,
+                    -1,  # unused
+                    (
+                        is_block_bucketize_pos
+                        if device == "cpu"
+                        else (
+                            [i.to(device) for i in is_block_bucketize_pos]
+                            if is_block_bucketize_pos is not None
+                            else None
+                        )
+                    ),
+                ),
+                iters=100,
+                device=device,
+            )
+
+        num_bytes = 0
+        for tensor in [lengths, indices, weights, *block_bucketize_pos, *output]:
+            if isinstance(tensor, torch.Tensor):
+                num_bytes += (tensor.numel()) * tensor.element_size()
+
+        logging.info(
+            f"{name}_block_bucketize_sparse_features forward: {dtype}, {num_bytes} bytes read/write, {time * 1e3} ms, {num_bytes / time / 1e9} GB/s"
+        )
+
+
+if __name__ == "__main__":
+    cli()

@@ -1,0 +1,22 @@
+# Sparse Encodings
+
+**Benchdnn** supports the same sparse encodings as the library does (memory::sparse_encoding
+enum). If an unsupported sparse encoding is specified, an error will be reported.
+The following sparse encodings are supported:
+
+| Sparse encoding | Description
+| :---            | :---
+| csr             | Compressed Sparse Row (CSR) encoding
+| coo             | Co-ordinate Sparse (COO) encoding
+| packed          | Packed Sparse encoding
+
+> **Note:**  to use grouped encoding for MatMul, the `--grouped` option must be specified
+> (see [MatMul driver documentation](driver_matmul.md) for details).
+
+## Usage
+```
+    --encoding=ENCODING[+SPARSITY]:ENCODING[+SPARSITY]:ENCODING[+SPARSITY]
+```
+
+The colon-separated encodings correspond to the source, weights and destination
+tensors respectively.
