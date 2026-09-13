@@ -1,0 +1,84 @@
+{
+ "build_stack": {
+  "bitbake": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+  "openembedded-core": "fe7a24bc67118e7e184b5f5247258715e3904e7c"
+ },
+ "census_note": "METHOD A and METHOD B differ in discovery but BOTH call is_submodule(), which depends on `git rev-parse --show-superproject-working-tree`. The methods are therefore NOT fully independent. Their agreement remains meaningful evidence about discovery, but must not be read as two wholly independent confirmations.",
+ "census_shared_primitive": "lib_acq.is_submodule -> git rev-parse --show-superproject-working-tree",
+ "determinism_curated_declared": [
+  "exceptions.json",
+  "source-manifest.json",
+  "unresolved.json"
+ ],
+ "determinism_scanner_derived_checked": [
+  "artifact-plan.json",
+  "dependency-graph.json",
+  "license-inventory.json",
+  "provider-collisions.json",
+  "source-collisions.json",
+  "source-lock.json",
+  "submodule-lock.json",
+  "vendor-lock.json"
+ ],
+ "determinism_verified": true,
+ "determinism_verified_scope": "SCANNER-DERIVED records only",
+ "record_provenance": {
+  "artifact-plan.json": "SCANNER-DERIVED",
+  "dependency-graph.json": "SCANNER-DERIVED",
+  "exceptions.json": "CURATED",
+  "license-inventory.json": "SCANNER-DERIVED",
+  "provider-collisions.json": "SCANNER-DERIVED",
+  "source-collisions.json": "SCANNER-DERIVED",
+  "source-lock.json": "SCANNER-DERIVED",
+  "source-manifest.json": "CURATED",
+  "submodule-lock.json": "SCANNER-DERIVED",
+  "unresolved.json": "CURATED",
+  "vendor-lock.json": "SCANNER-DERIVED"
+ },
+ "record_schemas": {
+  "artifact-plan.json": "symoneural-artifact-plan/2",
+  "dependency-graph.json": "symoneural-dependency-graph/2",
+  "exceptions.json": "symoneural-exceptions/1",
+  "license-inventory.json": "symoneural-license-inventory/2",
+  "provider-collisions.json": "symoneural-provider-collisions/2",
+  "source-collisions.json": "symoneural-source-collisions/1",
+  "source-lock.json": "symoneural-source-lock/2",
+  "source-manifest.json": "symoneural-source-manifest/1",
+  "submodule-lock.json": "symoneural-submodule-lock/2",
+  "unresolved.json": "symoneural-unresolved/2",
+  "vendor-lock.json": "symoneural-vendor-lock/3"
+ },
+ "schema": "symoneural-control-plane/1.2",
+ "superseded_tools": {
+  "README.md": {
+   "sha256": "02dd94e083ee14560681e66c05f720a0e173795bd4fc0be30fdf783f7a315a40",
+   "status": "SUPERSEDED-BY-V1.1"
+  },
+  "VENDORED-REGISTER.md": {
+   "sha256": "738a1d6c7fece232055ac5418f390050124f66c9862feefe225141de9bc49a68",
+   "status": "SUPERSEDED-BY-V1.1"
+  },
+  "scan-licenses.py": {
+   "sha256": "7b037acb20bf744f166e6236ae6ae68453662f5305b74503ff5fea820c36f27c",
+   "status": "SUPERSEDED-BY-V1.1"
+  },
+  "scan-vendored-inline.py": {
+   "sha256": "2ccbd5a8a898df20ff20c21f515ea13a712720c4532c38accfb4fccf675480e5",
+   "status": "SUPERSEDED-BY-V1.1"
+  },
+  "scan-vendored.py": {
+   "sha256": "6edfc6085761cedc01f1f83f20cd860ce497477c9d676ea2edf2d5a979d7dd02",
+   "status": "SUPERSEDED-BY-V1.1"
+  }
+ },
+ "tool_sha256": {
+  "check-determinism.py": "f08dee4ca4d697a6e964a47818cebdc631dfc7f41a0facd6268237ab7ff13f1e",
+  "generate-runtime-acquisition.py": "af1f441b777d6ac99d5fa4f5592ac31c9fd634c1383b11d1cab53ca3817b8fc3",
+  "lib_acq.py": "e15ffb0046a2fac663650c79b5b961bc97b140c81de4f07e1c886f854f67a964",
+  "scan-acquisition.py": "ae2811347fd2c7f6a0432e7dfdf25bec606604923da29c7b67604941ca227433",
+  "scan-dependencies.py": "81e0041c7f251a8b568070e58996bc4ff6fc5536fca052fa762c5a319a9589e9",
+  "scan-oe-providers.py": "16dec735fc1f1f84ee9ff5290aa6e174687f5cbc309493a9687656179c62abef",
+  "scan-source-collisions.py": "15f7096b172e888cabd5da26abc55c53b221c5629a4cfd122f122aa0ec721f2f",
+  "verify-acquisition.py": "9241455d7e71db85b476f5da3b7b25c3f9f116e3a5af2930df0045af42f6c167"
+ }
+}

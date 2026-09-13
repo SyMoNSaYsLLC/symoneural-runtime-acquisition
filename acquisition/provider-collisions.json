@@ -1,0 +1,1070 @@
+{
+ "collisions": [
+  {
+   "consumers": [
+    "Common/pytorch"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "nlohmann",
+   "provider_count": 7,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann",
+     "state": "AVAILABLE",
+     "version": "55f93686c015"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/cudnn_frontend/include/cudnn_frontend/thirdparty/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/single_include/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/abi/include/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/single_include/nlohmann",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "fmt"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "fmt",
+   "provider_count": 6,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "fmt",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/fmt/fmt_12.2.0.bb",
+     "state": "AVAILABLE",
+     "version": "12.2.0"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fmt",
+     "state": "AVAILABLE",
+     "version": "c0330b746600"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/fmt",
+     "state": "AVAILABLE",
+     "version": "40626af88bd7"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fmt/include/fmt",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/ideep/mkl-dnn/third_party/spdlog/fmt",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/fmt/include/fmt",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/scikit-learn",
+    "Ravencalc/scipy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "array-api-compat",
+   "provider_count": 4,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_compat/array_api_compat",
+     "state": "AVAILABLE",
+     "version": "145bd7d3f41d"
+    },
+    {
+     "identity": "Ravencalc/scikit-learn",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/array_api_compat",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_compat",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_compat/array_api_compat/array_api_compat",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/scikit-learn",
+    "Ravencalc/scipy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "array-api-extra",
+   "provider_count": 3,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_extra",
+     "state": "AVAILABLE",
+     "version": "02afc63f8133"
+    },
+    {
+     "identity": "Ravencalc/scikit-learn",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/array_api_extra",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_extra/src/array_api_extra",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "LLM/llama.cpp"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "cpp-httplib",
+   "provider_count": 3,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/cpp-httplib",
+     "state": "AVAILABLE",
+     "version": "62d899feac3c"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/cpp-httplib/benchmark/cpp-httplib",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "LLM/llama.cpp",
+     "kind": "VENDORED",
+     "location": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/cpp-httplib",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Live/gstreamer",
+    "gstreamer1.0"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gstreamer",
+   "provider_count": 3,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Live/gstreamer",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Live/src/gstreamer/source/gstreamer",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "gstreamer1.0",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-multimedia/gstreamer/gstreamer1.0_1.28.7.bb",
+     "state": "AVAILABLE",
+     "version": "1.28.7"
+    },
+    {
+     "identity": "Live/gstreamer",
+     "kind": "VENDORED",
+     "location": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gstreamer",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Ravencalc/scikit-learn",
+    "python3-packaging"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "packaging",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "python3-packaging",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/python/python3-packaging_26.3.bb",
+     "state": "AVAILABLE",
+     "version": "26.3"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/torch/_vendor/packaging",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Ravencalc/scikit-learn",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/_packaging",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/autoconf",
+    "autoconf"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "autoconf",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/autoconf",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/autotools/source/autoconf",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "autoconf",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/autoconf/autoconf_2.73.bb",
+     "state": "AVAILABLE",
+     "version": "2.73"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/automake",
+    "automake"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "automake",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/automake",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/autotools/source/automake",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "automake",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/automake/automake_1.19.bb",
+     "state": "AVAILABLE",
+     "version": "1.19"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/libtool",
+    "Build/m4"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "bootstrap",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/libtool",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/libtool/gl-mod/bootstrap",
+     "state": "AVAILABLE",
+     "version": "fdcc277cd237"
+    },
+    {
+     "identity": "Build/m4",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/m4/gl-mod/bootstrap",
+     "state": "AVAILABLE",
+     "version": "42785aaa63db"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "clang"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "clang",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "clang",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/clang/clang_git.bb",
+     "state": "AVAILABLE",
+     "version": "git"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11/tools/clang",
+     "state": "AVAILABLE",
+     "version": "6a00cbc4a9b8"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gemmlowp",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/gemmlowp/gemmlowp",
+     "state": "AVAILABLE",
+     "version": "3fb5c176c17c"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/gemmlowp",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/libtool",
+    "Build/m4"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gnulib",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/libtool",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/libtool/gnulib",
+     "state": "AVAILABLE",
+     "version": "491f1bb7d304"
+    },
+    {
+     "identity": "Build/m4",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/m4/gnulib",
+     "state": "AVAILABLE",
+     "version": "c6842ec25c6d"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Live/gstreamer",
+    "gst-devtools"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gst-devtools",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "gst-devtools",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-multimedia/gstreamer/gst-devtools_1.28.7.bb",
+     "state": "AVAILABLE",
+     "version": "1.28.7"
+    },
+    {
+     "identity": "Live/gstreamer",
+     "kind": "VENDORED",
+     "location": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gst-devtools",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Live/gstreamer",
+    "gst-examples"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gst-examples",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "gst-examples",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-multimedia/gstreamer/gst-examples_1.28.7.bb",
+     "state": "AVAILABLE",
+     "version": "1.28.7"
+    },
+    {
+     "identity": "Live/gstreamer",
+     "kind": "VENDORED",
+     "location": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gst-examples",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/libtool",
+    "libtool"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "libtool",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/libtool",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/autotools/source/libtool",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "libtool",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/libtool/libtool_2.6.2.bb",
+     "state": "AVAILABLE",
+     "version": "2.6.2"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "libuv"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "libuv",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "libuv",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-connectivity/libuv/libuv_1.52.1.bb",
+     "state": "AVAILABLE",
+     "version": "1.52.1"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/libuv",
+     "state": "AVAILABLE",
+     "version": "5152db2cbfeb"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/m4",
+    "m4"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "m4",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/m4",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/autotools/source/m4",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "m4",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/m4/m4_1.4.21.bb",
+     "state": "AVAILABLE",
+     "version": "1.4.21"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/numpy",
+    "Ravencalc/scipy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "math",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/boost_math/math",
+     "state": "AVAILABLE",
+     "version": "c114cf4a6ae9"
+    },
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/numpy/_core/src/highway/hwy/contrib/math",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/numpy",
+    "meson"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "meson",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "meson",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/meson/meson_1.12.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.12.0"
+    },
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/vendored-meson/meson",
+     "state": "AVAILABLE",
+     "version": "983fca5b39b6"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/ninja",
+    "ninja"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "ninja",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/ninja",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/ninja/source/ninja",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "ninja",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/ninja/ninja_1.13.2.bb",
+     "state": "AVAILABLE",
+     "version": "1.13.2"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/numpy",
+    "python3-numpy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "numpy",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-numpy",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/python/python3-numpy_2.5.3.bb",
+     "state": "AVAILABLE",
+     "version": "2.5.3"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/numpy",
+    "libpcre2"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "pcre2",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "libpcre2",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-support/libpcre/libpcre2_10.48.bb",
+     "state": "AVAILABLE",
+     "version": "10.48"
+    },
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/vendored-meson/meson/test cases/common/291 subproject with foreign lang/subprojects/pcre2",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/bitbake",
+    "python3-ply"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "ply",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "python3-ply",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/python/python3-ply_3.11.bb",
+     "state": "AVAILABLE",
+     "version": "3.11"
+    },
+    {
+     "identity": "Build/bitbake",
+     "kind": "VENDORED",
+     "location": "Symoneural-Build/src/bitbake/source/lib/ply",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Ravencalc/numpy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "pocketfft",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/pocketfft",
+     "state": "AVAILABLE",
+     "version": "0fa0ef591e38"
+    },
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/numpy/fft/pocketfft",
+     "state": "AVAILABLE",
+     "version": "33ae5dc94c9c"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Web/workerd",
+    "rust"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "rust",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "rust",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/rust/rust_1.98.1.bb",
+     "state": "AVAILABLE",
+     "version": "1.98.1"
+    },
+    {
+     "identity": "Web/workerd",
+     "kind": "VENDORED",
+     "location": "Symoneural-Web/src/runtime/source/workerd/deps/rust",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/scikit-learn",
+    "Ravencalc/scipy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "scipy",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "Ravencalc/scikit-learn",
+     "kind": "VENDORED",
+     "location": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/_scipy",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/numpy",
+    "Ravencalc/scipy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "scipy-mathjax",
+   "provider_count": 2,
+   "provider_kinds": [
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/doc/source/_static/scipy-mathjax",
+     "state": "AVAILABLE",
+     "version": "6f4c898f2255"
+    },
+    {
+     "identity": "Ravencalc/scipy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/scipy/doc/source/_static/scipy-mathjax",
+     "state": "AVAILABLE",
+     "version": "d21c58225c09"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/bitbake",
+    "vim"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "vim",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "vim",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-support/vim/vim_9.2.bb",
+     "state": "AVAILABLE",
+     "version": "9.2"
+    },
+    {
+     "identity": "Build/bitbake",
+     "kind": "VENDORED",
+     "location": "Symoneural-Build/src/bitbake/source/contrib/vim",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "LLM/llama.cpp",
+    "xxhash"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "xxhash",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "xxhash",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-support/xxhash/xxhash_0.8.3.bb",
+     "state": "AVAILABLE",
+     "version": "0.8.3"
+    },
+    {
+     "identity": "LLM/llama.cpp",
+     "kind": "VENDORED",
+     "location": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/hash/xxhash",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  }
+ ],
+ "note": "Provider EXISTENCE only. selected_provider stays UNRESOLVED; the scanner exposes choices and does not make architecture decisions.",
+ "oe_core_providers_indexed": 1021,
+ "oe_core_recipes_inspected": 958,
+ "schema": "symoneural-provider-collisions/2"
+}

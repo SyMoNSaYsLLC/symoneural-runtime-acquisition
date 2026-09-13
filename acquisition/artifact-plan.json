@@ -1,0 +1,474 @@
+{
+ "components": [
+  {
+   "component": "httpcore",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/httpcore",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "httpx",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/httpx",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "pydantic",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 125,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/pydantic",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "fastapi",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/fastapi",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "starlette",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/starlette",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "uvicorn",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/uvicorn",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "FreeToken",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 4,
+   "runtime": "Adaptive-Fabric",
+   "source_path": "Symoneural-Adaptive-Fabric/src/freetoken/source/FreeToken",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "autoconf",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 0,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/autoconf",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "automake",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 1,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/automake",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "libtool",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 3471,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/libtool",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "m4",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 3424,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/m4",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "bitbake",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 0,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/bitbake/source",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "openembedded-core",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 26,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/devtools/source/openembedded-core",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "ninja",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 76,
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/ninja/source/ninja",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "anthropic-sdk-python",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/anthropic/source/anthropic-sdk-python",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "anthropic-sdk-typescript",
+   "declared_capabilities": [
+    "NODE-BUNDLE"
+   ],
+   "native_source_files": 0,
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/anthropic/source/anthropic-sdk-typescript",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "python-sdk",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/mcp/source/python-sdk",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "typescript-sdk",
+   "declared_capabilities": [
+    "NODE-BUNDLE"
+   ],
+   "native_source_files": 0,
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/mcp/source/typescript-sdk",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "accelerate",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/accelerate",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "huggingface-hub",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/huggingface-hub",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "pytorch",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-RLIB",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 36685,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/pytorch",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "safetensors",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 9,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/safetensors",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "tokenizers",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 125,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/tokenizers",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "transformers",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/transformers",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "stratum",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 161,
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/stratum",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "sv2-apps",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 181,
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/sv2-apps",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "sv2-spec",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 0,
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/sv2-spec",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "llama.cpp",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 740,
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/llama.cpp",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "triton",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 366,
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/triton",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "vllm",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 355,
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/vllm",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "gstreamer",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 3779,
+   "runtime": "Live",
+   "source_path": "Symoneural-Live/src/gstreamer/source/gstreamer",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "openblas",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "SHARED-LIBRARY",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 6783,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/blas/source/openblas",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "scikit-learn",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 61,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/ml/source/scikit-learn",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "numpy",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 1600,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/numerics/source/numpy",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "scipy",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 3539,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "mpmath",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/symbolic/source/mpmath",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "sympy",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/symbolic/source/sympy",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "librespot",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 132,
+   "runtime": "Remix",
+   "source_path": "Symoneural-Remix/src/librespot/source/librespot",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "hls.js",
+   "declared_capabilities": [
+    "NODE-BUNDLE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Streamer",
+   "source_path": "Symoneural-Streamer/src/hls/source/hls.js",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "workerd",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 200,
+   "runtime": "Web",
+   "source_path": "Symoneural-Web/src/runtime/source/workerd",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "workers-sdk",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Web",
+   "source_path": "Symoneural-Web/src/tooling/source/workers-sdk",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  }
+ ],
+ "note": "Declared upstream capability only. No SyMoNeuRaL artifact decision here.",
+ "schema": "symoneural-artifact-plan/2"
+}

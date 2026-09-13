@@ -1,0 +1,4296 @@
+{
+ "files": [
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "25efce27fa98f89e99bb6e11f55bf8e8",
+   "owner_component": "FreeToken",
+   "owner_runtime": "Adaptive-Fabric",
+   "path": "LICENSE",
+   "sha256": "1d28009bf66a66c90fa9c5561d9a73b7460ab611eeb3e90169d22a3b5a2a2326",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "accelerate",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2453eb85b33e21e22cb4fa811c650d75",
+   "owner_component": "anthropic-sdk-python",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "8bf96984ff8bcfae7e48cae76a529e8a25317ba9e02abf7fd3cc64fdf95657a6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6cd99a559ccce444ec3f9ef9d16f9e87",
+   "owner_component": "anthropic-sdk-python",
+   "owner_runtime": "CLI",
+   "path": "src/anthropic/_vendor/httpx_aiohttp/LICENSE",
+   "sha256": "154759c1e9eb58e42643ee43ec59d556def4d1d702d911a484c469e02f85dd5d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7fdf792f111fb0485c17f4e301411f6c",
+   "owner_component": "anthropic-sdk-python",
+   "owner_runtime": "CLI",
+   "path": "src/anthropic/_vendor/httpx_aiohttp/NOTICE.md",
+   "sha256": "90f45e20cf0b5c730d956ad93d3cd68ab4466b9c7490ac2a1999c8dcbd521562",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2453eb85b33e21e22cb4fa811c650d75",
+   "owner_component": "anthropic-sdk-typescript",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "8bf96984ff8bcfae7e48cae76a529e8a25317ba9e02abf7fd3cc64fdf95657a6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9249b8fd4b9fb878fddcb56165d81ed3",
+   "owner_component": "anthropic-sdk-typescript",
+   "owner_runtime": "CLI",
+   "path": "src/internal/qs/LICENSE.md",
+   "sha256": "d8c77eaffed7f1f874b97f66ee47a557ae24fd59bae8ae14f9b1b84f26a94d2f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "570a9b3749dd0463a1778803b12a6dce",
+   "owner_component": "autoconf",
+   "owner_runtime": "Build",
+   "path": "COPYING",
+   "sha256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "eb129370fe0bb2068cc4e48ff8d31260",
+   "owner_component": "autoconf",
+   "owner_runtime": "Build",
+   "path": "COPYING.EXCEPTION",
+   "sha256": "1f1cde9fb68b9b3cff18c420894bec5bd4defacd700b7d13df54a887301e5350",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1ebbd3e34237af26da5dc08a4e440464",
+   "owner_component": "autoconf",
+   "owner_runtime": "Build",
+   "path": "COPYINGv3",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "751419260aa954499f7abaabaa882bbe",
+   "owner_component": "automake",
+   "owner_runtime": "Build",
+   "path": "COPYING",
+   "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1ebbd3e34237af26da5dc08a4e440464",
+   "owner_component": "automake",
+   "owner_runtime": "Build",
+   "path": "lib/COPYING",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "431daa8bc6c493df222d00b084d0667c",
+   "owner_component": "automake",
+   "owner_runtime": "Build",
+   "path": "t/license-gnulib-names.sh",
+   "sha256": "d264b3329b187b7c6a971f0e14c9e442b7590b18ff93926bd067fd2bc62f7589",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2df9d833c66e99b81264f66deed8deca",
+   "owner_component": "automake",
+   "owner_runtime": "Build",
+   "path": "t/license.sh",
+   "sha256": "e85d9202303b73a911a2b85763c4bf4298be260c59215d2a619291ac8fd83d8a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0267cd6275f3e3bcb4f49cdfbfccb621",
+   "owner_component": "automake",
+   "owner_runtime": "Build",
+   "path": "t/license2.sh",
+   "sha256": "7e28cbd7ede513e7fb6f58073bafa2b0b1c899ac0d8fb2dab7ecc1cfd26d3c8c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7e4cfe1c8dee5c6fe34c79c38d7b6b52",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "LICENSE",
+   "sha256": "2b515caef822c79d7e08cc16066dffef7baf401e51d219ad6695d19aa5b4e885",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4ee23c52855c222cba72583d301d2338",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "LICENSE.GPL-2.0-only",
+   "sha256": "5d51b52a40391a26cbb2accf5dc5d1c165de49a022d9d5efb50b22204d2682ec",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "030cb33d2af49ccebca74d0588b84a21",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "LICENSE.MIT",
+   "sha256": "7557cb18e41b5506cd83c524cc56b6114107ad7c16f5b15348597c8931bfcd53",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9a8bb0266376912777a9634ba661d969",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "contrib/vim/LICENSE.txt",
+   "sha256": "86c5794e2eb553f1abcbc5eaf3cc7c28318d58e3d7cbbfd0da8c5dc3c20ece6c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "751419260aa954499f7abaabaa882bbe",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "doc/COPYING.GPL",
+   "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5750f3aa4ea2b00c2bf21b2b2a7b714d",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "doc/COPYING.MIT",
+   "sha256": "e49a10c9878faef072e5172bb53ec670df2216f310ab3b768bb76cb21098684a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "83e365dc17176bd72ba7d08ca0555efa",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "lib/bs4/COPYING.txt",
+   "sha256": "424336c2b3446b3c179f07217271bb914dc881a65c2bf7021da98c77e776d2c9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6d38698d6f983adff50eb75d8cb26e6b",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "lib/progressbar/LICENSE.txt",
+   "sha256": "cd9ae4bad4124563ef2556118ea2d52df165ac42639dee68c02137789ac7aa56",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9476fb642383515b0a38a680778c01d5",
+   "owner_component": "bitbake",
+   "owner_runtime": "Build",
+   "path": "lib/simplediff/LICENSE",
+   "sha256": "4b8682932a656cded5c78d200061da0b1df86909a56bcc68cde53c98deea92bb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "95792ff3fe8e11aa49ceb247e66e4810",
+   "owner_component": "fastapi",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6844f1bbc18b2206b0b2e49d2feb41d9",
+   "owner_component": "fastapi",
+   "owner_runtime": "API",
+   "path": "docs/en/overrides/partials/copyright.html",
+   "sha256": "1ab5fcd269af9bfae7fc39b1cde1900fb449020d4e3e2d70e8b6d95362c9d733",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "LICENSE",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a6f89e2100d9b6cdffcea4f398e37343",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-devtools/validate/COPYING",
+   "sha256": "6095e9ffa777dd22839f7801aa845b31c9ed07f3d6bf8a26dc5d2dec8ccc0ef3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "da3ad60ef7ec7817e6abd67effc8d3d7",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-docs/LICENSE.BSD",
+   "sha256": "143c9e4d0b5e52311bc6b85e1e9e433bc4bdc7674393cd0c032b6392cb50f999",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cf58529a4bfbca0b10c68fbf559caf7c",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-docs/LICENSE.CC-BY-SA-4.0",
+   "sha256": "b6e5017897f7a233483368aeeafe444c8779ddbb43d78aac71d28d6e2dcad14e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4b54a1fd55a448865a0b32d41598759d",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-docs/LICENSE.LGPL-2.1",
+   "sha256": "592987e8510228d546540b84a22444bde98e48d03078d3b2eefcd889bec5ce8c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a50b04414e4853ca21949a0fb1b35f36",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-docs/LICENSE.MIT",
+   "sha256": "f953c23a0948bc8078fc3dc0e66d6a1de245f379c8585a4abff8e1d04fbbe276",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a3462923a35559673975080d5a8dd1ba",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-docs/LICENSE.OPL",
+   "sha256": "592222be76ed1980b614e1e766d4f0ff025cd8734dce25c2fe13d2d0bb7fd608",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-editing-services/COPYING",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-editing-services/COPYING.LIB",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4fbd65380cdd255951079008b364516c",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-examples/COPYING",
+   "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "31d1631886d78e9ff38b6c3b05bb9e9a",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-examples/webrtc/LICENSE",
+   "sha256": "74ea7ab3a52e3e973a983504c6289a94aae760f50fda180c115a149d301acb99",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-libav/COPYING",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4fbd65380cdd255951079008b364516c",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-bad/COPYING",
+   "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ffcf846341f3856d79a483eafa18e2a5",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-bad/ext/sctp/usrsctp/LICENSE.md",
+   "sha256": "fa53711b25af4b9a9b8dadfea3cb38166ec4b96760c8d62b284055554537d9ef",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "66da4798e2782862e204c1de7115688c",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-bad/gst/dvbsubenc/libimagequant/COPYRIGHT",
+   "sha256": "7391bfbcde4404cefb9849553362c3ab436f929f5cc1abb57071ec045590ee99",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5355ff188aa9a1dc019e8e22855b2fc0",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-bad/sys/directshow/strmbase/LICENSE",
+   "sha256": "49885c38b55a2020f72af1d4b3c76059a778bf2e2cb6871ed3e11c268995f98f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "da1082841ec483429abb0e8c8779d6dc",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-bad/sys/dwrite/libcaption/LICENSE.txt",
+   "sha256": "33738b27547a48e4164c86db9f85d0f735a388c2d171326b548768ee18ad3694",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-base/COPYING",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b3856cc9571b1ae084deac70b44fd537",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-base/gst-libs/gst/tag/license-translations.dict",
+   "sha256": "25ebb771dd2bc53bedf66e1b4bee7e6169bd5c0eee84621e7c4ac2d91f9826c2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "05a9f393038fe62d7591583c94ae618c",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-base/gst-libs/gst/tag/licenses-tables.dat",
+   "sha256": "72619e35c59ec2527c561ff5757a2d0fead3a502c3024add007f1e93c16b5d70",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "42174dc3dc2bb4623ab4647b62fdbc9b",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-base/gst-libs/gst/tag/licenses.c",
+   "sha256": "1f56aeb38bfc982b535d1c6356658e7d18cff845cb2a144d38cf994183c5f7b6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ab312cb2fece81fcc6bd2f8a421c3097",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-base/tests/files/license-uris",
+   "sha256": "de0f312e9784884e211d50d4344dae0d9beb9074bfb9812566f904888c47c121",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a6f89e2100d9b6cdffcea4f398e37343",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-good/COPYING",
+   "sha256": "6095e9ffa777dd22839f7801aa845b31c9ed07f3d6bf8a26dc5d2dec8ccc0ef3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5c99bf83b0380f1df49ed9a5306ed708",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-good/gst/rtsp/COPYING.MIT",
+   "sha256": "0efdd7e1522b73c4a206ab2fb1bb8a609157abccf588837bca6eb7c98d5b35c6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a6f89e2100d9b6cdffcea4f398e37343",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-plugins-ugly/COPYING",
+   "sha256": "6095e9ffa777dd22839f7801aa845b31c9ed07f3d6bf8a26dc5d2dec8ccc0ef3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c34deae4e395ca07e725ab0076a5f740",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-python/COPYING",
+   "sha256": "ea3ad127610e5ded2210b3a86a46314f2b3b28e438eccffdae19a4d6fbcdb0c2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-rtsp-server/COPYING",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gst-rtsp-server/COPYING.LIB",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4b54a1fd55a448865a0b32d41598759d",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gstreamer-sharp/COPYING",
+   "sha256": "592987e8510228d546540b84a22444bde98e48d03078d3b2eefcd889bec5ce8c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "69333daa044cb77e486cc36129f7a770",
+   "owner_component": "gstreamer",
+   "owner_runtime": "Live",
+   "path": "subprojects/gstreamer/COPYING",
+   "sha256": "ad2eec519ebd4b5df86ea84dff24ae3bfa2edea846a703b58902dd221ae375db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8c22b1b3074f826155dbc85e6a0d4d1f",
+   "owner_component": "hls.js",
+   "owner_runtime": "Streamer",
+   "path": "LICENSE",
+   "sha256": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c1f23b073da202e1f4f9e426490210c",
+   "owner_component": "httpcore",
+   "owner_runtime": "API",
+   "path": "LICENSE.md",
+   "sha256": "fdcb59154c74cbaba16a11242f7740bea9f23d6feb5547917d8c5f94a80392a5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c624803bdf6fc1c4ce39f5ae11d7bd05",
+   "owner_component": "httpx",
+   "owner_runtime": "API",
+   "path": "LICENSE.md",
+   "sha256": "4ec59d544f12b5f539a3a716fd321ac58ccd8030b465221f2c880200cdf28d8d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "huggingface-hub",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "98b2b0c9a6081259c441045ca68b640f",
+   "owner_component": "librespot",
+   "owner_runtime": "Remix",
+   "path": "LICENSE",
+   "sha256": "b6e979ad38c429c5811e9eb6930040a984619786f55ebc60660db05df5325ed6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e9644593d31089f5d3b6f483392ec7dc",
+   "owner_component": "librespot",
+   "owner_runtime": "Remix",
+   "path": "metadata/src/copyright.rs",
+   "sha256": "626c475c95c0f6389c54cbc677dcfcbe883ba7cd0d289f29859f04d38dccf748",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d65cd57ee96e03049d1c1cf9b4bf8f88",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gl-mod/bootstrap/LICENSE",
+   "sha256": "83da3b2be0449f7a983c224738fd8111605c6cf58983b63f191e3012f7ee9c80",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ef5bccbf6e492f82800e68bdeab302eb",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/COPYING",
+   "sha256": "438610ba3d10f492dff9e17f7d53a5316e3f4b4adc5f79a33ac7110d5a5ee210",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4bf661c1e3793e55c8d1051bc5e0ae21",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYING.LESSERv2",
+   "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3000208d539ec061b899bce1d9ce9404",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYING.LESSERv3",
+   "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "570a9b3749dd0463a1778803b12a6dce",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYINGv2",
+   "sha256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1ebbd3e34237af26da5dc08a4e440464",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYINGv3",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "57de020f89968f994d1a029c6eadf9c2",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/conditions.text",
+   "sha256": "e2b95420f262f10980a4ab828587e008208c96eb3de77f20fec11a4693a295c7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c0ee243fee23fc1471feab7393ad81b",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.changes",
+   "sha256": "63103d045a3d571ef678651ae9b436b72f633f70b708f8a51739f23d8bb486d7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f3b12c563737e26d625cab5031980e84",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.future",
+   "sha256": "a9196ae099f52feecfd88dfcc460e03491d39b614219a42dad39587a5722c7fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d3d5bc2a8e8a9ca8e94adc81f45ba938",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.program",
+   "sha256": "b55e7cec536015c3f83a060d98f4f827992288c59835e15c469e2d62b8f0296a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "97f4e1a7ac70d215d2c7ff55ff899b82",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-disclaim.changes",
+   "sha256": "2d5ff69a7f793567c25505cc0dc6f0ce823facac96d820a72ebf4eb13a9b2d9b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "09b614ae21015080de2b8609e6dc53ab",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/licenses-texi.texi",
+   "sha256": "e2978abebf7cbcae3ee0c8794e660dd7b8a1508b1b347357fd235e5c83347436",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c6e075428a27f5f532f880d13f8e295",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPL",
+   "sha256": "56daba5fbdaed24db18f5f1a5bedd06dd13c6db821651899f3e429eb4eff41ce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5ce7d0334f07b226c7fc98c3ff5a856e",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPLv2+",
+   "sha256": "508f85fbf1397b817eae6f29af2289e3f16a117ede3b343c726fab68af79f8cd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c6e075428a27f5f532f880d13f8e295",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPLv3+",
+   "sha256": "56daba5fbdaed24db18f5f1a5bedd06dd13c6db821651899f3e429eb4eff41ce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0ca052fc52beb0651a5c5e11438862e3",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPL",
+   "sha256": "442ef845df1799caaaa184f27b7548b8fc4dff14a58db020b6364f4e209202f9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "592cab4e58b6de14cb5c2606d066c198",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv2+",
+   "sha256": "4290b35b3f2d515cce5d9a7790963df1b571503a941453dc90a7eaac1b1e5314",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0ca052fc52beb0651a5c5e11438862e3",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv3+",
+   "sha256": "442ef845df1799caaaa184f27b7548b8fc4dff14a58db020b6364f4e209202f9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9ea8b24d4800023635f1175322cfcf33",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv3+_or_GPLv2+",
+   "sha256": "747fa2ac9afb2848aac35e51c8107deec25db7953dd9b4861e6c22992e59adf9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c41715ffeec48d9342aa5592e296d77a",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/README",
+   "sha256": "cb86e35cf21e77b2ac68bc86754338b01f28308cc68d0d64567f8e8740875fce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b37cd5fd610a994cdb32232322d741d0",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/public_domain",
+   "sha256": "f9878f12b0c4e2071022a90317b10c38e6e7a87cefacdb93dc0e4eeecd400415",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "59ad7e557a75046b04517ceefc771677",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/unlimited",
+   "sha256": "05326be3840fa4589ba85faacd5a9907601a739d92d477d57372698c262ad9c3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "06278c397f7effab23d4b56008d33989",
+   "owner_component": "libtool",
+   "owner_runtime": "Build",
+   "path": "gnulib/modules/COPYING",
+   "sha256": "f530fec34a348cd8ad9cab66d0672f40406b07c3a4b995a2a5f31c483a9221d7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "223b26b3c1143120c87e2b13111d3e99",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "LICENSE",
+   "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c547b83618ef0f5139afeda251ba3dad",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "cmake/license.cmake",
+   "sha256": "083515dff8a9b8696e348c7c616934e53941a7db30e1b3f092576632e9a2d1d4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d486bb2ba5e2a4d3c958abbcbe1b9225",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "gguf-py/LICENSE",
+   "sha256": "ef78c7e6659e34c798194f0d344e807c722de70cbca1359ef54772661e11ca38",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d9545308f01613f54de6f21134ec51f3",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "licenses/LICENSE-jsonhpp",
+   "sha256": "c0d068392ea65358b798b8c165103560f06e9e3b38c4ab4e2d8810a7b931af86",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5641118d2906fdb4ba9b0c35dec565eb",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "tools/ui/src/lib/vendors/big-integer/LICENSE",
+   "sha256": "e9b0e94f628e00b5ed98046cfa041696ff89eebbbdd54108ee350625bc6d0363",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "069dacc2a679616090ba5fe5d8687cac",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "tools/ui/src/lib/vendors/decimal.js/LICENCE.md",
+   "sha256": "3108b546bcff5d346923a82f48b2d252ca722f9088076db6d145f6b67757ad6c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cfc391c756ac9312d458ea4ce6b32c3f",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "tools/ui/src/lib/vendors/nerdamer-prime/LICENSE",
+   "sha256": "c9f52548869a0a2e63a7100055c54cebf36b9327c8fc2da7cf9ca8dddc2f1cca",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1321bdf796c67e3a8ab8e352dd81474b",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "vendor/cpp-httplib/LICENSE",
+   "sha256": "4b45cbe16d7b71b89ae6127e26e0d90a029198ca5e958ad8e3d0b8bbed364d8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bcdfbfcc0d644320ff435b1acd3627e7",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "vendor/hash/rotate-bits/LICENSE.md",
+   "sha256": "ca0b44aec101afb6b46f4c39b23369fa06a64fb9c0add37c2689d702156fee55",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9023e9d96f2f04557d35e682b39ffd60",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "vendor/hash/sha256/LICENSE",
+   "sha256": "b81d0022ca6367918c67b57e9647d3513ee58809fd4b0ef0b3492f1356bced25",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "13be6b481ff5616f77dda971191bb29b",
+   "owner_component": "llama.cpp",
+   "owner_runtime": "LLM",
+   "path": "vendor/hash/xxhash/LICENSE",
+   "sha256": "6ffedbc0f7878612d2b23589f1ff2ab15633e1df7963a5d9fc750ec5500c7e7a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1ebbd3e34237af26da5dc08a4e440464",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "COPYING",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "005f2e201a0526c1d1d79dd6303ecf23",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "examples/COPYING",
+   "sha256": "ce55592f0e70e7d4667a71f5ef56e9286d73539ae97ae7bca58940a95c26907c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d5688448fc38a9cce6ad2dd20f9034a4",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gl-mod/bootstrap/LICENSE",
+   "sha256": "a1ec0d79b4f70247acf53956a14ebeb17888d249f748c26726db6667b12ca5e2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ef5bccbf6e492f82800e68bdeab302eb",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/COPYING",
+   "sha256": "438610ba3d10f492dff9e17f7d53a5316e3f4b4adc5f79a33ac7110d5a5ee210",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4bf661c1e3793e55c8d1051bc5e0ae21",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYING.LESSERv2",
+   "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3000208d539ec061b899bce1d9ce9404",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYING.LESSERv3",
+   "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "570a9b3749dd0463a1778803b12a6dce",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYINGv2",
+   "sha256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1ebbd3e34237af26da5dc08a4e440464",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/COPYINGv3",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "57de020f89968f994d1a029c6eadf9c2",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/conditions.text",
+   "sha256": "e2b95420f262f10980a4ab828587e008208c96eb3de77f20fec11a4693a295c7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c0ee243fee23fc1471feab7393ad81b",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.changes",
+   "sha256": "63103d045a3d571ef678651ae9b436b72f633f70b708f8a51739f23d8bb486d7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f3b12c563737e26d625cab5031980e84",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.future",
+   "sha256": "a9196ae099f52feecfd88dfcc460e03491d39b614219a42dad39587a5722c7fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d3d5bc2a8e8a9ca8e94adc81f45ba938",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-assign.program",
+   "sha256": "b55e7cec536015c3f83a060d98f4f827992288c59835e15c469e2d62b8f0296a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "97f4e1a7ac70d215d2c7ff55ff899b82",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/Copyright/request-disclaim.changes",
+   "sha256": "2d5ff69a7f793567c25505cc0dc6f0ce823facac96d820a72ebf4eb13a9b2d9b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "09b614ae21015080de2b8609e6dc53ab",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/doc/licenses-texi.texi",
+   "sha256": "e2978abebf7cbcae3ee0c8794e660dd7b8a1508b1b347357fd235e5c83347436",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c6e075428a27f5f532f880d13f8e295",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPL",
+   "sha256": "56daba5fbdaed24db18f5f1a5bedd06dd13c6db821651899f3e429eb4eff41ce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5ce7d0334f07b226c7fc98c3ff5a856e",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPLv2+",
+   "sha256": "508f85fbf1397b817eae6f29af2289e3f16a117ede3b343c726fab68af79f8cd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1c6e075428a27f5f532f880d13f8e295",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/GPLv3+",
+   "sha256": "56daba5fbdaed24db18f5f1a5bedd06dd13c6db821651899f3e429eb4eff41ce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0ca052fc52beb0651a5c5e11438862e3",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPL",
+   "sha256": "442ef845df1799caaaa184f27b7548b8fc4dff14a58db020b6364f4e209202f9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "592cab4e58b6de14cb5c2606d066c198",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv2+",
+   "sha256": "4290b35b3f2d515cce5d9a7790963df1b571503a941453dc90a7eaac1b1e5314",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0ca052fc52beb0651a5c5e11438862e3",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv3+",
+   "sha256": "442ef845df1799caaaa184f27b7548b8fc4dff14a58db020b6364f4e209202f9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9ea8b24d4800023635f1175322cfcf33",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/LGPLv3+_or_GPLv2+",
+   "sha256": "747fa2ac9afb2848aac35e51c8107deec25db7953dd9b4861e6c22992e59adf9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c41715ffeec48d9342aa5592e296d77a",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/README",
+   "sha256": "cb86e35cf21e77b2ac68bc86754338b01f28308cc68d0d64567f8e8740875fce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b37cd5fd610a994cdb32232322d741d0",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/public_domain",
+   "sha256": "f9878f12b0c4e2071022a90317b10c38e6e7a87cefacdb93dc0e4eeecd400415",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "59ad7e557a75046b04517ceefc771677",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/etc/license-notices/unlimited",
+   "sha256": "05326be3840fa4589ba85faacd5a9907601a739d92d477d57372698c262ad9c3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "06278c397f7effab23d4b56008d33989",
+   "owner_component": "m4",
+   "owner_runtime": "Build",
+   "path": "gnulib/modules/COPYING",
+   "sha256": "f530fec34a348cd8ad9cab66d0672f40406b07c3a4b995a2a5f31c483a9221d7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a6607bd72611b702183473dfb4e6198b",
+   "owner_component": "mpmath",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "01cb9dc26c9afd5804c2ebf72f9ef03b5fd48972875ed59a483a45f441971f1e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a81586a64ad4e476c791cda7e2f2c52e",
+   "owner_component": "ninja",
+   "owner_runtime": "Build",
+   "path": "COPYING",
+   "sha256": "eb7e9ab9690124c5c9f42bdc81383d886a3dede26345b6ed15bbad7caf81f7ea",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bde96408b6df910d3d7c40d3d9a10d31",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": ".spin/LICENSE",
+   "sha256": "990e6a6dbaee82e655163c3d2a51d1002471e5c0964da4881bc193eaa6a8ee3b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "26080bf81b2662c7119d3ef28ae197fd",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE.txt",
+   "sha256": "1be1df33863f97a7bc1c4d67980bd6c69c9a6fef0a5ee76e6ad6cb91e56e8491",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "doc/source/_static/scipy-mathjax/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "04c3984c770a5a9fed6ccc47f2d2b515",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "doc/source/license.rst",
+   "sha256": "563953e4bf6aba42f430420da7494dce2747f60d56e82ca165e24dfaf766d256",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a0fff136e7abb00075d7bd1e9a1ecd71",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_build_utils/tempita/LICENSE.txt",
+   "sha256": "743b0f4a0087fe3607167113fffab6f2ca069c8da321763697ab5d0d8411634a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e1c97b70a98c8ec5aff0aa275fdb2c91",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/include/numpy/libdivide/LICENSE.txt",
+   "sha256": "fbc539f47d0cf83bc61378080fb873d5c14630126cacbfe754035c3926daa5ec",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f74f54822fab8814a50330e4e4578b88",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/src/common/pythoncapi-compat/COPYING",
+   "sha256": "3f2c1ffa76383a55ae0aac01c9737cd70050dff63e1f026694fbe9d662573c98",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e583f1fc1c22da0f388b23a31df5b591",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/src/highway/LICENSE",
+   "sha256": "e340270d4f64384569a91d546acb5b094d69ce47f0c015db77abb74dc6f815af",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0090ea7383ac2a23a7e6b5532e4ae5c6",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/src/highway/debian/copyright",
+   "sha256": "6e4ecf1cae052b678ea3178dd4b3652d581ee66a82d58db8800dd7d80dd6de76",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "32e4087908578b334f5b91fce7a470a0",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+   "sha256": "211e7d737d6179a08f791ebb0a99897ce7cd2457410c542876d125576edfe910",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "54d69368f84829557fb97f5e81ab3b64",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/_core/src/umath/svml/LICENSE",
+   "sha256": "c17011467b4fe6e20fbfbeda4df09e58c2bca5480a063e55735a4000a379aad9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bb0e49a83ba802d32f3a05a7b8b2180b",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/fft/pocketfft/LICENSE.md",
+   "sha256": "a85ca13fdf90160b64a0698215868c13b74d835ad0a4e2ba44713b8c5058a056",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7d9f3a90a3f3d41052b70a31c1daf8ad",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/linalg/lapack_lite/LICENSE.txt",
+   "sha256": "a14cc25e10d40a3aa705b7de2fb764a6535d8ee9b2db4e1724900585457dfd55",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "560a44ba225da50f5d488426818c8474",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/ma/LICENSE",
+   "sha256": "05f3b88351988ecfad10abe92c0c50e5875c6452d5009a0084cc291551ffcca6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "09b2aa3c0d32aea36fb330dc9c728fc4",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/LICENSE.md",
+   "sha256": "103166b62b80443afb9eb3488e052ea06be0cff566b908f199e561fde49af19f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0a26f80d7361a8d65d2f8daf8c7e3de8",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/distributions/LICENSE.md",
+   "sha256": "469778be8f33d54e1bcaab28c281cc472916d2d273f835e55bc487d30503face",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "58535013375c548c899f1d5b80a0e886",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/mt19937/LICENSE.md",
+   "sha256": "0e111337b25494a773106695f0e799f642b8567aaacca4f116a74a8177179156",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5d0d131c837b97f368c758589b4e82f0",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/pcg64/LICENSE.md",
+   "sha256": "e7d4f4fb20358f314210a892ae17351e04993813646f697ec387385ca2a36918",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d1f2eb63cadd62578bd54c4a7f20f03e",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/philox/LICENSE.md",
+   "sha256": "6f5828a57223d4cc7f8ea505a2623e7b978b242752c1515e355f46ba2cec1800",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ad204ac84919852ee6d8e4154dddca08",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/sfc64/LICENSE.md",
+   "sha256": "9d4098846018319cd68e228ee6220361787f73bccbf00237a85e4fc9621b998f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aed2fe30600fb0e72efc56b188d9e0df",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "numpy/random/src/splitmix64/LICENSE.md",
+   "sha256": "268b0ca06759d31ea3ca68dd35f20e877916e927b1c2a835e4592a3c4354b1f9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "vendored-meson/meson/COPYING",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8490f984473ca7fa3bdcfe2a919e6249",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "vendored-meson/meson/docs/theme/extra/templates/license.html",
+   "sha256": "15fcbcade0003df4b37350f12bea7dfeb25d4d2ac9e99d12d893773c4d5359fd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "074ef868ead2735d006e564c24e059c7",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "vendored-meson/meson/packaging/License.rtf",
+   "sha256": "e3e8d7b15b2021c994047314ad0ac5e367561f64771a60a85a9c0952d8cd4c3a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b46b502fdb8b1a81dd4d71c1de058f00",
+   "owner_component": "numpy",
+   "owner_runtime": "Ravencalc",
+   "path": "vendored-meson/meson/packaging/macpages/English.lproj/license.html",
+   "sha256": "bca11d525505d21cdfb021e634b0f1d48ece827f9bedcf8cd41356c48a09be24",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5adf4792c949a00013ce25d476a2abc0",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "190b5a9c8d9723fe958ad33916bd7346d96fab3c5ea90832bb02d854f620fcff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6571445bebffcbf3dc11671e0044a0f9",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "ctest/LICENSE",
+   "sha256": "c1ceeff23f242ddac805ba9d332f58b559454ec00447e65540c0e818f7de69da",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "262be6117ed87ae106825097c1c3733f",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "lapack-netlib/LAPACKE/LICENSE",
+   "sha256": "871f415ebd2fd06c7ab8cc3c0016aa2d26b918622345116e2d0c740b688d4843",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d0e7a458f9fcbf0a3ba97cef3128b85d",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "lapack-netlib/LICENSE",
+   "sha256": "978539245c405775bf347b1256c36df4daf8b69a64b099e94b1d53742201621e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6571445bebffcbf3dc11671e0044a0f9",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "reference/LICENSE",
+   "sha256": "c1ceeff23f242ddac805ba9d332f58b559454ec00447e65540c0e818f7de69da",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "65ab012e987dc0a47926be2d2bc711ba",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "relapack/LICENSE",
+   "sha256": "abd17b9664b38cfab093e7cca625ac08d3a686fc63142ea58c27bae15969dd3a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6571445bebffcbf3dc11671e0044a0f9",
+   "owner_component": "openblas",
+   "owner_runtime": "Ravencalc",
+   "path": "test/LICENSE",
+   "sha256": "c1ceeff23f242ddac805ba9d332f58b559454ec00447e65540c0e818f7de69da",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b97a012949927931feb7793eee5ed924",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "LICENSE",
+   "sha256": "9b2d9745455ea1be9de19dfeae6a052628998f1209d57edf773a010d2431cd12",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4ee23c52855c222cba72583d301d2338",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "LICENSE.GPL-2.0-only",
+   "sha256": "5d51b52a40391a26cbb2accf5dc5d1c165de49a022d9d5efb50b22204d2682ec",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "030cb33d2af49ccebca74d0588b84a21",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "LICENSE.MIT",
+   "sha256": "7557cb18e41b5506cd83c524cc56b6114107ad7c16f5b15348597c8931bfcd53",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ee97da3360b2843ce4dafb1044b3430b",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-selftest/recipes-test/license/incompatible-license-alias.bb",
+   "sha256": "32302802a93232b43b6a748640906b65cd928f5d30ba7c370fd6d0836c11f4b6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "325c78f25569fb9dcfd2d91b9141e708",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-selftest/recipes-test/license/incompatible-license.bb",
+   "sha256": "ac7a6c0e3f9c7f289d1b6c6247a41d9e52ba467722c6785ee181c70d1c16b85c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bc35b224c9babe95f8894f02f25295ba",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-selftest/recipes-test/license/incompatible-licenses.bb",
+   "sha256": "dfeb86a61231991fdcb6f177cbd3760e3fc95a61406fed2434b58abfe739c726",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aa6008f9fdef840618ca50c0bd2223e1",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-selftest/recipes-test/license/incompatible-nonspdx-license.bb",
+   "sha256": "5239c2b98cc267aa7420570c4b9ca5fdd71dd4213c8aeeb38f22af684f62252f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "12f884d2ae1ff87c09e5b7ccc2c4ca7e",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-skeleton/recipes-kernel/hello-mod/files/COPYING",
+   "sha256": "b499eddebda05a8859e32b820a64577d91f1de2b52efa2a1575a2cb4000bc259",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "349c872e0066155e1818b786938876a4",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta-skeleton/recipes-skeleton/service/service/COPYRIGHT",
+   "sha256": "4ccb5c105652ac77c184c914cac7256f3ad747e57909f492a767fdf042e3083e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3da9cfbcb788c80a0384361b4de20420",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/COPYING.MIT",
+   "sha256": "a3cf78761a26fb2c850aec855708e83f808617c0c9c4620db58f06cbd2ce4d36",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f6874105d12cd5272df05c3fe3acf45d",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/classes-global/license.bbclass",
+   "sha256": "39c65690f560b7c18edfdc1605102cbcf2a3d4de4dbf376b4f05be2aa12ab546",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0333342b182983e6afe17c39996a6f85",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/classes-recipe/license_image.bbclass",
+   "sha256": "db88a752a7fb1d4cb1921c243dee8b5a75ba2554748f31b2613b714b18c1a504",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1181cc8a51717e2817bfa03c9fb4b8a9",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/conf/licenses.conf",
+   "sha256": "ffaabdb8a084f2e928a9ba57ecebe13dd4ed12d34f0fc1b3527dff423881ce41",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a75c9b468eb49436c29a1d290ede2cac",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/lib/oe/license.py",
+   "sha256": "96e97e69cc50725532f99d955d2773f52ef9d25904a7975265d5f4c81cc7783f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1836efb2eb779966696f473ee8540542",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/lib/oeqa/files/maturin/guessing-game/LICENSE-APACHE",
+   "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "85fd3b67069cff784d98ebfc7d5c0797",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/lib/oeqa/files/maturin/guessing-game/LICENSE-MIT",
+   "sha256": "ea7882c559733766ad08343bde1d1ec80a4967c03a738fb8e0058ef6289f7b7c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "931d1ca5a023e75f9e7da5fb892d0dc5",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/lib/oeqa/selftest/cases/oelib/license.py",
+   "sha256": "6414b86150dc51c242c54d06895645c23ccdf7d6afb307dd457282685ec21044",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "751419260aa954499f7abaabaa882bbe",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-bsp/usbinit/usbinit/COPYING.GPL",
+   "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "94d55d512a9ba36caa9b7df079bae19f",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-core/base-files/base-files/licenses/GPL-2",
+   "sha256": "32b1062f7da84967e7019d01ab805935caa7ab7321a7ced0e30ebe75e5df1670",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4bd090a20bfcd1a18f1f79837b5e3e91",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-core/gettext/gettext-minimal/COPYING",
+   "sha256": "cf71d6e9f48387619ce29cb843213342431aac800f9257c505032eb54e721297",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3dd6192d306f582dee7687da3d8748ab",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-core/init-ifupdown/init-ifupdown-1.0/copyright",
+   "sha256": "c72606efed09f6bf6e17e38541d34a1d21caf4d7c9ca190c19b84a26da4b85d3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5750f3aa4ea2b00c2bf21b2b2a7b714d",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-core/volatile-binds/files/COPYING.MIT",
+   "sha256": "e49a10c9878faef072e5172bb53ec670df2216f310ab3b768bb76cb21098684a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c608985dd5f7f215e669e7639a0b1d2e",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-devtools/docbook-xml/docbook-xml-dtd4/LICENSE-OASIS",
+   "sha256": "bb55b7380d78acbffd15985b5afcef31d4df4a1356dfef517c4b6ec457c7571e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d6bb62e73ca8b901d3f2e9d71542f4bb",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-extended/texinfo-dummy-native/texinfo-dummy/COPYING",
+   "sha256": "a4b7e316de4216ec82037876a4e2da28447f62dc9f4722222d63a9cedab9b43c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "751419260aa954499f7abaabaa882bbe",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "meta/recipes-kernel/linux/linux-dummy/COPYING.GPL",
+   "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "676b85a735db52e9884e2b43ac0bb6d9",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "scripts/lib/recipetool/licenses.csv",
+   "sha256": "985802c5e112a715d8db3d2a789a36611e98d42602ad7bbfa65c3e899e180131",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "44ac4678311254db62edf8fd39cb8124",
+   "owner_component": "openembedded-core",
+   "owner_runtime": "Build",
+   "path": "scripts/pybootchartgui/COPYING",
+   "sha256": "54e1afa760fa3649fa47c7838ac937771e74af695d4cf7d907bc61c107c83dc9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "09280955509d1c4ca14bae02f21d49a6",
+   "owner_component": "pydantic",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "a9e186f3ca16b5eef84318e7a701721351a00cb7b8ae3a4394b67b49e3529ef3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ab599c188b4a314d2856b3a55030c75c",
+   "owner_component": "pydantic",
+   "owner_runtime": "API",
+   "path": "pydantic-core/LICENSE",
+   "sha256": "2afdd30d54b4d62b6f488a6bcc1546e84ec5061f13f4209c03d012348783795a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7ae711d8a91d3871696f50e34ad3c2d7",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c5aaa17915ccc2608224983d654f09a0",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/de/notices.md",
+   "sha256": "6982688ca227377f0dff3844443eec0c73535ee21a4e3e16fd853b6f264b4be1",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9bc84c09ac6cbaf74b64954b73fe15c0",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/es/notices.md",
+   "sha256": "4a1df8740bc381847590254aede19093d51f6cb2e02d49b566f3e42e6f21b05c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "02dd3f824f3e42eb11223cee87cc475d",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/fr/notices.md",
+   "sha256": "dfea3ec1b97cfb981e3c5b71e325e53faa5b39d7c178fc60bab4e2acbe3cd3b7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3cb901bf6371a97f533b997a321a4b8f",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/hi/notices.md",
+   "sha256": "d21f31c6550ff9d0fcbe343d58f4bc78722857bf95febebe7234afe46a5b1d9e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d1d70c611cb0dfa2726c0ac8a8175414",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/ja/notices.md",
+   "sha256": "d48d6c968ab81d36a1cadfd12a0cc64885cd2e04a1dfc34d2402ad6a4708552d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6eb727f05d02a1f9b23c5a98411329c2",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/ko/notices.md",
+   "sha256": "5292e6766e616a5f98aab10b390973ce5f439506fa5f589c4e91b7386a243f4a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f5f5200ed686b40dec9f9b11ef0aa06a",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/notices.md",
+   "sha256": "870c00ee5071b3de0a24b6246d6ffb45132d55922a7d01c28d857f2e6abbab68",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "af3568bcd29e9c5138524318561310f4",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/pt/notices.md",
+   "sha256": "f1a2e87322d22dcc091c99dea4251101cce8d0dbe0bd53bfb3c886f10c3a60cf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "15dbd24ba8ff1e01158959113a2ac963",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/ru/notices.md",
+   "sha256": "73696fb8ba96f943e989e6f8c63add5cbfed22bb231c8c9c525739e47304a5a3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "324f215d10f2f29da28fb01cb512132c",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/tr/notices.md",
+   "sha256": "253eb6050ed3b13279809715b15095021882bb5e429310110ee349133a2e1691",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "dcffe9f43e8298834a2e97c95a3a5a5c",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/uk/notices.md",
+   "sha256": "b863153b677919c1b62280ced35ae2ba87234958530901dc19665da0fc3b05cb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0cc0195c2dd43e1d8a35804704569190",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/zh-hant/notices.md",
+   "sha256": "71408a73f0418b1639d67e4969c778b2e28521e4206b99f1700b573786aa6d7b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5823ea0e31e9c6779bb8bef783c9ffeb",
+   "owner_component": "python-sdk",
+   "owner_runtime": "CLI",
+   "path": "i18n/zh/notices.md",
+   "sha256": "0b06ca8942fa082b70e21c3f903d3edb0f04ae92090c92e163c377150ee40b74",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "40a70f85c8da9f0d41e5f3b71e341229",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": ".ci/manywheel/LICENSE",
+   "sha256": "ccfa95da478e5e0a9f9a09a29974ccac13997d864699eee22175db1eace1a73d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b114fbe63fdb5f7a91332a4aefb61ee5",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "bd018feef8825e88181c84eb7e3aa4eafb8f08a20d9fd6ef948569610c4a3e43",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "dff7a430f36da9b71299379ec419aa39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "NOTICE",
+   "sha256": "c2cc7bf0caec7652c2b460a8a470bea1677f241e4ab8e431df34cf17f5a9fec0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cac82e6f105a5444e031d569a75e7443",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "android/libs/fbjni/LICENSE",
+   "sha256": "f62d190c08e2b300b45780f0b3cabcacc78d0e373f7a0de79d31f82b084d35ea",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f1e2603190afb8bee3644e45853bd55e",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "aten/src/ATen/native/quantized/cpu/qnnpack/LICENSE",
+   "sha256": "ca5018243e6b6b698d927c8bdf99c08ddf119f36d9cf18dda82cd45e75ee5dfc",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "32150729bbb899c7ce46b1d9a0e2cd44",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "aten/src/ATen/native/quantized/cpu/qnnpack/deps/clog/LICENSE",
+   "sha256": "68a14c3e79add023eecd83d611e73f05b8bf1d16852efeb7eb4033a96736da9e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8bf44841b1dd77d3e36317dfd18621b2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "test/cpython/v3_13/LICENSE",
+   "sha256": "8a54c8287138ffef35ecec20e2d3db8d3f2ffe86da69d8f7a2199e07b252cbec",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "998fb0b16ad8a4fb8bd41bf3faf2d21c",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/FP16/LICENSE",
+   "sha256": "17e4f539024be2749ee729d1e2f01d24cef12ece8c9bf18e91a4349be29c80bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0c2eed7ba400a6fea8fec2a582b177e8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/FXdiv/LICENSE",
+   "sha256": "7cac00006125b1486a27e4801ed66357236e984c540bd323945ab7b66b078ec3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c5a9b70072d4baa29517f99984c74aeb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NNPACK/LICENSE",
+   "sha256": "ab09e33621f513ebdd1ef685b324f39c1f6bee9221d15600bafd958322df1231",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3e25197a0d6dfa3023e74295603ae578",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NVTX/LICENSE.txt",
+   "sha256": "abdfd8a6738b27cd1504e091f77b682dbae928339f040b8a6f59a548245991a0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3e25197a0d6dfa3023e74295603ae578",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NVTX/docs/LICENSE.txt",
+   "sha256": "abdfd8a6738b27cd1504e091f77b682dbae928339f040b8a6f59a548245991a0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3e25197a0d6dfa3023e74295603ae578",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NVTX/python/LICENSE.txt",
+   "sha256": "abdfd8a6738b27cd1504e091f77b682dbae928339f040b8a6f59a548245991a0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2380abefcd980848da99c7cc11061e29",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NVTX/rust/LICENSE",
+   "sha256": "e165ed77854f47fb208850d23d935a9f0ab8bb4527381466beeb16025e2f6e9e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d5f2a6dd0192dcc7c833e50bb9017337",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/NVTX/tools/docs/github-markdown-css/license",
+   "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b62a4e76b6f66c9ac6aad3948e3c982",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/VulkanMemoryAllocator/LICENSE.txt",
+   "sha256": "8d70e4cf2a9941f6454da71cd60e38484dd3e34810c824760d550e982af6d97a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "afa8f8a91390ab659c837da57124977c",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/XNNPACK/LICENSE",
+   "sha256": "63f519e15726f4c4f830bd958f694c84fecb4e0a4cacc527d2696bb71ef95ada",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/aiter/3rdparty/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/aiter/3rdparty/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c90dfb7f5776d9561353925f47831d32",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/aiter/LICENSE",
+   "sha256": "0baca809927cad448401b252ce3bae12687c2987597ad7088cf3423f872d5bcd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/benchmark/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3e3bd5d3367ca1cdb53ff11ab44322ea",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/concurrentqueue/moodycamel/LICENSE.md",
+   "sha256": "22331571e5e3dbe4c79ad715e23127bdf3beabd75052c953ddabf191ef799e14",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1321bdf796c67e3a8ab8e352dd81474b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cpp-httplib/LICENSE",
+   "sha256": "4b45cbe16d7b71b89ae6127e26e0d90a029198ca5e958ad8e3d0b8bbed364d8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cabca80e8e4a4bbe90e9a4b4ad53f5f4",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cpuinfo/LICENSE",
+   "sha256": "8e7e60636c3aa0cb03571a1a841ce5697f9551ff92b3c426c2561613d15ade70",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "32150729bbb899c7ce46b1d9a0e2cd44",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cpuinfo/deps/clog/LICENSE",
+   "sha256": "68a14c3e79add023eecd83d611e73f05b8bf1d16852efeb7eb4033a96736da9e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9d5b92ac12c8a9118b4509abee0804b8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cudnn_frontend/LICENSE.txt",
+   "sha256": "3fc4b473a2c08768a8066bf7e4a58a1185060f3ad674f2ca9e2011bca4adf2ce",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f969127d7b7ed0a8a63c2bbeae002588",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cudnn_frontend/include/cudnn_frontend/thirdparty/nlohmann/LICENSE.MIT",
+   "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "869f19a11f1294eb63d1248e7ff505c8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cutlass/LICENSE.txt",
+   "sha256": "ad1513ca983da737a6843364ad19e8424a56d860736c2da773b8c5be527e1475",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c2c0968bbe32f171f90319f299dd248f",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/cutlass/python/LICENSE.txt",
+   "sha256": "00bf1806f664ac1afe4221f5f04b384fb6f1ca6eb33efcb6dccf599eb06d08b9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a09faadc0ce85420f75229a382e62588",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/LICENSE",
+   "sha256": "12c2370ec32e78115dcd71ba22cdcb1297320fdc4ade81f798136d42357c58b8",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "da60683017c3d3944dadd9a6395e27d1",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/asmjit/LICENSE.md",
+   "sha256": "8fc74133788bc8a7aa94168e9913a2d0b0e3f0a6064a0e72a0f1206d5ce9189e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "da60683017c3d3944dadd9a6395e27d1",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/asmjit/db/LICENSE.md",
+   "sha256": "8fc74133788bc8a7aa94168e9913a2d0b0e3f0a6064a0e72a0f1206d5ce9189e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cabca80e8e4a4bbe90e9a4b4ad53f5f4",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/cpuinfo/LICENSE",
+   "sha256": "8e7e60636c3aa0cb03571a1a841ce5697f9551ff92b3c426c2561613d15ade70",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "32150729bbb899c7ce46b1d9a0e2cd44",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/cpuinfo/deps/clog/LICENSE",
+   "sha256": "68a14c3e79add023eecd83d611e73f05b8bf1d16852efeb7eb4033a96736da9e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ce85e3722fa981b4aef41101c60ed4a4",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/cutlass/LICENSE.txt",
+   "sha256": "80a7a18b73d41f64dd9ca881af35938f8de88b18c728703251f4c94d1299884d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3a191d1cab4614f6018588fab3f40222",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/cutlass/python/LICENSE.txt",
+   "sha256": "42fec630f410aa308f70a51a89fadcd19586fa620f9831a32bee528a9a10000e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c7ca682d67f05aa25cd399821a8201eb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/hipify_torch/LICENSE.txt",
+   "sha256": "ecf819d55b17c2f091b3ba0934d044368aa0680d8a81374860306aa2b91aa1eb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b489645de9825cca5beeb9a7e18b6eb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/LICENSE.MIT",
+   "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f739ef75581cae312e8c711bcdab16",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/LICENSES/BSD-3-Clause.txt",
+   "sha256": "5a93d5831e1297ab10fe643e1a631e83be392896da14ee2951285a79012df69d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8da5784ab1c72e63ac74971f88658166",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/LICENSES/GPL-3.0-only.txt",
+   "sha256": "b6a8bf63ae2c95b0aa256ee774680d7bd18f21f457da75466f7610b3b16acc4e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7dda4e90ded66ab88b86f76169f28663",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/LICENSES/MIT.txt",
+   "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0b50ae6ab6b292c61ea813fc02dafce5",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/external/json/docs/mkdocs/docs/home/license.md",
+   "sha256": "d4b7ed0261c2c840e9ccc7d483b3b659bfddc8be797f3007da080f0c4a78d960",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "574e16da9d767579790b0519386f2561",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/fbgemm_gpu/docs/src/general/License.rst",
+   "sha256": "28e8a7bea8e35cc341133847d66ca4b34e7156724e31e7fb62e37872d4259416",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0f5fe03b6862f8b140b55243259ceaa8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/fbgemm_gpu/experimental/hstu/LICENSE",
+   "sha256": "8c9ccb96c065e706135b6cbad279b721da6156e51f3a5f27c6b3329af9416d73",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d4a904ca135bb7bc912156fee12726f0",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/fbgemm_gpu/src/quantize_ops/mx/LICENSE",
+   "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d4a904ca135bb7bc912156fee12726f0",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fbgemm/fbgemm_gpu/test/quantize/mx/LICENSE",
+   "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0f5fe03b6862f8b140b55243259ceaa8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/LICENSE",
+   "sha256": "8c9ccb96c065e706135b6cbad279b721da6156e51f3a5f27c6b3329af9416d73",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/csrc/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/csrc/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ce85e3722fa981b4aef41101c60ed4a4",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/csrc/cutlass/LICENSE.txt",
+   "sha256": "80a7a18b73d41f64dd9ca881af35938f8de88b18c728703251f4c94d1299884d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3a191d1cab4614f6018588fab3f40222",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/csrc/cutlass/python/LICENSE.txt",
+   "sha256": "42fec630f410aa308f70a51a89fadcd19586fa620f9831a32bee528a9a10000e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0f5fe03b6862f8b140b55243259ceaa8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/flash_attn/cute/LICENSE",
+   "sha256": "8c9ccb96c065e706135b6cbad279b721da6156e51f3a5f27c6b3329af9416d73",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c90dfb7f5776d9561353925f47831d32",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flash-attention/third_party/aiter/LICENSE",
+   "sha256": "0baca809927cad448401b252ce3bae12687c2987597ad7088cf3423f872d5bcd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flatbuffers/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "de048fefedc11f95ce6013188756c8c5",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flatbuffers/dart/LICENSE",
+   "sha256": "edd9b3459bee4c79b549a5ef66d06d12bd144ddb8d08e0b448fb421267f43dd5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/flatbuffers/swift/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6ec080902ed8f82f5a97ed13e8042634",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fmt/LICENSE",
+   "sha256": "a65fcc5a1095fc33cc37e4fff69366e49d7e92f613558a2b95ed1b70e33758b4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b9257785fc4f3803a4b71b76c1412729",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/fmt/doc/LICENSE-exception",
+   "sha256": "07580f2a3b35709ce703d523f447b242f6dfec7582a8c0df102c7fa2849375f8",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/gemmlowp/gemmlowp/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ea1ecec5f757696cea349b925fa70342",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/gloo/LICENSE",
+   "sha256": "2afbc572cf7f60888159bc2ca48ba58f8adec06682ae5de820d61449d1eeea81",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "75598a838148e597d8f0e810a57f3855",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/gloo/gloo/transport/uv/LICENSE.uvw",
+   "sha256": "ea786619b4d1b2ba0a188e923111122dfefea1d01c86e37f9e8c80bdbc3ea400",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fcb77001387249feb8deb2934a2a0172",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/LICENSE",
+   "sha256": "a26add03107a53a605a89711b9b7dbd4f5dd668ae193a912e01a879366a23b0e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "05fda7e0b3a0fe6749e8443316fc9a3f",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/LICENSE",
+   "sha256": "e9fc874fc09801b9acf3411ba72394098473704d832d713404b6c4861a086318",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/third_party/gtest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e671ff178b24a95a382ba670503c66fb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/third_party/ittnotify/LICENSE.BSD",
+   "sha256": "51e80f0261cdc1962e9b9a1c80f9aa6a7adf0b05f0f217caf59141f59b2ad1c1",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5a03e1700352959938c2b169e3270087",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/third_party/ngen/COPYRIGHT",
+   "sha256": "2e3a976489278a87e8372cec964ccce325acb67399d9d50a0a1d19fb3050bf62",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/third_party/opencl/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b9bf048d063d54cdb28964db558bcc7",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ideep/mkl-dnn/third_party/xbyak/COPYRIGHT",
+   "sha256": "f8ddc1b38c2ba3d472abe83d66bd5bad6206e9fe50ac33ea3872069056beb8e2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c551872bcf41ce707df54c722edeca7b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ittapi/LICENSES/BSD-3-Clause.txt",
+   "sha256": "cf48cdd9ed87c2031b68fb1b9f4cfb55d00dcf815b21a30bf8304aa1e5e6f76a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e2d76e7801260c21b90eea3605508ad6",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/ittapi/LICENSES/GPL-2.0-only.txt",
+   "sha256": "cbe0f9505c5ca02ee34bfca453df31a98e31e6d56afcdf8ab0f87f4c94f1181b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b8952a632483f083083970d123bb2f24",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/LICENSE",
+   "sha256": "6f3d59b9103e72e5c977eecf61b261c2e1546a9be2995847e3ee2d31021fd39b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "901f6cd9846257b3a9c69dbd0a49caf1",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/dynolog_headers/LICENSE",
+   "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b9257785fc4f3803a4b71b76c1412729",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/fmt/LICENSE",
+   "sha256": "07580f2a3b35709ce703d523f447b242f6dfec7582a8c0df102c7fa2849375f8",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b489645de9825cca5beeb9a7e18b6eb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/LICENSE.MIT",
+   "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f739ef75581cae312e8c711bcdab16",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/LICENSES/BSD-3-Clause.txt",
+   "sha256": "5a93d5831e1297ab10fe643e1a631e83be392896da14ee2951285a79012df69d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8da5784ab1c72e63ac74971f88658166",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/LICENSES/GPL-3.0-only.txt",
+   "sha256": "b6a8bf63ae2c95b0aa256ee774680d7bd18f21f457da75466f7610b3b16acc4e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7dda4e90ded66ab88b86f76169f28663",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/LICENSES/MIT.txt",
+   "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0b50ae6ab6b292c61ea813fc02dafce5",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kineto/libkineto/third_party/json/docs/mkdocs/docs/home/license.md",
+   "sha256": "d4b7ed0261c2c840e9ccc7d483b3b659bfddc8be797f3007da080f0c4a78d960",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kleidiai/LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f739ef75581cae312e8c711bcdab16",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/kleidiai/LICENSES/BSD-3-Clause.txt",
+   "sha256": "5a93d5831e1297ab10fe643e1a631e83be392896da14ee2951285a79012df69d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "755d65af9d209fb823af1a6023c19d12",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/llvm-openmp/LICENSE.txt",
+   "sha256": "68395143f21a9aa29b8232168c71892af5ec4f1ae2529571cd250a71c9e37a03",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fade5fb11a9703a4216c1b5133efdc7f",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mimalloc/LICENSE",
+   "sha256": "82ade5d7d9b029044b5fbbc326207fc47c2d44ee4dd71e8a559c36d728217de9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "292e2564dd2edd7c3ee1eb1e50480e25",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/miniz-3.0.2/LICENSE",
+   "sha256": "0115478d567121238cf6cc1c0c361926cf07a49d9e4c9e66da97fac6a01646b3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d92c311ec29a53cecbde7d07b2bf4725",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/LICENSE",
+   "sha256": "44519cbe722d7bf092cd7e0fa26558b9e3905b88fca4c0c278e2733a9f6b4cf9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2049c7351121e693518087ea93a76da2",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/composable_kernel/LICENSE",
+   "sha256": "20f3b83dfda01bd18d285e0edbb9d044be6dde04cdf76a1ec18d9fc7127936bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f108c9f3047895b571fd7c1a8f831c39",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/composable_kernel/docs/license.rst",
+   "sha256": "527eec8a9670f793119a685a3510369e5fd64b45515a885c7226641777ecff8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ce85e3722fa981b4aef41101c60ed4a4",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/cutlass/LICENSE.txt",
+   "sha256": "80a7a18b73d41f64dd9ca881af35938f8de88b18c728703251f4c94d1299884d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3a191d1cab4614f6018588fab3f40222",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/cutlass/python/LICENSE.txt",
+   "sha256": "42fec630f410aa308f70a51a89fadcd19586fa620f9831a32bee528a9a10000e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c7ca682d67f05aa25cd399821a8201eb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/external/hipify_torch/LICENSE.txt",
+   "sha256": "ecf819d55b17c2f091b3ba0934d044368aa0680d8a81374860306aa2b91aa1eb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0f5fe03b6862f8b140b55243259ceaa8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/mslk/mslk/attention/flash_attn/LICENSE",
+   "sha256": "8c9ccb96c065e706135b6cbad279b721da6156e51f3a5f27c6b3329af9416d73",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b489645de9825cca5beeb9a7e18b6eb",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/LICENSE.MIT",
+   "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f739ef75581cae312e8c711bcdab16",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/LICENSES/BSD-3-Clause.txt",
+   "sha256": "5a93d5831e1297ab10fe643e1a631e83be392896da14ee2951285a79012df69d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8da5784ab1c72e63ac74971f88658166",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/LICENSES/GPL-3.0-only.txt",
+   "sha256": "b6a8bf63ae2c95b0aa256ee774680d7bd18f21f457da75466f7610b3b16acc4e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7dda4e90ded66ab88b86f76169f28663",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/LICENSES/MIT.txt",
+   "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0b50ae6ab6b292c61ea813fc02dafce5",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/nlohmann/docs/mkdocs/docs/home/license.md",
+   "sha256": "d4b7ed0261c2c840e9ccc7d483b3b659bfddc8be797f3007da080f0c4a78d960",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/onnx/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/onnx/LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d0f280d1058e77e66264a9b9e10e6c89",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/onnx/LICENSES/BSD-2-Clause.txt",
+   "sha256": "f32fb3b417a194167cfad068223fc975ba96c5960513a10f66a3c28720aec1df",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "65d3616852dbf7b1a6d4b53b00626032",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/onnx/LICENSES/CC0-1.0.txt",
+   "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "774f65abd8a7fe3124be2cdf766cd06f",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/onnx/third_party/pybind11/LICENSE",
+   "sha256": "83965b843b98f670d3a85bd041ed4b372c8ec50d7b4a5995a83ac697ba675dcb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b06e43f2e368eb8663632d529232353",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/perfetto/LICENSE",
+   "sha256": "9a682a56cffc9524dfa9b0b1c0dca9cb81a19e96d5bd0793aaf02c08a95ee7ca",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bb0e49a83ba802d32f3a05a7b8b2180b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/pocketfft/LICENSE.md",
+   "sha256": "a85ca13fdf90160b64a0698215868c13b74d835ad0a4e2ba44713b8c5058a056",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "37b5762e07f0af8c74ce80a8bda4266b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/LICENSE",
+   "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/benchmark/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/googletest/googlemock/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2c0b90db7465231447cf2dd2e8163333",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/googletest/googlemock/scripts/generator/LICENSE",
+   "sha256": "5e0df8c845c742e76f2f64d2d9ce1b7e74a2422fddbc577ae6a56319083de0bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/googletest/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ef460f31070fd7184bd9059de2e4b132",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/protobuf/third_party/utf8_range/LICENSE",
+   "sha256": "5a629d2b868081d8af08bbce5d038116f3a0e2e0d4ce9adf4d53f14e76b6b2e0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1a15870c3c6ac367fa27851881128c00",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/psimd/LICENSE",
+   "sha256": "984ce1e0b8ee89d234e28b960381f240e03a07a8031f35012f9c3256f56964e2",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1609499688b503850848d795dce4da2d",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/pthreadpool/LICENSE",
+   "sha256": "57814a606b4d0fb087d9a534919084b6c11b58a4174cb5a4aef200187780dc3a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "774f65abd8a7fe3124be2cdf766cd06f",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/pybind11/LICENSE",
+   "sha256": "83965b843b98f670d3a85bd041ed4b372c8ec50d7b4a5995a83ac697ba675dcb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "083a76258b33cfe514a466d172aca1d6",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/python-peachpy/LICENSE.rst",
+   "sha256": "e6d6fdbfc09c9cc1bfc55946ca9690dd9276deeaed2b72ac7fc5c79bde80ff32",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e4224ccaecb14d942c71d31bef20d78c",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/sleef/LICENSE.txt",
+   "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c6c727097c1e044f8e6ef0bce769aba3",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/LICENSE.txt",
+   "sha256": "f4dcef0d1f0520b414d5bfaeed8df02f188e4ec05c0a17bf1c18f25f6cc66245",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/googletest/googlemock/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2c0b90db7465231447cf2dd2e8163333",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/googletest/googlemock/scripts/generator/LICENSE",
+   "sha256": "5e0df8c845c742e76f2f64d2d9ce1b7e74a2422fddbc577ae6a56319083de0bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cbbd27594afd089daa160d3a16dd515a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/googletest/googletest/LICENSE",
+   "sha256": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4e5640559f0849cf863b1dc47bac078b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/libnop/LICENSE",
+   "sha256": "876e8f7432440974ee5543a2aa1344370ef1f2f7949ad98a1f3899cf722d5631",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "74b6f2f7818a4e3a80d03556f71b129b",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/libuv/LICENSE",
+   "sha256": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "eacc0b19e3fb8dd12d2e110b24be0452",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/libuv/LICENSE-docs",
+   "sha256": "cce5d01fa4a83b794271bd2c28cffdf99afd43c803e6ddefddae39b591ea7448",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f9307417749e19bd1d6d68a394b49324",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/libuv/LICENSE-extra",
+   "sha256": "262c44bd2cdba037e6d2a82fba15f5800d292bc993a6f5d6b6ea487744d02836",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "beb87117af69fd10fbf9fb14c22a2e62",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/pybind11/LICENSE",
+   "sha256": "9a37ea54aa3cf12c7f3292799f20822ffd4b9b7142b36a7a9997b28c39264dc9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "dfabea443c6c16b6321441a8c8c19705",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "third_party/tensorpipe/third_party/pybind11/tools/clang/LICENSE.TXT",
+   "sha256": "23c817ddf55e9a8ea332a376e6c23469c31a6c833516385cf0662767ba863276",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "faadaedca9251a90b205c9167578ce91",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "torch/_vendor/packaging/LICENSE",
+   "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2ee41112a44fe7014dce33e26468ba93",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "torch/_vendor/packaging/LICENSE.APACHE",
+   "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7bef9bf4a8e4263634d0597e7ba100b8",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "torch/_vendor/packaging/LICENSE.BSD",
+   "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "torch/_vendor/quack/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "98901c53ec07ed4a714ccd6fc454320a",
+   "owner_component": "pytorch",
+   "owner_runtime": "Common",
+   "path": "torch/fx/experimental/unification/LICENSE.txt",
+   "sha256": "d0eb08f977f3dee279187e77074ae959b8a1e261482eeb49b04ba39b95a928dd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "safetensors",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "safetensors",
+   "owner_runtime": "Common",
+   "path": "bindings/python/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "safetensors",
+   "owner_runtime": "Common",
+   "path": "safetensors/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bdb6f7facb161e909d9554c4dba7e3d5",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "COPYING",
+   "sha256": "50d6a9d340f19ab355609917993114daf5f47e3161067bcf34955bbd05cd9cb0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "74fe73a2347614be92ca02e88ccb635e",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "build_tools/wheels/LICENSE_linux.txt",
+   "sha256": "f19565f341cd43a14bf338a105038ba14679c095f16c3cabe2aa84d313a02e6b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0de7c72eb7424592824af78da6be6820",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "build_tools/wheels/LICENSE_macos.txt",
+   "sha256": "d959b421895aa93a6cb97c39c1dd7a43f80d335e62ead4a1a235471776687f2c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "802ab916560bd734a79d42a2976716f8",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "build_tools/wheels/LICENSE_windows.txt",
+   "sha256": "55c28f01fdb192a87d5270d7b4dcc766bb4d2d259230476302b5ab88f6586643",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3d4ab4243dc36b64cb5d45edfcff7242",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "sklearn/externals/array_api_compat/LICENSE",
+   "sha256": "4ffd978e3fa18d058d98c66771cfea7ed634aaf7023cf9612b8b55eee9a8f0fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "88200d470f94211ec903b46e40b5c09b",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "sklearn/externals/array_api_extra/LICENSE",
+   "sha256": "58494398fe147fdce76a68b2decd4c08ce3a1ea237b6d6785001c15f822c6ed6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4baf47a10698d8d50aa7907b77be55e9",
+   "owner_component": "scikit-learn",
+   "owner_runtime": "Ravencalc",
+   "path": "sklearn/svm/src/liblinear/COPYRIGHT",
+   "sha256": "36f048db5651dd450f03e513016b77036cc99a44a66b2fdcecf4f6418657e0e1",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6506a2e1578b1a1161d9bda0b896c647",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE.txt",
+   "sha256": "221e59f5e910fd7f94e44f0dac77436a11338c285c6346232e4a850a50da0e94",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fe2784111ff83b9451741c37b82985c6",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSES_bundled.txt",
+   "sha256": "45b1a2cf4eb57277812fcbca2b6af7d84e98c942a5e4dcc360610f49de16c63f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "doc/source/_static/scipy-mathjax/LICENSE",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a0fff136e7abb00075d7bd1e9a1ecd71",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/_build_utils/tempita/LICENSE.txt",
+   "sha256": "743b0f4a0087fe3607167113fffab6f2ca069c8da321763697ab5d0d8411634a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7bef9bf4a8e4263634d0597e7ba100b8",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/_external/packaging_version/src/LICENSE.BSD",
+   "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "785bcc9127bd3157d67fa9ed552bddd4",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/_lib/_uarray/LICENSE",
+   "sha256": "c80c39b5fce06ba4897e14e0b0a88b54458334d951eb1361402ffad2cfb863b4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6a98c867d6c3e06afef9ac46fec0be7a",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/fft/_duccfft/LICENSE.md",
+   "sha256": "c254b2b5fd30ae3c89d36ba061730563b9760fca04f1b746a1b2c3157da2c789",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2134dd11e6d5e1d601d0caf43806ecc6",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/integrate/src/LICENSE_DOP",
+   "sha256": "ed9bf58c6d74d3fad9d92d1d67d9bff8141d8ab60de784516b0711364fd43357",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8b849aeb8994a3701e153d713aa3dd1b",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/io/_fast_matrix_market/LICENSE.txt",
+   "sha256": "4421977664ada9a02087ab1b031b50335f02b500e2cb58a1757074f31b4a89f5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "32b11d50c7d9788d4270f6a83f3e68eb",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/io/_fast_matrix_market/fast_matrix_market/dependencies/fast_float/LICENSE-MIT",
+   "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e4224ccaecb14d942c71d31bef20d78c",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/io/_fast_matrix_market/fast_matrix_market/dependencies/ryu/LICENSE-Boost",
+   "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "35b5198447c00d3274a4a2f2c6732e97",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/ndimage/LICENSE.txt",
+   "sha256": "606209a000716c5f66e33e180ce08434b96ed17db4975ab9723c6b5fbcc89609",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d0c85669acd941e21db1c3564aea3ea7",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/optimize/_direct/COPYING",
+   "sha256": "a7669da81aac1b0539f161cf93d6a94956d24ff476537e0b0579925997eec3f0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2a0a9f478766a7418ed1f73074e010bd",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/optimize/tnc/LICENSE",
+   "sha256": "3df9207af2fdb861af0ae3b22026f163b9bcfab4e525dc4943afe2ffa3f77624",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "665d3a848ec7c94b78ae986bd84e640a",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/sparse/linalg/_dsolve/SuperLU/License.txt",
+   "sha256": "f0cedf52503b2d42b83411a0a16e6fefac346dfad8fddc66f50050150123470c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9b2e3c8e43456099bcdd92d5f14fe653",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/sparse/linalg/_eigen/arpack/arnaud/LICENSE",
+   "sha256": "f49da99252dee2c12dbd5c71762b0724063f4531de193fbcece550ad9a3b6354",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9b2e3c8e43456099bcdd92d5f14fe653",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/sparse/linalg/_propack/PROPACK/LICENSE",
+   "sha256": "f49da99252dee2c12dbd5c71762b0724063f4531de193fbcece550ad9a3b6354",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "484ee0cacf0472e8b40225b116f6296c",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/spatial/COPYING_QHULL.txt",
+   "sha256": "106d55c931fd6a84822e5345d900273d059f1c27310d02567ccb313c5d18c55d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "976bf80440d83cd2207c837079e5d02f",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "scipy/stats/biasedurn/license.txt",
+   "sha256": "c2bf3b1e5a5cde539b9f8e38b5c870f49db0b5f01c7f9cdd1d1291bafc81d22f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3d4ab4243dc36b64cb5d45edfcff7242",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/array_api_compat/array_api_compat/LICENSE",
+   "sha256": "4ffd978e3fa18d058d98c66771cfea7ed634aaf7023cf9612b8b55eee9a8f0fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "88200d470f94211ec903b46e40b5c09b",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/array_api_extra/LICENSE",
+   "sha256": "58494398fe147fdce76a68b2decd4c08ce3a1ea237b6d6785001c15f822c6ed6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e4224ccaecb14d942c71d31bef20d78c",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/boost_math/math/LICENSE",
+   "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c802e16ca7e81e49f8ae378190cc516d",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/boost_math/math/doc/sf/license.qbk",
+   "sha256": "cd1fa4b1126b015d9705f52d2f71b0824a7844410cdc57fadf26699e6b386017",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "292ce648cea6d89fe8f89f8c1db15801",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/cobyqa/.github/workflows/license.yml",
+   "sha256": "13f8b813fefcb28457fc72c77fb6913dd4ee043d52841b4e21dff70868c77bbd",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6c6dac86d60e66e4928fda256ac4ae5f",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/cobyqa/LICENSE",
+   "sha256": "a4d7975be6d6487b7125ce6e79f299a5396b300b1a67e3644a1cf6467b426708",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ed62f09b8c08c12d08aef3dac52006dc",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/cobyqa/doc/source/license.rst",
+   "sha256": "51360f9096b34021dee78d8a34869f3c8d740fda65ea2a9eeda6d477cc8cc61d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6a98c867d6c3e06afef9ac46fec0be7a",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/duccfft/LICENSE.md",
+   "sha256": "c254b2b5fd30ae3c89d36ba061730563b9760fca04f1b746a1b2c3157da2c789",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0a78ef4281a31099889742071b95635c",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/highs/LICENSE.txt",
+   "sha256": "10b39dba7b7731175f0705398b6db4320b64add1bd2ed9f9ec5b512a9ef1bd95",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2c7a3fa82e66676005cd4ee2608fd7d2",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/highs/extern/LICENCE_1_0.txt",
+   "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5b046dfed7566c31370696024903db41",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/highs/extern/filereaderlp/LICENSE",
+   "sha256": "4374bb8064e5302f5ac6b82fd3e153a36670f04d0a6ee1bc55b3dc3faee923cc",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "562cb442602ac60b605e540b3934c57b",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/highs/extern/pdqsort/license.txt",
+   "sha256": "323fc18e35fcf058d69d684022ef844f206cb8fefb2bac1298fa1767e0b9ae38",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e9819379180c72070bdccc5485bdb692",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/pyprima/pyprima/LICENCE.txt",
+   "sha256": "997379b2c1bf53a391d2fd3295dce75bf3c94ed28d64882ede30d1b518cb0dd6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "484ee0cacf0472e8b40225b116f6296c",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/qhull_r/libqhull_r/COPYING.txt",
+   "sha256": "106d55c931fd6a84822e5345d900273d059f1c27310d02567ccb313c5d18c55d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9ec7f489493515510bc7635f078c44a5",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/unuran/license.txt",
+   "sha256": "8d62d5c8e1752ee5c3d3a0f8fd0dd0b45865c243fa282cf5e63f00288a01c5ee",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4a2f7003fc1fbf4b17679372f1dd4307",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/xsf/LICENSE",
+   "sha256": "632f86f8bd24a264ac49c002f39866f407a38e8cbd8a6568df7596cc7fbe0048",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e22ae48aba34d559c03cdae4a38549b4",
+   "owner_component": "scipy",
+   "owner_runtime": "Ravencalc",
+   "path": "subprojects/xsf/LICENSES_bundled.txt",
+   "sha256": "e28d89b1e6c248e98d1f02c946f52556e76e8757bec371cf5a67bffe7aa43cac",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "11e8c8dbfd5fa373c703de492140ff7a",
+   "owner_component": "starlette",
+   "owner_runtime": "API",
+   "path": "LICENSE.md",
+   "sha256": "dcb95677a02240243187e964f941847d19b17821cf99e5afae684fab328c19bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "stratum",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE-APACHE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "abd40148cf3f5fc7a8052c45980fa081",
+   "owner_component": "stratum",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE-MIT",
+   "sha256": "638da3722c9e102ccd8011d82f61ae3b611174e4a0f8da185c582df137b60a8c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "14ecc01e3adadf9652f355df43b4855f",
+   "owner_component": "stratum",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE.md",
+   "sha256": "437462a699a2c34c46a0b566b06f041ea5f54652a10e73e8ac13e9c6becbd1d0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "sv2-apps",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE-APACHE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "abd40148cf3f5fc7a8052c45980fa081",
+   "owner_component": "sv2-apps",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE-MIT",
+   "sha256": "638da3722c9e102ccd8011d82f61ae3b611174e4a0f8da185c582df137b60a8c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "14ecc01e3adadf9652f355df43b4855f",
+   "owner_component": "sv2-apps",
+   "owner_runtime": "Crypto",
+   "path": "LICENSE.md",
+   "sha256": "437462a699a2c34c46a0b566b06f041ea5f54652a10e73e8ac13e9c6becbd1d0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bd3412dad92085eb3afc5bf9d701adf0",
+   "owner_component": "sv2-spec",
+   "owner_runtime": "Crypto",
+   "path": "License/BSD-3-Clause",
+   "sha256": "c0d4dcb99e5b34c2816ec9dcc0abba0d475465458bd6cf1c9626dc31c8f2248c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "65d3616852dbf7b1a6d4b53b00626032",
+   "owner_component": "sv2-spec",
+   "owner_runtime": "Crypto",
+   "path": "License/CC0-1.0",
+   "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ea48085d7dff75b49271b25447e8cdca",
+   "owner_component": "sympy",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "07a5e9819f727b4986ad2829c7a29a6320d42575f720eb24d71b7fef573a0286",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d6236a858ffac8a4743506872d5c1039",
+   "owner_component": "sympy",
+   "owner_runtime": "Ravencalc",
+   "path": "data/TeXmacs/LICENSE",
+   "sha256": "596639d3681fdb67bb2f05a9fcd2503d88bc549471a89b2e500cd9759ae2a3fa",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b70381bd640070cb20be9d6f93f47036",
+   "owner_component": "sympy",
+   "owner_runtime": "Ravencalc",
+   "path": "sympy/parsing/latex/LICENSE.txt",
+   "sha256": "007bc30a58fa40a996e772047120de4eaf31f5110e4f9c3b5f93fcdfbe2eaca1",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "tokenizers",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "195ddbbc20ae4e81cdc1d6b1c0d8846c",
+   "owner_component": "tokenizers",
+   "owner_runtime": "Common",
+   "path": "bindings/node/LICENSE",
+   "sha256": "02965ed67e29f871a53f7a7afa593a0ddc8020f86ccce0faaf1aa59215b5269e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "tokenizers",
+   "owner_runtime": "Common",
+   "path": "tokenizers/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d15f16de23b5d7f8e28dd073d2ed8b28",
+   "owner_component": "transformers",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "048160ce07d177648e699b6f41a72b9a",
+   "owner_component": "triton",
+   "owner_runtime": "LLM",
+   "path": "LICENSE",
+   "sha256": "92640fb97222fd0a698ff28ce0c3782c172623f8d6c609b557636a80f28fb946",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1077d374bd619bc68bfe2023d1fabf76",
+   "owner_component": "triton",
+   "owner_runtime": "LLM",
+   "path": "third_party/f2reduce/LICENCE.txt",
+   "sha256": "e18b77c5b0f23ee0f20d391ea2b49a05d571a9656248cfb057c4e0e44faf58b5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5498bbc0155db622ff063f9f7396da88",
+   "owner_component": "typescript-sdk",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5c778842f66a649636561c423c0eec2e",
+   "owner_component": "uvicorn",
+   "owner_runtime": "API",
+   "path": "LICENSE.md",
+   "sha256": "efe1acf3e62fb99c288b0ec73e5a773b7268ef4320fe757ea994214e4b63c371",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "vllm",
+   "owner_runtime": "LLM",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "736e631fc66c620b9a29da9df68ec51e",
+   "owner_component": "vllm",
+   "owner_runtime": "LLM",
+   "path": "vllm/third_party/flash_linear_attention/LICENSE",
+   "sha256": "1350bfbef13ce4d3d3bdaa2f1fc4b1d1117d846732a2a62f891a67f3d5356d0d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2ee41112a44fe7014dce33e26468ba93",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "LICENSE",
+   "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "163972d49c2f7a3d3b687aeb48e9e3c9",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "samples/nodejs-compat-fs-graceful/graceful-fs/LICENSE",
+   "sha256": "f65c5d9f22a317b2a10803bd1868461ce6499c2ed7217bc80c0cc772a748789c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/flags/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/flags/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/build/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/build/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/cmd/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/cmd/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/lib/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/gen/lib/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/macro/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b377b220f43d747efdec40d69fcaa69d",
+   "owner_component": "workerd",
+   "owner_runtime": "Web",
+   "path": "src/rust/cxx/macro/LICENSE-MIT",
+   "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a02f91b8dd3b6abe453990b6e5bd19f7",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "LICENSE-MIT",
+   "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "packages/unenv-preset/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "eec2769ea60c80cc76956f0638348024",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "packages/unenv-preset/LICENSE-MIT",
+   "sha256": "6967403e44e729441704474cffc39c1e6f30602ee086d2669f8d68a9a0c89828",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "22a53954e4e0ec258dfce4391e905dac",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "packages/workers-auth/LICENSE-APACHE",
+   "sha256": "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a02f91b8dd3b6abe453990b6e5bd19f7",
+   "owner_component": "workers-sdk",
+   "owner_runtime": "Web",
+   "path": "packages/workers-auth/LICENSE-MIT",
+   "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+   "status": "UNRESOLVED"
+  }
+ ],
+ "note": "LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts. This is drift evidence, not a licensing conclusion.",
+ "schema": "symoneural-license-inventory/2"
+}

@@ -28,3 +28,27 @@ Symoneural-*/prod/lib/*
 
 # Generated tree inventories - large and regenerable
 *.tree.txt
+
+# Python bytecode from the scanner suite
+__pycache__/
+*.pyc
+
+# Sandbox scaffolding (NOT project files)
+# These paths are character devices (/dev/null shims, owner nobody:nogroup)
+# injected by the execution environment. Git cannot stage a device node, but
+# they otherwise appear as untracked noise. Listed narrowly and never covering
+# a path that could be a real project file.
+#
+# .gitmodules is DELIBERATELY NOT listed. A repository carrying submodule
+# configuration must never silently ignore it.
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.mcp.json
+.ripgreprc
+.idea
+.vscode
+.claude/
