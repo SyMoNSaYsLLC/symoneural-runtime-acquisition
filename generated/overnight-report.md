@@ -166,3 +166,48 @@ estate-correctness rule — source and recipe must agree). Intent was declared i
 not the acquisition.
 
 The project's copy of its own build stack is no longer a stale souvenir of it.
+
+## PHASE 5 — Rust: Crypto and Remix · IN PROGRESS
+
+All three Rust recipes were bare recipetool stubs: **no inherit, no crates.inc**.
+
+stratum prepared: `inherit cargo cargo-update-recipe-crates`, and
+`bitbake -c update_crates` generated **233 `crate://` entries** into
+`recipes/symoneural-stratum/symoneural-stratum-crates.inc` — tracked in git, not
+resolved from the network at build time.
+
+**Offline-proof method corrected mid-phase.** My first attempt ran `-c fetch` on stratum
+alone, then `BB_NO_NETWORK=1`. That failed on `rust-source` and `llvm-project-source` —
+because `-c fetch` on one recipe does not fetch the *toolchain's* sources. That was a
+flaw in my test, not a finding. Correct form is `--runall=fetch` across the whole
+dependency closure, then compile offline. `FETCH rc=0` with the full closure pulled;
+offline compile running (llvm-native is the long pole — rust 1.98.1 and LLVM 23 build
+from source).
+
+## PHASE 7 — LLM: llama.cpp · PREPARED, NOT YET BUILT
+
+**Misdetection found: llama.cpp inherited `python_poetry_core`.** It ships a
+`pyproject.toml` for helper scripts and recipetool picked that over the `CMakeLists.txt`
+that actually builds the project — so a C++ project was being built as a Python package.
+Corrected to `inherit cmake`, with
+`-DBUILD_SHARED_LIBS=ON -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF`
+(`GGML_NATIVE=OFF` because `-march=native` would bake the build host's CPU into a
+cross-compiled artifact). A scan for the same misdetection across all other recipes
+came back clear.
+
+## PHASE 6 — Node consumers · BLOCKED ON A PRIOR DECISION
+
+`nodejs_24.21.0` is available via meta-oe and the layer is in CLI, Streamer and Web
+bblayers. But **three of the four consumers have no recipe at all**:
+
+| Component | State |
+|---|---|
+| hls.js | recipe exists (generic stub, no inherit) |
+| anthropic-sdk-typescript | **NO RECIPE** |
+| mcp typescript-sdk | **NO RECIPE** |
+| workers-sdk | **NO RECIPE** |
+
+Those three were acquired by plain `git clone` under the v1.2 rules, which permitted
+cloning but not `devtool add`. They have source at the intended revision and no recipe to
+build it. Creating recipes needs `devtool add` against an existing tree, or hand-authored
+recipes — an acquisition-path decision, not a build fix. Recorded; not invented tonight.

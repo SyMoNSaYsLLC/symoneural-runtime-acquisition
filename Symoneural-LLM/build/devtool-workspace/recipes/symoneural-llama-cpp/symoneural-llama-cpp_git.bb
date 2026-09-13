@@ -44,9 +44,17 @@ SRCREV = "5266f24da75dc449bd56cbed7addb9c8e4a6a73e"
 S = "${WORKDIR}/git"
 
 # NOTE: spec file indicates the license may be "MIT"
-inherit python_poetry_core
+# recipetool inherited python_poetry_core here: llama.cpp ships a pyproject.toml
+# for its helper scripts, and the detector picked that over the CMakeLists.txt that
+# actually builds the project. llama.cpp is C++/cmake.
+inherit cmake
 
 
 # WARNING: We were unable to map the following python package/module
 # runtime dependencies to the bitbake packages which include them:
 #    torch
+
+# CPU-only build. llama.cpp defaults BUILD_SHARED_LIBS off; we want the shared
+# library so it can become a SyMoNeuRaL artifact. GGML_NATIVE is disabled because
+# -march=native would bake the build host's CPU into a cross-compiled artifact.
+EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF"
