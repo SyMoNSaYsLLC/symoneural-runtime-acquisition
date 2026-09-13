@@ -221,3 +221,85 @@ the irreplaceable together.
 
 12e's `find / -xdev` sweep will find **nothing** — confirmed by search of `/home`,
 `/yocto` and `/`. Every row is a FETCH, not a MOVE.
+
+## PRIOR-ESTATE EVIDENCE — /yocto, a second OE estate that DID build
+
+`/yocto` is a complete, separate OpenEmbedded estate (492 GB partition, 112 GB
+used) with its own `bitbake`, `openembedded-core`, `meta-openembedded`, a 41 GB
+sstate-cache, and **three custom layers**: `meta-symoneural`,
+`meta-symoneural-bsp`, `meta-cryptocurrency`. Last built 2026-08-25.
+
+It is not a failed experiment. `build-ai6.log` ends:
+
+```
+NOTE: Tasks Summary: Attempted 9334 tasks of which 9313 didn't need to be rerun
+      and all succeeded.
+```
+
+**It reached a working state, then was abandoned** — the work moved to
+`/home/google/Symoneural`, then to `SymonSaysLLC`. Read-only; nothing imported.
+
+### Five failures before it worked — and four are defect classes we have hit
+
+| Build | Failure | Our equivalent |
+|---|---|---|
+| `build-ai` | `do_unpack` failed on `python3-safetensors`, `python3-huggingface-hub` | the `python_maturin` / Rust-closure recipes, Phase 13b |
+| `build-ai2` | `do_create_spdx: Cannot find any text for license LicenseRef-NVIDIA-Proprietary` | **identical** to `LicenseRef-netlib-BLAS` needing a text file under `meta-symoneural/files/custom-licenses/` (O4) |
+| `build-ai3` | `do_package_qa: non -staticdev package contains static .a library` | **identical** to numpy's `FILES:${PN}-staticdev` and stratum's rlibs → `-staticdev` (R12') |
+| `build-ai4` | `do_package_qa: Architecture did not match (Unknown (243), expected x86-64) in /usr/lib/firmware` | what 12a's `INSANE_SKIP` exists for |
+| `build-ai5` | `do_rootfs: Unable to install packages` | no equivalent yet — we build no image |
+
+**`build-ai2` is the one to act on.** 12a specifies `LICENSE "Proprietary"` with
+`LIC_FILES_CHKSUM` on the EULA. The prior estate proves that is not sufficient on
+its own: a `LicenseRef-*` token with **no corresponding text file** fails
+`do_create_spdx` outright. The NVIDIA EULA text must be placed under
+`meta-symoneural/files/custom-licenses/` exactly as O4 requires for netlib-BLAS —
+same mechanism, same failure if skipped.
+
+### A different CUDA strategy, already proven to build
+
+12a specifies the CUDA Toolkit as **one binary recipe** from NVIDIA's local
+installer. The prior estate did something else: **CUDA as PyPI wheels at 13.0.48**,
+one recipe per component —
+
+```
+python3-nvidia-cuda-runtime   cuda-nvrtc   cuda-cupti   cublas   cudnn-cu13
+cufft   cufile   curand   cusolver   cusparse   cusparselt-cu13
+nccl-cu13   nvjitlink   nvshmem-cu13   nvtx
+```
+
+That is how PyTorch itself ships CUDA. Trade-off, stated plainly:
+
+* **Wheels**: no EULA acceptance for the toolkit, each component versioned and
+  licensed separately, proven to build here — but it is a *runtime* set. It gives
+  no `nvcc`, so 12c's `-DGGML_CUDA=ON` compile has nothing to compile with, and
+  12's GATE (`run.do_compile shows the estate's nvcc`) cannot be satisfied.
+* **Local installer (12a as written)**: provides `nvcc`, satisfies the GATE,
+  requires `LICENSE_FLAGS "commercial"` and the EULA text file.
+
+**They are not alternatives — llama.cpp needs `nvcc`, PyTorch needs the runtime
+wheels.** Phase 12 needs 12a; Phase 13 may want the wheel set. Recorded so 13
+does not rebuild from scratch what already exists at `/yocto/meta-symoneural`.
+
+### A packagegroup and an image already exist there
+
+```
+packagegroup-symoneural-ai
+  ├── ${PN}-cuda        11 nvidia wheel packages
+  ├── ${PN}-torch       python3-torch
+  └── ${PN}-diffusion
+
+core-image-symoneural   inherit symoneural-core-image
+COMPATIBLE_MACHINE = "symoneural-x86-64"
+```
+
+The prior estate had a **custom MACHINE and a bootable image**. The current estate
+has neither — it builds individual recipes into `tmp/deploy/ipk`. That is the
+single largest structural difference between the two, and it is what Phase 11d
+(`packagegroup-symoneural-rack`) begins to close.
+
+`/yocto/meta-symoneural` also carries recipes for `python3-torch`,
+`transformers`, `peft`, `accelerate`, `diffusers`, `safetensors`, `tokenizers` —
+the whole Phase 13 stack, already written once. **Reference, not import**: they
+predate `symoneural-pristine`, so they will carry externalsrc-era assumptions.
+Worth reading before writing 13b; worth not copying.

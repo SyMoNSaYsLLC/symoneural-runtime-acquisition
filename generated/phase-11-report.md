@@ -1,6 +1,19 @@
 # PHASE 11 — RavenCalc 6/6 live from estate binaries; the current deployment located
 
-## STATUS: NOT STARTED — blocked on the Phase 10 gate
+## STATUS: IN PROGRESS — Phase 10 gate PASSED at `1f007af`
+
+| Item | State |
+|---|---|
+| 11a locate `:8800` deployment | not started |
+| 11b scipy + scikit-learn | **in progress** |
+| 11c FastAPI app | not started |
+| 11d dispatch recipe + packagegroup | not started |
+| 11e service on :8801 | not started |
+| 11f proof paths | not started |
+| 11g pydantic-core owned | not started |
+| 11h provider-decisions.json | not started |
+| 11i openblas licence + closures | not started |
+| 11j symoneural-secrets adopted | not started |
 
 **starts after: Phase 10 gate** (the phase's own line; authoritative per O1)
 

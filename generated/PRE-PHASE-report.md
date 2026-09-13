@@ -37,9 +37,24 @@
 | `symoneural-scipy` | **NOT BUILT — Phase 11 item 11b** |
 | `symoneural-scikit-learn` | **NOT BUILT — Phase 11 item 11b** |
 
-The Fortran cross toolchain that 11b needs was built in 10a (`rc=0`), and
-openblas already links LAPACK through it — so the toolchain is proven by a
-consumer, not merely by existing.
+**CORRECTION.** An earlier version of this report claimed openblas proves the
+Fortran toolchain works. **It does not.** openblas is built
+`-DNOFORTRAN=1 -DC_LAPACK=1` — the C-translated LAPACK — so its 2,304
+Fortran-mangled symbols come from f2c output, not from gfortran. **No consumer has
+used gfortran yet; scipy will be the first.**
+
+The compiler itself is verified present and working, by direct invocation rather
+than by inference:
+
+```
+$ x86_64-oe-linux-gfortran --version
+GNU Fortran (GCC) 16.2.0
+$ x86_64-oe-linux-gfortran -c t.f90 -o t.o      ->  2240 bytes
+```
+
+It is staged into every target `recipe-sysroot-native` by the cross toolchain, so
+**no `DEPENDS` entry is needed** — 11b's `gfortran-cross` names no recipe in any
+layer and bitbake refuses it with `Nothing PROVIDES 'gfortran-cross'`.
 
 ## 3. CONTROL PLANE
 ```

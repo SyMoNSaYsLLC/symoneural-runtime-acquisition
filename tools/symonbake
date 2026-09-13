@@ -34,8 +34,14 @@ live=$(pgrep -af "bin/bitbake " 2>/dev/null | grep -vc 'bash -c' || true)
 [ "${live:-0}" -ge 2 ] && echo "symonbake: WARNING ${live} bitbake runs already live; 20 cores" >&2
 
 cd "$BOOT" || exit 1
+# `set -u` kills this script the instant oe-init-build-env is sourced: that
+# script references unset variables internally, which is fine interactively and
+# fatal under nounset. Symptom was an EMPTY build log and rc=1 with zero ERROR
+# lines - the build never started at all.
+set +u
 # shellcheck disable=SC1091
-source openembedded-core/oe-init-build-env "$BD" >/dev/null 2>&1 || exit 1
+source openembedded-core/oe-init-build-env "$BD" >/dev/null 2>&1
+set -u
 # `bitbake` is a shell wrapper that re-execs python and spawns bitbake-server as
 # a separate process, so nice-ing the wrapper alone leaves the server at 0.
 # POLL for the server rather than sleeping a fixed interval - a fixed sleep fires
