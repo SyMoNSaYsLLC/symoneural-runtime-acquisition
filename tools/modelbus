@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""modelbus - a shared, append-only transcript that several models can all read.
+
+WHAT THIS IS
+  One JSONL file every participant reads in full. Post a message and every other
+  participant sees it, along with everything said before. That is the "echo":
+  shared state, not point-to-point messaging.
+
+WHAT THIS IS NOT
+  It is NOT a live network channel. Nothing here lets ChatGPT or Gemini reach this
+  machine on their own. A message enters the bus when something WRITES to the file:
+  you paste it, or an app with local file access writes it. Be clear-eyed about
+  that - a design that pretends otherwise would be a lie in the shape of a feature.
+
+CARRIED FORWARD FROM R-184 (the multi-coder surface, 2026-09-02, since deleted)
+  The bus NEVER decides who is right and NEVER merges answers. It records, shows
+  agreement or disagreement, and preserves every answer including the rejected one.
+  The judgement is the operator's. Anything cleverer takes a decision that is his.
+
+  That rule was paid for: Symon answered "1,2,3,4,5,6,7,8,9,10" and Claude answered
+  "1, 2, 3, 4, 5, 6, 7, 8, 9, 10". Same answer. Reporting it as a disagreement
+  would have sent the operator to a decision he should never have been asked to
+  make - so comparison normalises spacing around separators and NOTHING else.
+
+USAGE
+  tools/modelbus post --from chatgpt --text "..."     add a message
+  tools/modelbus post --from gemini --file reply.txt  add from a file
+  tools/modelbus read                                 the whole thread
+  tools/modelbus read --since 10                      last 10
+  tools/modelbus agree --topic <id>                   who agrees on a topic
+  tools/modelbus topics                               list topics
+"""
+import argparse, json, os, sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+BUS = Path(os.environ.get("MODELBUS_PATH",
+           Path.home() / "Desktop" / "modelbus" / "bus.jsonl"))
+PARTIES = ("garrett", "claude", "chatgpt", "gemini", "symon")
+
+
+def _normalise(text):
+    """Compare answers on their substance, not their punctuation spacing.
+
+    Deliberately shallow, and the shallowness is the point. This decides whether
+    to SHOW agreement; it never decides which answer is right. Only spacing around
+    separators is collapsed - the tokens themselves are untouched, so "1,2,3" and
+    "1,2,4" still disagree, which is the case that matters.
+
+    Recovered verbatim in behaviour from the deleted R-184 implementation.
+    """
+    t = " ".join(text.split()).strip().casefold()
+    for sep in (",", ";", ":"):
+        t = t.replace(f" {sep}", sep).replace(f"{sep} ", sep)
+    return t
+
+
+def _load():
+    if not BUS.is_file():
+        return []
+    out = []
+    for line in BUS.read_text(errors="replace").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
+def cmd_post(a):
+    if a.file:
+        text = Path(a.file).read_text(errors="replace").strip()
+    elif a.text:
+        text = a.text
+    else:
+        text = sys.stdin.read().strip()
+    if not text:
+        print("refusing to post an empty message", file=sys.stderr)
+        return 2
+    BUS.parent.mkdir(parents=True, exist_ok=True)
+    msg = {
+        "seq": len(_load()) + 1,
+        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "from": a.sender,
+        "topic": a.topic,
+        "text": text,
+    }
+    with BUS.open("a") as f:
+        f.write(json.dumps(msg) + "\n")
+    print(f"posted #{msg['seq']} from {a.sender}" + (f" [topic {a.topic}]" if a.topic else ""))
+    return 0
+
+
+def cmd_read(a):
+    msgs = _load()
+    if a.topic:
+        msgs = [m for m in msgs if m.get("topic") == a.topic]
+    if a.since:
+        msgs = msgs[-a.since:]
+    if not msgs:
+        print(f"bus is empty ({BUS})")
+        return 0
+    print(f"\n{BUS}  -  {len(msgs)} message(s)\n")
+    for m in msgs:
+        t = m.get("topic")
+        print(f"  #{m.get('seq','?'):<3} {m.get('ts','')}  {m.get('from','?')}"
+              + (f"  [{t}]" if t else ""))
+        for line in m.get("text", "").splitlines() or [""]:
+            print(f"       {line}")
+        print()
+    return 0
+
+
+def cmd_topics(a):
+    msgs = _load()
+    seen = {}
+    for m in msgs:
+        t = m.get("topic")
+        if t:
+            seen.setdefault(t, []).append(m.get("from"))
+    if not seen:
+        print("no topics yet")
+        return 0
+    for t, who in seen.items():
+        print(f"  {t:<24} {len(who)} message(s) from {', '.join(sorted(set(who)))}")
+    return 0
+
+
+def cmd_agree(a):
+    msgs = [m for m in _load() if m.get("topic") == a.topic]
+    if not msgs:
+        print(f"no messages on topic {a.topic!r}")
+        return 1
+    latest = {}
+    for m in msgs:
+        latest[m.get("from")] = m.get("text", "")
+    groups = {}
+    for who, text in latest.items():
+        groups.setdefault(_normalise(text), []).append(who)
+
+    print(f"\ntopic: {a.topic}   {len(latest)} participant(s)\n")
+    if len(groups) == 1:
+        print(f"  AGREE - all of {', '.join(sorted(latest))} gave the same answer\n")
+    else:
+        print(f"  DISAGREE - {len(groups)} distinct answers\n")
+        for i, (_, who) in enumerate(sorted(groups.items(), key=lambda kv: -len(kv[1])), 1):
+            print(f"  group {i}: {', '.join(sorted(who))}")
+            print(f"           {latest[who[0]][:200]}")
+            print()
+    print("  Every answer above is preserved. This tool does not pick one and does")
+    print("  not merge them - that decision is the operator's (R-184).\n")
+    return 0
+
+
+def main():
+    p = argparse.ArgumentParser(description="shared transcript across models")
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    po = sub.add_parser("post")
+    po.add_argument("--from", dest="sender", required=True, choices=PARTIES)
+    po.add_argument("--text")
+    po.add_argument("--file")
+    po.add_argument("--topic")
+    po.set_defaults(fn=cmd_post)
+
+    rd = sub.add_parser("read")
+    rd.add_argument("--since", type=int)
+    rd.add_argument("--topic")
+    rd.set_defaults(fn=cmd_read)
+
+    tp = sub.add_parser("topics"); tp.set_defaults(fn=cmd_topics)
+
+    ag = sub.add_parser("agree")
+    ag.add_argument("--topic", required=True)
+    ag.set_defaults(fn=cmd_agree)
+
+    a = p.parse_args()
+    return a.fn(a)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
