@@ -37,6 +37,13 @@
    "state": "UNRESOLVED"
   },
   {
+   "blocks": "R1 pristine-source guarantee for any externalsrc recipe with BBCLASSEXTEND",
+   "category": "HAZARD",
+   "description": "BBCLASSEXTEND = \"native\" on an externalsrc recipe gives the target and native variants the SAME EXTERNALSRC source tree, and bitbake schedules them concurrently. Isolated empirically: `bitbake -c compile -f symoneural-numpy-native` alone leaves the tree clean (mode 775), `-f symoneural-numpy` alone leaves it clean, but a full build that runs both flips numpy/_core/src/umath/loops_hyperbolic.dispatch.cpp.src from 100755 to 100644. Content is unchanged; the exec bit is lost because a writer rewrites the file. Options: drop BBCLASSEXTEND on externalsrc recipes, serialise the two, or give the native variant its own tree. Not resolved tonight.",
+   "identifier": "externalsrc-native-shared-tree",
+   "state": "UNRESOLVED"
+  },
+  {
    "blocks": "release licensing claim",
    "category": "LICENCE",
    "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",
