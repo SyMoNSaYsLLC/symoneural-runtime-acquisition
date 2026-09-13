@@ -531,3 +531,157 @@ cython and pybind11 rather than OE's.
 5. **Decide CPython** — the one item that needs your call, not mine.
 
 Steps 1–3 are the real content. Step 4 is mechanical. Step 5 is a decision.
+
+---
+
+# TREE LAYOUT — recovered 2026-09-13
+
+Recovered from the acquisition session transcript. `symonjump` is the section
+separator between runtimes. Regenerated from disk, so HEADs are current.
+
+## Canonical tree layout
+
+The `%s` pattern every acquired source follows:
+
+```
+Symoneural-<Runtime>/src/<category>/source/<component>
+```
+
+`symonjump` separates each runtime below.
+
+
+symonjump
+
+### Symoneural-API
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| http | `httpcore` | `9820975` | symoneural-httpcore |
+| http | `httpx` | `26d48e0` | symoneural-httpx |
+| model | `pydantic` | `001dea020` | symoneural-pydantic |
+| web | `fastapi` | `95f8322ee` | symoneural-fastapi |
+| web | `starlette` | `4f250d6` | symoneural-starlette |
+| web | `uvicorn` | `8988c23` | symoneural-uvicorn |
+
+symonjump
+
+### Symoneural-Adaptive-Fabric
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| freetoken | `FreeToken` | `9db1a39` | symoneural-freetoken |
+
+symonjump
+
+### Symoneural-Build
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| autotools | `autoconf` | `44d712a2` | symoneural-autoconf |
+| autotools | `automake` | `e82d2d34d` | symoneural-automake |
+| autotools | `libtool` | `309bb53a` | symoneural-libtool |
+| autotools | `m4` | `fe2f13ab` | symoneural-m4 |
+| bitbake | `bin` | `046a90b0e` | **none** |
+| bitbake | `classes` | `046a90b0e` | **none** |
+| bitbake | `conf` | `046a90b0e` | **none** |
+| bitbake | `contrib` | `046a90b0e` | **none** |
+| bitbake | `default-registry` | `046a90b0e` | **none** |
+| bitbake | `doc` | `046a90b0e` | **none** |
+| bitbake | `lib` | `046a90b0e` | **none** |
+| bitbake | `packaging-pypi` | `046a90b0e` | **none** |
+| bitbake | `setup-schema` | `046a90b0e` | **none** |
+| bitbake | `vendor` | `046a90b0e` | **none** |
+| devtools | `openembedded-core` | `fe7a24bc67` | symoneural-openembedded-core |
+| ninja | `ninja` | `3441b63` | symoneural-ninja |
+
+symonjump
+
+### Symoneural-CLI
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| anthropic | `anthropic-sdk-python` | `eb21a435` | symoneural-anthropic-sdk-python |
+| anthropic | `anthropic-sdk-typescript` | `135f71e9` | symoneural-anthropic-sdk-typescript |
+| mcp | `python-sdk` | `9972c21a` | **none** |
+| mcp | `typescript-sdk` | `cc4b4161` | **none** |
+
+symonjump
+
+### Symoneural-Common
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| ml | `accelerate` | `6afc1e5e` | symoneural-accelerate |
+| ml | `huggingface-hub` | `495b17c8` | symoneural-huggingface-hub |
+| ml | `pytorch` | `2b3ec348290` | symoneural-pytorch |
+| ml | `safetensors` | `a406ca3` | symoneural-safetensors |
+| ml | `tokenizers` | `88a4498a` | symoneural-tokenizers |
+| ml | `transformers` | `856157a2f3` | symoneural-transformers |
+
+symonjump
+
+### Symoneural-Crypto
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| stratum | `stratum` | `c1a79913` | symoneural-stratum |
+| stratum | `sv2-apps` | `d7d556d1` | symoneural-sv2-apps |
+| stratum | `sv2-spec` | `67d2178` | symoneural-sv2-spec |
+
+symonjump
+
+### Symoneural-LLM
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| inference | `llama.cpp` | `5266f24da` | symoneural-llama-cpp |
+| inference | `triton` | `c01b6774b1` | symoneural-triton |
+| inference | `vllm` | `98dff2a81d` | symoneural-vllm |
+
+symonjump
+
+### Symoneural-Live
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| gstreamer | `gstreamer` | `070125524a` | symoneural-gstreamer |
+
+symonjump
+
+### Symoneural-Ravencalc
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| blas | `openblas` | `e0166008b` | symoneural-openblas |
+| devtools | `cython` | `58b8e6adc` | symoneural-cython |
+| devtools | `pybind11` | `d03662f0` | symoneural-pybind11 |
+| ml | `scikit-learn` | `866c0f51e7` | symoneural-scikit-learn |
+| numerics | `numpy` | `dd88c0c19b` | symoneural-numpy |
+| numerics | `scipy` | `e4e854eaa8` | symoneural-scipy |
+| symbolic | `mpmath` | `c1131e2d` | symoneural-mpmath |
+| symbolic | `sympy` | `16fa855354` | symoneural-sympy |
+
+symonjump
+
+### Symoneural-Remix
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| librespot | `librespot` | `d36f9f1` | symoneural-librespot |
+
+symonjump
+
+### Symoneural-Streamer
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| hls | `hls.js` | `e5ff35839` | symoneural-hlsjs |
+
+symonjump
+
+### Symoneural-Web
+
+| category | component | HEAD | recipe |
+|---|---|---|---|
+| runtime | `workerd` | `925464ba9` | symoneural-workerd |
+| tooling | `workers-sdk` | `00ae21fa8` | **none** |
