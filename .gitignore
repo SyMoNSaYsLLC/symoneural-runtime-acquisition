@@ -52,3 +52,53 @@ __pycache__/
 .idea
 .vscode
 .claude/
+
+# ---------------------------------------------------------------------------
+# SECRETS - deny by pattern, not by discipline.
+#
+# No secret has ever been tracked here: /etc/symoneural/*.env is root-owned 0600
+# and lives OUTSIDE this repository by design (R13), and a full-history scan
+# (231 paths ever added, all commits) found no .env, key, or credential file and
+# no secret-shaped assignment. These rules exist so that stays true by
+# construction rather than by anyone remembering.
+#
+# Treat this repository as if it were public even while it is private: a repo
+# that is published once is forked, cached and archived, and making it private
+# afterwards undoes none of that.
+# ---------------------------------------------------------------------------
+*.env
+!*.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
+*.kdbx
+.netrc
+.npmrc
+.pypirc
+credentials*
+secrets*
+*token*.json
+*.secret
+
+# Provisioned secret material, if ever mirrored into the tree by mistake
+etc/symoneural/
+**/symoneural/*.env
+**/licensing/*.pub
+**/licensing/*.priv
+
+# Model weights never enter git (SYMON_MODELS_DIR = /home/google/symoneural-models)
+*.gguf
+*.safetensors
+*.onnx
+*.bin.gguf
+*.ckpt
+*.pt
+*.pth
+
+# Local operator scratch
+*.local
+.env.*
