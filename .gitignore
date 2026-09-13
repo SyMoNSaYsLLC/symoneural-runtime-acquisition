@@ -102,3 +102,19 @@ etc/symoneural/
 # Local operator scratch
 *.local
 .env.*
+
+# ---------------------------------------------------------------------------
+# PERSONAL DATA - never tracked.
+#
+# Org member exports carry names, email addresses and roles for OTHER PEOPLE.
+# That is personal data, and a private repository is not a safe home for it:
+# repos get cloned, backed up, mirrored, and sometimes opened up later. The
+# knowledge of what the file is lives in ops/README.md; the file itself lives
+# outside this tree at /home/google/symoneural-ops (0700).
+# ---------------------------------------------------------------------------
+*members*.csv
+*users*.csv
+*roster*.csv
+*seats*.csv
+ops/*.csv
+!ops/*-usage-*.csv
