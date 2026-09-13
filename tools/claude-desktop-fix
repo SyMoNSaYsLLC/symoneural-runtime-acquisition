@@ -43,11 +43,15 @@ printf '\nclaude-desktop-fix  [%s]\n' "$MODE"
 # ---------------------------------------------------------------- preflight
 head2 "preflight"
 if pgrep -f 'claude-desktop|claude_desktop' >/dev/null 2>&1; then
-    say "Claude Desktop is RUNNING."
-    say "Quit it fully before applying - the app rewrites its config on exit"
-    say "and would silently undo these edits."
-    [ "$APPLY" -eq 1 ] && { echo; say "refusing to apply while it is running"; exit 1; }
-    say "(continuing in dry run)"
+    say "Claude Desktop is RUNNING - continuing anyway."
+    # An earlier version refused here, on the belief that the app rewrites its
+    # config on exit. MEASURED, and it does not:
+    #   desktop started         10:57:42
+    #   claude_desktop_config   10:22:19  (edited 35 min BEFORE launch, unchanged)
+    #   developer_settings.json 2026-07-29 (unchanged across ~6 weeks of restarts)
+    # The app reads these at launch and leaves them alone. What IS true is that
+    # changes do not take effect until a restart - which is a different claim.
+    say "NOTE: edits apply at next app start, so restart when convenient."
 else
     say "Claude Desktop not running - safe to edit"
 fi
