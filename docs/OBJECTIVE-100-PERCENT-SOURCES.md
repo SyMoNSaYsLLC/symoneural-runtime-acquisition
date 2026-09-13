@@ -685,3 +685,36 @@ symonjump
 |---|---|---|---|
 | runtime | `workerd` | `925464ba9` | symoneural-workerd |
 | tooling | `workers-sdk` | `00ae21fa8` | **none** |
+
+---
+
+# SOURCE WEIGHT — % per runtime, 2026-09-13
+
+Derived from disk. The raw `tree` dumps Garrett produced live OUTSIDE the repo
+(`~/SymonSaysLLC-tree.md` 86 MB / 812,879 lines, plus nine per-runtime files).
+They are not committed: they include build directories and would add ~110 MB of
+regenerable output to git. This table is the distilled part that matters.
+
+## Source weight per runtime
+
+Acquired source only — `src/*/source/*`. Build directories excluded.
+
+| runtime | components | source size | % of estate |
+|---|---:|---:|---:|
+| Symoneural-Common | 6 | 8.95 GB | 56.8% |
+| Symoneural-Ravencalc | 8 | 2.14 GB | 13.6% |
+| Symoneural-LLM | 3 | 1.89 GB | 12.0% |
+| Symoneural-Build | 16 | 644 MB | 4.1% |
+| Symoneural-API | 6 | 603 MB | 3.8% |
+| Symoneural-Live | 1 | 544 MB | 3.5% |
+| Symoneural-Crypto | 3 | 328 MB | 2.1% |
+| Symoneural-Web | 2 | 292 MB | 1.9% |
+| Symoneural-Streamer | 1 | 253 MB | 1.6% |
+| Symoneural-CLI | 4 | 102 MB | 0.6% |
+| Symoneural-Adaptive-Fabric | 1 | 10 MB | 0.1% |
+| Symoneural-Remix | 1 | 8 MB | 0.1% |
+| **TOTAL** | **52** | **15.75 GB** | **100%** |
+
+Common is **57% of all acquired source** on its own — pytorch and its 65
+submodules. Any operation that touches Common costs more than the other eleven
+runtimes combined, which is why it is not casually rebuilt.
