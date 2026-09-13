@@ -100,3 +100,91 @@ itself have failed loudly; it did, which is the right direction.
 **`sv2-spec` was `LICENSE = "CLOSED"` — a false statement.** Its tree carries
 `License/BSD-3-Clause` and `License/CC0-1.0`. Corrected to `BSD-3-Clause OR CC0-1.0`.
 The files sit in a `License/` **directory**, which is why every scanner missed them.
+
+## PHASE 10f — PARITY REBUILD
+
+Rebuilt every recipe built so far under `symoneural-pristine`, in all three
+runtimes that have builds. `FILES` counts regular files in `${D}` (the baseline
+definition — symlinks excluded).
+
+| Runtime | Recipe | before | after | .so | Verdict |
+|---|---|---|---|---|---|
+| Ravencalc | symoneural-mpmath | 192 | **115** | 0 | **EXPLAINED DELTA — see below** |
+| Ravencalc | symoneural-numpy | 1330 | 1330 | 19 | match |
+| Ravencalc | symoneural-openblas | 14 | 14 | 1 | match |
+| Ravencalc | symoneural-sympy | 3103 | 3103 | 0 | match |
+| API | symoneural-fastapi | 109 | 109 | 0 | match |
+| API | symoneural-httpcore | 66 | 66 | 0 | match |
+| API | symoneural-httpx | 52 | 52 | 0 | match |
+| API | symoneural-pydantic | 215 | 215 | 0 | match |
+| API | symoneural-starlette | 74 | 74 | 0 | match |
+| API | symoneural-uvicorn | 90 | 90 | 0 | match |
+| CLI | symoneural-anthropic-sdk-python | 2817 | pending | 0 | blocked on nodejs-native |
+| CLI | symoneural-mcp-python-sdk | 252 | pending | 0 | blocked on nodejs-native |
+
+`bitbake -k` exit codes: Ravencalc **rc=0**, API **rc=0**, both with 0 ERRORs.
+
+### DEFECT — setuptools-scm cannot work under the class (FIXED)
+
+`symoneural-mpmath do_compile` failed on the first parity run:
+
+> `LookupError: setuptools-scm was unable to detect version for .../1.4.1/pristine`
+> `ERROR Backend subprocess exited when trying to invoke get_requires_for_build_wheel`
+
+A `git archive` export carries no `.git` — that is what makes `${S}` disposable.
+setuptools-scm derives the version by asking git, so it cannot work. Under
+externalsrc these recipes worked **only because `${S}` was the git repo**, which
+is exactly the coupling this class removes. That was never correct: the version
+came from whatever state the tree was in, not from the pin.
+
+Fixed once, in the class, rather than per recipe:
+
+```
+export SETUPTOOLS_SCM_PRETEND_VERSION = "${PV}"
+```
+
+Affects `mpmath` and `vllm` today; every future Python recipe is covered without
+anyone having to remember. After the fix, `symoneural-mpmath do_compile: Succeeded`.
+
+### The mpmath delta is a consequence of the same root cause, and it is correct
+
+192 - 115 = **77**, accounted for exactly: `mpmath/tests` holds 38 `.py` files,
+which contribute 38 `.pyc` files plus one non-`.py` file = 77.
+
+`mpmath/tests` **has no `__init__.py`**, so it is not a package. mpmath declares
+`[tool.setuptools.packages] find = {namespaces = false}`, has no `MANIFEST.in`,
+declares no `package-data`, and nothing in `mpmath/__init__.py` imports it. Its
+inclusion in the externalsrc build came from setuptools-scm's `setuptools.file_finders`
+entry point, which lists git-tracked files. No `.git`, no file finder, no tests.
+
+The controlled comparison is in the same build:
+
+| | test dirs | with `__init__.py` | outcome |
+|---|---|---|---|
+| sympy | 65 | **65 (all)** | real packages, discovered, **3103 unchanged** |
+| mpmath | 1 | **0** | not a package, correctly skipped, **192 -> 115** |
+
+So the old 192 was output that varied with VCS metadata — non-reproducible by
+construction. 115 is what a build from a released sdist produces. Recorded as an
+EXPLAINED DELTA, not a regression.
+
+### DEFECT — build residue was recorded as a licence file
+
+`license-inventory.json` carried
+`fastapi/.pdm-build/fastapi-0.141.1.dist-info/licenses/LICENSE`
+(sha256 `4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e`).
+`.pdm-build/` is pdm-backend's build directory: under `EXTERNALSRC_BUILD == S` the
+build wrote it into the pristine fastapi tree, and the licence scanner then recorded
+it as upstream licence material. It is no longer present — removed by the 10c
+migration, not by the class, which only exports and never cleans srctrees.
+Record regenerated 431 -> 430; report and SHA256SUMS regenerated in the same pass
+so report-agreement did not flip.
+
+### DEFECT — duplicate BBFILE_COLLECTIONS wedged the npm handler
+
+`devtool add` auto-creates `<builddir>/workspace`, which declares
+`BBFILE_COLLECTIONS += "workspacelayer"` — the same identifier as the existing
+`devtool-workspace` layer. With both in `bblayers.conf`, every parse died with
+`Found duplicated BBFILE_COLLECTIONS 'workspacelayer'`. This killed the first 10e
+run; Symoneural-Crypto carried the same latent conflict. Both cleared: all nine
+runtimes now reference `meta-symoneural` only.

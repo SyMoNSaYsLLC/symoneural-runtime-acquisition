@@ -251,16 +251,6 @@
    "status": "UNRESOLVED"
   },
   {
-   "apparent_scope": "NESTED/DEPENDENCY",
-   "declared_identifier": "UNRESOLVED",
-   "md5": "95792ff3fe8e11aa49ceb247e66e4810",
-   "owner_component": "fastapi",
-   "owner_runtime": "API",
-   "path": ".pdm-build/fastapi-0.141.1.dist-info/licenses/LICENSE",
-   "sha256": "4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e",
-   "status": "UNRESOLVED"
-  },
-  {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
    "md5": "95792ff3fe8e11aa49ceb247e66e4810",

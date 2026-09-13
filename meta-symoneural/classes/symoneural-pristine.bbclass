@@ -92,6 +92,18 @@ python do_unpack() {
 }
 
 # There is nothing to fetch: the tree is already acquired and verified.
+# A `git archive` export carries NO .git directory - that is the whole point of
+# the class, and it is what makes ${S} disposable. But setuptools-scm, hatch-vcs
+# and vcs-versioning all derive the package version by asking git, so under this
+# class they fail with:
+#   LookupError: setuptools-scm was unable to detect version for .../pristine
+# Under externalsrc they happened to work only because ${S} WAS the git repo -
+# exactly the coupling this class exists to remove. Relying on that was never
+# correct: the version came from whatever state the tree was in, not from the pin.
+# Pin it from PV instead. Deterministic, and PV is what SRCREV is pinned to.
+# Harmless for recipes that do not use setuptools-scm - nothing reads it.
+export SETUPTOOLS_SCM_PRETEND_VERSION = "${PV}"
+
 do_fetch[noexec] = "1"
 do_patch[noexec] = "1"
 

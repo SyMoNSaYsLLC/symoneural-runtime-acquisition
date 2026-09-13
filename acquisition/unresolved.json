@@ -1,95 +1,101 @@
 {
- "counts": {
-  "artifact_decisions_pending": 41,
-  "licence_files_unresolved": 429,
-  "provider_collisions_unresolved": 30,
-  "source_collision_decisions_unresolved": 73,
-  "vendor_entries_reclassified_as_submodule": 64,
-  "vendored_decisions_unresolved": 366
- },
- "items": [
-  {
-   "blocks": "Symoneural-CLI source lock",
-   "category": "ACQUISITION",
-   "description": "Not acquired. Release decision specifies v2 GA 2.0.0 at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; tag-to-commit unverified and mixed MIT / Apache-2.0 / CC-BY-4.0 treatment uncharacterised.",
-   "identifier": "mcp-typescript-sdk",
-   "state": "UNRESOLVED"
+  "counts": {
+    "artifact_decisions_pending": 41,
+    "licence_files_unresolved": 429,
+    "provider_collisions_unresolved": 30,
+    "source_collision_decisions_unresolved": 73,
+    "vendor_entries_reclassified_as_submodule": 64,
+    "vendored_decisions_unresolved": 366
   },
-  {
-   "blocks": "Symoneural-Web source lock",
-   "category": "ACQUISITION",
-   "description": "On disk at 909e388c (v1.20260912.1); release decision specifies 925464ba (v1.20260911.1) paired with Wrangler 4.131.1.",
-   "identifier": "symoneural-workerd",
-   "state": "UNRESOLVED"
+  "items": [
+    {
+      "blocks": "Symoneural-CLI source lock",
+      "category": "ACQUISITION",
+      "description": "Not acquired. Release decision specifies v2 GA 2.0.0 at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; tag-to-commit unverified and mixed MIT / Apache-2.0 / CC-BY-4.0 treatment uncharacterised.",
+      "identifier": "mcp-typescript-sdk",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "Symoneural-Web source lock",
+      "category": "ACQUISITION",
+      "description": "On disk at 909e388c (v1.20260912.1); release decision specifies 925464ba (v1.20260911.1) paired with Wrangler 4.131.1.",
+      "identifier": "symoneural-workerd",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "Adaptive-Fabric build design",
+      "category": "ARCHITECTURE",
+      "description": "FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.",
+      "identifier": "FreeToken/torch",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "Symoneural-API release posture",
+      "category": "BUILD-DESIGN",
+      "description": "pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.",
+      "identifier": "pydantic-core-ownership",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "Ravencalc scipy and scikit-learn (transitively)",
+      "category": "BUILD-DESIGN",
+      "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",
+      "identifier": "scipy-fortran",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "release licensing claim",
+      "category": "LICENCE",
+      "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",
+      "identifier": "symoneural-openblas",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "audit of SyMoNeuRaL modifications",
+      "category": "PROVENANCE",
+      "description": "RAW-GENERATED-BASELINE NOT PRESERVED. recipetool output was edited in place. Historical absence is not reconstructable and is not fabricated. STANDING REQUIREMENT: before editing any newly generated recipe, preserve its raw generated form or deterministic hash in acquisition evidence first.",
+      "identifier": "all recipes",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "build design for Build, Ravencalc and Live",
+      "category": "PROVIDER",
+      "description": "The master re-baseline made 7 directly-acquired components duplicate an OE-Core recipe at the SAME version: gstreamer(1.28.7), autoconf(2.73), automake(1.19), libtool(2.6.2), m4(1.4.21), ninja(1.13.2), numpy(2.5.3). Each needs a provider selection. Provider graph now indexes SUBMODULE as a provider kind; the cross-runtime map is acquisition/source-collisions.json.",
+      "identifier": "direct-vs-oe-core",
+      "state": "UNRESOLVED"
+    },
+    {
+      "blocks": "Node/TypeScript acquisition",
+      "category": "PROVIDER",
+      "description": "No nodejs provider in OE-Core at the locked SHA; npm.bbclass DEPENDS on nodejs-native and cites openembedded-meta.",
+      "identifier": "nodejs",
+      "state": "UNRESOLVED"
+    }
+  ],
+  "phase": {
+    "acquisition": "CLOSED",
+    "rule_precedence": "The estate being correct beats category purity. Settled; not relitigated per case.",
+    "statement": "Acquisition is CLOSED: 41/41 sources at intended revision, estate completeness PASS. No further control-plane revisions. Remaining items are BUILD-DESIGN decisions, not acquisition defects, and are not resolvable by further scanning."
   },
-  {
-   "blocks": "Adaptive-Fabric build design",
-   "category": "ARCHITECTURE",
-   "description": "FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.",
-   "identifier": "FreeToken/torch",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "Symoneural-API release posture",
-   "category": "BUILD-DESIGN",
-   "description": "pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.",
-   "identifier": "pydantic-core-ownership",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "Ravencalc scipy and scikit-learn (transitively)",
-   "category": "BUILD-DESIGN",
-   "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",
-   "identifier": "scipy-fortran",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "R1 pristine-source guarantee for any externalsrc recipe with BBCLASSEXTEND",
-   "category": "HAZARD",
-   "description": "BBCLASSEXTEND = \"native\" on an externalsrc recipe gives the target and native variants the SAME EXTERNALSRC source tree, and bitbake schedules them concurrently. Isolated empirically: `bitbake -c compile -f symoneural-numpy-native` alone leaves the tree clean (mode 775), `-f symoneural-numpy` alone leaves it clean, but a full build that runs both flips numpy/_core/src/umath/loops_hyperbolic.dispatch.cpp.src from 100755 to 100644. Content is unchanged; the exec bit is lost because a writer rewrites the file. Options: drop BBCLASSEXTEND on externalsrc recipes, serialise the two, or give the native variant its own tree. Not resolved tonight.",
-   "identifier": "externalsrc-native-shared-tree",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "release licensing claim",
-   "category": "LICENCE",
-   "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",
-   "identifier": "symoneural-openblas",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "audit of SyMoNeuRaL modifications",
-   "category": "PROVENANCE",
-   "description": "RAW-GENERATED-BASELINE NOT PRESERVED. recipetool output was edited in place. Historical absence is not reconstructable and is not fabricated. STANDING REQUIREMENT: before editing any newly generated recipe, preserve its raw generated form or deterministic hash in acquisition evidence first.",
-   "identifier": "all recipes",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "build design for Build, Ravencalc and Live",
-   "category": "PROVIDER",
-   "description": "The master re-baseline made 7 directly-acquired components duplicate an OE-Core recipe at the SAME version: gstreamer(1.28.7), autoconf(2.73), automake(1.19), libtool(2.6.2), m4(1.4.21), ninja(1.13.2), numpy(2.5.3). Each needs a provider selection. Provider graph now indexes SUBMODULE as a provider kind; the cross-runtime map is acquisition/source-collisions.json.",
-   "identifier": "direct-vs-oe-core",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "Node/TypeScript acquisition",
-   "category": "PROVIDER",
-   "description": "No nodejs provider in OE-Core at the locked SHA; npm.bbclass DEPENDS on nodejs-native and cites openembedded-meta.",
-   "identifier": "nodejs",
-   "state": "UNRESOLVED"
-  },
-  {
-   "blocks": "release build claim",
-   "category": "VERIFICATION",
-   "description": "No component demonstrated to compile with no network after bitbake -c fetch. Enumeration is not proof.",
-   "identifier": "offline-compile",
-   "state": "UNRESOLVED"
-  }
- ],
- "phase": {
-  "acquisition": "CLOSED",
-  "rule_precedence": "The estate being correct beats category purity. Settled; not relitigated per case.",
-  "statement": "Acquisition is CLOSED: 41/41 sources at intended revision, estate completeness PASS. No further control-plane revisions. Remaining items are BUILD-DESIGN decisions, not acquisition defects, and are not resolvable by further scanning."
- },
- "schema": "symoneural-unresolved/2"
+  "resolved": [
+    {
+      "blocks": "R1 pristine-source guarantee for any externalsrc recipe with BBCLASSEXTEND",
+      "category": "HAZARD",
+      "description": "BBCLASSEXTEND = \"native\" on an externalsrc recipe gives the target and native variants the SAME EXTERNALSRC source tree, and bitbake schedules them concurrently. Isolated empirically: `bitbake -c compile -f symoneural-numpy-native` alone leaves the tree clean (mode 775), `-f symoneural-numpy` alone leaves it clean, but a full build that runs both flips numpy/_core/src/umath/loops_hyperbolic.dispatch.cpp.src from 100755 to 100644. Content is unchanged; the exec bit is lost because a writer rewrites the file. Options: drop BBCLASSEXTEND on externalsrc recipes, serialise the two, or give the native variant its own tree. Not resolved tonight.",
+      "identifier": "externalsrc-native-shared-tree",
+      "resolution": "RESOLVED by Phase 10b. symoneural-pristine.bbclass gives EVERY recipe variant its own disposable export (git archive HEAD -> ${WORKDIR}/pristine), so the target and native variants no longer share a tree. This is option 3 from the original description, applied universally rather than per recipe. Evidence: 41/41 acquired trees reported clean under `git status --porcelain --ignored=traditional` DURING a live build that scheduled both symoneural-numpy and symoneural-numpy-native; 0 dirty, 0 ignored residue. The negative test (tree moved off its pin) failed correctly with the PIN MISMATCH fatal.",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    },
+    {
+      "blocks": "release build claim",
+      "category": "VERIFICATION",
+      "description": "No component demonstrated to compile with no network after bitbake -c fetch. Enumeration is not proof.",
+      "identifier": "offline-compile",
+      "resolution": "RESOLVED by Phase 5. symoneural-stratum: `--runall=fetch` rc=0, then `BB_NO_NETWORK=1 bitbake symoneural-stratum` -> do_compile Succeeded, 0 NetworkAccess denials, 102 rlibs produced, across rust 1.98.1 + LLVM 23 + 233 crate:// entries. Proof by execution, not by enumeration. (do_install failed separately on 'Did not find anything to install' - stratum is a library workspace with no bin targets; that is the open pydantic-core-class packaging question, not a network question.)",
+      "resolved_phase": "10",
+      "state": "RESOLVED"
+    }
+  ],
+  "schema": "symoneural-unresolved/2"
 }
