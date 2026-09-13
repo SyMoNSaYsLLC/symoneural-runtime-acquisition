@@ -46,3 +46,34 @@ fork**). Two upstreams, three copies. `CROSS-RUNTIME-DUPLICATE`, decision `UNRES
 
 Phase 10's specification has not been pasted. `symoneural-pristine.bbclass`,
 `meta-symoneural`, and 10a–10e are not started.
+
+## PHASE 5 RESULT — OFFLINE COMPILE PROVEN
+
+`--runall=fetch` rc=0, then `BB_NO_NETWORK=1 bitbake symoneural-stratum`:
+
+| | |
+|---|---|
+| `do_compile` | **Succeeded** with the network disabled |
+| NetworkAccess denials during the offline half | **0** |
+| Artifacts | **102 rlibs** |
+| Crate closure | 233 `crate://` entries, tracked in the recipe dir |
+
+**The offline guarantee holds.** rust 1.98.1, LLVM 23 and all 233 crates compiled with
+no network after fetch. That was the open question from the dependency-closure report,
+and it is now answered with evidence rather than enumeration.
+
+`do_install` then failed — `Did not find anything to install`. stratum is a **library
+workspace with no binary targets**, and `cargo_do_install` looks for binaries. A packaging
+matter, unrelated to the offline question, and it is exactly what R12's empty-`${D}` check
+exists to catch loudly rather than pass quietly.
+
+## PHASE 10b — CLASS PROVEN
+
+| Test | Result |
+|---|---|
+| Positive: export at the real SRCREV | **PASS** — `${WORKDIR}/pristine` populated |
+| **Negative: wrong SRCREV** | **PASS — `do_unpack` FAILED** as required |
+
+Negative-test message, verbatim:
+
+> `PIN MISMATCH. .../hls.js is at e5ff3583... but SRCREV says deadbeef.... Refusing to build a tree that is not at its pinned revision.`

@@ -1,0 +1,747 @@
+# Recipe created by recipetool
+# This is the basis of a recipe and may need further editing in order to be fully functional.
+# (Feel free to remove these comments when editing.)
+
+# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
+# your responsibility to verify that the values are complete and correct.
+#
+# The following license files were not able to be identified and are
+# represented as "Unknown" below, you will need to check them yourself:
+#   LICENSE
+#   android/libs/fbjni/LICENSE
+#   aten/src/ATen/native/quantized/cpu/qnnpack/LICENSE
+#   test/cpython/v3_13/LICENSE
+#   test/test_license.py
+#   third_party/NVTX/LICENSE.txt
+#   third_party/NVTX/docs/LICENSE.txt
+#   third_party/NVTX/docs/python/_static/scripts/bootstrap.js.LICENSE.txt
+#   third_party/NVTX/docs/python/_static/scripts/fontawesome.js.LICENSE.txt
+#   third_party/NVTX/python/LICENSE.txt
+#   third_party/NVTX/rust/LICENSE
+#   third_party/XNNPACK/LICENSE
+#   third_party/aiter/3rdparty/composable_kernel/LICENSE
+#   third_party/aiter/3rdparty/composable_kernel/docs/license.rst
+#   third_party/composable_kernel/LICENSE
+#   third_party/composable_kernel/docs/license.rst
+#   third_party/concurrentqueue/moodycamel/LICENSE.md
+#   third_party/cudnn_frontend/LICENSE.txt
+#   third_party/cutlass/LICENSE.txt
+#   third_party/cutlass/python/LICENSE.txt
+#   third_party/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt
+#   third_party/fbgemm/LICENSE
+#   third_party/fbgemm/external/composable_kernel/LICENSE
+#   third_party/fbgemm/external/composable_kernel/docs/license.rst
+#   third_party/fbgemm/external/cutlass/LICENSE.txt
+#   third_party/fbgemm/external/cutlass/python/LICENSE.txt
+#   third_party/fbgemm/external/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt
+#   third_party/fbgemm/external/googletest/LICENSE
+#   third_party/fbgemm/external/json/docs/mkdocs/docs/home/license.md
+#   third_party/fbgemm/fbgemm_gpu/docs/src/general/License.rst
+#   third_party/fbgemm/fbgemm_gpu/experimental/hstu/LICENSE
+#   third_party/flash-attention/LICENSE
+#   third_party/flash-attention/csrc/composable_kernel/LICENSE
+#   third_party/flash-attention/csrc/composable_kernel/docs/license.rst
+#   third_party/flash-attention/csrc/cutlass/LICENSE.txt
+#   third_party/flash-attention/csrc/cutlass/python/LICENSE.txt
+#   third_party/flash-attention/csrc/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt
+#   third_party/flash-attention/flash_attn/cute/LICENSE
+#   third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/LICENSE
+#   third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/docs/license.rst
+#   third_party/fmt/doc/LICENSE-exception
+#   third_party/gloo/LICENSE
+#   third_party/gloo/gloo/transport/uv/LICENSE.uvw
+#   third_party/googletest/LICENSE
+#   third_party/ideep/mkl-dnn/.github/.licenserc.yml
+#   third_party/ideep/mkl-dnn/LICENSE
+#   third_party/ideep/mkl-dnn/doc/legal_information.md
+#   third_party/ideep/mkl-dnn/third_party/gtest/LICENSE
+#   third_party/ideep/mkl-dnn/third_party/ngen/COPYRIGHT
+#   third_party/ideep/mkl-dnn/third_party/xbyak/COPYRIGHT
+#   third_party/ittapi/LICENSES/GPL-2.0-only.txt
+#   third_party/kineto/LICENSE
+#   third_party/kineto/libkineto/third_party/fmt/LICENSE
+#   third_party/kineto/libkineto/third_party/fmt/doc/python-license.txt
+#   third_party/kineto/libkineto/third_party/googletest/LICENSE
+#   third_party/kineto/libkineto/third_party/json/docs/mkdocs/docs/home/license.md
+#   third_party/kleidiai/docs/imatmul/imgs/lhs_igemm.png.license
+#   third_party/kleidiai/docs/imgs/kai_rhs_packing_pattern_1.png.license
+#   third_party/kleidiai/docs/imgs/kai_rhs_packing_pattern_2.png.license
+#   third_party/kleidiai/docs/matmul_qsi4cx/imgs/int4_matmul_per_channel.png.license
+#   third_party/kleidiai/third_party/benchmark-v1.9.4.zip.license
+#   third_party/kleidiai/third_party/googletest-v1.17.0.zip.license
+#   third_party/llvm-openmp/LICENSE.txt
+#   third_party/mslk/LICENSE
+#   third_party/mslk/external/composable_kernel/LICENSE
+#   third_party/mslk/external/composable_kernel/docs/license.rst
+#   third_party/mslk/external/cutlass/LICENSE.txt
+#   third_party/mslk/external/cutlass/python/LICENSE.txt
+#   third_party/mslk/external/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt
+#   third_party/mslk/external/googletest/LICENSE
+#   third_party/mslk/mslk/attention/flash_attn/LICENSE
+#   third_party/nlohmann/docs/mkdocs/docs/home/license.md
+#   third_party/onnx/third_party/pybind11/LICENSE
+#   third_party/perfetto/LICENSE
+#   third_party/pocketfft/LICENSE.md
+#   third_party/protobuf/LICENSE
+#   third_party/protobuf/third_party/googletest/LICENSE
+#   third_party/protobuf/third_party/googletest/googlemock/LICENSE
+#   third_party/protobuf/third_party/googletest/googlemock/scripts/generator/LICENSE
+#   third_party/protobuf/third_party/googletest/googletest/LICENSE
+#   third_party/pybind11/LICENSE
+#   third_party/python-peachpy/LICENSE.rst
+#   third_party/tensorpipe/LICENSE.txt
+#   third_party/tensorpipe/third_party/googletest/LICENSE
+#   third_party/tensorpipe/third_party/googletest/googlemock/LICENSE
+#   third_party/tensorpipe/third_party/googletest/googlemock/scripts/generator/LICENSE
+#   third_party/tensorpipe/third_party/googletest/googletest/LICENSE
+#   third_party/tensorpipe/third_party/libuv/LICENSE-docs
+#   third_party/tensorpipe/third_party/libuv/LICENSE-extra
+#   third_party/tensorpipe/third_party/pybind11/LICENSE
+#   third_party/tensorpipe/third_party/pybind11/tools/clang/LICENSE.TXT
+#   torch/_vendor/packaging/LICENSE
+#   torch/fx/experimental/unification/LICENSE.txt
+#
+# NOTE: multiple licenses have been detected; they have been separated with &
+# in the LICENSE value for now since it is a reasonable assumption that all
+# of the licenses apply. If instead there is a choice between the multiple
+# licenses then you should change the value to separate the licenses with |
+# instead of &. If there is any doubt, check the accompanying documentation
+# to determine which situation is applicable.
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+# Built by symoneural-pristine: a DISPOSABLE `git archive` export of the
+# acquired tree. ${S} is throwaway; the acquired tree is never written to.
+# do_unpack asserts the tree HEAD equals SRCREV and refuses to build otherwise.
+inherit symoneural-pristine
+SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Common/src/ml/source/pytorch"
+
+LICENSE = "BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://.ci/manywheel/LICENSE;md5=40a70f85c8da9f0d41e5f3b71e341229 \
+                    file://LICENSE;md5=b114fbe63fdb5f7a91332a4aefb61ee5 \
+                    file://android/libs/fbjni/LICENSE;md5=cac82e6f105a5444e031d569a75e7443 \
+                    file://aten/src/ATen/native/quantized/cpu/qnnpack/LICENSE;md5=f1e2603190afb8bee3644e45853bd55e \
+                    file://aten/src/ATen/native/quantized/cpu/qnnpack/deps/clog/LICENSE;md5=32150729bbb899c7ce46b1d9a0e2cd44 \
+                    file://test/cpython/v3_13/LICENSE;md5=8bf44841b1dd77d3e36317dfd18621b2 \
+                    file://test/test_license.py;md5=de9af91457a7fb03b674223ca360ca2e \
+                    file://third_party/FP16/LICENSE;md5=998fb0b16ad8a4fb8bd41bf3faf2d21c \
+                    file://third_party/FXdiv/LICENSE;md5=0c2eed7ba400a6fea8fec2a582b177e8 \
+                    file://third_party/NNPACK/LICENSE;md5=c5a9b70072d4baa29517f99984c74aeb \
+                    file://third_party/NVTX/LICENSE.txt;md5=3e25197a0d6dfa3023e74295603ae578 \
+                    file://third_party/NVTX/docs/LICENSE.txt;md5=3e25197a0d6dfa3023e74295603ae578 \
+                    file://third_party/NVTX/docs/python/_static/scripts/bootstrap.js.LICENSE.txt;md5=98a6f719a0e699ad3742fe588fbb3788 \
+                    file://third_party/NVTX/docs/python/_static/scripts/fontawesome.js.LICENSE.txt;md5=cfb33d190ffa15551a6a320611715848 \
+                    file://third_party/NVTX/python/LICENSE.txt;md5=3e25197a0d6dfa3023e74295603ae578 \
+                    file://third_party/NVTX/rust/LICENSE;md5=2380abefcd980848da99c7cc11061e29 \
+                    file://third_party/NVTX/tools/docs/github-markdown-css/license;md5=d5f2a6dd0192dcc7c833e50bb9017337 \
+                    file://third_party/VulkanMemoryAllocator/LICENSE.txt;md5=3b62a4e76b6f66c9ac6aad3948e3c982 \
+                    file://third_party/XNNPACK/LICENSE;md5=afa8f8a91390ab659c837da57124977c \
+                    file://third_party/aiter/3rdparty/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/aiter/3rdparty/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/aiter/LICENSE;md5=c90dfb7f5776d9561353925f47831d32 \
+                    file://third_party/benchmark/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/concurrentqueue/moodycamel/LICENSE.md;md5=3e3bd5d3367ca1cdb53ff11ab44322ea \
+                    file://third_party/cpp-httplib/LICENSE;md5=1321bdf796c67e3a8ab8e352dd81474b \
+                    file://third_party/cpuinfo/LICENSE;md5=cabca80e8e4a4bbe90e9a4b4ad53f5f4 \
+                    file://third_party/cpuinfo/deps/clog/LICENSE;md5=32150729bbb899c7ce46b1d9a0e2cd44 \
+                    file://third_party/cudnn_frontend/LICENSE.txt;md5=9d5b92ac12c8a9118b4509abee0804b8 \
+                    file://third_party/cudnn_frontend/include/cudnn_frontend/thirdparty/nlohmann/LICENSE.MIT;md5=f969127d7b7ed0a8a63c2bbeae002588 \
+                    file://third_party/cutlass/LICENSE.txt;md5=869f19a11f1294eb63d1248e7ff505c8 \
+                    file://third_party/cutlass/python/LICENSE.txt;md5=c2c0968bbe32f171f90319f299dd248f \
+                    file://third_party/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt;md5=7bbc9f9fc90fbe3bd69de1b43bc8a6be \
+                    file://third_party/fbgemm/LICENSE;md5=a09faadc0ce85420f75229a382e62588 \
+                    file://third_party/fbgemm/external/asmjit/LICENSE.md;md5=da60683017c3d3944dadd9a6395e27d1 \
+                    file://third_party/fbgemm/external/asmjit/db/LICENSE.md;md5=da60683017c3d3944dadd9a6395e27d1 \
+                    file://third_party/fbgemm/external/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/fbgemm/external/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/fbgemm/external/cpuinfo/LICENSE;md5=cabca80e8e4a4bbe90e9a4b4ad53f5f4 \
+                    file://third_party/fbgemm/external/cpuinfo/deps/clog/LICENSE;md5=32150729bbb899c7ce46b1d9a0e2cd44 \
+                    file://third_party/fbgemm/external/cutlass/LICENSE.txt;md5=ce85e3722fa981b4aef41101c60ed4a4 \
+                    file://third_party/fbgemm/external/cutlass/python/LICENSE.txt;md5=3a191d1cab4614f6018588fab3f40222 \
+                    file://third_party/fbgemm/external/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt;md5=7bbc9f9fc90fbe3bd69de1b43bc8a6be \
+                    file://third_party/fbgemm/external/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/fbgemm/external/hipify_torch/LICENSE.txt;md5=c7ca682d67f05aa25cd399821a8201eb \
+                    file://third_party/fbgemm/external/json/LICENSE.MIT;md5=3b489645de9825cca5beeb9a7e18b6eb \
+                    file://third_party/fbgemm/external/json/LICENSES/GPL-3.0-only.txt;md5=8da5784ab1c72e63ac74971f88658166 \
+                    file://third_party/fbgemm/external/json/docs/mkdocs/docs/home/license.md;md5=0b50ae6ab6b292c61ea813fc02dafce5 \
+                    file://third_party/fbgemm/fbgemm_gpu/docs/src/general/License.rst;md5=574e16da9d767579790b0519386f2561 \
+                    file://third_party/fbgemm/fbgemm_gpu/experimental/hstu/LICENSE;md5=0f5fe03b6862f8b140b55243259ceaa8 \
+                    file://third_party/fbgemm/fbgemm_gpu/src/quantize_ops/mx/LICENSE;md5=d4a904ca135bb7bc912156fee12726f0 \
+                    file://third_party/fbgemm/fbgemm_gpu/test/quantize/mx/LICENSE;md5=d4a904ca135bb7bc912156fee12726f0 \
+                    file://third_party/flash-attention/LICENSE;md5=0f5fe03b6862f8b140b55243259ceaa8 \
+                    file://third_party/flash-attention/csrc/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/flash-attention/csrc/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/flash-attention/csrc/cutlass/LICENSE.txt;md5=ce85e3722fa981b4aef41101c60ed4a4 \
+                    file://third_party/flash-attention/csrc/cutlass/python/LICENSE.txt;md5=3a191d1cab4614f6018588fab3f40222 \
+                    file://third_party/flash-attention/csrc/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt;md5=7bbc9f9fc90fbe3bd69de1b43bc8a6be \
+                    file://third_party/flash-attention/flash_attn/cute/LICENSE;md5=0f5fe03b6862f8b140b55243259ceaa8 \
+                    file://third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/flash-attention/third_party/aiter/LICENSE;md5=c90dfb7f5776d9561353925f47831d32 \
+                    file://third_party/flatbuffers/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/flatbuffers/dart/LICENSE;md5=de048fefedc11f95ce6013188756c8c5 \
+                    file://third_party/flatbuffers/swift/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/fmt/LICENSE;md5=6ec080902ed8f82f5a97ed13e8042634 \
+                    file://third_party/fmt/doc/LICENSE-exception;md5=b9257785fc4f3803a4b71b76c1412729 \
+                    file://third_party/gemmlowp/gemmlowp/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/gloo/LICENSE;md5=ea1ecec5f757696cea349b925fa70342 \
+                    file://third_party/gloo/gloo/transport/uv/LICENSE.uvw;md5=75598a838148e597d8f0e810a57f3855 \
+                    file://third_party/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/ideep/LICENSE;md5=fcb77001387249feb8deb2934a2a0172 \
+                    file://third_party/ideep/mkl-dnn/.github/.licenserc.yml;md5=bea5a8b4dcf9a949481d9d74deff753f \
+                    file://third_party/ideep/mkl-dnn/LICENSE;md5=05fda7e0b3a0fe6749e8443316fc9a3f \
+                    file://third_party/ideep/mkl-dnn/doc/legal_information.md;md5=9d22695105d17891b71619560947d531 \
+                    file://third_party/ideep/mkl-dnn/third_party/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/ideep/mkl-dnn/third_party/ittnotify/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
+                    file://third_party/ideep/mkl-dnn/third_party/ngen/COPYRIGHT;md5=5a03e1700352959938c2b169e3270087 \
+                    file://third_party/ideep/mkl-dnn/third_party/opencl/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/ideep/mkl-dnn/third_party/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
+                    file://third_party/ittapi/LICENSES/GPL-2.0-only.txt;md5=e2d76e7801260c21b90eea3605508ad6 \
+                    file://third_party/kineto/LICENSE;md5=b8952a632483f083083970d123bb2f24 \
+                    file://third_party/kineto/libkineto/third_party/dynolog_headers/LICENSE;md5=901f6cd9846257b3a9c69dbd0a49caf1 \
+                    file://third_party/kineto/libkineto/third_party/fmt/LICENSE;md5=b9257785fc4f3803a4b71b76c1412729 \
+                    file://third_party/kineto/libkineto/third_party/fmt/doc/python-license.txt;md5=d214581529e343354f8e23025bdf582d \
+                    file://third_party/kineto/libkineto/third_party/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/kineto/libkineto/third_party/json/LICENSE.MIT;md5=3b489645de9825cca5beeb9a7e18b6eb \
+                    file://third_party/kineto/libkineto/third_party/json/LICENSES/GPL-3.0-only.txt;md5=8da5784ab1c72e63ac74971f88658166 \
+                    file://third_party/kineto/libkineto/third_party/json/docs/mkdocs/docs/home/license.md;md5=0b50ae6ab6b292c61ea813fc02dafce5 \
+                    file://third_party/kleidiai/docs/imatmul/imgs/lhs_igemm.png.license;md5=0a7fa88e05d95a7e1d24243cb52a89f2 \
+                    file://third_party/kleidiai/docs/imgs/kai_rhs_packing_pattern_1.png.license;md5=4c9e61e928dc5b9a224206406276decf \
+                    file://third_party/kleidiai/docs/imgs/kai_rhs_packing_pattern_2.png.license;md5=4c9e61e928dc5b9a224206406276decf \
+                    file://third_party/kleidiai/docs/matmul_qsi4cx/imgs/int4_matmul_per_channel.png.license;md5=a85a4abb121db23dabcc4525709be958 \
+                    file://third_party/kleidiai/third_party/benchmark-v1.9.4.zip.license;md5=35ae5f7e86ac63b6f42dba0a47427759 \
+                    file://third_party/kleidiai/third_party/googletest-v1.17.0.zip.license;md5=fc050b2ee0c22c70139a66e3c1fd5b20 \
+                    file://third_party/llvm-openmp/LICENSE.txt;md5=755d65af9d209fb823af1a6023c19d12 \
+                    file://third_party/mimalloc/LICENSE;md5=fade5fb11a9703a4216c1b5133efdc7f \
+                    file://third_party/miniz-3.0.2/LICENSE;md5=292e2564dd2edd7c3ee1eb1e50480e25 \
+                    file://third_party/mslk/LICENSE;md5=d92c311ec29a53cecbde7d07b2bf4725 \
+                    file://third_party/mslk/external/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \
+                    file://third_party/mslk/external/composable_kernel/docs/license.rst;md5=f108c9f3047895b571fd7c1a8f831c39 \
+                    file://third_party/mslk/external/cutlass/LICENSE.txt;md5=ce85e3722fa981b4aef41101c60ed4a4 \
+                    file://third_party/mslk/external/cutlass/python/LICENSE.txt;md5=3a191d1cab4614f6018588fab3f40222 \
+                    file://third_party/mslk/external/cutlass/python/docs/_static/scripts/furo.js.LICENSE.txt;md5=7bbc9f9fc90fbe3bd69de1b43bc8a6be \
+                    file://third_party/mslk/external/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/mslk/external/hipify_torch/LICENSE.txt;md5=c7ca682d67f05aa25cd399821a8201eb \
+                    file://third_party/mslk/mslk/attention/flash_attn/LICENSE;md5=0f5fe03b6862f8b140b55243259ceaa8 \
+                    file://third_party/nlohmann/LICENSE.MIT;md5=3b489645de9825cca5beeb9a7e18b6eb \
+                    file://third_party/nlohmann/LICENSES/GPL-3.0-only.txt;md5=8da5784ab1c72e63ac74971f88658166 \
+                    file://third_party/nlohmann/docs/mkdocs/docs/home/license.md;md5=0b50ae6ab6b292c61ea813fc02dafce5 \
+                    file://third_party/onnx/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/onnx/third_party/pybind11/LICENSE;md5=774f65abd8a7fe3124be2cdf766cd06f \
+                    file://third_party/perfetto/LICENSE;md5=3b06e43f2e368eb8663632d529232353 \
+                    file://third_party/pocketfft/LICENSE.md;md5=bb0e49a83ba802d32f3a05a7b8b2180b \
+                    file://third_party/protobuf/LICENSE;md5=37b5762e07f0af8c74ce80a8bda4266b \
+                    file://third_party/protobuf/third_party/benchmark/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://third_party/protobuf/third_party/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/protobuf/third_party/googletest/googlemock/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/protobuf/third_party/googletest/googlemock/scripts/generator/LICENSE;md5=2c0b90db7465231447cf2dd2e8163333 \
+                    file://third_party/protobuf/third_party/googletest/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/protobuf/third_party/utf8_range/LICENSE;md5=ef460f31070fd7184bd9059de2e4b132 \
+                    file://third_party/psimd/LICENSE;md5=1a15870c3c6ac367fa27851881128c00 \
+                    file://third_party/pthreadpool/LICENSE;md5=1609499688b503850848d795dce4da2d \
+                    file://third_party/pybind11/LICENSE;md5=774f65abd8a7fe3124be2cdf766cd06f \
+                    file://third_party/python-peachpy/LICENSE.rst;md5=083a76258b33cfe514a466d172aca1d6 \
+                    file://third_party/sleef/LICENSE.txt;md5=e4224ccaecb14d942c71d31bef20d78c \
+                    file://third_party/tensorpipe/LICENSE.txt;md5=c6c727097c1e044f8e6ef0bce769aba3 \
+                    file://third_party/tensorpipe/third_party/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/tensorpipe/third_party/googletest/googlemock/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/tensorpipe/third_party/googletest/googlemock/scripts/generator/LICENSE;md5=2c0b90db7465231447cf2dd2e8163333 \
+                    file://third_party/tensorpipe/third_party/googletest/googletest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://third_party/tensorpipe/third_party/libnop/LICENSE;md5=4e5640559f0849cf863b1dc47bac078b \
+                    file://third_party/tensorpipe/third_party/libuv/LICENSE;md5=74b6f2f7818a4e3a80d03556f71b129b \
+                    file://third_party/tensorpipe/third_party/libuv/LICENSE-docs;md5=eacc0b19e3fb8dd12d2e110b24be0452 \
+                    file://third_party/tensorpipe/third_party/libuv/LICENSE-extra;md5=f9307417749e19bd1d6d68a394b49324 \
+                    file://third_party/tensorpipe/third_party/pybind11/LICENSE;md5=beb87117af69fd10fbf9fb14c22a2e62 \
+                    file://third_party/tensorpipe/third_party/pybind11/tools/clang/LICENSE.TXT;md5=dfabea443c6c16b6321441a8c8c19705 \
+                    file://torch/_vendor/packaging/LICENSE;md5=faadaedca9251a90b205c9167578ce91 \
+                    file://torch/_vendor/packaging/LICENSE.APACHE;md5=2ee41112a44fe7014dce33e26468ba93 \
+                    file://torch/_vendor/packaging/LICENSE.BSD;md5=7bef9bf4a8e4263634d0597e7ba100b8 \
+                    file://torch/_vendor/quack/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
+                    file://torch/fx/experimental/unification/LICENSE.txt;md5=98901c53ec07ed4a714ccd6fc454320a"
+
+SRC_URI = "gitsm://github.com/pytorch/pytorch;protocol=https;branch=release/2.14"
+
+# Modify these as desired
+PV = "1.0+git"
+SRCREV = "2b3ec34829036a65cd9d1398ea72a0167dc37470"
+
+# NOTE: recipetool emitted "inherit distutils3"; that class was REMOVED in scarthgap.
+# setuptools3 is its replacement. Mechanical fix only - this recipe is DRAFT, NON-AUTHORITATIVE.
+inherit setuptools3
+
+# WARNING: the following rdepends are determined through basic analysis of the
+# python sources, and might not be 100% accurate.
+RDEPENDS:${PN} += "python3-core"
+
+# WARNING: We were unable to map the following python package/module
+# dependencies to the bitbake packages which include them:
+#    PIL
+#    PIL.Image
+#    __future__
+#    __main__
+#    _compat_pickle
+#    _dummy_thread
+#    _pytest.python_api
+#    _pytest.raises
+#    _pytest.recwarn
+#    abc
+#    aiohttp
+#    amdsmi
+#    annotationlib
+#    argparse
+#    ast
+#    asyncio
+#    base64
+#    bisect
+#    boto3
+#    cProfile
+#    calendar
+#    ck4inductor
+#    ck4inductor.batched_universal_gemm.gen_instances
+#    ck4inductor.grouped_conv_fwd.gen_instances
+#    ck4inductor.grouped_conv_fwd.op
+#    ck4inductor.universal_gemm.gen_instances
+#    ck4inductor.universal_gemm.op
+#    clang.cindex
+#    clickhouse_connect
+#    codecs
+#    collections
+#    collections.abc
+#    colorama
+#    com.sun
+#    com.sun.jna
+#    com.sun.jna.platform
+#    concurrent
+#    concurrent.futures
+#    concurrent.futures._base
+#    concurrent.futures.process
+#    concurrent.futures.thread
+#    configparser
+#    contextlib
+#    contextvars
+#    copy
+#    copyreg
+#    coremltools
+#    coremltools.converters.mil.input_types
+#    coremltools.converters.mil.mil
+#    coremltools.models.neural_network
+#    csv
+#    ctypes
+#    ctypes.util
+#    ctypes.wintypes
+#    cuda.bindings
+#    cuda.bindings.driver
+#    cuda.bindings.runtime
+#    cupti
+#    cupti.cupti
+#    cupti.pm_sampling
+#    cutlass
+#    cutlass._mlir
+#    cutlass._mlir.dialects
+#    cutlass.base_dsl.arch
+#    cutlass.base_dsl.common
+#    cutlass.base_dsl.export
+#    cutlass.base_dsl.tvm_ffi_builder
+#    cutlass.base_dsl.typing
+#    cutlass.cute
+#    cutlass.cute._tvm_ffi_args_spec_converter
+#    cutlass.cute.nvgpu
+#    cutlass.cute.nvgpu.cpasync
+#    cutlass.cute.nvgpu.tcgen05
+#    cutlass.cute.nvgpu.tcgen05.mma
+#    cutlass.cute.nvgpu.warp
+#    cutlass.cute.runtime
+#    cutlass.cute.tensor
+#    cutlass.cute.testing
+#    cutlass.cutlass_dsl
+#    cutlass.operators
+#    cutlass.operators.arch
+#    cutlass.operators.arguments
+#    cutlass.operators.arguments.epilogue
+#    cutlass.operators.artifact
+#    cutlass.operators.fusion
+#    cutlass.operators.metadata
+#    cutlass.operators.mma
+#    cutlass.operators.providers.cutedsl
+#    cutlass.operators.providers.cutedsl.evt.common_efc
+#    cutlass.operators.providers.cutedsl.gemm.sm100_dense_blockscaled_static_persistent
+#    cutlass.operators.providers.cutedsl.gemm.sm100_static_persistent_efc
+#    cutlass.operators.providers.cutedsl.integration_utils.mma
+#    cutlass.operators.providers.cutedsl.operator
+#    cutlass.operators.status
+#    cutlass.operators.utils.common
+#    cutlass.operators.utils.device
+#    cutlass.operators.utils.dtype
+#    cutlass.operators.utils.tensor
+#    cutlass.pipeline
+#    cutlass.torch
+#    cutlass.utils
+#    cutlass.utils.blackwell_helpers
+#    cutlass.utils.blockscaled_layout
+#    cutlass.utils.hopper_helpers
+#    cutlass_cppgen
+#    cutlass_cppgen.backend.c_types
+#    cutlass_cppgen.backend.epilogue
+#    cutlass_cppgen.backend.evt
+#    cutlass_cppgen.backend.evt.backend.emitter_base
+#    cutlass_cppgen.backend.evt.backend.sm100_emitter
+#    cutlass_cppgen.backend.evt.frontend
+#    cutlass_cppgen.backend.evt.ir.tensor
+#    cutlass_library
+#    cutlass_library.gemm_operation
+#    cutlass_library.generator
+#    cutlass_library.library
+#    cutlass_library.manifest
+#    dataclasses
+#    dataclasses_json
+#    datetime
+#    decimal
+#    deeplearning.fbgemm.fbgemm_gpu.fb.inductor_lowerings
+#    difflib
+#    dill
+#    dis
+#    einops
+#    einops._torch_specific
+#    email
+#    enum
+#    etcd
+#    expecttest
+#    fbscribelogger
+#    filelock
+#    flash_attn.cute.block_sparsity
+#    fnmatch
+#    foo
+#    fsspec
+#    fsspec.core
+#    functools
+#    getpass
+#    glob
+#    google.protobuf
+#    gzip
+#    halide
+#    hashlib
+#    heapq
+#    helion
+#    helion.experimental
+#    http.client
+#    http.server
+#    hypothesis
+#    hypothesis.extra
+#    hypothesis.strategies
+#    importlib
+#    importlib.abc
+#    importlib.machinery
+#    importlib.metadata
+#    importlib.resources
+#    importlib.util
+#    inspect
+#    io
+#    ipaddress
+#    jax
+#    jax.experimental
+#    jax.numpy
+#    jinja2
+#    json
+#    json5
+#    junitparser
+#    keyword
+#    libfb.py
+#    libfb.py.build_info
+#    libfb.py.cxx_resources
+#    libfb.py.log
+#    libfb.py.parutil
+#    linecache
+#    locale
+#    logging
+#    logging.handlers
+#    matplotlib
+#    matplotlib.backends.backend_agg
+#    matplotlib.figure
+#    matplotlib.patches
+#    matplotlib.pyplot
+#    ml_dtypes
+#    mmap
+#    modulefinder
+#    monkeytype
+#    monkeytype.config
+#    monkeytype.db.base
+#    monkeytype.tracing
+#    moviepy
+#    mpmath.libmp
+#    msvcrt
+#    mtia.host_runtime.torch_mtia.acc_flags
+#    multiprocessing
+#    multiprocessing.connection
+#    multiprocessing.context
+#    multiprocessing.pool
+#    multiprocessing.queues
+#    multiprocessing.reduction
+#    multiprocessing.resource_sharer
+#    multiprocessing.resource_tracker
+#    multiprocessing.util
+#    networkx
+#    numba.cuda
+#    numbers
+#    numpy
+#    numpy.typing
+#    nvMatmulHeuristics
+#    nvidia.cu13
+#    nvmath.bindings
+#    nvmath.bindings.cublas
+#    objgraph
+#    onnx
+#    onnx.reference
+#    onnx_ir
+#    onnxruntime
+#    onnxscript
+#    onnxscript._framework_apis.torch_2_11
+#    onnxscript.evaluator
+#    onnxscript.ir
+#    onnxscript.onnx_opset
+#    onnxscript.values
+#    operator
+#    opt_einsum
+#    optree
+#    optree._C
+#    optree.registry
+#    optree.utils
+#    origami
+#    orjson
+#    os
+#    packaging.version
+#    pandas
+#    pathlib
+#    pdb
+#    pickle
+#    pickletools
+#    pkgutil
+#    platform
+#    pprint
+#    pstats
+#    psutil
+#    pulp
+#    pwlf
+#    pycute
+#    pydot
+#    pyinstrument
+#    pynvml
+#    pytest
+#    pytest_subtests
+#    pytorch_lightning
+#    pyzes
+#    queue
+#    random
+#    re
+#    redis
+#    requests
+#    resource
+#    rfe.scubadata.scubadata_py3
+#    rich
+#    rich.align
+#    rich.box
+#    rich.console
+#    rich.padding
+#    rich.style
+#    rich.table
+#    rocm_sdk
+#    runpy
+#    safetensors
+#    safetensors.torch
+#    scipy
+#    scipy.fft
+#    scipy.io
+#    scipy.optimize
+#    scipy.signal
+#    scipy.spatial
+#    scipy.special
+#    selectors
+#    setuptools
+#    setuptools._distutils
+#    setuptools._distutils.compilers.C
+#    setuptools.command.build_ext
+#    shlex
+#    shtab
+#    shutil
+#    signal
+#    site
+#    socket
+#    spmd_types
+#    spmd_types._checker
+#    spmd_types._mesh_axis
+#    spmd_types.runtime
+#    spmd_types.types
+#    sqlite3
+#    statistics
+#    string
+#    struct
+#    subprocess
+#    sympy
+#    sympy.core
+#    sympy.core.basic
+#    sympy.core.decorators
+#    sympy.core.expr
+#    sympy.core.function
+#    sympy.core.logic
+#    sympy.core.numbers
+#    sympy.core.operations
+#    sympy.core.parameters
+#    sympy.core.singleton
+#    sympy.core.sorting
+#    sympy.core.traversal
+#    sympy.functions.elementary.complexes
+#    sympy.logic.boolalg
+#    sympy.multipledispatch
+#    sympy.parsing.sympy_parser
+#    sympy.printing.precedence
+#    sympy.printing.str
+#    sympy.utilities.iterables
+#    sysconfig
+#    tabulate
+#    tarfile
+#    tempfile
+#    tensorboard
+#    tensorboard.compat
+#    tensorboard.compat.proto
+#    tensorboard.compat.proto.attr_value_pb2
+#    tensorboard.compat.proto.config_pb2
+#    tensorboard.compat.proto.event_pb2
+#    tensorboard.compat.proto.graph_pb2
+#    tensorboard.compat.proto.node_def_pb2
+#    tensorboard.compat.proto.step_stats_pb2
+#    tensorboard.compat.proto.summary_pb2
+#    tensorboard.compat.proto.tensor_pb2
+#    tensorboard.compat.proto.tensor_shape_pb2
+#    tensorboard.compat.proto.versions_pb2
+#    tensorboard.plugins.custom_scalar
+#    tensorboard.plugins.hparams.api_pb2
+#    tensorboard.plugins.hparams.metadata
+#    tensorboard.plugins.hparams.plugin_data_pb2
+#    tensorboard.plugins.mesh
+#    tensorboard.plugins.mesh.plugin_data_pb2
+#    tensorboard.plugins.pr_curve.plugin_data_pb2
+#    tensorboard.plugins.projector.projector_config_pb2
+#    tensorboard.plugins.text.plugin_data_pb2
+#    tensorboard.summary.writer.event_file_writer
+#    tensorboard.summary.writer.record_writer
+#    tensorflow.core.framework
+#    tensorflow.core.util
+#    tensorflow.python.summary.writer.writer
+#    textwrap
+#    threading
+#    timeit
+#    tokenize
+#    tools.testing.target_determination.determinator
+#    tools.testing.target_determination.heuristics.interface
+#    torch._C
+#    torch._C._VariableFunctions
+#    torch._C._aoti
+#    torch._C._autograd
+#    torch._C._distributed
+#    torch._C._distributed_autograd
+#    torch._C._distributed_c10d
+#    torch._C._distributed_rpc
+#    torch._C._distributed_rpc_testing
+#    torch._C._dynamo
+#    torch._C._dynamo.eval_frame
+#    torch._C._dynamo.guards
+#    torch._C._export
+#    torch._C._functorch
+#    torch._C._jit_tree_views
+#    torch._C._lazy
+#    torch._C._lazy_ts_backend
+#    torch._C._monitor
+#    torch._C._onnx
+#    torch._C._profiler
+#    torch._inductor.fb.cutlass_remote_cache
+#    torch._inductor.fb.kernel_binary_remote_cache
+#    torch._inductor.fb.remote_cache
+#    torch._inductor.fb.remote_gemm_autotune_cache
+#    torch._inductor.fb.shape_logging
+#    torch._inductor.fb.triton_kernel_metadata
+#    torch._inductor.fb.utils
+#    torch._inductor.runtime.caching.fb.implementations
+#    torch._inductor.runtime.fb.incremental
+#    torch._nccl_ep
+#    torch.distributed.elastic.metrics.static_init
+#    torch.profiler._cupti._cupti_stubs
+#    torch.utils._config_typing
+#    torch.version
+#    torch_xla
+#    torch_xla.core.dynamo_bridge
+#    torch_xla.core.xla_model
+#    torch_xla.distributed.spmd
+#    torch_xla.stablehlo
+#    torch_xla.utils.dlpack
+#    torcharrow.pytorch
+#    torchaudio
+#    torchcomms
+#    torchcomms._backend_wrapper
+#    torchcomms._comms
+#    torchcomms.hooks
+#    torchdistx
+#    torchrec.sparse.jagged_tensor
+#    torchvision
+#    torchvision.io
+#    torchvision.ops
+#    tqdm
+#    traceback
+#    transformers
+#    triton
+#    triton._C.libtriton.ir
+#    triton._utils
+#    triton.backends
+#    triton.backends.compiler
+#    triton.backends.nvidia.driver
+#    triton.compiler
+#    triton.compiler.compiler
+#    triton.compiler.errors
+#    triton.fb.build
+#    triton.fb.re_build_helper
+#    triton.language
+#    triton.language.core
+#    triton.language.extra
+#    triton.language.extra.cuda
+#    triton.language.extra.tlx
+#    triton.language.extra.tlx.inductor.registry
+#    triton.language.standard
+#    triton.runtime
+#    triton.runtime.autotuner
+#    triton.runtime.cache
+#    triton.runtime.driver
+#    triton.runtime.errors
+#    triton.runtime.interpreter
+#    triton.runtime.jit
+#    triton.testing
+#    triton.tools.disasm
+#    triton.tools.experimental_descriptor
+#    triton.tools.tensor_descriptor
+#    tvm.relax.frontend.torch
+#    tvm_ffi
+#    types
+#    typing
+#    typing_extensions
+#    unittest
+#    unittest.mock
+#    urllib
+#    urllib.error
+#    urllib.parse
+#    urllib.request
+#    urllib3.exceptions
+#    uuid
+#    warnings
+#    wave
+#    weakref
+#    win32api
+#    win32com.shell
+#    winreg
+#    xml.etree.ElementTree
+#    xmlrunner
+#    xmlrunner.result
+#    yaml
+#    yaml.constructor
+#    yaml.nodes
+#    z3
+#    zipfile
