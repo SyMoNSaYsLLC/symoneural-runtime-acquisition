@@ -32,7 +32,10 @@ PACKAGECONFIG[dev] = ",,,python3-hypothesis python3-pytest"
 
 # WARNING: the following rdepends are from setuptools install_requires. These
 # upstream names may not correspond exactly to bitbake package names.
-RDEPENDS:${PN} += "python3-mpmath"
+# recipetool mapped the upstream dependency "mpmath" to OE's python3-* naming.
+# No python3-mpmath exists in this estate; SyMoNeuRaL supplies it as
+# symoneural-mpmath (Ravencalc/src/symbolic/source/mpmath).
+RDEPENDS:${PN} += "symoneural-mpmath"
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.

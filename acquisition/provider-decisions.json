@@ -1,0 +1,43 @@
+{
+ "decisions": [
+  {
+   "logical": "autoconf",
+   "rationale": "build tool, never shipped, identical version",
+   "selected_provider": "OE-CORE"
+  },
+  {
+   "logical": "automake",
+   "rationale": "build tool, never shipped, identical version",
+   "selected_provider": "OE-CORE"
+  },
+  {
+   "logical": "libtool",
+   "rationale": "build tool, never shipped, identical version",
+   "selected_provider": "OE-CORE"
+  },
+  {
+   "logical": "m4",
+   "rationale": "build tool, never shipped, identical version",
+   "selected_provider": "OE-CORE"
+  },
+  {
+   "logical": "ninja",
+   "rationale": "build tool, never shipped, identical version",
+   "selected_provider": "OE-CORE"
+  },
+  {
+   "logical": "numpy",
+   "rationale": "Ravencalc deliverable; built from the acquired tree via EXTERNALSRC. scipy and scikit-learn DEPEND on symoneural-numpy, never python3-numpy",
+   "selected_provider": "SYMONEURAL-OWNED"
+  },
+  {
+   "logical": "gstreamer",
+   "rationale": "Live deliverable; built from the acquired tree via EXTERNALSRC",
+   "selected_provider": "SYMONEURAL-OWNED"
+  }
+ ],
+ "not_deleted": "The five Build-runtime source trees are retained; only the provider selection changed.",
+ "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
+ "rule": "Own what you ship; borrow what you only build with.",
+ "schema": "symoneural-provider-decisions/1"
+}

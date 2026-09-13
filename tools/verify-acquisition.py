@@ -148,6 +148,15 @@ def main():
         keyc = (m["runtime"], m["component"])
         c = by_comp.get(keyc)
         st = m["acquisition_state"]
+        if m["runtime"] == "<build-stack>" and st == "ACQUIRED":
+            # Build-stack layers live in the bootstrap, not under Symoneural-*/src,
+            # so source-lock cannot hold them. Their integrity is asserted by the
+            # LOCKED_STACK drift check instead. Reconciling them against source-lock
+            # would report MISSING for something that is present and pinned.
+            state = "PRESENT-AT-INTENDED-REVISION"
+            RECON[state] = RECON.get(state, 0) + 1
+            RECON_DETAIL.append((state, m["runtime"], m["component"]))
+            continue
         if st == "DEFERRED":
             state = "DEFERRED"
         elif m["intended_revision"] == "UNRESOLVED":

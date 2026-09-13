@@ -7,6 +7,14 @@ LICENSE = "BSD-3-Clause"
 # licence-bearing files; under-declaring hides it. Curating this down to one
 # canonical file dropped OpenBLAS from 8 files to 1, losing coverage of the
 # vendored LAPACK, LAPACKE, ReLAPACK and netlib BLAS reference licences.
+# Three of recipetool's generated entries were removed:
+#   vendored-meson/meson/test cases/common/42 subproject/mylicense.txt
+#   vendored-meson/meson/test cases/common/42 subproject/subprojects/sublib/sublicense1.txt
+#   vendored-meson/meson/test cases/common/42 subproject/subprojects/sublib/sublicense2.txt
+# Two independent reasons. Structurally, LIC_FILES_CHKSUM is WHITESPACE-SEPARATED
+# and those paths contain spaces - that is what broke do_populate_lic.
+# Semantically, md5=d41d8cd9... is the md5 of an EMPTY FILE: they are Meson test
+# fixtures, not licence documents.
 LIC_FILES_CHKSUM = "file://.spin/LICENSE;md5=bde96408b6df910d3d7c40d3d9a10d31 \
                     file://LICENSE.txt;md5=26080bf81b2662c7119d3ef28ae197fd \
                     file://doc/source/_static/scipy-mathjax/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
@@ -31,11 +39,7 @@ LIC_FILES_CHKSUM = "file://.spin/LICENSE;md5=bde96408b6df910d3d7c40d3d9a10d31 \
                     file://numpy/random/src/splitmix64/LICENSE.md;md5=aed2fe30600fb0e72efc56b188d9e0df \
                     file://vendored-meson/meson/COPYING;md5=3b83ef96387f14655fc854ddc3c6bd57 \
                     file://vendored-meson/meson/docs/markdown/legal.md;md5=000fe0dead3c0d575839e9d2bcfe2d5e \
-                    file://vendored-meson/meson/packaging/License.rtf;md5=074ef868ead2735d006e564c24e059c7 \
-                    file://vendored-meson/meson/test cases/common/42 subproject/mylicense.txt;md5=d41d8cd98f00b204e9800998ecf8427e \
-                    file://vendored-meson/meson/test cases/common/42 subproject/subprojects/sublib/sublicense1.txt;md5=d41d8cd98f00b204e9800998ecf8427e \
-                    file://vendored-meson/meson/test cases/common/42 subproject/subprojects/sublib/sublicense2.txt;md5=d41d8cd98f00b204e9800998ecf8427e"
-
+                    file://vendored-meson/meson/packaging/License.rtf;md5=074ef868ead2735d006e564c24e059c7"
 SRC_URI = "gitsm://github.com/numpy/numpy;protocol=https;branch=maintenance/2.5.x"
 
 # Modify these as desired
@@ -44,22 +48,55 @@ SRCREV = "dd88c0c19b54ad9ed3533224221285bf0873249a"
 
 S = "${WORKDIR}/git"
 
-inherit python_mesonpy
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
+# Mirrors OE-Core's own python3-numpy_2.5.3 (identical upstream version, known to
+# cross-build): pkgconfig is what lets meson's Cython link test find target python3,
+# and cython.bbclass supplies python3-cython-native plus metadata stripping.
+inherit pkgconfig python_mesonpy
+
+# NOT `inherit cython`. That class is INCOMPATIBLE with externalsrc: its
+# do_compile postfunc strip_cython_metadata runs `sed -i` over every .c/.cpp
+# under ${S}, and with externalsrc ${S} IS the pristine upstream tree. It
+# changed no content but rewrote files and stripped the exec bit from
+# numpy/_core/src/umath/loops_hyperbolic.dispatch.cpp.src - a real mutation of
+# acquired source. We take only what was actually needed from it:
+DEPENDS += "python3-cython-native"
+
+
 
 # NOTE: no Makefile found, unable to determine what needs to be done
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
+
+
+
+
+# --- packaging hygiene -------------------------------------------------------
+# numpy records its build configuration into __config__.py, which embeds TMPDIR
+# and the build-host HOME. OE-Core's own recipe fixes this by sed-ing
+# ${S}/numpy/__config__.py.in during do_patch - i.e. by editing the SOURCE.
+# We build from a pristine externalsrc tree that must never be modified, so the
+# same correction is applied to the INSTALLED artifact instead. Same outcome,
+# source left untouched.
+do_install:append() {
+    for f in ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py; do
+        [ -f "$f" ] || continue
+        sed -i -e 's|${TMPDIR}|/build|g' -e 's|${HOME}|/build|g' \
+               -e 's|${WORKDIR}|/build|g' -e 's|${S}|/source|g' "$f"
+    done
+    # drop the stale bytecode so it cannot carry the paths we just stripped
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__pycache__/__config__.*.pyc
 }
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
+# numpy ships static helper libraries (libnpymath.a, libnpyrandom.a) inside the
+# python package tree. They belong in -staticdev, not the runtime package.
+FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/_core/lib/*.a \
+                          ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a"
 
-do_install () {
-	# Specify install commands here
-	:
-}
-
+# scipy and scikit-learn need numpy importable by nativepython3 at build time.
+# D2 says they build against the numpy SyMoNeuRaL ships, so we provide a native
+# variant rather than pulling OE-Core python3-numpy into the build.
+BBCLASSEXTEND = "native"

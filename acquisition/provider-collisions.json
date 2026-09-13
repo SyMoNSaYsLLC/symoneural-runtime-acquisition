@@ -2,6 +2,140 @@
  "collisions": [
   {
    "consumers": [
+    "Common/pytorch",
+    "googletest"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "googletest",
+   "provider_count": 7,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "googletest",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-test/googletest/googletest_1.18.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.18.0"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/googletest",
+     "state": "AVAILABLE",
+     "version": "52eb8108c5bd"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/googletest",
+     "state": "AVAILABLE",
+     "version": "52eb8108c5bd"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/googletest",
+     "state": "AVAILABLE",
+     "version": "52eb8108c5bd"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/mslk/external/googletest",
+     "state": "AVAILABLE",
+     "version": "52eb8108c5bd"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/protobuf/third_party/googletest",
+     "state": "AVAILABLE",
+     "version": "5ec7f0c4a113"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/googletest",
+     "state": "AVAILABLE",
+     "version": "aee0f9d9b5b8"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "googletest"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gtest",
+   "provider_count": 7,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "googletest",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-test/googletest/googletest_1.18.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.18.0"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/cpp-httplib/test/gtest/include/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/googletest/googletest/include/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fmt/test/gtest/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/googletest/googletest/include/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/ideep/mkl-dnn/third_party/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/fmt/test/gtest/gtest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Common/pytorch"
    ],
    "decision": "UNRESOLVED",
@@ -175,6 +309,52 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "python3-pybind11"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "pybind11",
+   "provider_count": 4,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "python3-pybind11",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-pybind11_3.0.4.bb",
+     "state": "AVAILABLE",
+     "version": "3.0.4"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/onnx/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "a2e59f0e7065"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "97bf890db679"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "a23996fce38f"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Ravencalc/scikit-learn",
     "Ravencalc/scipy"
    ],
@@ -253,10 +433,90 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "flatbuffers",
+    "python3-flatbuffers"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "flatbuffers",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "flatbuffers",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/flatbuffers/flatbuffers.bb",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "python3-flatbuffers",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/flatbuffers/python3-flatbuffers.bb",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/flatbuffers",
+     "state": "AVAILABLE",
+     "version": "a2cd1ea3b6d3"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Build/libtool",
+    "Build/m4",
+    "gnulib"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gnulib",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "gnulib",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-support/gnulib/gnulib_202601.bb",
+     "state": "AVAILABLE",
+     "version": "202601"
+    },
+    {
+     "identity": "Build/libtool",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/libtool/gnulib",
+     "state": "AVAILABLE",
+     "version": "491f1bb7d304"
+    },
+    {
+     "identity": "Build/m4",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Build/src/autotools/source/m4/gnulib",
+     "state": "AVAILABLE",
+     "version": "c6842ec25c6d"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Live/gstreamer",
     "gstreamer1.0"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): Live deliverable; built from the acquired tree via EXTERNALSRC",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "gstreamer",
@@ -289,7 +549,47 @@
      "version": "UNKNOWN"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "SYMONEURAL-OWNED"
+  },
+  {
+   "consumers": [
+    "Build/ninja",
+    "ninja",
+    "python3-ninja"
+   ],
+   "decision": "RESOLVED (D2): build tool, never shipped, identical version",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "ninja",
+   "provider_count": 3,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Build/ninja",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Build/src/ninja/source/ninja",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "ninja",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/ninja/ninja_1.13.2.bb",
+     "state": "AVAILABLE",
+     "version": "1.13.2"
+    },
+    {
+     "identity": "python3-ninja",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-ninja_1.13.2.bb",
+     "state": "AVAILABLE",
+     "version": "1.13.2"
+    }
+   ],
+   "selected_provider": "OE-CORE"
   },
   {
    "consumers": [
@@ -333,10 +633,130 @@
   },
   {
    "consumers": [
+    "Build/bitbake",
+    "ply",
+    "python3-ply"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "ply",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "python3-ply",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/python/python3-ply_3.11.bb",
+     "state": "AVAILABLE",
+     "version": "3.11"
+    },
+    {
+     "identity": "ply",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/ply/ply_git.bb",
+     "state": "AVAILABLE",
+     "version": "git"
+    },
+    {
+     "identity": "Build/bitbake",
+     "kind": "VENDORED",
+     "location": "Symoneural-Build/src/bitbake/source/lib/ply",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "protobuf",
+    "python3-protobuf"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "protobuf",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "protobuf",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/protobuf/protobuf_6.33.6.bb",
+     "state": "AVAILABLE",
+     "version": "6.33.6"
+    },
+    {
+     "identity": "python3-protobuf",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-protobuf_6.33.6.bb",
+     "state": "AVAILABLE",
+     "version": "6.33.6"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/protobuf",
+     "state": "AVAILABLE",
+     "version": "f0dc78d7e6e3"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "LLM/llama.cpp",
+    "python3-xxhash",
+    "xxhash"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "xxhash",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "xxhash",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-support/xxhash/xxhash_0.8.3.bb",
+     "state": "AVAILABLE",
+     "version": "0.8.3"
+    },
+    {
+     "identity": "python3-xxhash",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-xxhash_4.0.1.bb",
+     "state": "AVAILABLE",
+     "version": "4.0.1"
+    },
+    {
+     "identity": "LLM/llama.cpp",
+     "kind": "VENDORED",
+     "location": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/hash/xxhash",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Build/autoconf",
     "autoconf"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): build tool, never shipped, identical version",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "autoconf",
@@ -361,14 +781,14 @@
      "version": "2.73"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "OE-CORE"
   },
   {
    "consumers": [
     "Build/automake",
     "automake"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): build tool, never shipped, identical version",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "automake",
@@ -393,7 +813,7 @@
      "version": "1.19"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "OE-CORE"
   },
   {
    "consumers": [
@@ -460,6 +880,38 @@
   },
   {
    "consumers": [
+    "API/fastapi",
+    "python3-fastapi"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "fastapi",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/fastapi",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/web/source/fastapi",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-fastapi",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-fastapi_0.141.1.bb",
+     "state": "AVAILABLE",
+     "version": "0.141.1"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Common/pytorch"
    ],
    "decision": "UNRESOLVED",
@@ -491,37 +943,6 @@
   },
   {
    "consumers": [
-    "Build/libtool",
-    "Build/m4"
-   ],
-   "decision": "UNRESOLVED",
-   "evidence": "tools/scan-oe-providers.py",
-   "link_scope": "UNKNOWN",
-   "logical_dependency": "gnulib",
-   "provider_count": 2,
-   "provider_kinds": [
-    "SUBMODULE"
-   ],
-   "providers": [
-    {
-     "identity": "Build/libtool",
-     "kind": "SUBMODULE",
-     "location": "Symoneural-Build/src/autotools/source/libtool/gnulib",
-     "state": "AVAILABLE",
-     "version": "491f1bb7d304"
-    },
-    {
-     "identity": "Build/m4",
-     "kind": "SUBMODULE",
-     "location": "Symoneural-Build/src/autotools/source/m4/gnulib",
-     "state": "AVAILABLE",
-     "version": "c6842ec25c6d"
-    }
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "consumers": [
     "Live/gstreamer",
     "gst-devtools"
    ],
@@ -546,6 +967,38 @@
      "identity": "Live/gstreamer",
      "kind": "VENDORED",
      "location": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gst-devtools",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Live/gstreamer",
+    "gst-editing-services"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "gst-editing-services",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "gst-editing-services",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/gst-editing-services/gst-editing-services_1.28.5.bb",
+     "state": "AVAILABLE",
+     "version": "1.28.5"
+    },
+    {
+     "identity": "Live/gstreamer",
+     "kind": "VENDORED",
+     "location": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gst-editing-services",
      "state": "AVAILABLE",
      "version": "UNKNOWN"
     }
@@ -586,10 +1039,138 @@
   },
   {
    "consumers": [
+    "Ravencalc/numpy",
+    "highway"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "highway",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "highway",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-extended/highway/highway_1.4.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.4.0"
+    },
+    {
+     "identity": "Ravencalc/numpy",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Ravencalc/src/numerics/source/numpy/numpy/_core/src/highway",
+     "state": "AVAILABLE",
+     "version": "ee36c8371293"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "API/httpcore",
+    "python3-httpcore"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "httpcore",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/httpcore",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/http/source/httpcore",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-httpcore",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-httpcore_1.0.9.bb",
+     "state": "AVAILABLE",
+     "version": "1.0.9"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "API/httpx",
+    "python3-httpx"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "httpx",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/httpx",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/http/source/httpx",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-httpx",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-httpx_0.28.1.bb",
+     "state": "AVAILABLE",
+     "version": "0.28.1"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "jsoncpp"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "jsoncpp",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "jsoncpp",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/jsoncpp/jsoncpp_1.9.8.bb",
+     "state": "AVAILABLE",
+     "version": "1.9.8"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/protobuf/conformance/third_party/jsoncpp",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Build/libtool",
     "libtool"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): build tool, never shipped, identical version",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "libtool",
@@ -614,7 +1195,7 @@
      "version": "2.6.2"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "OE-CORE"
   },
   {
    "consumers": [
@@ -653,7 +1234,7 @@
     "Build/m4",
     "m4"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): build tool, never shipped, identical version",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "m4",
@@ -678,7 +1259,7 @@
      "version": "1.4.21"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "OE-CORE"
   },
   {
    "consumers": [
@@ -746,13 +1327,13 @@
   },
   {
    "consumers": [
-    "Build/ninja",
-    "ninja"
+    "Ravencalc/mpmath",
+    "python3-mpmath"
    ],
    "decision": "UNRESOLVED",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
-   "logical_dependency": "ninja",
+   "logical_dependency": "mpmath",
    "provider_count": 2,
    "provider_kinds": [
     "DIRECT-ACQUISITION",
@@ -760,18 +1341,18 @@
    ],
    "providers": [
     {
-     "identity": "Build/ninja",
+     "identity": "Ravencalc/mpmath",
      "kind": "DIRECT-ACQUISITION",
-     "location": "Symoneural-Build/src/ninja/source/ninja",
+     "location": "Symoneural-Ravencalc/src/symbolic/source/mpmath",
      "state": "AVAILABLE",
      "version": "see source-lock"
     },
     {
-     "identity": "ninja",
+     "identity": "python3-mpmath",
      "kind": "OE-CORE-RECIPE",
-     "location": "openembedded-core/meta/recipes-devtools/ninja/ninja_1.13.2.bb",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-mpmath_1.4.1.bb",
      "state": "AVAILABLE",
-     "version": "1.13.2"
+     "version": "1.4.1"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -781,7 +1362,7 @@
     "Ravencalc/numpy",
     "python3-numpy"
    ],
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED (D2): Ravencalc deliverable; built from the acquired tree via EXTERNALSRC. scipy and scikit-learn DEPEND on symoneural-numpy, never python3-numpy",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
    "logical_dependency": "numpy",
@@ -806,7 +1387,7 @@
      "version": "2.5.3"
     }
    ],
-   "selected_provider": "UNRESOLVED"
+   "selected_provider": "SYMONEURAL-OWNED"
   },
   {
    "consumers": [
@@ -842,13 +1423,13 @@
   },
   {
    "consumers": [
-    "Build/bitbake",
-    "python3-ply"
+    "Common/pytorch",
+    "perfetto"
    ],
    "decision": "UNRESOLVED",
    "evidence": "tools/scan-oe-providers.py",
    "link_scope": "UNKNOWN",
-   "logical_dependency": "ply",
+   "logical_dependency": "perfetto",
    "provider_count": 2,
    "provider_kinds": [
     "OE-CORE-RECIPE",
@@ -856,16 +1437,16 @@
    ],
    "providers": [
     {
-     "identity": "python3-ply",
+     "identity": "perfetto",
      "kind": "OE-CORE-RECIPE",
-     "location": "openembedded-core/meta/recipes-devtools/python/python3-ply_3.11.bb",
+     "location": "meta-openembedded/meta-oe/recipes-devtools/perfetto/perfetto.bb",
      "state": "AVAILABLE",
-     "version": "3.11"
+     "version": "UNKNOWN"
     },
     {
-     "identity": "Build/bitbake",
+     "identity": "Common/pytorch",
      "kind": "VENDORED",
-     "location": "Symoneural-Build/src/bitbake/source/lib/ply",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/perfetto",
      "state": "AVAILABLE",
      "version": "UNKNOWN"
     }
@@ -899,6 +1480,38 @@
      "location": "Symoneural-Ravencalc/src/numerics/source/numpy/numpy/fft/pocketfft",
      "state": "AVAILABLE",
      "version": "33ae5dc94c9c"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "API/pydantic",
+    "python3-pydantic"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "pydantic",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/pydantic",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/model/source/pydantic",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-pydantic",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-pydantic_2.13.4.bb",
+     "state": "AVAILABLE",
+     "version": "2.13.4"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -1000,6 +1613,134 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "spdlog"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "spdlog",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "spdlog",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-support/spdlog/spdlog_1.17.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.17.0"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/ideep/mkl-dnn/third_party/spdlog",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "API/starlette",
+    "python3-starlette"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "starlette",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/starlette",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/web/source/starlette",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-starlette",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-starlette_1.6.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.6.0"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/sympy",
+    "python3-sympy"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "sympy",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/sympy",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Ravencalc/src/symbolic/source/sympy",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-sympy",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-sympy_1.14.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.14.0"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "API/uvicorn",
+    "python3-uvicorn"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "uvicorn",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "API/uvicorn",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-API/src/web/source/uvicorn",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-uvicorn",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-uvicorn_0.49.0.bb",
+     "state": "AVAILABLE",
+     "version": "0.49.0"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Build/bitbake",
     "vim"
    ],
@@ -1029,42 +1770,10 @@
     }
    ],
    "selected_provider": "UNRESOLVED"
-  },
-  {
-   "consumers": [
-    "LLM/llama.cpp",
-    "xxhash"
-   ],
-   "decision": "UNRESOLVED",
-   "evidence": "tools/scan-oe-providers.py",
-   "link_scope": "UNKNOWN",
-   "logical_dependency": "xxhash",
-   "provider_count": 2,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "identity": "xxhash",
-     "kind": "OE-CORE-RECIPE",
-     "location": "openembedded-core/meta/recipes-support/xxhash/xxhash_0.8.3.bb",
-     "state": "AVAILABLE",
-     "version": "0.8.3"
-    },
-    {
-     "identity": "LLM/llama.cpp",
-     "kind": "VENDORED",
-     "location": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/hash/xxhash",
-     "state": "AVAILABLE",
-     "version": "UNKNOWN"
-    }
-   ],
-   "selected_provider": "UNRESOLVED"
   }
  ],
  "note": "Provider EXISTENCE only. selected_provider stays UNRESOLVED; the scanner exposes choices and does not make architecture decisions.",
- "oe_core_providers_indexed": 1021,
- "oe_core_recipes_inspected": 958,
+ "oe_core_providers_indexed": 2823,
+ "oe_core_recipes_inspected": 2760,
  "schema": "symoneural-provider-collisions/2"
 }

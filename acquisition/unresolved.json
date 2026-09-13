@@ -30,6 +30,13 @@
    "state": "UNRESOLVED"
   },
   {
+   "blocks": "Ravencalc scipy and scikit-learn (transitively)",
+   "category": "BUILD-DESIGN",
+   "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",
+   "identifier": "scipy-fortran",
+   "state": "UNRESOLVED"
+  },
+  {
    "blocks": "release licensing claim",
    "category": "LICENCE",
    "description": "8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.",

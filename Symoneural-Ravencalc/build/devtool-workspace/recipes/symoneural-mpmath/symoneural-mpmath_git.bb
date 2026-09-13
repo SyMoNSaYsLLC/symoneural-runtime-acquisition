@@ -11,22 +11,20 @@ SRCREV = "c1131e2d64abcbb57728ca8a499c920c0c69e67f"
 
 S = "${WORKDIR}/git"
 
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
 inherit python_setuptools_build_meta
+
+# Build-time dependency proven by an actual build failure, not inferred:
+# mpmath's PEP-517 build requires setuptools-scm; supplied by OE-Core.
+DEPENDS += "python3-setuptools-scm-native"
+
 
 # NOTE: no Makefile found, unable to determine what needs to be done
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
 
-do_install () {
-	# Specify install commands here
-	:
-}
 

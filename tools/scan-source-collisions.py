@@ -82,6 +82,22 @@ for name in sorted(prov):
         "selected_provider": "UNRESOLVED", "decision": "UNRESOLVED"})
 
 entries.sort(key=lambda e: (-e["provider_count"], e["logical_source"]))
+
+# --- MERGE curated D2 decisions -------------------------------------------
+# Scanner-derived records are overwritten on every regeneration, so decisions
+# must live in a curated record and be merged in here. Hand-editing the output
+# is exactly how host_designation was silently lost.
+try:
+    _pd = load("provider-decisions.json")["decisions"]
+    _by = {d["logical"]: d for d in _pd}
+    for _c in entries:
+        _d = _by.get(_c["logical_source"])
+        if _d:
+            _c["selected_provider"] = _d["selected_provider"]
+            _c["decision"] = "RESOLVED (D2): " + _d["rationale"]
+except Exception as _e:
+    print("WARN: provider-decisions merge skipped: %s" % _e)
+
 dump({"schema": "symoneural-source-collisions/1",
       "note": "DETECTION ONLY. No copy is collapsed, deleted or rewritten. "
               "Every entry is UNRESOLVED by design.",

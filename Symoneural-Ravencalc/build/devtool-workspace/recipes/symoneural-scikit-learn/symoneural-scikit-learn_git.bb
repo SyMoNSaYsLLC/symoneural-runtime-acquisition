@@ -25,25 +25,19 @@ SRCREV = "866c0f51e7560ef0303cbcc5f159df5382ea9e3f"
 S = "${WORKDIR}/git"
 
 
-inherit python_mesonpy
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
+inherit pkgconfig python_mesonpy
 
-# NOTE: this is a Makefile-only piece of software, so we cannot generate much of the
-# recipe automatically - you will need to examine the Makefile yourself and ensure
-# that the appropriate arguments are passed in.
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# You will almost certainly need to add additional arguments here
-	oe_runmake
-}
 
-do_install () {
-	# NOTE: unable to determine what to put here - there is a Makefile but no
-	# target named "install", so you will need to define this yourself
-	:
-}
 
+
+# --- SYMONEURAL BUILD DEPS ---------------------------------------------------
+# D2: scikit-learn builds against the numpy and scipy SyMoNeuRaL ships, not
+# OE-Core's python3-numpy.
+DEPENDS += "python3-cython-native symoneural-numpy-native symoneural-numpy symoneural-scipy python3"

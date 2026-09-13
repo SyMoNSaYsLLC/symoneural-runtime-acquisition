@@ -12,32 +12,38 @@ from lib_acq import ROOT, BOOT, components, dump, load
 from collections import defaultdict
 
 META = os.path.join(BOOT, "openembedded-core", "meta")
+# D1 admitted meta-oe and meta-python; the provider graph must see what they
+# supply or it will report absent providers that are in fact available.
+EXTRA_LAYERS = [os.path.join(BOOT, "meta-openembedded", l)
+                for l in ("meta-oe", "meta-python")]
+EXTRA_LAYERS = [p for p in EXTRA_LAYERS if os.path.isdir(p)]
 RE_BB = re.compile(r'^(?P<pn>.+?)_(?P<pv>[^_]+)\.bb$')
 
 recipes, provides_idx = [], defaultdict(list)
 n_files = 0
-for dp, dn, fn in os.walk(META):
-    dn[:] = sorted(dn)
-    for f in sorted(fn):
-        if not f.endswith(".bb"): continue
-        n_files += 1
-        m = RE_BB.match(f)
-        pn = m.group("pn") if m else f[:-3]
-        pv = m.group("pv") if m else "UNKNOWN"
-        rp = os.path.relpath(os.path.join(dp, f), BOOT)
-        prov = []
-        try:
-            t = open(os.path.join(dp, f), encoding="utf-8", errors="ignore").read()
-            for pm in re.finditer(r'^PROVIDES\s*[:+]?=?\s*[+]?=\s*"([^"]*)"', t, re.M):
-                prov += pm.group(1).split()
-        except OSError:
-            pass
-        rec = {"PN": pn, "PV": pv, "recipe_path": rp,
-               "PROVIDES": sorted(set(prov)) or []}
-        recipes.append(rec)
-        provides_idx[pn].append(rec)
-        for p in rec["PROVIDES"]:
-            provides_idx[p].append(rec)
+for _root in [META] + EXTRA_LAYERS:
+  for dp, dn, fn in os.walk(_root):
+      dn[:] = sorted(dn)
+      for f in sorted(fn):
+          if not f.endswith(".bb"): continue
+          n_files += 1
+          m = RE_BB.match(f)
+          pn = m.group("pn") if m else f[:-3]
+          pv = m.group("pv") if m else "UNKNOWN"
+          rp = os.path.relpath(os.path.join(dp, f), BOOT)
+          prov = []
+          try:
+              t = open(os.path.join(dp, f), encoding="utf-8", errors="ignore").read()
+              for pm in re.finditer(r'^PROVIDES\s*[:+]?=?\s*[+]?=\s*"([^"]*)"', t, re.M):
+                  prov += pm.group(1).split()
+          except OSError:
+              pass
+          rec = {"PN": pn, "PV": pv, "recipe_path": rp,
+                 "PROVIDES": sorted(set(prov)) or []}
+          recipes.append(rec)
+          provides_idx[pn].append(rec)
+          for p in rec["PROVIDES"]:
+              provides_idx[p].append(rec)
 
 # ---- logical-name normalisation so OE PN and SyMoNeuRaL names can be compared
 def logical(n):
@@ -102,6 +108,22 @@ for key in sorted(set(direct) | set(vend_idx) | set(sub_idx)):
             "evidence": "tools/scan-oe-providers.py"})
 
 collisions.sort(key=lambda x: (-x["provider_count"], x["logical_dependency"]))
+
+# --- MERGE curated D2 decisions -------------------------------------------
+# Scanner-derived records are overwritten on every regeneration, so decisions
+# must live in a curated record and be merged in here. Hand-editing the output
+# is exactly how host_designation was silently lost.
+try:
+    _pd = load("provider-decisions.json")["decisions"]
+    _by = {d["logical"]: d for d in _pd}
+    for _c in collisions:
+        _d = _by.get(_c["logical_dependency"])
+        if _d:
+            _c["selected_provider"] = _d["selected_provider"]
+            _c["decision"] = "RESOLVED (D2): " + _d["rationale"]
+except Exception as _e:
+    print("WARN: provider-decisions merge skipped: %s" % _e)
+
 dump({"schema": "symoneural-provider-collisions/2",
       "note": "Provider EXISTENCE only. selected_provider stays UNRESOLVED; the "
               "scanner exposes choices and does not make architecture decisions.",

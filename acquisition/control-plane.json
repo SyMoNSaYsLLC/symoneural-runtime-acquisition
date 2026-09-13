@@ -8,6 +8,7 @@
  "census_shared_primitive": "lib_acq.is_submodule -> git rev-parse --show-superproject-working-tree",
  "determinism_curated_declared": [
   "exceptions.json",
+  "provider-decisions.json",
   "source-manifest.json",
   "unresolved.json"
  ],
@@ -36,6 +37,7 @@
   "exceptions.json": "CURATED",
   "license-inventory.json": "SCANNER-DERIVED",
   "provider-collisions.json": "SCANNER-DERIVED",
+  "provider-decisions.json": "CURATED",
   "source-collisions.json": "SCANNER-DERIVED",
   "source-lock.json": "SCANNER-DERIVED",
   "source-manifest.json": "CURATED",
@@ -49,6 +51,7 @@
   "exceptions.json": "symoneural-exceptions/1",
   "license-inventory.json": "symoneural-license-inventory/2",
   "provider-collisions.json": "symoneural-provider-collisions/2",
+  "provider-decisions.json": "symoneural-provider-decisions/1",
   "source-collisions.json": "symoneural-source-collisions/1",
   "source-lock.json": "symoneural-source-lock/2",
   "source-manifest.json": "symoneural-source-manifest/1",
@@ -80,13 +83,13 @@
   }
  },
  "tool_sha256": {
-  "check-determinism.py": "2d1183c73a952f3e97fb5f9a12a44e74bf801c9f27108fa40b7660f447d52821",
+  "check-determinism.py": "0ffb3933d5829e41b7e277408800195afffaa4056e0532d39363b898863d94f6",
   "generate-runtime-acquisition.py": "af1f441b777d6ac99d5fa4f5592ac31c9fd634c1383b11d1cab53ca3817b8fc3",
   "lib_acq.py": "ee1775b55ca94711875e123471c5f5875ac3f70ec5cd1e429c95774620ca6c7e",
   "scan-acquisition.py": "ae2811347fd2c7f6a0432e7dfdf25bec606604923da29c7b67604941ca227433",
   "scan-dependencies.py": "81e0041c7f251a8b568070e58996bc4ff6fc5536fca052fa762c5a319a9589e9",
-  "scan-oe-providers.py": "16dec735fc1f1f84ee9ff5290aa6e174687f5cbc309493a9687656179c62abef",
-  "scan-source-collisions.py": "15f7096b172e888cabd5da26abc55c53b221c5629a4cfd122f122aa0ec721f2f",
-  "verify-acquisition.py": "f45e1f4b6b9346a046cff08e5b9f3619d045c2a00f8d8070ef376d7090bc8412"
+  "scan-oe-providers.py": "fcf8d107e0b22fbe458721b5a87fa34cbc032beca098da04af0c200ced52e043",
+  "scan-source-collisions.py": "690d939d3950c74804d0d7e3b9452839d0f1805630c5bbc7ed8ceb3ca4606565",
+  "verify-acquisition.py": "f4bc2206e1f3ab5bd12e6a99a1f63f7d8fd92eb179ce0b0e8ba678294d042f3c"
  }
 }

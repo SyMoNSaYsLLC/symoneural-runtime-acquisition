@@ -57,3 +57,35 @@ Pythran-accelerated kernels (slower fallbacks), not loss of function. Recorded a
 BUILD-DESIGN decision rather than a blocker.
 
 GATE: `bitbake -p` parses with both layers · verifier **PASS**.
+
+## PHASE 2 — Ravencalc · **GATE PASSED WITH RECORDED BLOCKER** (4 of 6)
+
+| Component | Result |
+|---|---|
+| openblas | BUILT · 14 files · 1 .so |
+| sympy | BUILT · 3103 files |
+| mpmath | BUILT · 192 files |
+| numpy | BUILT · 1330 files · **19 .so** |
+| scipy | **BLOCKED — toolchain** |
+| scikit-learn | BLOCKED transitively on scipy |
+
+ELF proof: ` ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dyn`
+
+**scipy root cause — a toolchain decision, not a recipe fix.** scipy needs Fortran; the
+OE cross toolchain is built `LANGUAGES="c,c++"` with `FORTRAN=""`, so
+`x86_64-oe-linux-gfortran` does not exist.
+Evidence: `meson.build:91 Unknown compiler(s): x86_64-oe-linux-gfortran`, log
+`.../symoneural-scipy/1.18.1/temp/log.do_compile.2878019`. Recorded as `scipy-fortran`.
+
+Cleared on the way there, each from its log:
+- numpy absent from the **native** sysroot — scipy validates against `nativepython3`.
+  Added `BBCLASSEXTEND = "native"` to symoneural-numpy so scipy builds against the numpy
+  **we ship** (D2), not OE-Core's python3-numpy.
+- pythran validated by `pyproject-build` even under `--no-isolation`. Suppressed with
+  `PEP517_BUILD_OPTS += "--skip-dependency-check"` — honest here because
+  `-Duse-pythran=false` means the declared dep is genuinely not exercised.
+
+**2c — D2 recorded and wired.** `acquisition/provider-decisions.json` (CURATED, added to
+`determinism_curated_declared`). Both `scan-oe-providers` and `scan-source-collisions`
+now MERGE from it on every regeneration: all 7 decisions survive. Five build tools →
+OE-CORE, numpy and gstreamer → SYMONEURAL-OWNED. **No Build-runtime trees deleted.**

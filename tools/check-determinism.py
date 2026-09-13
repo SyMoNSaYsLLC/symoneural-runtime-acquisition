@@ -4,7 +4,7 @@ require byte-identical records. Also writes acquisition/SHA256SUMS and
 acquisition/control-plane.json (scanner identity)."""
 import os, sys, json, hashlib, tempfile, subprocess, shutil
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib_acq import ROOT, ACQ, LOCKED_STACK, sha256_file
+from lib_acq import ROOT, ACQ, LOCKED_STACK, HOST_DESIGNATION, sha256_file
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 SCANNERS = ["scan-acquisition.py", "scan-dependencies.py", "scan-oe-providers.py",
@@ -45,9 +45,14 @@ for r in sorted(os.listdir(ACQ)):
 open(os.path.join(ACQ, "SHA256SUMS"), "w").write("\n".join(lines) + "\n")
 
 # ---- control-plane.json : what implementation produced the result
-CURATED = ["source-manifest.json", "unresolved.json", "exceptions.json"]
+CURATED = ["source-manifest.json", "unresolved.json", "exceptions.json",
+           "provider-decisions.json"]
 cp = {"schema": "symoneural-control-plane/1.2",
       "build_stack": dict(sorted(LOCKED_STACK.items())),
+      # emitted from lib_acq.HOST_DESIGNATION every run. Do NOT hand-edit
+      # control-plane.json: it is rebuilt from scratch on each invocation,
+      # so any manual insertion is silently clobbered.
+      "host_designation": HOST_DESIGNATION,
       "record_schemas": {}, "record_provenance": {},
       "tool_sha256": {}, "superseded_tools": {},
       "census_note": (
