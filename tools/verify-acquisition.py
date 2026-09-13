@@ -60,6 +60,7 @@ RECON_DETAIL = []
 COMPLETE_FAIL = []
 AGREE = []
 DUP_URL = []
+RESIDUE = []
 
 def main():
     # ---- build-stack identity
@@ -82,6 +83,13 @@ def main():
             v = c[k]
             if v != "NOT-APPLICABLE" and not os.path.isfile(os.path.join(ROOT, v)):
                 FAIL.append("registered %s DISAPPEARED: %s" % (k, v))
+        # Ignored residue is still residue. oe-workdir / oe-logs / __pycache__ /
+        # build/ inside an acquired tree means something wrote into pristine
+        # source and .gitignore merely hid it. A FINDING, never a silent pass.
+        ig = [l[3:] for l in git(p, "status", "--short", "--ignored").splitlines()
+              if l.startswith("!!")]
+        if ig:
+            RESIDUE.append((c["source_path"], ig))
     if not sl["census"]["sets_identical"]:
         FAIL.append("repository census methods disagree")
 
@@ -214,6 +222,9 @@ def main():
     for w in WARN: print("  WARN: %s" % w)
     for f in FAIL: print("  FAIL: %s" % f)
     print("  duplicate top-level upstream URLs: %d (must be 0)" % len(DUP_URL))
+    print("  acquired trees carrying ignored residue: %d" % len(RESIDUE))
+    for sp, items in RESIDUE[:8]:
+        print("     %-52s %s" % (sp.split("/source/")[-1], ", ".join(items[:3])))
     print("  -- completeness reconciliation --")
     for k in ("PRESENT-AT-INTENDED-REVISION","PRESENT-REVISION-MISMATCH","MISSING",
               "EXTRA-UNDECLARED","INTENT-UNRESOLVED","DEFERRED"):
@@ -224,6 +235,7 @@ def main():
             print("  %-30s report=%-6s verifier=%-6s %s" % (l+":", c2, a2, "OK" if ok2 else "MISMATCH"))
     for c2 in COMPLETE_FAIL[:10]: print("  COMPLETENESS-FAIL: %s" % c2)
     if len(COMPLETE_FAIL) > 10: print("  ... %d more completeness failures" % (len(COMPLETE_FAIL)-10))
+    for sp,_ in RESIDUE: WARN.append("ignored residue in acquired tree: %s" % sp)
     verdict = "FAIL" if FAIL else ("PASS-WITH-WARNINGS" if WARN else "PASS")
     comp = "FAIL" if COMPLETE_FAIL else "PASS"
     print("  CONTROL-PLANE RESULT:      %s" % verdict)
