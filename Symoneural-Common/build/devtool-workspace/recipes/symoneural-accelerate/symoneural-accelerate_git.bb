@@ -15,7 +15,11 @@ HOMEPAGE = "https://github.com/huggingface/accelerate"
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "Apache AND Apache-2.0"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/huggingface/accelerate;protocol=https;branch=v1.15.0-release"

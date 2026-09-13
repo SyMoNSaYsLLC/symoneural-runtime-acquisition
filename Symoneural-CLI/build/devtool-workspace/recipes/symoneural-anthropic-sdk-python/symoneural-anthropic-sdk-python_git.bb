@@ -15,7 +15,11 @@
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "MIT AND Unknown"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2453eb85b33e21e22cb4fa811c650d75 \
                     file://src/anthropic/_vendor/httpx_aiohttp/LICENSE;md5=6cd99a559ccce444ec3f9ef9d16f9e87"
 
@@ -27,22 +31,15 @@ SRCREV = "eb21a4352015686c30f5759e8c2f02d70f5371e2"
 
 S = "${WORKDIR}/git"
 
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
 inherit python_hatchling
 
 # NOTE: no Makefile found, unable to determine what needs to be done
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
 
-do_install () {
-	# Specify install commands here
-	:
-}
 

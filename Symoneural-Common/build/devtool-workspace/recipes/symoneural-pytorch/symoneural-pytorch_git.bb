@@ -107,7 +107,11 @@
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND GPL-3.0-only AND MIT AND Unknown AND Zlib"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://.ci/manywheel/LICENSE;md5=40a70f85c8da9f0d41e5f3b71e341229 \
                     file://LICENSE;md5=b114fbe63fdb5f7a91332a4aefb61ee5 \
                     file://android/libs/fbjni/LICENSE;md5=cac82e6f105a5444e031d569a75e7443 \

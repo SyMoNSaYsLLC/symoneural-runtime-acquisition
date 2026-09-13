@@ -30,6 +30,13 @@
    "state": "UNRESOLVED"
   },
   {
+   "blocks": "Symoneural-API release posture",
+   "category": "BUILD-DESIGN",
+   "description": "pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.",
+   "identifier": "pydantic-core-ownership",
+   "state": "UNRESOLVED"
+  },
+  {
    "blocks": "Ravencalc scipy and scikit-learn (transitively)",
    "category": "BUILD-DESIGN",
    "description": "scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES=\"c,c++\" with FORTRAN=\"\", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = \",fortran\"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.",

@@ -40,7 +40,11 @@
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "BSD-2-Clause AND LGPL-2.1-only AND MIT AND Unknown"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=69333daa044cb77e486cc36129f7a770 \
                     file://subprojects/gst-devtools/dots-viewer/static/dist/bundle.js.LICENSE.txt;md5=55aa52cfa7f72e34297e0c23c328498d \
                     file://subprojects/gst-devtools/validate/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \

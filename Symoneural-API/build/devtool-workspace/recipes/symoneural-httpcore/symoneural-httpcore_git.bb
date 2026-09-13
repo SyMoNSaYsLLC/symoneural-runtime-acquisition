@@ -8,7 +8,11 @@
 # The following license files were not able to be identified and are
 # represented as "Unknown" below, you will need to check them yourself:
 #   LICENSE.md
-LICENSE = "Unknown"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=1c1f23b073da202e1f4f9e426490210c"
 
 SRC_URI = "git://github.com/encode/httpcore;protocol=https;branch=master"
@@ -19,22 +23,19 @@ SRCREV = "98209758cc14e1a5f966fe1dfdc1064b94055d8c"
 
 S = "${WORKDIR}/git"
 
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
 inherit python_hatchling
 
 # NOTE: no Makefile found, unable to determine what needs to be done
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
 
-do_install () {
-	# Specify install commands here
-	:
-}
 
+
+# PEP-517 build backend needs hatch-fancy-pypi-readme importable by nativepython3.
+# Proven by build failure, not inferred.
+DEPENDS += "python3-hatch-fancy-pypi-readme-native"

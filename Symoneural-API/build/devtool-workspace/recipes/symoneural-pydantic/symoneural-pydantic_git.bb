@@ -19,24 +19,20 @@ S = "${WORKDIR}/git"
 # NOTE: the following library dependencies are unknown, ignoring: h
 #       (this is based on recipes that have previously been built and packaged)
 
+# recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
+# a real build-class inherit. A recipe-level function OVERRIDES the inherited
+# one, so the stubs silently won: this recipe installed nothing (or ran bare
+# `make`) despite inheriting a working class. Stubs removed so the inherited
+# class actually runs.
 inherit python_hatchling
 
-# NOTE: this is a Makefile-only piece of software, so we cannot generate much of the
-# recipe automatically - you will need to examine the Makefile yourself and ensure
-# that the appropriate arguments are passed in.
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# You will almost certainly need to add additional arguments here
-	oe_runmake
-}
 
-do_install () {
-	# This is a guess; additional arguments may be required
-	oe_runmake install
-}
+# recipetool guessed `oe_runmake install` for a hatchling/maturin package and
+# that guess overrode the inherited class. Removed; python_hatchling installs.
 
+
+# PEP-517 build backend needs hatch-fancy-pypi-readme importable by nativepython3.
+# Proven by build failure, not inferred.
+DEPENDS += "python3-hatch-fancy-pypi-readme-native"

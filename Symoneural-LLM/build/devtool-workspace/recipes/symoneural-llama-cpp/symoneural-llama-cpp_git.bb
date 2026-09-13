@@ -18,7 +18,11 @@ SUMMARY = "CPU Inference of LLaMA model in pure C/C++ (no CUDA/OpenCL)"
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "MIT AND Unknown AND Unlicense"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=223b26b3c1143120c87e2b13111d3e99 \
                     file://cmake/license.cmake;md5=c547b83618ef0f5139afeda251ba3dad \
                     file://gguf-py/LICENSE;md5=d486bb2ba5e2a4d3c958abbcbe1b9225 \

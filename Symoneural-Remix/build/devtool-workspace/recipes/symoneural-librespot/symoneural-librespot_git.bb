@@ -16,7 +16,11 @@
 # licenses then you should change the value to separate the licenses with |
 # instead of &. If there is any doubt, check the accompanying documentation
 # to determine which situation is applicable.
-LICENSE = "MIT AND Unknown"
+# LICENSE established from the licence text in the acquired tree. recipetool had
+# emitted a non-SPDX token ('Unknown'/'Apache'), which newer OE-Core's SPDX parser
+# rejects outright: do_populate_lic dies with
+# "AttributeError: 'UnknownId' object has no attribute 'name'".
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=98b2b0c9a6081259c441045ca68b640f \
                     file://metadata/src/copyright.rs;md5=e9644593d31089f5d3b6f483392ec7dc \
                     file://protocol/proto/player_license.proto;md5=93b9409e7bf39ec20c06077d26c1d8c2"

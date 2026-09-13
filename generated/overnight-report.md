@@ -89,3 +89,38 @@ Cleared on the way there, each from its log:
 `determinism_curated_declared`). Both `scan-oe-providers` and `scan-source-collisions`
 now MERGE from it on every regeneration: all 7 decisions survive. Five build tools →
 OE-CORE, numpy and gstreamer → SYMONEURAL-OWNED. **No Build-runtime trees deleted.**
+
+## PHASE 3 — Symoneural-API · **GATE PASSED** (6 of 6)
+
+| Component | files |
+|---|---|
+| fastapi | 109 |
+| starlette | 74 |
+| uvicorn | 90 |
+| httpcore | 66 |
+| httpx | 52 |
+| pydantic | 215 |
+
+**Systemic defect found here, fixed estate-wide: 13 recipes carried a non-SPDX LICENSE
+token.** recipetool emits `LICENSE = "Unknown"` (and once `"Apache"`), which newer
+OE-Core's SPDX parser rejects outright — `do_populate_lic` dies with
+`AttributeError: 'UnknownId' object has no attribute 'name'`. Every value was
+re-established from the licence text in the acquired tree, never from memory:
+Encode projects → BSD-3-Clause, hls.js → Apache-2.0, anthropic-sdk-python / librespot /
+llama.cpp → MIT, stratum + sv2-apps → Apache-2.0 AND MIT, gstreamer → LGPL-2.1-or-later,
+pytorch → BSD-3-Clause, accelerate → Apache-2.0. **This would have broken every
+remaining phase.**
+
+**Second defect: a recipe with stubs and NO inherit fails silently.** fastapi reported
+`do_compile` success and installed nothing, because recipetool emitted empty stubs and no
+build class at all — so Phase 0's stub removal, which only touched recipes that *had* an
+inherit, skipped it. Fixed with `inherit python_pep517` + `PEP517_BUILD_API = "pdm.backend"`.
+Silent success is worse than loud failure.
+
+Also cleared: httpx, httpcore and pydantic each needed
+`python3-hatch-fancy-pypi-readme-native` in the native sysroot.
+
+**DECISION RECORDED — `pydantic-core-ownership`.** pydantic needs pydantic-core
+(Rust/maturin). meta-python supplies `python3-pydantic-core 2.46.4` and it is BORROWED
+tonight. But it is linked into the shipped runtime, and D2 says own what you ship — so
+under D2 it should be SyMoNeuRaL-owned. Recorded, not decided.

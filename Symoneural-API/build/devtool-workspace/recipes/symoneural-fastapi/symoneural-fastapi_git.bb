@@ -17,18 +17,14 @@ S = "${WORKDIR}/git"
 
 # NOTE: no Makefile found, unable to determine what needs to be done
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
 
-do_compile () {
-	# Specify compilation commands here
-	:
-}
 
-do_install () {
-	# Specify install commands here
-	:
-}
 
+
+# fastapi uses the pdm backend. recipetool emitted empty stubs and NO inherit at
+# all, so nothing built and nothing installed - yet the task reported success.
+# A recipe with stubs and no build class fails silently, which is worse than
+# failing loudly.
+inherit python_pep517 python_setuptools_build_meta
+PEP517_BUILD_API = "pdm.backend"
+DEPENDS += "python3-pdm-backend-native"
