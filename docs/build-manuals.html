@@ -118,6 +118,19 @@
   .steps li::marker { font-family: var(--font-mono); color: var(--accent); font-size: 0.85em; }
   .plain-list { margin: 0.6rem 0 0; padding-left: 1.2rem; } .plain-list li { margin: 0.3rem 0; max-width: 70ch; }
 
+
+  .seq { list-style: none; margin: 1.2rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .seq li { position: relative; padding: 0 0 1.15rem 3.25rem; }
+  .seq li::before { content: ""; position: absolute; left: 1.05rem; top: 1.55rem; bottom: -0.15rem; width: 1px; background: var(--line); }
+  .seq li:last-child::before { display: none; }
+  .seq .n { position: absolute; left: 0; top: 0; width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border: 1px solid var(--accent); border-radius: 50%; background: var(--surface); font-family: var(--font-mono); font-size: 0.74rem; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .seq li.branch .n { border-style: dashed; }
+  .seq .ttl { font-family: var(--font-display); font-weight: 600; font-size: 1rem; line-height: 1.35; margin: 0.22rem 0 0; text-wrap: balance; }
+  .seq .dep { margin: 0.3rem 0 0; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--ink-2); }
+  .seq .dep b { color: var(--accent-ink); font-weight: 500; }
+  .seq .why { margin: 0.28rem 0 0; font-size: 0.9rem; color: var(--ink-2); max-width: 64ch; }
+  @media (max-width: 640px) { .seq li { padding-left: 2.7rem; } .seq .n { width: 1.8rem; height: 1.8rem; font-size: 0.68rem; } .seq li::before { left: 0.9rem; } }
+
   footer { margin-top: 3.5rem; padding-top: 1.1rem; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-2); line-height: 1.6; }
 </style>
 </head>
@@ -156,9 +169,11 @@
         <li><a href="#five">The five new runtimes</a></li>
         <li><a href="#edge">Edge, domain, security</a></li>
         <li><a href="#plan">The plan, phases 10–19</a></li>
+        <li><a href="#sequence">The sequence</a></li>
         <li><a href="#tenants">Customer runtimes</a></li>
         <li><a href="#secrets">Secrets and configuration</a></li>
         <li><a href="#native">Native apps</a></li>
+        <li><a href="#handbook">Stakeholder handbook</a></li>
         <li><a href="#manuals">The manuals</a></li>
       </ol>
     </nav>
@@ -493,6 +508,89 @@
         </div>
       </section>
 
+      <section id="sequence">
+        <h2>The sequence</h2>
+        <div class="callout warn">
+          <span class="lbl">This is a sequence, not a status board</span>
+          <p>It shows what order phases run in and what each one waits on. It carries <strong>no status</strong> — no percentages, no ticks, no dates — and it cannot tell you what is done.</p>
+          <p>A status view is stale the moment work lands, and a stale status view is worse than none because the next reader acts on it. That already happened here: a duplicated task list diverged from the canonical one and a worker began executing the retired copy. Sequence cannot go stale that way, because it makes no claim about the present — Phase 12 depends on Phase 11 whether or not 11 has finished.</p>
+        </div>
+        <p class="intro">Dashed markers are phases that share a dependency and do not depend on each other; their relative order is a scheduling choice, not a constraint.</p>
+        <ol class="seq">
+          <li>
+            <span class="n">10</span>
+            <p class="ttl">curation, pristine-by-construction class, parity rebuild</p>
+            <p class="dep">waits on <b>nothing</b></p>
+            <p class="why">Gate passed at <code>1f007af</code>. Every assertion task turned out to be a no-op and was made live before it closed.</p>
+          </li>
+          <li>
+            <span class="n">11</span>
+            <p class="ttl">RavenCalc 6/6 live from estate binaries</p>
+            <p class="dep">waits on <b>10</b></p>
+            <p class="why">Needs the pristine class and a clean parity rebuild underneath it.</p>
+          </li>
+          <li class="branch">
+            <span class="n">11-T</span>
+            <p class="ttl">Customer runtimes: DispatchOS as a template instance</p>
+            <p class="dep">waits on <b>11</b></p>
+            <p class="why">A customer template instantiates runtimes, so the runtimes must exist first.</p>
+          </li>
+          <li>
+            <span class="n">12</span>
+            <p class="ttl">CUDA inside the estate: Chat live under the lock</p>
+            <p class="dep">waits on <b>11</b></p>
+            <p class="why">Builds directly on RavenCalc numerics.</p>
+          </li>
+          <li>
+            <span class="n">13</span>
+            <p class="ttl">Common: torch with CUDA, and the Studio proof</p>
+            <p class="dep">waits on <b>12</b></p>
+            <p class="why">torch-with-CUDA needs CUDA already proven inside the estate.</p>
+          </li>
+          <li class="branch">
+            <span class="n">14</span>
+            <p class="ttl">Diffuse: Image and Sigils live, the lock under contention</p>
+            <p class="dep">waits on <b>13</b></p>
+            <p class="why">Consumes Common.</p>
+          </li>
+          <li class="branch">
+            <span class="n">15</span>
+            <p class="ttl">Gateway and cutover: symoneural.com served from the estate</p>
+            <p class="dep">waits on <b>13</b></p>
+            <p class="why">Cutover needs something real to serve.</p>
+          </li>
+          <li class="branch">
+            <span class="n">16</span>
+            <p class="ttl">Studio and Reinforce as a live unit</p>
+            <p class="dep">waits on <b>13</b></p>
+            <p class="why">Consumes Common.</p>
+          </li>
+          <li class="branch">
+            <span class="n">17</span>
+            <p class="ttl">Crypto and Miner: Stratum V2 on the LAN</p>
+            <p class="dep">waits on <b>13</b></p>
+            <p class="why">Independent of 14–16.</p>
+          </li>
+          <li class="branch">
+            <span class="n">18</span>
+            <p class="ttl">Live, Streamer, Voice: the NET and CPU units</p>
+            <p class="dep">waits on <b>13</b></p>
+            <p class="why">Independent of 14–17.</p>
+          </li>
+          <li>
+            <span class="n">19</span>
+            <p class="ttl">Tune, Remix, Adaptive-Fabric, contract freeze, estate closure</p>
+            <p class="dep">waits on <b>14–18</b></p>
+            <p class="why">Closure requires the units it freezes.</p>
+          </li>
+        </ol>
+        <div class="callout">
+          <span class="lbl">Where the truth actually lives</span>
+          <p><strong>What is done?</strong> <code>generated/phase-NN-report.md</code> — and only where the artifact exists on disk. <strong>What changed, when?</strong> <code>git log</code>. <strong>Does this claim hold?</strong> the MCP tool <code>verify_claim</code>, which checks disk rather than a report.</p>
+          <p><strong>R16 — declared is not done.</strong> An item is done when its artifact exists or a consumer exercised it. A report saying &ldquo;complete&rdquo; is not evidence.</p>
+        </div>
+      </section>
+
       <!-- ============================================================ tenants -->
       <section id="tenants">
         <h2>Customer runtimes — a DispatchOS per customer</h2>
@@ -544,6 +642,39 @@ sudo symoneural-secrets verify       <span class="cm"># exit 1 on placeholder te
       </section>
 
       <!-- ============================================================ 10 -->
+
+      <section id="handbook">
+        <h2>Stakeholder handbook</h2>
+        <p class="intro">One file per stakeholder, each written from what is on the machine rather than from recall. Where something could not be verified, the file says so in those words.</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Stakeholder</th><th>File</th><th>What it settles</th></tr></thead>
+            <tbody>
+              <tr><td>GitHub</td><td class="m">github.md</td><td>Two accounts; never <code>git add .</code>; what never enters git</td></tr>
+              <tr><td>Claude</td><td class="m">claude.md</td><td>Four accounts — config does <em>not</em> swap on switch <span class="chip warn">open</span></td></tr>
+              <tr><td>Claude Desktop</td><td class="m">claude-desktop-developer.md</td><td>Developer settings as configured now; the key that must not be committed</td></tr>
+              <tr><td>MCP</td><td class="m">mcp.md</td><td>Six tools, registered; <code>verify_claim</code> is R16 made callable</td></tr>
+              <tr><td>Zoho</td><td class="m">zoho.md</td><td>SSO done and the three steps remaining <span class="chip warn">invite link needs rotating</span></td></tr>
+              <tr><td>Cloudflare</td><td class="m">cloudflare.md</td><td>No role in SSO; Phase 15 tunnel only</td></tr>
+              <tr><td>Gemini</td><td class="m">gemini.md</td><td>Not started — and which reading of &ldquo;integrate&rdquo; to reject</td></tr>
+              <tr><td>ChatGPT</td><td class="m">chatgpt.md</td><td>Same Electron freeze class; mitigations transfer</td></tr>
+              <tr><td>Google Drive</td><td class="m">google-drive.md</td><td>134 brand assets; nothing from August</td></tr>
+              <tr><td>Hugging Face</td><td class="m">huggingface.md</td><td>Weights never enter git; the model card is authoritative, not the repo</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <span class="lbl">One rule — where these files live</span>
+          <p>Canonical in <code>SymonSaysLLC/docs/handbook/</code>. Your Desktop copy at <code>~/Desktop/symonsaysllchandbook/</code> is <strong>generated, never edited</strong>:</p>
+<pre><code>/home/google/SymonSaysLLC/tools/gen-handbook</code></pre>
+          <p>Two copies of the same knowledge with no stated winner is the bug that stopped work once before. It is defused by making the Desktop copy an output rather than a sibling. <strong>If the two ever disagree, the repo is correct and the Desktop copy is stale by definition.</strong></p>
+        </div>
+        <div class="callout">
+          <span class="lbl">What is deliberately absent</span>
+          <p>No token, key, password or certificate appears in any handbook file — where a credential exists, the file names where it lives and nothing more. The org invite link is also omitted on purpose: it was exposed in a screenshot and still needs rotating, so reprinting it would widen an exposure that is already open.</p>
+        </div>
+      </section>
+
       <section id="manuals">
         <h2>The manuals — the reading path</h2>
         <p class="intro">Ordered as a path: foundations, then following the coder, then licensing, then the layer decision, then building your own. Every link was opened and checked on 12 September 2026.</p>

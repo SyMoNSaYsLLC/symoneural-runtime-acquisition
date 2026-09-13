@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Generate the Desktop handbook copy from the canonical repo source.
+#
+# The Desktop copy is an OUTPUT, never a sibling. This is the defence against
+# the 2026-08-20 failure where PROJECT-TASKS.md and CODER-TASKS.md diverged and
+# a worker executed the retired copy. Two copies with no stated winner is the
+# bug; a generator with a one-way arrow is the fix.
+set -euo pipefail
+
+SRC="/home/google/SymonSaysLLC/docs/handbook"
+DST="/home/google/Desktop/symonsaysllchandbook"
+
+[ -d "$SRC" ] || { echo "no canonical handbook at $SRC" >&2; exit 1; }
+
+STAMP="$(date -u '+%Y-%m-%d %H:%M UTC')"
+REV="$(git -C /home/google/SymonSaysLLC rev-parse --short HEAD 2>/dev/null || echo 'no-git')"
+
+mkdir -p "$DST"
+# Remove only generated .md files; never touch anything else the user put here.
+find "$DST" -maxdepth 1 -name '*.md' -delete
+
+n=0
+for f in "$SRC"/*.md; do
+    b="$(basename "$f")"
+    {
+        echo "<!-- GENERATED FILE - DO NOT EDIT -->"
+        echo "> **Generated copy.** Canonical source:"
+        echo "> \`SymonSaysLLC/docs/handbook/$b\` @ \`$REV\`"
+        echo "> Generated $STAMP by \`tools/gen-handbook\`."
+        echo "> Edits made here are lost on the next run. Edit the repo, then re-run."
+        echo
+        cat "$f"
+    } > "$DST/$b"
+    n=$((n+1))
+done
+
+echo "generated $n files -> $DST"
+echo "source: $SRC @ $REV"

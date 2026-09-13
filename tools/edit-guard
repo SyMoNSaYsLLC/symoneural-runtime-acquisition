@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# R2 by mechanism: refuse edits while a bitbake cooker is live.
+#
+# Editing recipes mid-parse gives a cooker a half-written file and produces
+# failures that look like recipe defects and are not. Exits 1 if a cooker is up.
+#
+# NOTE: this file was recorded as built in a previous session and was NOT on
+# disk. It is rebuilt here. R16 applies to tooling too - a guard that does not
+# exist guards nothing, and a caller checking $? after a pipeline gets the
+# pipeline's status, not the guard's.
+set -uo pipefail
+
+# Match real bitbake processes, excluding this script and any grep/pgrep of it.
+mapfile -t PIDS < <(pgrep -f 'bitbake' 2>/dev/null | grep -v "^$$\$" || true)
+
+live=()
+for p in "${PIDS[@]:-}"; do
+    [ -n "${p:-}" ] || continue
+    cmd="$(tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null || true)"
+    case "$cmd" in
+        *edit-guard*|*pgrep*|*grep*) continue ;;
+        *bitbake*) live+=("$p  $cmd") ;;
+    esac
+done
+
+if [ "${#live[@]}" -gt 0 ]; then
+    echo "EDIT GUARD: a bitbake cooker is LIVE - do not edit recipes now." >&2
+    printf '  %s\n' "${live[@]}" >&2
+    exit 1
+fi
+
+echo "edit-guard: no cooker live - safe to edit"
+exit 0
