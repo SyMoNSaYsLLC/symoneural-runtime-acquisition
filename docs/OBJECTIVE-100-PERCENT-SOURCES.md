@@ -718,3 +718,89 @@ Acquired source only — `src/*/source/*`. Build directories excluded.
 Common is **57% of all acquired source** on its own — pytorch and its 65
 submodules. Any operation that touches Common costs more than the other eleven
 runtimes combined, which is why it is not casually rebuilt.
+
+---
+
+# SWEEP RESULT — 2026-09-13, first full estate build attempt
+
+| Runtime | Result |
+|---|---|
+| **Ravencalc** | **OK** — 6/6, 24 ipk, on estate-owned cython + pybind11 |
+| **API** | **OK** — fastapi, httpcore, httpx, pydantic, starlette, uvicorn |
+| **CLI** | **OK** — anthropic-sdk-python, mcp-python-sdk |
+| **Streamer** | **OK** — hlsjs |
+| Crypto | FAIL — sv2-apps, sv2-spec: empty `${D}` |
+| Remix | FAIL — librespot: empty `${D}` |
+| Web | FAIL — workerd: empty `${D}` |
+| LLM | FAIL — vllm: `No module named 'torch'` |
+| Adaptive-Fabric | FAIL — freetoken: `No module named 'torch'` |
+
+## Root cause 1 — NINE recipes are unfinished recipetool stubs
+
+Not a build problem. These recipes were generated and never completed: they
+inherit **no build-system class at all**, so bitbake falls through to
+base.bbclass and runs bare `make`. The generated comment says so outright:
+
+```
+do_install () {
+    # NOTE: unable to determine what to put here - there is a Makefile but no
+    # target named "install", so you will need to define this yourself
+    :
+}
+```
+
+A `:` no-op `do_install` produces an empty `${D}`, which is precisely what the
+R12 assertion catches. **The guard is working** — this is the assertion task,
+one of the three phantom completions, doing its job now that it is actually
+bound to the task graph.
+
+| Recipe | Real build system |
+|---|---|
+| `symoneural-safetensors` | Rust + maturin |
+| `symoneural-tokenizers` | Rust + maturin |
+| `symoneural-sv2-apps` | Rust + cargo |
+| `symoneural-sv2-spec` | Rust + cargo |
+| `symoneural-librespot` | Rust + cargo |
+| `symoneural-gstreamer` | meson |
+| `symoneural-workerd` | bazel / npm |
+| `symoneural-bitbake` | — it IS the build stack |
+| `symoneural-openembedded-core` | — it IS a layer |
+
+The last two need a decision: they are the build stack itself, and a recipe that
+builds bitbake inside a bitbake build is probably wrong.
+
+**The working model to copy is `symoneural-stratum`** — an estate Rust recipe
+that does build: `inherit cargo cargo-update-recipe-crates`,
+`CARGO_INSTALL_LIBRARIES = "1"`, plus a generated `-crates.inc`.
+
+## Root cause 2 — Common, Build and Live had NO devtool-master build directory
+
+57% of all acquired source had never been built, because those three runtimes
+were never re-baselined onto the master build stack. `symonbake` targets
+`build/devtool-master`; they only had `build/devtool`.
+
+**Fixed** — all three now have one, cloned from the Ravencalc template with
+per-runtime `DL_DIR` and `SSTATE_DIR`. Common parses clean, 5044 targets, 0 errors.
+
+This is why vllm and freetoken cannot find torch: **`symoneural-pytorch` has never
+been built. Zero ipks, ever.**
+
+## DECISION NEEDED — safetensors has no Cargo.lock
+
+`safetensors` ships **no `Cargo.lock` anywhere** in the tree — only three
+`Cargo.toml`. Without a lockfile there is no pinned crate set, so a build would
+resolve dependencies from crates.io at build time: non-deterministic, and it
+breaks the estate's offline guarantee.
+
+`tokenizers` does have one (`bindings/python/Cargo.lock`), so this is specific to
+safetensors, not a Rust-wide problem.
+
+Options, none of them free:
+
+1. **Generate a lockfile and commit it as recipe data.** Reproducible thereafter,
+   but the pin is SyMoNeuRaL's choice rather than upstream's, and must be recorded
+   as such.
+2. **Defer safetensors** until upstream ships a lockfile.
+3. Vendor the crates explicitly.
+
+**Not decided.** Recorded for Garrett.
