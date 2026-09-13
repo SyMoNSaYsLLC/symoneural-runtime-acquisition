@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SyMoNeuRaL Build Manuals</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root {
+    --bg: #F2F5F4; --surface: #FFFFFF; --ink: #16262B; --ink-2: #4B5F65; --line: #D3DCDA;
+    --accent: #0E6E63; --accent-ink: #0B564D; --accent-2: #946410; --ok: #1F7A3C;
+    --code-bg: #E6EEEC; --code-ink: #123F3A; --focus: #0E6E63;
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1A1D; --surface: #152528; --ink: #E3ECEA; --ink-2: #A3B7B4; --line: #27393D;
+      --accent: #5FC8B9; --accent-ink: #8ADCCF; --accent-2: #E2B65E; --ok: #6FD39A;
+      --code-bg: #1A2C30; --code-ink: #C3E7E0; --focus: #5FC8B9; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1A1D; --surface: #152528; --ink: #E3ECEA; --ink-2: #A3B7B4; --line: #27393D;
+    --accent: #5FC8B9; --accent-ink: #8ADCCF; --accent-2: #E2B65E; --ok: #6FD39A;
+    --code-bg: #1A2C30; --code-ink: #C3E7E0; --focus: #5FC8B9; color-scheme: dark;
+  }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1120px; margin: 0 auto; padding: clamp(1.25rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 4rem; }
+  a { color: var(--accent-ink); }
+  a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+  code { font-family: var(--font-mono); font-size: 0.86em; background: var(--code-bg); color: var(--code-ink); padding: 0.08em 0.38em; border-radius: 3px; }
+  pre { margin: 0.85rem 0 0; background: var(--code-bg); color: var(--code-ink); padding: 0.9rem 1.05rem; border-radius: 6px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.55; }
+  pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+  .cm { color: var(--ink-2); }
+  em { font-style: italic; }
+
+  .mast { padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+  .eyebrow { margin: 0 0 0.9rem; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(2.1rem, 4.6vw, 3.1rem); line-height: 1.04; letter-spacing: -0.012em; text-wrap: balance; }
+  .lede { margin: 1.1rem 0 0; max-width: 66ch; font-size: 1.1rem; color: var(--ink-2); }
+
+  .stack { margin-top: 1.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.25rem 1.1rem; }
+  .stack-h { margin: 0 0 0.7rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-2); font-weight: 500; }
+  .stack dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.4rem 1.4rem; font-family: var(--font-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+  .stack dt { color: var(--ink-2); } .stack dd { margin: 0; overflow-wrap: anywhere; } .stack .lbl { color: var(--ink-2); }
+  @media (max-width: 560px) { .stack dl { grid-template-columns: 1fr; gap: 0.15rem; } .stack dt { margin-top: 0.5rem; } }
+
+  .layout { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: 220px minmax(0, 1fr); gap: 3rem; } .toc { position: sticky; top: 1.5rem; align-self: start; } }
+  .toc { padding-top: 2rem; }
+  .toc-h { margin: 0 0 0.6rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); font-weight: 500; }
+  .toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; display: flex; flex-direction: column; gap: 0.3rem; font-family: var(--font-display); font-size: 0.95rem; }
+  @media (max-width: 999px) { .toc ol { flex-direction: row; flex-wrap: wrap; gap: 0.3rem 1.1rem; } }
+  .toc li { counter-increment: toc; }
+  .toc a { text-decoration: none; color: var(--ink-2); display: inline-flex; gap: 0.55rem; align-items: baseline; }
+  .toc a::before { content: counter(toc); font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); min-width: 1.2ch; }
+  .toc a:hover { color: var(--accent-ink); }
+
+  section { padding-top: 2.6rem; } section:first-of-type { padding-top: 2rem; }
+  h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.008em; text-wrap: balance; }
+  h2::before { content: ""; display: block; width: 2.25rem; height: 3px; background: var(--accent); margin-bottom: 0.8rem; border-radius: 2px; }
+  h3 { margin: 1.8rem 0 0; font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; letter-spacing: -0.005em; }
+  .intro { margin: 0.75rem 0 0; max-width: 68ch; color: var(--ink-2); }
+  p { max-width: 70ch; }
+  section > p, .body p { margin: 0.8rem 0 0; }
+
+  .entries { list-style: none; margin: 1.1rem 0 0; padding: 0; }
+  .entries > li { padding: 1rem 0 1.05rem; border-bottom: 1px solid var(--line); }
+  .entries > li:last-child { border-bottom: none; }
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.85rem; }
+  .head a, .head .plain { font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid transparent; }
+  .head .plain { color: var(--ink); } .head a:hover { border-bottom-color: var(--accent); }
+  .tag { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-2); background: var(--code-bg); padding: 0.14rem 0.45rem; border-radius: 3px; white-space: nowrap; }
+  .entries p { margin: 0.42rem 0 0; max-width: 68ch; }
+  .url { font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
+
+  figure { margin: 1.1rem 0 0; }
+  figcaption { margin-top: 0.45rem; font-size: 0.92rem; color: var(--ink-2); max-width: 70ch; }
+  .pipeline { display: flex; align-items: center; gap: 0.4rem; overflow-x: auto; padding: 0.35rem 0 0.6rem; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
+  .pipeline .t { border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 0.32rem 0.55rem; }
+  .pipeline .t.hot { border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
+  .pipeline .arrow { color: var(--ink-2); }
+
+  .layers { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; }
+  .layer { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 1rem; padding: 0.65rem 0.85rem; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+  .layer .k { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); padding-top: 0.15rem; }
+  .layer .v { font-size: 0.94rem; }
+  .layer.hw .k { color: var(--accent-2); }
+  @media (max-width: 640px) { .layer { grid-template-columns: 1fr; gap: 0.3rem; } }
+
+  .table-wrap { overflow-x: auto; margin-top: 1rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+  .tbl { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+  .tbl th, .tbl td { padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+  .tbl tbody tr:last-child td { border-bottom: none; }
+  .tbl th { font-family: var(--font-display); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-2); background: var(--code-bg); white-space: nowrap; }
+  .tbl tr.grp td { font-family: var(--font-display); font-weight: 600; background: var(--code-bg); color: var(--ink); }
+  .tbl .m { font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
+  .tbl .mw { font-family: var(--font-mono); font-size: 0.78rem; }
+  .tbl td.wrap { min-width: 22ch; }
+  .chip { display: inline-block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.03em; padding: 0.08rem 0.4rem; border-radius: 3px; border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
+  .chip.ok { color: var(--ok); border-color: var(--ok); }
+  .chip.warn { color: var(--accent-2); border-color: var(--accent-2); }
+  .chip.gpu { color: var(--accent-ink); border-color: var(--accent); }
+
+  .callout { margin-top: 1.1rem; padding: 0.9rem 1.05rem; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; max-width: 78ch; }
+  .callout.warn { border-left-color: var(--accent-2); }
+  .callout .lbl { display: block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .callout.warn .lbl { color: var(--accent-2); }
+  .callout p { margin: 0.3rem 0 0; }
+
+  .steps { margin: 0.9rem 0 0; padding-left: 1.4rem; }
+  .steps li { margin: 0.4rem 0; max-width: 72ch; }
+  .steps li::marker { font-family: var(--font-mono); color: var(--accent); font-size: 0.85em; }
+  .plain-list { margin: 0.6rem 0 0; padding-left: 1.2rem; } .plain-list li { margin: 0.3rem 0; max-width: 70ch; }
+
+  footer { margin-top: 3.5rem; padding-top: 1.1rem; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-2); line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="mast">
+    <p class="eyebrow">Estate handbook · Yocto Project / OpenEmbedded · one box, one GPU</p>
+    <h1>SyMoNeuRaL Build Manuals</h1>
+    <p class="lede">How the whole stack works from the card up, every source you hold with its pin and licence, every rack unit wired to the runtime and model that serves it, the procedure that takes each runtime to production on symoneural.com, and the manuals to read along the way. Facts come from the acquisition records and your August 2026 deployment. That deployment was trial and error: it is cited here as measured evidence of what this hardware does, never as the plan. Recommendations are marked as such and stand on their own.</p>
+
+    <section class="stack" aria-labelledby="stack-h">
+      <h2 class="stack-h" id="stack-h">Your stack — what this handbook must match</h2>
+      <dl>
+        <dt>Hardware</dt><dd>RTX 5070 Ti · Blackwell sm_120 · 15.92 GiB · PCIe Gen 3 ×8 host-capped · i9-10900KF · 94 GB RAM · 32 GB swap <span class="lbl">(measured; swap added 13 Sep)</span></dd>
+        <dt>OE-Core</dt><dd>fe7a24bc67118e7e184b5f5247258715e3904e7c <span class="lbl">· master (blacksail) · read the dev manuals</span></dd>
+        <dt>BitBake</dt><dd>046a90b0e9b7b914b7a95aec579cdc3fc9c7617a <span class="lbl">· master</span></dd>
+        <dt>Estate</dt><dd>12 runtimes · 42 declared sources at intended revision (41 + meta-openembedded, pinned) · acquisition CLOSED; new sources enter only inside the phase that builds them · 5 runtimes queued in Phases 11-T–19</dd>
+        <dt>Serving (Aug 2026)</dt><dd>Caddy :443 → symon-gateway :8000 → FastAPI :8800 · engines llama-server :8081, sd-cli, ComfyUI :8188 <span class="lbl">· DNS now Cloudflare-proxied</span></dd>
+        <dt>Phase 10</dt><dd>Gate committed <code>685203e</code>: pristine class with four defects fixed by building (do_fetch starvation, cleandirs, two VCS-versioning backends) · 41 recipes in meta-symoneural, 0 externalsrc · real PV on all 23 placeholder recipes · Fortran toolchain · stratum rlibs in -staticdev · edit-guard live · parity 11/12 + explained delta · 41/41 trees clean after a cargo build · open decisions 1 of 13 (FreeToken → Phase 19)</dd>
+        <dt>10e closing</dt><dd>hls.js under P2 (build step, no target Node, bundle to site/vendor) · anthropic-sdk-typescript, mcp typescript-sdk, workers-sdk → REFERENCE-ONLY · target nodejs ships nowhere; nodejs-native stays to build the bundle · wrangler consumed as the published package in Phase 15</dd>
+      </dl>
+    </section>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Contents">
+      <p class="toc-h">Contents</p>
+      <ol>
+        <li><a href="#version">Read the right version</a></li>
+        <li><a href="#stack">How the stack works</a></li>
+        <li><a href="#register">The estate register</a></li>
+        <li><a href="#rack">The rack, wired</a></li>
+        <li><a href="#models">Models and weights</a></li>
+        <li><a href="#procedures">Runtime to production</a></li>
+        <li><a href="#five">The five new runtimes</a></li>
+        <li><a href="#edge">Edge, domain, security</a></li>
+        <li><a href="#plan">The plan, phases 10–19</a></li>
+        <li><a href="#tenants">Customer runtimes</a></li>
+        <li><a href="#secrets">Secrets and configuration</a></li>
+        <li><a href="#native">Native apps</a></li>
+        <li><a href="#manuals">The manuals</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- ============================================================ 1 -->
+      <section id="version">
+        <h2>Read the right version</h2>
+        <p class="intro">Yocto publishes one manual set per release and one for the development branch. You are on OE-Core master — your <code>LAYERSERIES_COMPAT</code> names <code>blacksail</code>, the master codename — so the <a href="https://docs.yoctoproject.org/dev/">dev manuals</a> describe the classes and variables you actually have. The unversioned site tracks the latest release (currently the <code>wrynose</code> LTS): close, not identical. If you pin to a release later, switch manuals the same day.</p>
+      </section>
+
+      <!-- ============================================================ 2 -->
+      <section id="stack">
+        <h2>How the stack works — from the card to the browser</h2>
+        <p class="intro">One workstation, one GPU, one control plane. Read this bottom-up once and every line the coder prints will have a place to land.</p>
+
+        <div class="layers" role="img" aria-label="Stack layers from hardware up to the browser">
+          <div class="layer"><div class="k">Browser / apps</div><div class="v">symoneural.com pages (static HTML generated by Python, read <code>/api/status</code> and one WebSocket) · later: iPhone/Android/TV clients over the same API.</div></div>
+          <div class="layer"><div class="k">Edge</div><div class="v">Cloudflare DNS proxy (the <code>522</code> in your tab is Cloudflare saying the origin is unreachable) → <strong>Caddy :443</strong> — TLS and static files only; every other path is reverse-proxied. Rule from your Caddyfile: <em>FastAPI does all the routing</em>.</div></div>
+          <div class="layer"><div class="k">Gateway</div><div class="v"><strong>symon-gateway :8000</strong> (Rust, axum) — forwards <code>/api</code> verbatim, relays <code>/api/ws</code> as a real WebSocket, validates chat payloads before anything can take the GPU lock. No auth, no payments, no TLS.</div></div>
+          <div class="layer"><div class="k">Control plane<br>= DispatchOS</div><div class="v"><strong>FastAPI :8800</strong> (<code>backend/api.py</code>) — the unit registry (<code>build_status()</code>), the GPU queue and lock, the live bus, receipts, per-surface tokens, rackpower. This is what <strong>Symoneural-API</strong> exists to build.</div></div>
+          <div class="layer"><div class="k">Services</div><div class="v">Engines the control plane starts under the lock: <code>llama-server :8081</code> (resident), <code>sd-cli</code> (per request), <code>ffmpeg</code>/<code>gstreamer</code> → HLS, Stratum V2 pool + translator, <code>kawpowminer</code>, <code>whisper-cli</code>, the trainer, ComfyUI :8188. Each is a process, most are one recipe.</div></div>
+          <div class="layer"><div class="k">Runtimes</div><div class="v">The <code>Symoneural-*</code> folders — pinned source trees, curated recipes, and the built output in <code>prod/{bin,lib}</code>. A runtime is a <em>buildable library set</em>; a rack unit is a <em>running service</em>. One runtime serves several units: LLM serves Chat, Coder and the Studio agent.</div></div>
+          <div class="layer"><div class="k">Build system</div><div class="v"><strong>Symoneural-Build</strong>: OE-Core + BitBake at pinned master SHAs turn each source tree into cross-compiled packages, with a licence manifest and SPDX SBOM per recipe. The acquisition control plane guarantees every binary traces to a commit and a licence file.</div></div>
+          <div class="layer hw"><div class="k">Hardware</div><div class="v">RTX 5070 Ti — 70 SMs, 15.92 GiB GDDR7, 752 GB/s measured (896 vendor), 48 MB L2, 300 W · PCIe Gen 3 ×8 host-capped: 6.94 GB/s host→device measured, though the card does Gen 5 · i9-10900KF · 94 GB RAM · driver 610.57.04 / CUDA 13.3 · NVMe for weights.</div></div>
+        </div>
+
+        <h3>Why the design is the way it is</h3>
+        <p><strong>VRAM is the budget.</strong> Chat at 64K context holds ~8.2 GiB; FLUX schnell holds ~7 GB with T5 pushed to the CPU. They do not both fit in 15.92 GiB, so the machine runs <em>one GPU tenant per job</em>. That single fact produces the lock, the queue, the rack states, and the "busy / queued / ready" vocabulary on the site.</p>
+        <p><strong>PCIe Gen 3 ×8 makes weight swaps cost seconds, not milliseconds</strong> — loading is bandwidth-bound at ~7 GB/s. The 94 GB of RAM is the second tier: weights stay hot in page cache and move to the card when a surface wins the lock. This is also why <code>llama-server</code> stays resident between chat turns while <code>sd-cli</code> runs per request and evicts it.</p>
+        <p><strong>CPU units never touch the lock.</strong> RavenCalc (SymPy), Coder, Project, DispatchOS itself, Voice ASR (whisper.cpp built <code>GGML_CUDA=OFF</code>, 284 MiB RSS) all run beside the GPU, never on it. That is what lets them stay <em>ready</em> while a render holds the card.</p>
+
+        <h3>The lock, exactly</h3>
+        <p>Two layers. In-process, <code>GpuQueue</code> is an <code>asyncio.Lock</code> plus a <code>Semaphore(24)</code>; <code>hold(surface)</code> announces <em>queued → acquired → released</em> on the bus. Cross-process, <code>scripts/gpu-governor.sh</code> is a <strong>mkdir mutex</strong> at <code>run/gpu.lock.d</code> with a holder file <code>"&lt;surface&gt; &lt;pid&gt;"</code> and a <code>run/resident</code> record of who has weights loaded. Acquire spins on <code>mkdir</code> up to 300 s, breaks stale holders (<code>kill -0</code> fails), evicts the previous resident per surface (chat → stop llama-server; image/sigil → pkill sd-cli; comfy → stop ComfyUI; train → <em>refuses</em>; miner → stop), then drains until <code>nvidia-smi</code> reports under 1,500 MiB or 60 s. Release refuses a mismatched holder.</p>
+        <p>Three rules govern precedence and they are worth keeping verbatim: <em>the lock is held per job, never per process lifetime; train is never evicted; miner yields to everything.</em></p>
+        <p>That is the August implementation, described so the mechanism is understood. The estate's DispatchOS is free to rebuild it — as a proper service rather than a shell script — but the constraints it enforces are physics, not preference: one GPU tenant per job, explicit precedence, drain before hand-over.</p>
+
+        <h3>One request, end to end</h3>
+        <ol class="steps">
+          <li>Browser opens <code>symoneural.com/chat</code>; Cloudflare resolves and proxies to your origin.</li>
+          <li>Caddy terminates TLS; <code>/api/*</code> is handed to symon-gateway with <code>flush_interval -1</code> so tokens are never buffered.</li>
+          <li>symon-gateway checks the payload size and token estimate, appends its hop to <code>X-Forwarded-For</code>, forwards to FastAPI.</li>
+          <li>FastAPI routes <code>POST /api/chat</code>, calls <code>GpuQueue.hold("chat")</code>; the governor acquires the mutex, evicts a resident image job if one holds the card, drains VRAM.</li>
+          <li>If llama-server is not resident it is started: <code>-m Qwen2.5-7B-Instruct-Q4_K_M.gguf -ngl 99 -c 65536 -np 2</code>, plus the speculative 0.5B draft and <code>--lora symoneural-lora.gguf</code>; health is polled on :8081 for up to 120 s.</li>
+          <li>Tokens stream back as SSE through gateway and Caddy to the page; the WebSocket bus emits <code>rack</code> and <code>patch</code> frames so every open page updates without polling.</li>
+          <li>The job ends, the lock is released, the rack row returns to <em>ready</em>, and a receipt is recorded.</li>
+        </ol>
+
+        <h3>Models, adapters, training — how they connect</h3>
+        <p>Weights live on disk (<code>backend/models/</code>, ~40 GB) as <strong>GGUF</strong> for llama.cpp and stable-diffusion.cpp and as <strong>safetensors</strong> for anything torch touches. Training is <strong>QLoRA</strong>: PEFT loads the base in NF4, trains a rank-16 adapter (<code>alpha 32</code>, seven target modules), and the adapter is converted with <code>convert_lora_to_gguf.py --outtype f16</code> so llama-server applies it at serve time with <code>--lora</code>. That is the whole SymonChat personality loop: corpus → adapter → GGUF → <code>--lora</code>. Studio is the training bay; Reinforce is its SFT / DPO / GRPO preset system; Exp is a plugin container, not training at all.</p>
+
+        <div class="callout">
+          <span class="lbl">What the estate adds to this picture</span>
+          <p>The August deployment ran on Debian system packages and per-app virtualenvs. The estate replaces every one of those binaries with a build from a pinned source tree through OE-Core — same processes, same ports, same lock — so that <code>llama-server</code>, <code>sd-cli</code>, the trainer's torch and the site's HLS player are all yours, traceable, and rebuildable on this box.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ 3 -->
+      <section id="register">
+        <h2>The estate register — 12 runtimes, 41 sources</h2>
+        <p class="intro">Pins and licence expressions come straight from <code>acquisition/source-lock.json</code> and the recipes. Where a recipe still reads <code>Unknown</code>, the licence file was checked by hand and the reading is given — that is a curation item for the recipe, not a conclusion about the software.</p>
+
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Component</th><th>Upstream</th><th>Pin</th><th>Version</th><th>Recipe LICENSE</th><th>Ships as</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr class="grp"><td colspan="7">Symoneural-API — the control plane (DispatchOS). All six built with <code>python_hatchling</code> after the stub fix.</td></tr>
+              <tr><td>fastapi</td><td class="mw">github.com/fastapi/fastapi</td><td class="m">95f8322ee1dc</td><td class="m">0.141.1</td><td>MIT</td><td>Python</td><td>HTTP framework</td></tr>
+              <tr><td>starlette</td><td class="mw">github.com/encode/starlette</td><td class="m">4f250d6b8145</td><td class="m">1.6.0</td><td>Unknown <span class="chip warn">reads BSD-3 (Encode)</span></td><td>Python</td><td>ASGI toolkit under FastAPI</td></tr>
+              <tr><td>uvicorn</td><td class="mw">github.com/encode/uvicorn</td><td class="m">8988c23704fc</td><td class="m">0.52.4</td><td>Unknown <span class="chip warn">reads BSD-3 (Encode)</span></td><td>Python</td><td>ASGI server</td></tr>
+              <tr><td>pydantic</td><td class="mw">github.com/pydantic/pydantic</td><td class="m">001dea020e08</td><td class="m">2.13.5</td><td>MIT</td><td>Python + Rust core</td><td>Data models; needs <code>pydantic-core</code> (maturin)</td></tr>
+              <tr><td>httpx</td><td class="mw">github.com/encode/httpx</td><td class="m">26d48e0634e6</td><td class="m">0.28.1</td><td>Unknown <span class="chip warn">reads BSD-3 (Encode)</span></td><td>Python</td><td>HTTP client (Studio, remix)</td></tr>
+              <tr><td>httpcore</td><td class="mw">github.com/encode/httpcore</td><td class="m">98209758cc14</td><td class="m">1.0.9</td><td>Unknown <span class="chip warn">reads BSD-3 (Encode)</span></td><td>Python</td><td>Transport under httpx</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-LLM — inference. llama.cpp is the serving engine that was live; vLLM and Triton are the heavy path (CUDA, hours to build).</td></tr>
+              <tr><td>llama.cpp</td><td class="mw">github.com/ggml-org/llama.cpp</td><td class="m">5266f24da75d</td><td class="m">b10809 (+ gguf-py 0.4.0)</td><td>MIT AND Unlicense (vendored)</td><td>Executable + libs</td><td><code>llama-server</code>: Chat, Coder, Studio agent</td></tr>
+              <tr><td>vllm</td><td class="mw">github.com/vllm-project/vllm</td><td class="m">98dff2a81d74</td><td class="m">0.29.0 · REFERENCE-ONLY</td><td>Apache-2.0 AND MIT</td><td>Python + CUDA ext</td><td>Batch inference server (study path)</td></tr>
+              <tr><td>triton</td><td class="mw">github.com/triton-lang/triton</td><td class="m">c01b6774b186</td><td class="m">3.8.0 · REFERENCE-ONLY</td><td>MIT</td><td>Python + compiler</td><td>GPU kernel compiler, arrives via torch</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Common — the ML substrate shared by LLM (vLLM path), Studio and Diffuse.</td></tr>
+              <tr><td>pytorch</td><td class="mw">github.com/pytorch/pytorch</td><td class="m">2b3ec3482903</td><td class="m">2.14.0 · 65 submodules</td><td>Apache-2.0 AND BSD-2 AND BSD-3 AND BSL-1.0 AND MIT AND Zlib AND GPL-3.0-only <span class="chip warn">aggregate; curate</span></td><td>Libs + Python ext</td><td>Tensor/autograd core</td></tr>
+              <tr><td>transformers</td><td class="mw">github.com/huggingface/transformers</td><td class="m">856157a2f3e9</td><td class="m">5.17.0</td><td>Apache-2.0</td><td>Python</td><td>Model implementations, Trainer</td></tr>
+              <tr><td>accelerate</td><td class="mw">github.com/huggingface/accelerate</td><td class="m">6afc1e5ee217</td><td class="m">1.15.0</td><td>Apache-2.0</td><td>Python</td><td>Device placement</td></tr>
+              <tr><td>huggingface-hub</td><td class="mw">github.com/huggingface/huggingface_hub</td><td class="m">495b17c85296</td><td class="m">1.31.0</td><td>Apache-2.0</td><td>Python</td><td>Weight distribution client</td></tr>
+              <tr><td>safetensors</td><td class="mw">github.com/huggingface/safetensors</td><td class="m">a406ca3e7a90</td><td class="m">0.8.0</td><td>Apache-2.0</td><td>Python + Rust (maturin)</td><td>Tensor serialisation</td></tr>
+              <tr><td>tokenizers</td><td class="mw">github.com/huggingface/tokenizers</td><td class="m">88a4498ad4ea</td><td class="m">0.23.2</td><td>Apache-2.0 AND MIT</td><td>Python + Rust (maturin)</td><td>Tokenisation</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Ravencalc — symbolic and numeric maths on the CPU. <span class="chip ok">4 of 6 built</span></td></tr>
+              <tr><td>openblas <span class="chip ok">built</span></td><td class="mw">github.com/OpenMathLib/OpenBLAS</td><td class="m">e0166008be8e</td><td class="m">0.3.34</td><td>BSD-3-Clause <span class="chip warn">7 licence files; expression UNRESOLVED</span></td><td>libopenblas.so.0.3</td><td>BLAS/LAPACK kernels</td></tr>
+              <tr><td>numpy <span class="chip ok">built</span></td><td class="mw">github.com/numpy/numpy</td><td class="m">dd88c0c19b54</td><td class="m">2.5.3 · 7 submodules</td><td>BSD-3-Clause (25 files)</td><td>19 .so + Python</td><td>Array core; SyMoNeuRaL-owned, not OE-Core's</td></tr>
+              <tr><td>scipy</td><td class="mw">github.com/scipy/scipy</td><td class="m">e4e854eaa8f1</td><td class="m">1.18.1 · 8 submodules</td><td>BSD-3-Clause (36 files)</td><td>Python + ext</td><td>Blocked: pybind11, pythran (meta-python)</td></tr>
+              <tr><td>scikit-learn</td><td class="mw">github.com/scikit-learn/scikit-learn</td><td class="m">866c0f51e756</td><td class="m">1.9.1</td><td>BSD-3-Clause</td><td>Python + ext</td><td>Blocked transitively on scipy</td></tr>
+              <tr><td>sympy <span class="chip ok">built</span></td><td class="mw">github.com/sympy/sympy</td><td class="m">16fa855354eb</td><td class="m">1.14.0</td><td>BSD-3-Clause AND MIT</td><td>3,103 files</td><td>Symbolic maths — the RavenCalc unit</td></tr>
+              <tr><td>mpmath <span class="chip ok">built</span></td><td class="mw">github.com/mpmath/mpmath</td><td class="m">c1131e2d64ab</td><td class="m">1.4.1</td><td>BSD-3-Clause</td><td>192 files</td><td>Arbitrary precision (sympy dep)</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-CLI — agent tooling: Coder, the Studio MCP server, <code>bin/symoneural-cli</code>. The Python half ships; the TypeScript half is REFERENCE-ONLY.</td></tr>
+              <tr><td>python-sdk (MCP)</td><td class="mw">github.com/modelcontextprotocol/python-sdk</td><td class="m">9972c21aa420</td><td class="m">2.2.0</td><td>MIT</td><td>Python</td><td>MCP server/client — replaces fastmcp</td></tr>
+              <tr><td>anthropic-sdk-python</td><td class="mw">github.com/anthropics/anthropic-sdk-python</td><td class="m">eb21a4352015</td><td class="m">1.5.0</td><td>MIT</td><td>Python</td><td>Anthropic API client</td></tr>
+              <tr><td>typescript-sdk (MCP)</td><td class="mw">github.com/modelcontextprotocol/typescript-sdk</td><td class="m">cc4b41617ce3</td><td class="m">v2 GA 2.0.0</td><td>MIT / Apache-2.0 / CC-BY-4.0 mixed (docs)</td><td>—</td><td>REFERENCE-ONLY — pnpm <code>catalog:</code> workspace; no shipped unit consumes it</td></tr>
+              <tr><td>anthropic-sdk-typescript</td><td class="mw">github.com/anthropics/anthropic-sdk-typescript</td><td class="m">135f71e92976</td><td class="m">sdk-v0.125.0</td><td>MIT</td><td>—</td><td>REFERENCE-ONLY — no consumer; CLI uses the Python SDK (built, 2,817 files)</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Crypto — Stratum V2: the pool and translator the ASICs and GPU miner connect to. GPL miners stay separate processes.</td></tr>
+              <tr><td>stratum</td><td class="mw">github.com/stratum-mining/stratum</td><td class="m">c1a799139425</td><td class="m">1.11.1</td><td>MIT OR Apache-2.0 (dual)</td><td>Rust rlib + bins</td><td>SV2 protocol libraries</td></tr>
+              <tr><td>sv2-apps</td><td class="mw">github.com/stratum-mining/sv2-apps</td><td class="m">d7d556d1a3c7</td><td class="m">0.7.0 · 4 lockfiles</td><td>MIT OR Apache-2.0 (dual)</td><td>Rust bins</td><td>Pool, translator (SV1→SV2), JD</td></tr>
+              <tr><td>sv2-spec</td><td class="mw">github.com/stratum-mining/sv2-spec</td><td class="m">67d2178e12b2</td><td class="m">git</td><td>BSD-3-Clause + CC0-1.0 (<code>License/</code> dir) <span class="chip">REFERENCE-ONLY</span></td><td>—</td><td>Specification; never built</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Live and Symoneural-Streamer — media in and media out.</td></tr>
+              <tr><td>gstreamer</td><td class="mw">gitlab.freedesktop.org/gstreamer/gstreamer</td><td class="m">070125524a84</td><td class="m">1.28.7 · 1 submodule</td><td>LGPL-2.1-only AND BSD-2 AND MIT (30 files)</td><td>Libs + plugins</td><td>Live pipelines; HLS segmenter for Streamer. OE-Core ships 1.28.7 too — you own yours (D2)</td></tr>
+              <tr><td>hls.js</td><td class="mw">github.com/video-dev/hls.js</td><td class="m">e5ff3583965e</td><td class="m">1.7.3</td><td>Apache-2.0 (curated from "Unknown")</td><td>Browser bundle — <code>dist/hls.min.js</code> to site/vendor; no Node on the target</td><td>HLS playback in the page; 1,072-package dev closure builds it</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Remix, Symoneural-Adaptive-Fabric, Symoneural-Web</td></tr>
+              <tr><td>librespot</td><td class="mw">github.com/librespot-org/librespot</td><td class="m">d36f9f1907e8</td><td class="m">0.8.0</td><td>MIT</td><td>Rust bin</td><td>Spotify Connect client — Remix playback</td></tr>
+              <tr><td>FreeToken</td><td class="mw">github.com/FlashML-org/FreeToken</td><td class="m">9db1a39455a3</td><td class="m">0.1.2</td><td>Apache-2.0</td><td>Python + ext</td><td>Inference-time token optimisation; needs <code>torch&gt;=2.11,&lt;2.12</code> <span class="chip warn">vs Common 2.14</span></td></tr>
+              <tr><td>workerd</td><td class="mw">github.com/cloudflare/workerd</td><td class="m">925464ba9fe5</td><td class="m">v1.20260911.1</td><td>Apache-2.0 AND ISC AND MIT</td><td>Bazel build</td><td>Cloudflare Workers runtime (edge)</td></tr>
+              <tr><td>workers-sdk</td><td class="mw">github.com/cloudflare/workers-sdk</td><td class="m">00ae21fa8375</td><td class="m">wrangler@4.131.1</td><td>MIT OR Apache-2.0</td><td>—</td><td>REFERENCE-ONLY as source (pnpm workspace); wrangler@4.131.1 consumed as the published npm package in Phase 15, paired to workerd</td></tr>
+
+              <tr class="grp"><td colspan="7">Symoneural-Build — the build stack and autotools. Five of these resolve to OE-Core under "borrow what you only build with" (D2).</td></tr>
+              <tr><td>bitbake</td><td class="mw">git.openembedded.org/bitbake</td><td class="m">046a90b0e9b7</td><td class="m">master <span class="chip ok">advanced to the in-use SHA</span></td><td>GPL-2.0-only AND MIT</td><td>Python</td><td>Vendors ply 3.3 inline, no licence file — the ply case</td></tr>
+              <tr><td>openembedded-core</td><td class="mw">git.openembedded.org/openembedded-core</td><td class="m">fe7a24bc6711</td><td class="m">master <span class="chip ok">advanced to the in-use SHA</span></td><td>MIT AND GPL-2.0-only</td><td>Metadata</td><td>devtool, recipetool, classes</td></tr>
+              <tr><td>autoconf</td><td class="mw">git.savannah.gnu.org/git/autoconf</td><td class="m">44d712a26b0e</td><td class="m">2.73</td><td>GPL-3.0-or-later</td><td>—</td><td>→ OE-Core</td></tr>
+              <tr><td>automake</td><td class="mw">git.savannah.gnu.org/git/automake</td><td class="m">e82d2d34d462</td><td class="m">1.19</td><td>GPL-2.0-or-later</td><td>—</td><td>→ OE-Core</td></tr>
+              <tr><td>libtool</td><td class="mw">git.savannah.gnu.org/git/libtool</td><td class="m">309bb53a8adf</td><td class="m">2.6.2 · 2 submodules</td><td>GPL-2.0-or-later AND LGPL-2.1-or-later</td><td>—</td><td>→ OE-Core</td></tr>
+              <tr><td>m4</td><td class="mw">git.savannah.gnu.org/git/m4</td><td class="m">fe2f13ab9ab9</td><td class="m">1.4.21 · 2 submodules</td><td>GPL-3.0-or-later</td><td>—</td><td>→ OE-Core</td></tr>
+              <tr><td>ninja</td><td class="mw">github.com/ninja-build/ninja</td><td class="m">3441b633c2fe</td><td class="m">1.13.2</td><td>Apache-2.0</td><td>—</td><td>→ OE-Core</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="intro" style="margin-top:.8rem">Not in this table but carried by the estate: 85 submodules at recorded commits (pytorch 65, scipy 8, numpy 7, libtool 2, m4 2, gstreamer 1), 366 vendored copies of which 208 are meson test fixtures inside numpy, and 429 licence-bearing files with md5 and sha256 recorded.</p>
+      </section>
+
+      <!-- ============================================================ 4 -->
+      <section id="rack">
+        <h2>The rack, wired</h2>
+        <p class="intro">Each unit on the Live stack page, mapped to the runtime that builds it, the process that runs it, the model it loads, and how it behaves under the lock. The "Aug 2026" column records what the trial-and-error deployment proved mechanically possible on this card; the recommendation column is the forward plan and does not assume anything from August is kept. Bus: <span class="chip gpu">GPU</span> takes the lock; CPU and NET never do.</p>
+
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Unit</th><th>Bus</th><th>Runtimes</th><th>Process / model</th><th>Lock behaviour</th><th>Aug 2026</th><th>Recommendation</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Chat</strong></td><td><span class="chip gpu">GPU</span></td><td>LLM · CLI (tools) · Adaptive-Fabric later</td><td class="wrap"><code>llama-server :8081 -ngl 99 -c 65536 -np 2</code>, 0.5B speculative draft, <code>--lora symoneural-lora.gguf</code> · SymonChat S1-7B = Qwen2.5-7B-Instruct Q4_K_M, ~8.2 GiB · 80–92 tok/s with adapter</td><td>Resident until evicted by an image job</td><td><span class="chip ok">live</span></td><td class="wrap">Keep llama.cpp as the engine: it fits the one-tenant/16 GiB model and vLLM does not. Build <code>llama-server</code> from Symoneural-LLM with CUDA for sm_120. Add Adaptive-Fabric only once its torch pin is reconciled with Common. Stay on Apache-2.0 weights (Qwen).</td></tr>
+              <tr><td><strong>Image</strong></td><td><span class="chip gpu">GPU 2U</span></td><td><em>Diffuse</em> (new)</td><td class="wrap"><code>sd-cli --backend te=cpu --vae-tiling --diffusion-fa</code>, 4 steps, cfg 1.0, euler · SymonImage F1 q4_k = FLUX.1-schnell q4_k GGUF + ae + clip_l + t5xxl Q8_0 (T5 on CPU) · ~7 GB · 768² in 11.2 s</td><td>Per request; evicts Chat</td><td><span class="chip ok">live</span></td><td class="wrap">Acquire stable-diffusion.cpp (MIT) at an exact tag; flag that its <code>ggml</code> submodule is leejet's personal fork, not ggml-org. Never swap schnell (Apache-2.0) for dev (non-commercial).</td></tr>
+              <tr><td><strong>Remix</strong></td><td>NET (+ Chat's GPU for generation)</td><td>Remix · LLM · API</td><td class="wrap"><strong>This time: a Spotify-interacting unit, not the old DJ app.</strong> Two halves. Official <strong>Spotify Web API</strong> over OAuth PKCE (httpx, already in API) for library, search, playlists and playback control of the user's devices — Chat proposes, the API writes the playlist into the user's account. <code>librespot</code> (acquired, MIT) makes the box itself a Spotify Connect playback device.</td><td>Only when Chat generates</td><td><span class="chip">old code discarded</span></td><td class="wrap">Build the Web API half first — it is official, small, and needs no new source. Treat librespot as a personal-device feature: it is an unofficial client of Spotify's private protocol, needs Premium, and Spotify's terms restrict it, so it should not be a selling point of a product. Note Spotify withdrew the audio-features, analysis and recommendations endpoints for new apps in Nov 2024 — "remix" logic has to come from Chat and your own data, not Spotify's. Rotate the secrets committed in the old <code>remix/.env</code> regardless.</td></tr>
+              <tr><td><strong>RavenCalc</strong></td><td>CPU</td><td>Ravencalc</td><td class="wrap">SymPy in-process (<code>/api/ravencalc</code>), mpmath, numpy; scipy/sklearn for numeric routes</td><td>Never takes the lock</td><td><span class="chip ok">live</span></td><td class="wrap">4 of 6 built; scipy and scikit-learn follow the meta-openembedded decision. Keep it on the CPU — it is the unit that stays ready during renders.</td></tr>
+              <tr><td><strong>Miner</strong></td><td><span class="chip gpu">GPU</span> · ASIC · NET 6U</td><td>Crypto · own <code>cryptominer</code>/<code>asicminer</code> apps</td><td class="wrap">GPU: <code>kawpowminer 1.2.4</code> sm_120 build, 48.36 MH/s measured (bench only) · ASIC: pyasic control of Antminer/MicroBT on :4028, Braiins OS+ API plan · Gateway sub-unit = TRON licensing (see Gateway)</td><td>Holds lock for process lifetime — not preemptible (spec written, unbuilt)</td><td><span class="chip">offline</span></td><td class="wrap">Run the Stratum V2 pool and SV1→SV2 translator from sv2-apps as your in-house endpoint so ASICs and the GPU miner point at this box. Keep GPL-3 miners as separate processes, never linked. Build the yield protocol before mining shares the card with Chat.</td></tr>
+              <tr><td><strong>Streamer</strong></td><td>NET</td><td>Streamer · Live</td><td class="wrap">Was "Tuner": IPTV over HLS — <code>ffmpeg -c copy</code> → segments, 2 slots, Xtream/M3U, EPG, SSRF guard, hls.js in the page; 108 + 34 tests</td><td>None</td><td><span class="chip ok">live</span></td><td class="wrap">Keep hls.js in the browser. Move the segmenter to gstreamer <code>hlssink3</code> from Live so one framework serves both units; if ffmpeg stays, build it LGPL-only — <code>-c copy</code> needs no GPL codec.</td></tr>
+              <tr><td><strong>Coder</strong></td><td>CPU</td><td>CLI · LLM</td><td class="wrap">No HTTP route by decision; rack row links to documentation. The Studio agent already has a 26-tool loop over llama-server</td><td>Uses Chat's engine</td><td><span class="chip">linked</span></td><td class="wrap">Unify Coder and the Studio agent on the official MCP python-sdk (retire fastmcp), token-gated, with <code>run_command</code> and <code>write_file</code> confined to a workspace.</td></tr>
+              <tr><td><strong>Project</strong></td><td>CPU</td><td>API</td><td class="wrap">SQLite store at <code>run/project/store.db</code>; routed at <code>/api/project</code></td><td>None</td><td><span class="chip">offline</span></td><td class="wrap">A configuration gap, not a build gap: enable the surface drop-in and make one authenticated POST to create the store.</td></tr>
+              <tr><td><strong>Sigils</strong></td><td><span class="chip gpu">GPU</span></td><td><em>Diffuse</em> · CPU helpers</td><td class="wrap">Text → sticker via <code>sd-cli</code> under <code>with sigil</code>, colour-key matte, stdlib PNG encoder · upload cutout via rembg <code>u2net.onnx</code> (CPU) · speech via <code>whisper-cli</code> base.en (CPU)</td><td>Per request</td><td><span class="chip ok">live</span></td><td class="wrap">Shares Diffuse. rembg (MIT), the u2net weights (Apache-2.0) and whisper.cpp (MIT) are three acquisitions to add — today they live in virtualenvs, untracked.</td></tr>
+              <tr><td><strong>Studio</strong><br><span class="chip">Reinforce</span> <span class="chip">Exp</span></td><td><span class="chip gpu">GPU</span> / CPU</td><td><em>Studio</em> (new) · Common · LLM · CLI</td><td class="wrap">Reinforce: <code>train_lora.py</code> QLoRA NF4 r=16 — the 7B adapter is served; the 27B adapter trains (14.26 GiB peak) but is unevaluated · presets sft / DPO / GRPO (no RL run yet) · Studio agent: 26 tools over llama-server · ComfyUI embedded at :8188 (torch 2.13 + cu130, its own venv) · Exp: in-process plugin container, not training</td><td>train never evicted; renders per lease</td><td><span class="chip">off by default</span></td><td class="wrap">Render through diffusers (Apache-2.0) instead of the embedded ComfyUI (GPL-3 plus a GPL frontend) — one torch from Common instead of two venvs. Keep Exp as the plugin runtime. Evaluate the 27B adapter before it is served.</td></tr>
+              <tr><td><strong>Live</strong></td><td>NET</td><td>Live</td><td class="wrap">New unit; not in the August snapshot. gstreamer pipelines: camera / screen / RTMP / SRT in → HLS or WebRTC out</td><td>None (NVENC would be a lock decision)</td><td>—</td><td class="wrap">Build <code>symoneural-gstreamer</code> with only the plugin sets you need; the <code>ugly</code>/<code>bad</code> sets carry <code>LICENSE_FLAGS commercial</code> in OE-Core for a reason. You own it under D2 even though OE-Core ships 1.28.7.</td></tr>
+              <tr><td><strong>DispatchOS</strong></td><td>CPU</td><td>API</td><td class="wrap">The control plane itself: <code>build_status()</code> registry, <code>GpuQueue</code>, <code>gpu-governor.sh</code>, the WebSocket bus, receipts, rackpower, per-surface tokens</td><td>Owns the lock</td><td><span class="chip ok">live</span></td><td class="wrap">This is Symoneural-API. Promote the governor to a first-class service with the preemption protocol, move the unit list from hard-coded <code>Unit(...)</code> calls to a registry file, keep "one tenant per job".</td></tr>
+              <tr><td><strong>Voice</strong></td><td>CPU</td><td>(whisper.cpp)</td><td class="wrap">ASR works at <code>/api/voice</code> — 579 ms for 3 s of audio, 0 VRAM. No rack row, no page, no TTS</td><td>Never</td><td><span class="chip">routed, hidden</span></td><td class="wrap">Give it a row and a page; piper (MIT) for TTS. Both are CPU units that stay ready during renders.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ 5 -->
+      <section id="models">
+        <h2>Models and weights</h2>
+        <p class="intro">Weights are not source acquisitions and never enter the parent repository. They get their own register: the Hugging Face model card is the authority for a weight set's licence, not the GitHub repository beside it (the DeepSeek code/weights split is the standing example). Every VRAM figure below was measured on this card.</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Role</th><th>File</th><th>Source</th><th>Format</th><th>Runtime</th><th>VRAM / speed</th><th>Weight licence</th></tr></thead>
+            <tbody>
+              <tr><td>Chat — SymonChat S1-7B</td><td class="mw">llm/Qwen2.5-7B-Instruct-Q4_K_M.gguf</td><td class="mw">bartowski/Qwen2.5-7B-Instruct-GGUF</td><td>GGUF Q4_K_M</td><td>llama-server</td><td>8.2 GiB @64K ctx · 151 tok/s bare, 80–92 with adapter</td><td>Apache-2.0 (Qwen2.5)</td></tr>
+              <tr><td>Chat heavy tier (CLI)</td><td class="mw">llm/Qwen2.5-14B-Instruct-Q4_K_M.gguf</td><td class="mw">bartowski</td><td>GGUF Q4_K_M</td><td>llama-server</td><td>~98 tok/s</td><td>Apache-2.0</td></tr>
+              <tr><td>Speculative draft</td><td class="mw">llm/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf</td><td class="mw">bartowski</td><td>GGUF</td><td><code>-md … --spec-draft-n-max 2</code></td><td>+5% (157 tok/s)</td><td>Apache-2.0</td></tr>
+              <tr><td>Persona adapter</td><td class="mw">training/adapter/symoneural-lora.gguf</td><td>trained here (PEFT → <code>convert_lora_to_gguf.py</code>)</td><td>GGUF LoRA r=16</td><td><code>--lora</code> at serve</td><td>—</td><td>yours · corpus is a trade secret</td></tr>
+              <tr><td>Qwen3.6-27B (opt-in)</td><td class="mw">llm/Qwen3.6-27B-UD-Q2_K_XL.gguf + mmproj-F16</td><td class="mw">unsloth/Qwen3.6-27B-GGUF</td><td>GGUF ~2.5 bpw, 11.03 GiB</td><td>llama.cpp ≥ 4df29be (<code>qwen35</code> arch)</td><td>12.4 GiB @8K … 14.3 @64K; 128K fails · 56.9 tok/s</td><td>verify on the model card</td></tr>
+              <tr><td>Image — SymonImage F1 q4_k</td><td class="mw">image/flux1-schnell-q4_k.gguf</td><td class="mw">leejet/FLUX.1-schnell-gguf</td><td>GGUF q4_k</td><td>sd-cli, 4 steps</td><td>~7 GB · 768² in 11.2 s</td><td>Apache-2.0 (schnell) — <strong>dev is non-commercial</strong></td></tr>
+              <tr><td>FLUX VAE / CLIP-L / T5</td><td class="mw">image/ae.safetensors · clip_l.safetensors · t5xxl-Q8_0.gguf</td><td class="mw">second-state/FLUX.1-schnell-GGUF</td><td>safetensors / GGUF Q8_0</td><td>sd-cli, T5 on CPU</td><td>12 GB on disk total</td><td>Apache-2.0</td></tr>
+              <tr><td>ASR</td><td class="mw">whisper/ggml-base.en.bin</td><td class="mw">ggerganov/whisper.cpp</td><td>ggml</td><td>whisper-cli, CPU build</td><td>0 VRAM · 284 MiB RSS</td><td>MIT (code) · Whisper weights MIT</td></tr>
+              <tr><td>Cutout</td><td class="mw">rembg/u2net.onnx</td><td class="mw">danielgatis/rembg releases</td><td>ONNX</td><td>rembg (CPU)</td><td>—</td><td>Apache-2.0</td></tr>
+              <tr><td>Training bases</td><td class="mw">models/hf/hub/models--Qwen--Qwen2.5-7B-Instruct · Qwen3.6-27B</td><td>HF (<code>HF_HOME=backend/models/hf</code>)</td><td>bf16 safetensors → NF4 at load</td><td>transformers + PEFT</td><td>7B QLoRA ~12 GB · 27B 14.26 GiB peak</td><td>Apache-2.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <span class="lbl">Not viable on this card</span>
+          <p>The NVIDIA NIM <code>qwen3.6-27b</code> container needs ~18.6 GB at NVFP4 and an NGC login; it does not fit 15.92 GiB. The 27B path that <em>does</em> fit is the Q2_K_XL GGUF at 8K–64K context. Treat 128K context on any 27B as out of reach until the hardware changes.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ 6 -->
+      <section id="procedures">
+        <h2>Runtime to production — the procedure</h2>
+        <p class="intro">The same ten steps take every runtime from a pinned tree to a unit on the rack. The table after it holds what differs per runtime. Steps are ordered because each depends on the last.</p>
+        <ol class="steps">
+          <li><strong>Source at the intended revision.</strong> The control plane already proves this: <code>source-lock.json</code> matches <code>source-manifest.json</code>, submodules at recorded commits, tree clean under <code>git status --ignored</code>.</li>
+          <li><strong>Recipe curated.</strong> No recipetool stubs beside an <code>inherit</code>; <code>LICENSE</code> and <code>LIC_FILES_CHKSUM</code> read from the real files (all of them, never narrowed); out-of-tree build so <code>B != S</code>; no class that writes into <code>${S}</code>.</li>
+          <li><strong>Build.</strong> From the runtime's <code>build/devtool-master</code> with <code>BB_NUMBER_THREADS = "10"</code> and <code>PARALLEL_MAKE = "-j 12"</code>: <code>bitbake symoneural-&lt;component&gt;</code>. One bitbake per build directory; never edit a recipe while it runs.</li>
+          <li><strong>Inspect the image.</strong> <code>tmp/work/x86-64-v3-oe-linux/&lt;recipe&gt;/&lt;ver&gt;/image</code> — file count, <code>file</code> on every <code>.so</code> (ELF 64-bit x86-64), sonames, no build paths baked in.</li>
+          <li><strong>Licence and vulnerability evidence.</strong> <code>bitbake &lt;recipe&gt; -c create_recipe_sbom</code> for the SPDX document; <code>cve-check</code>. Both are free; both go in the receipts.</li>
+          <li><strong>Package and install.</strong> <code>do_package</code> emits ipk/rpm per <code>PACKAGE_CLASSES</code>; install into the runtime's <code>prod/{bin,lib}</code>, or generate an SDK/sysroot for the Python runtimes so the interpreter and its extensions come from the same build.</li>
+          <li><strong>Service unit.</strong> Start from <code>ops/symoneural-api.service</code>: <code>User=google</code>, <code>ExecStartPre</code> releases stale governor locks, <code>ExecStopPost</code> kills engine children, <code>MemoryMax</code>, the moderate hardening set, journal logging. One unit per long-running service; per-job engines are spawned by the API under the governor, never as units.</li>
+          <li><strong>Register the unit.</strong> Add it to DispatchOS (today a <code>Unit(...)</code> in <code>build_status()</code>; move this to a registry file), give it a bus, a page generator in <code>tools/build_*.py</code>, and a token switch in <code>/etc/symoneural/api.env</code>.</li>
+          <li><strong>Health.</strong> The rack row reads <em>ready</em> from <code>/api/status</code>; the engine's own health endpoint answers; the Playwright suite passes in a real browser.</li>
+          <li><strong>Expose and commit.</strong> Caddy <code>handle</code> → symon-gateway → API; <code>sudo scripts/deploy.sh --prune</code> for the static site; commit explicit paths, never <code>git add .</code>.</li>
+        </ol>
+
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Runtime</th><th>bitbake targets</th><th>Produces</th><th>Service / process</th><th>Health</th><th>Exposure</th></tr></thead>
+            <tbody>
+              <tr><td>API</td><td class="mw">symoneural-fastapi -starlette -uvicorn -pydantic -httpx -httpcore</td><td>Python packages into one sysroot</td><td><code>symoneural-api.service</code> → uvicorn :8800</td><td><code>GET /api/status</code>, WS <code>/api/ws</code></td><td>Caddy → gateway → :8800</td></tr>
+              <tr><td>LLM</td><td class="mw">symoneural-llama-cpp (CUDA, sm_120)</td><td><code>llama-server</code>, <code>libllama.so</code>, <code>convert_lora_to_gguf.py</code></td><td>spawned per job by the API under <code>with chat</code> on :8081</td><td><code>GET :8081/health</code></td><td>never exposed directly — the gateway's <code>SYMON_ENGINE_UPSTREAM</code> stays :8800 on purpose</td></tr>
+              <tr><td>Common</td><td class="mw">symoneural-pytorch -transformers -accelerate -huggingface-hub -safetensors -tokenizers</td><td>one torch for Studio and Diffuse</td><td>library only; used by the trainer and diffusers</td><td>import check in the trainer preflight</td><td>—</td></tr>
+              <tr><td>Ravencalc</td><td class="mw">symoneural-openblas -numpy -scipy -scikit-learn -sympy -mpmath</td><td><code>libopenblas.so.0.3</code>, numpy 19 .so, pure-Python trees</td><td>in-process in the API</td><td><code>POST /api/ravencalc</code></td><td>via API</td></tr>
+              <tr><td>CLI</td><td class="mw">symoneural-mcp-python-sdk -anthropic-sdk-python (+ TS after nodejs)</td><td>MCP server, CLI</td><td>Coder / Studio agent, <code>bin/symoneural-cli</code></td><td>MCP handshake</td><td>token-gated <code>/api/studio</code></td></tr>
+              <tr><td>Crypto</td><td class="mw">symoneural-stratum -sv2-apps (inherit cargo, crate closure tracked)</td><td>pool, translator, JD binaries</td><td>two units: pool and SV1→SV2 translator</td><td>stratum port answers; miner connects</td><td>LAN for ASICs; public only if you run a pool</td></tr>
+              <tr><td>Live · Streamer</td><td class="mw">symoneural-gstreamer (chosen plugin sets) · symoneural-hlsjs</td><td>gst binaries + plugins; hls.js bundle</td><td>pipeline units per source; segments to a tmpfs dir Caddy serves</td><td>segment freshness</td><td>Caddy file_server for segments; page from site</td></tr>
+              <tr><td>Remix</td><td class="mw">symoneural-librespot (inherit cargo) · Web API half lives in API (httpx)</td><td><code>librespot</code> binary; OAuth PKCE routes</td><td>Connect daemon unit (optional); <code>/api/remix</code> in the API</td><td>OAuth round-trip completes; device visible in Spotify</td><td>via API; redirect URI on symoneural.com</td></tr>
+              <tr><td>Adaptive-Fabric</td><td class="mw">symoneural-freetoken</td><td>Python + ext</td><td>sits between Chat and the model</td><td>—</td><td>—</td></tr>
+              <tr><td>Web</td><td class="mw">workers-sdk after nodejs · workerd out of scope (Bazel)</td><td>Wrangler</td><td>Cloudflare Workers at the edge</td><td><code>wrangler dev</code></td><td>edge</td></tr>
+              <tr><td>Build</td><td class="mw">—</td><td>the toolchain itself</td><td>—</td><td>verifier PASS</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ 7 -->
+      <section id="five">
+        <h2>The five new runtimes — what each is, what exists, what to acquire</h2>
+        <p class="intro">These are named in the estate and on the rack but never acquired. The August code already contains most of their logic; the acquisitions below are the upstream sources that logic depends on, so they can be built here like everything else. Decisions are stated with a recommended answer; the final word is yours.</p>
+
+        <h3>Symoneural-UI</h3>
+        <p><strong>What it is.</strong> The website and, later, the surface every native client mirrors. In August it was 18 Python generators emitting static HTML, one hand-written CSS file and a 22 KB <code>console.js</code> — framework-free, with hls.js and Swagger UI the only vendored JavaScript. That is history, not a constraint.</p>
+        <p><strong>Recommendation, independent of what August did.</strong> Choose the lightest UI that can render the rack live: a generated static site over the WebSocket bus. It needs no Node toolchain to build, has no dependency closure to audit, and deploys with a copy — which matters in an estate whose whole argument is provenance. If you want a richer application shell later, that is the moment Next.js (MIT, pinned to a release tag, never <code>canary</code>) or a Tauri wrapper enters, after nodejs lands via meta-openembedded. <strong>Acquire now:</strong> nothing. The UI runtime is your generators, CSS, JS, brand assets and browser tests.</p>
+
+        <h3>Symoneural-Gateway</h3>
+        <p><strong>What it is.</strong> Three things share the name and should become one runtime: the HTTP front door (symon-gateway, Rust, your code), the TLS/static edge (Caddy), and workspace licensing (TRON USDT TRC-20: <code>SymoneuralLicence.sol</code>, tronpy CLI, settlement → Ed25519 entitlements — compiled and tested, never deployed, no wallet, no key).</p>
+        <p><strong>Acquire:</strong> Caddy — <span class="url">github.com/caddyserver/caddy</span> (Apache-2.0, Go; OE-Core has Go) · cloudflared — <span class="url">github.com/cloudflare/cloudflared</span> (Apache-2.0) if you take the tunnel route below · tronpy — <span class="url">github.com/andelf/tronpy</span> (MIT) · coincurve — <span class="url">github.com/ofek/coincurve</span> (MIT OR Apache-2.0). symon-gateway's crates arrive through its <code>Cargo.lock</code> as a tracked closure; note from the earlier audit that axum, tokio, hyper, tower are MIT-only while serde, reqwest, rustls are dual-licensed. Also finally build <code>ops/middleware/limiter.wasm</code> — it never was, so the gateway runs in native fallback.</p>
+        <p><strong>Decision.</strong> Cloudflare Tunnel (no open ports, origin certificate) versus DNS-only with Caddy's own ACME as in August. <em>Recommended:</em> tunnel — the DNS is already proxied, and a workstation with no inbound ports is the right posture. Caddy stays behind it for static files and compression.</p>
+
+        <h3>Symoneural-Diffuse</h3>
+        <p><strong>What it is.</strong> The Image and Sigils units: FLUX.1-schnell at q4_k through stable-diffusion.cpp, T5 on the CPU, 4 steps. Studio's renders went through ComfyUI instead.</p>
+        <p><strong>Acquire:</strong> stable-diffusion.cpp — <span class="url">github.com/leejet/stable-diffusion.cpp</span> (MIT) at an exact tag, with the provenance flag that its <code>ggml</code> submodule is <code>leejet/ggml</code>, a personal fork, not <code>ggml-org/ggml</code> · diffusers — <span class="url">github.com/huggingface/diffusers</span> (Apache-2.0) for Studio renders and image LoRA training · rembg — <span class="url">github.com/danielgatis/rembg</span> (MIT) · whisper.cpp — <span class="url">github.com/ggml-org/whisper.cpp</span> (MIT), both currently in virtualenvs. Weights go in the models register, not the estate.</p>
+        <p><strong>Decision.</strong> Keep ComfyUI as an isolated GPL-3 process, or retire it for diffusers. <em>Recommended:</em> retire it. It carried a second torch (2.13 + cu130) and a GPL frontend package; diffusers on Common's torch gives Studio one substrate and removes a licence flag.</p>
+
+        <h3>Symoneural-Studio</h3>
+        <p><strong>What it is.</strong> The training bay. QLoRA via PEFT (NF4, rank 16, <code>paged_adamw_8bit</code>, bf16, loss masked to the assistant turn), TRL for DPO and GRPO on a branch, presets, a VRAM planner, and the 27B path with its four documented traps (vision tower on CPU, embed gather shim, streamed cross-entropy). Plus the agent loop with 26 tools and an MCP server.</p>
+        <p><strong>Acquire:</strong> peft — <span class="url">github.com/huggingface/peft</span> (Apache-2.0) · trl — <span class="url">github.com/huggingface/trl</span> (Apache-2.0) · bitsandbytes — <span class="url">github.com/bitsandbytes-foundation/bitsandbytes</span> (MIT; CUDA kernels must build for sm_120) · datasets — <span class="url">github.com/huggingface/datasets</span> (Apache-2.0). The MCP server moves from fastmcp to the python-sdk already in CLI.</p>
+        <p><strong>Decision.</strong> Which torch. Common holds 2.14; the August trainer ran 2.11 + cu128; FreeToken demands <code>&gt;=2.11,&lt;2.12</code>. <em>Recommended:</em> Common's torch is <em>the</em> torch for the estate — Studio and Diffuse build on it; Adaptive-Fabric either follows it or pins its own and stays a separate runtime. Do not run two.</p>
+
+        <h3>Symoneural-Tune</h3>
+        <p><strong>What it is.</strong> The GPU itself as a managed device: the telemetry the rack footer shows (VRAM, power, temperature, PCIe link), power limits, persistence mode, and your own CUDA kernel work — the NVRTC engine in <code>apps/reinforce/symoneural/</code> (12 <code>__global__</code> kernels, sm_120 targets, 112 tests) and the 34-sample CUDA curriculum with "on this box" results.</p>
+        <p><strong>Acquire:</strong> nvidia-ml-py (BSD-3, NVIDIA's NVML binding; the PyPI sdist is the source) · CuPy — <span class="url">github.com/cupy/cupy</span> (MIT) · cuda-python — <span class="url">github.com/NVIDIA/cuda-python</span> — characterise its licence on acquisition, do not assume. The CUDA Toolkit and driver are proprietary: they enter as <strong>BINARY, REFERENCE</strong> acquisitions under NVIDIA's EULA and the estate records that honestly — Tune can never be fully source-built, and the register should say so.</p>
+        <p><strong>Decision.</strong> Telemetry plus power limits through NVML, or fan curves and clocks too. <em>Recommended:</em> telemetry and power limits now (root via a small privileged helper); fan and clock control needs X11 through <code>libXNVCtrl</code> (MIT, inside the GPL nvidia-settings tree) — defer until there is a display server to justify it.</p>
+
+        <div class="callout">
+          <span class="lbl">Web, which you left off the list</span>
+          <p>workerd and workers-sdk are already acquired. With Cloudflare in front of the domain they have a real job: static and API caching at the edge, and the tunnel's counterpart. <em>Recommended:</em> fold Web into Gateway as its edge half rather than keeping a twelfth runtime for two packages.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ 8 -->
+      <section id="edge">
+        <h2>Edge, domain, security</h2>
+        <p><strong>How symoneural.com reached the box in August.</strong> DNS pointed straight at it; Caddy did ACME TLS on :80/:443, served <code>/var/www/symoneural</code>, and proxied <code>/api /v1 /swagger-ui /api-docs</code> to symon-gateway :8000 and <code>/docs /openapi.json</code> plus the section pages to FastAPI :8800. <code>X-Forwarded-For</code> handling is deliberate: Caddy replaces untrusted inbound headers with the real peer, the gateway appends its hop, and the API keys its rate limiter on the first entry.</p>
+        <p><strong>What changed.</strong> The <code>522</code> in your browser tab is a Cloudflare status — the domain is now proxied through Cloudflare and Cloudflare could not reach the origin. Two consequences: Caddy's HTTP-01 ACME challenge will not complete behind a proxy, and every visitor's first hop is Cloudflare, so the rate-limiter chain in the Caddyfile note ("if a proxy is ever put in front of Caddy, this block must change") is now live.</p>
+        <ol class="steps">
+          <li><strong>Choose the origin posture.</strong> Tunnel (<code>cloudflared</code>, outbound only, no inbound ports, Cloudflare terminates public TLS, origin certificate between Cloudflare and Caddy) — <em>recommended</em> for a workstation. Or DNS-only "grey cloud" and Caddy's ACME as before.</li>
+          <li><strong>Fix the forwarded chain.</strong> With Cloudflare in front, Caddy needs <code>trusted_proxies</code> naming Cloudflare's ranges and should read <code>CF-Connecting-IP</code>; otherwise every visitor shares one rate-limit bucket.</li>
+          <li><strong>Add customer authentication before public exposure.</strong> <code>/api/chat</code>, <code>/api/image</code> and <code>/api/status</code> had no auth; the per-surface <code>X-Sym-Token</code> switches protect operator surfaces only. Accounts (scrypt, SQLite) exist and are routed but "not open yet".</li>
+          <li><strong>Keep licensing off the app store path.</strong> TRON settlement happens on the website; clients only read an entitlement (see Native apps).</li>
+        </ol>
+        <div class="callout warn">
+          <span class="lbl">Done 13 September</span>
+          <p>DMARC added (<code>_dmarc</code>, quarantine, reports to symonsayadmin@); SPF and two Zoho DKIM selectors were already live. Tunnel <code>symoneural-estate</code> created and its token stored; public hostnames and the A-record replacement are the one remaining click, due before Phase 15. The old locally-configured tunnel <code>symoneural</code> is recorded for removal once the new one is Healthy.</p>
+          <span class="lbl" style="margin-top:.8rem">Still to do before anything is exposed again</span>
+          <p><strong>Secrets rotated</strong> — the leaked Spotify credentials are replaced by a new app and secret; the old <code>VLLM_API_KEY</code> and <code>DJ_TOKEN</code> belonged to an engine that no longer runs. <strong>Signing keys regenerated</strong> by the secrets tool (contract-signing, settlement-signing). <strong>Swap</strong>: 32 GB added 13 September; the hard-freeze risk is closed, and concurrent builds in separate build directories are fine (load 12.7 measured with two toolchain builds running). <strong>The DRM proof-of-concept fails open</strong> (<code>_check_local_sandbox_state()</code> returns True) — treat it as absent.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ 9 -->
+      <section id="native">
+        <h2>Native apps — iPhone, Android, Fire TV, Windows, Mac</h2>
+        <p class="intro">The box is the product; every client is thin. Nothing in the rack moves to a phone — what moves is the surface. Your routes for Voice, Sigils and Project were already designed for this: stable JSON, header tokens, no session assumptions. Do it in this order and each step is shippable.</p>
+        <ol class="steps">
+          <li><strong>Progressive Web App first, this week.</strong> A <code>manifest.json</code>, icons from <code>brand/</code>, and a service worker for the shell make the existing site installable on iPhone, Android, Windows, Mac and the Fire TV browser with zero new code. It also forces the API to be the only interface — the discipline everything below relies on.</li>
+          <li><strong>Publish the contract.</strong> FastAPI already emits <code>/openapi.json</code>. Freeze a versioned copy in the repo; every native client is generated from it, never hand-written.</li>
+          <li><strong>iPhone, iPad, Mac — one SwiftUI codebase.</strong> Generate the client with <a href="https://github.com/apple/swift-openapi-generator">Swift OpenAPI Generator</a> (Apple, Apache-2.0). Streaming: SSE tokens via <code>URLSession.bytes(for:)</code>, the rack bus via <code>URLSessionWebSocketTask</code>. Sign in with Apple maps to an entitlement token from your accounts service. Push through APNs when a queued job completes. SwiftUI multiplatform covers macOS natively; Catalyst is not needed.</li>
+          <li><strong>App Store rules that touch this product.</strong> No on-device mining (the Miner screen is control and telemetry only — that is fine). Digital goods must use In-App Purchase, and an app may not link out to an external crypto payment to unlock features: keep TRON licensing on symoneural.com and have the app read the entitlement it already has. Background audio for Remix needs the audio background mode and a real player.</li>
+          <li><strong>Android and Fire TV.</strong> Kotlin + Jetpack Compose, client generated with OpenAPI Generator (kotlin). Fire OS is Android: the same app, with Compose for TV / Leanback and Media3 ExoPlayer for HLS — Streamer and Live are the units that map most naturally to a television. Ship through the Amazon Appstore or sideload for your own devices.</li>
+          <li><strong>Windows.</strong> The PWA is the honest first answer. If a shell is wanted, Tauri (MIT OR Apache-2.0) wraps the same site with a native window and a small footprint; Electron is the heavier alternative.</li>
+          <li><strong>Offline and on-device modes, later.</strong> Apple silicon can run small models locally — llama.cpp with Metal, MLX (MIT), or Core ML conversions — for a degraded mode when the box is unreachable. Keep the 5070 Ti as the place heavy work happens; on-device is a fallback, not a second product.</li>
+        </ol>
+        <div class="callout">
+          <span class="lbl">One rule for all of them</span>
+          <p>A native client never talks to an engine port. It talks to the same <code>/api</code> the website uses, through the same gateway, under the same lock. That is what keeps thirteen units and five platforms one system instead of six.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ plan -->
+      <section id="plan">
+        <h2>The plan — phases 10 to 19</h2>
+        <p class="intro">Build-driven, one milestone per phase, acquisition only inside the phase that builds the component. Every decision below is settled by a rule already on this page, so each phase is handed to the coder with "DECISIONS FOR GARRETT: none".</p>
+        <h3>Cleared on 13 September</h3>
+        <ul class="plain-list">
+          <li><strong>Fortran enabled estate-wide</strong> — own what you ship; Ravencalc needs scipy. Toolchain rebuilt in about ten minutes; sstate backed up (2.4 GB, 255 entries).</li>
+          <li><strong>externalsrc retired.</strong> <code>symoneural-pristine</code> exports a disposable <code>${S}</code> from the acquired tree and refuses to build unless the tree's HEAD equals <code>SRCREV</code>. Pristine is now enforced by the build, not watched for; the negative test fails with <code>PIN MISMATCH</code>. Every earlier build is re-verified under it (the parity rebuild).</li>
+          <li><strong>Acquisition per phase</strong> from <code>pending-acquisitions.json</code>; Phase 9 never runs as a block. stable-diffusion.cpp has no release line and is pinned as a SNAPSHOT (7f410a37).</li>
+          <li><strong>TypeScript SDKs and hls.js</strong> get recipes through the npm handler now that nodejs exists — completing the estate's own method, not a new decision.</li>
+          <li><strong>Rust via source-built LLVM</strong> is the accepted one-time price. Offline compile proven: stratum's <code>do_compile</code> succeeded under <code>BB_NO_NETWORK=1</code> with 102 rlibs. Library-only Rust workspaces install their rlibs into <code>-staticdev</code>; the empty-install check stays.</li>
+          <li><strong>Swap is 32 GB</strong>; concurrent builds in separate build directories are allowed. The old "0 swap" premise cost hours of serialisation and is withdrawn.</li>
+          <li><strong>The :8800 deployment is demo-critical</strong> and read-only for the coder. The estate's DispatchOS comes up beside it on :8801; nothing is cut over until it is proven.</li>
+          <li><strong>Ordering follows each phase's own "Start after" line</strong>, not the paste order: 11-T and 18 may run beside 12 and 13; 14 and 17 follow 12; 16 follows 13; 15 follows 14; 19 follows 15, 16 and 18. GPU proof steps run one at a time through the governor.</li>
+          <li><strong>TypeScript SDKs and workers-sdk are REFERENCE-ONLY</strong> (pnpm <code>catalog:</code> workspaces; no consumer). Target Node ships nowhere; nodejs-native stays only to build the hls.js bundle. wrangler is consumed as the published package.</li>
+          <li><strong>scipy builds with <code>-Duse-pythran=false</code></strong> — a supported configuration, not a patch; pythran stays a DEFERRED acquisition until a RavenCalc benchmark asks for it.</li>
+          <li><strong>pydantic-core is owned</strong> (a runtime dependency of pydantic, which API ships) and acquired in Phase 11. sv2-apps is two recipes, one per cargo workspace. The netlib BLAS grant is declared as <code>LicenseRef-netlib-BLAS</code>. Open decisions: 1 of 13.</li>
+          <li><strong>Method, recorded:</strong> a negative search across meta-symoneural and the phase specs — pasted raw, never summarised — is how "no consumer" is proven; a third live recipetool defect (LICENSE handed up as a set) joins the known-failure list.</li>
+        </ul>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Phase</th><th>Milestone</th><th>Gate</th></tr></thead>
+            <tbody>
+              <tr><td>10 <span class="chip ok">gate 685203e</span></td><td>Curation and pristine by construction; 41 recipes into meta-symoneural; defect classes fixed; Fortran toolchain; 10e closing under P2</td><td>parity held (11/12 + explained); 0 externalsrc; pin test fails correctly; 41/41 clean after cargo</td></tr>
+              <tr><td>11</td><td>RavenCalc 6/6 live from estate binaries on :8801; the current site's units and pages captured, never modified</td><td><code>/api/ravencalc</code> answers from the estate interpreter</td></tr>
+              <tr><td>11-T</td><td>Customer runtimes: DispatchOS as a systemd template instance; first tenant stood up with its own units, tokens, page and port</td><td>tenant rack live on its own port; shared governor honoured</td></tr>
+              <tr><td>12</td><td>CUDA toolkit as an estate recipe; llama-server sm_120; Chat live under the lock; models register with FOUND / FETCHED / ABSENT</td><td>five completions with the lock cycled; estate nvcc in the log</td></tr>
+              <tr><td>13</td><td>torch 2.14 CUDA; HF stack; Studio four acquired; QLoRA round-tripped to Chat</td><td>capability (12, 0); the adapter changes the answer</td></tr>
+              <tr><td>14</td><td>Diffuse acquired and built; Image and Sigils; lock under contention</td><td>ten Chat/Image alternations, zero stale holders</td></tr>
+              <tr><td>15</td><td>Gateway stack; tunnel; auth on public surfaces; SBOM and cve-check on receipts</td><td>rack reached from another network</td></tr>
+              <tr><td>16</td><td>Studio live: training bay, evaluation harness, promotion by config; the 27B adapter evaluated</td><td>an adapter trained from the UI is served</td></tr>
+              <tr><td>17</td><td>Stratum V2 on the LAN; governor daemon with the yield protocol; GPU miner as a separate GPL process</td><td>SV1 accepted; yield under 15 s</td></tr>
+              <tr><td>18</td><td>gstreamer HLS live; Streamer rebuilt; Voice with TTS</td><td>latency under 10 s; ASR during a render</td></tr>
+              <tr><td>19</td><td>Tune on the bus; Remix on the Web API; FreeToken outcome; API v1 frozen; offline proof for the rack; <code>symonbuild</code>; tag estate-v0.1</td><td><code>BB_NO_NETWORK</code> build of the rack passes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ tenants -->
+      <section id="tenants">
+        <h2>Customer runtimes — a DispatchOS per customer</h2>
+        <p class="intro">"Have one built" means a customer gets their own SyMoNeuRaL: a dedicated DispatchOS instance with the units they bought, their own tokens and accounts, their own receipts and page — presented to them as theirs. The sources are already in the estate; what is new is making DispatchOS <em>instantiable</em>.</p>
+        <ul class="plain-list">
+          <li><strong>One template, many instances.</strong> <code>symoneural-dispatch@.service</code> is a systemd template; <code>symoneural-dispatch@donnie</code> reads <code>/etc/symoneural/tenants/donnie/</code> (tenant.json, units.json, api.env, accounts.env) and binds its own loopback port. The binaries are the estate's, shared; only configuration differs.</li>
+          <li><strong>One card, one governor.</strong> Tenants do not get their own GPU lock. Every tenant's GPU units queue on the single estate governor, so two customers' jobs never collide on VRAM and the rack states stay truthful across tenants.</li>
+          <li><strong>Their view, not yours.</strong> A tenant page shows only that tenant's units and receipts, at <code>&lt;name&gt;.symoneural.com</code> or <code>symoneural.com/&lt;name&gt;</code> through Caddy and the gateway. Operator surfaces (Studio, Exp, Rack power, Miner) never appear in a customer's rack.</li>
+          <li><strong>Units decide readiness.</strong> A tenant made of CPU and NET units — RavenCalc, Project, Coder, Streamer — is presentable as soon as Phase 11-T lands. A tenant that includes Chat waits for Phase 12; Image for Phase 14. What the customer asked for sets the date.</li>
+          <li><strong>Secrets per tenant.</strong> <code>symoneural-secrets setup --tenant donnie</code> generates that tenant's tokens and accounts secret under its own directory; nothing is shared between customers.</li>
+        </ul>
+        <h3>Onboarding — request, verify, approve</h3>
+        <p>A customer never receives a password and you never hand one out. The front door is a single field.</p>
+        <ol class="steps">
+          <li>The customer enters an email on the tenant's <code>/account</code> page. The API records a pending request (email, tenant, IP, time) and sends a <strong>verification link</strong> to that address — nothing reaches you yet, so a stranger typing addresses cannot fill your inbox.</li>
+          <li>The customer clicks the link (single-use, 15-minute expiry, token hashed at rest). The request becomes <em>verified</em>.</li>
+          <li>You receive one email at <code>symonsayadmin@symoneural.com</code>: who, which tenant, when, from where — with two signed, single-use links, <strong>Approve</strong> and <strong>Deny</strong>, valid for seven days. The same decision is available from the box: <code>symoneural-cli accounts approve &lt;id&gt;</code>.</li>
+          <li>Approve creates the account inside that tenant's accounts store and emails the customer a sign-in link. Sign-in stays passwordless (a magic link per session); an API key can be issued to the account later for native clients. Deny closes the request; nothing is sent unless you choose to.</li>
+        </ol>
+        <p>Outbound mail goes through <strong>Zoho Mail</strong>, where symoneural.com's mail already lives: <code>smtp.zoho.com:587</code> (STARTTLS) authenticated as your mailbox with a Zoho <em>app password</em>, never the login password. Three Zoho facts govern it: SMTP needs a paid plan (Mail Lite or above — the free plan has no SMTP access); the From address must be the authenticated mailbox or one of its aliases, so <code>noreply@symoneural.com</code> is an alias to add before switching <code>MAIL_FROM</code> to it; and DKIM is enabled per domain in the Zoho admin console (Email Authentication → DKIM), which hands you one TXT record for Cloudflare DNS — SPF is already in place if inbound mail works. The API sends a few messages a day, far under Zoho's limits; if volume ever grows, Zoho's ZeptoMail is the transactional tier and uses the same <code>mail.env</code> shape.</p>
+      </section>
+
+      <!-- ============================================================ secrets -->
+      <section id="secrets">
+        <h2>Secrets and configuration</h2>
+        <p class="intro">One tool provisions everything under <code>/etc/symoneural</code> and writes a manifest of names and fingerprints — never values — that the coder reads without privileges and never has to ask you about. You supply three values; everything else is generated.</p>
+<pre><code>sudo install -m 0755 symoneural-secrets.py /usr/local/sbin/symoneural-secrets
+sudo symoneural-secrets setup        <span class="cm"># asks only: TUNNEL_TOKEN, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET</span>
+symoneural-secrets status            <span class="cm"># what is set, fingerprints only — this is what the coder reads</span>
+sudo symoneural-secrets verify       <span class="cm"># exit 1 on placeholder text or bad permissions</span></code></pre>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>File</th><th>Keys</th><th>Who supplies</th><th>Consumed by</th></tr></thead>
+            <tbody>
+              <tr><td class="m">cloudflared.env</td><td>TUNNEL_TOKEN</td><td>you — Zero Trust → Networks → Tunnels</td><td>Phase 15 named tunnel; the quick tunnel works without it</td></tr>
+              <tr><td class="m">spotify.env</td><td>SPOTIFY_CLIENT_ID · SPOTIFY_CLIENT_SECRET · SPOTIFY_REDIRECT_URI</td><td>you — rotate the leaked secret first</td><td>Phase 19 Remix; the unit stays off until set</td></tr>
+              <tr><td class="m">api.env</td><td>SYMONEURAL_PORT · SYMON_MODELS_DIR · SYM_ACCOUNTS_* · SYM_&lt;SURFACE&gt;_ENABLED / _TOKEN for nine surfaces · SYM_GATEWAY_ENABLED</td><td>generated</td><td>every dispatch unit via <code>EnvironmentFile=</code></td></tr>
+              <tr><td class="m">gateway.env</td><td>SYM_GATEWAY_NETWORK · CONTRACT · BENEFICIARY</td><td>you, later (TRON)</td><td>licensing; off until a contract is deployed</td></tr>
+              <tr><td class="m">mail.env</td><td>SMTP_HOST · SMTP_PORT · SMTP_USER · SMTP_PASS · MAIL_FROM · MAIL_ADMIN · ACCOUNTS_PUBLIC_URL</td><td>you — your Zoho mailbox and a Zoho app password (host and port pre-filled)</td><td>account verification, approval and activation emails</td></tr>
+              <tr><td class="m">miner.env</td><td>SYM_MINING_ENABLED · POOL · WALLET</td><td>you, later</td><td>Phase 17; benchmark only until set</td></tr>
+              <tr><td class="m">licensing/*.key · *.pub</td><td>contract-signing, settlement-signing (ed25519)</td><td>generated — replaces the key lost in <code>/tmp</code></td><td>entitlements; public halves exported into meta-symoneural</td></tr>
+              <tr><td class="m">tenants/&lt;name&gt;/</td><td>tenant.json · units.json · api.env · accounts.env</td><td>generated per customer</td><td><code>symoneural-dispatch@&lt;name&gt;</code></td></tr>
+              <tr><td class="m">manifest.json</td><td>status and fingerprint per key; unset externals; which units stay off</td><td>written by the tool</td><td>the coder, unprivileged</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Status, 13 September 01:30:</strong> provisioned. Tunnel token set; Spotify app <em>SyMoNeuRaL Remix</em> with a rotated secret; Zoho SMTP proven end to end (test message received, DKIM signed); all nine surface tokens, the owner token and both signing keypairs generated; models directory created. Only the four deliberately-unset values remain (TRON contract and beneficiary, miner pool and wallet).</p>
+        <p>Placeholder text such as <code>&lt;paste token&gt;</code> is treated as unset, so the files written by hand on 13 September are harmless; the next <code>setup</code> replaces them. Internal tokens rotate with <code>sudo symoneural-secrets rotate SYM_STUDIO_TOKEN</code>; external ones rotate where they were issued, then <code>setup --force</code>.</p>
+      </section>
+
+      <!-- ============================================================ 10 -->
+      <section id="manuals">
+        <h2>The manuals — the reading path</h2>
+        <p class="intro">Ordered as a path: foundations, then following the coder, then licensing, then the layer decision, then building your own. Every link was opened and checked on 12 September 2026.</p>
+
+        <h3>Foundations</h3>
+        <ul class="entries">
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/overview-manual/index.html">Overview and Concepts Manual</a><span class="tag">overview-manual</span></div><p>Layers, recipes, tasks, sysroots, shared state, the <code>tmp/work</code> tree.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/bitbake.html">BitBake User Manual</a><span class="tag">bitbake</span></div><p>Recipe syntax, variable expansion and overrides, the <code>SRC_URI</code>/<code>SRCREV</code> fetchers, tasks and classes.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/what-i-wish-id-known.html">What I wish I'd known about Yocto Project</a><span class="tag">intro</span></div><p>Short. Saves weeks.</p></li>
+        </ul>
+
+        <h3>Follow the coder day to day</h3>
+        <figure>
+          <div class="pipeline" role="img" aria-label="BitBake task pipeline">
+            <span class="t">do_fetch</span><span class="arrow">→</span><span class="t">do_unpack</span><span class="arrow">→</span><span class="t">do_patch</span><span class="arrow">→</span><span class="t">do_configure</span><span class="arrow">→</span><span class="t hot">do_compile</span><span class="arrow">→</span><span class="t">do_install</span><span class="arrow">→</span><span class="t hot">do_populate_lic</span><span class="arrow">→</span><span class="t">do_package</span>
+          </div>
+          <figcaption>The two highlighted tasks are where Ravencalc failed: <code>do_populate_lic</code> on numpy's licence list, <code>do_compile</code> on recipetool stubs and the missing <code>pkgconfig</code>. Under <code>externalsrc</code> the first three are skipped — your acquired tree stands in for them.</figcaption>
+        </figure>
+        <ul class="entries">
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/ref-manual/devtool-reference.html">devtool Quick Reference</a><span class="tag">ref-manual · §9</span></div><p><code>devtool add / modify / build / reset</code>, and the workspace layer that is your <code>devtool-workspace</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/new-recipe.html">Writing a New Recipe</a><span class="tag">dev-manual · §5</span></div><p>What <code>recipetool</code> generates and why it needs curation.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/devtool.html">Using the devtool command-line tool</a><span class="tag">dev-manual · §20</span></div><p>The full workflow, including <code>devtool upgrade</code> for the day you bump a pin.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/ref-manual/structure.html">Source Directory Structure</a><span class="tag">ref-manual · §5</span></div><p>Decodes the build tree:</p>
+<pre><code>tmp/work/x86-64-v3-oe-linux/symoneural-numpy/2.5.3/
+├── temp/log.do_compile.&lt;pid&gt;    <span class="cm"># what failed, and why</span>
+├── temp/run.do_compile.&lt;pid&gt;    <span class="cm"># the exact script bitbake ran</span>
+└── image/                       <span class="cm"># what do_install produced</span></code></pre></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/debugging.html">Debugging Tools and Techniques</a><span class="tag">dev-manual · §35</span></div><p><code>log.do_*</code>, <code>run.do_*</code>, <code>bitbake -e</code>, <code>-c devshell</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/ref-manual/variables.html">Variables Glossary</a><span class="tag">ref-manual · §14</span></div><p><code>DEPENDS</code>, <code>RDEPENDS</code>, <code>LICENSE</code>, <code>LIC_FILES_CHKSUM</code>, <code>PACKAGECONFIG</code>, <code>SRCREV</code>, <code>S</code>, <code>B</code>, <code>D</code>, <code>EXTERNALSRC</code>, <code>EXTERNALSRC_BUILD</code>, <code>FILES</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/ref-manual/classes.html">Classes</a><span class="tag">ref-manual · §6</span></div><p><code>externalsrc</code>, <code>python_mesonpy</code>, <code>python_hatchling</code>, <code>python_setuptools_build_meta</code>, <code>cython</code>, <code>pkgconfig</code>, <code>cargo</code>, <code>npm</code>, <code>meson</code>, <code>cmake</code>. Read each asking whether it assumes <code>${S}</code> is disposable.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/ref-manual/tasks.html">Tasks</a><span class="tag">ref-manual · §7</span></div><p>What each <code>do_*</code> does and which variables it reads.</p></li>
+        </ul>
+
+        <h3>Licensing and true upstream</h3>
+        <ul class="entries">
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/licenses.html">Working With Licenses</a><span class="tag">dev-manual · §36</span></div><p><code>LICENSE</code> expressions versus <code>LIC_FILES_CHKSUM</code> coverage, manifests, <code>INCOMPATIBLE_LICENSE</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/sbom.html">Creating a Software Bill of Materials</a><span class="tag">dev-manual · §37</span></div><p><code>create-spdx</code> is on by default on master.</p><pre><code>$ bitbake symoneural-openblas -c create_recipe_sbom</code></pre></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/security-manual/vulnerabilities.html">Checking for Vulnerabilities</a><span class="tag">security-manual</span></div><p><code>cve-check</code> — the answer to split CVE tracking on vendored copies.</p></li>
+        </ul>
+
+        <h3>The layer decision and building your own</h3>
+        <ul class="entries">
+          <li><div class="head"><a href="https://layers.openembedded.org/">OpenEmbedded Layer Index</a><span class="tag">layers.openembedded.org</span></div><p>Search <code>pybind11</code>, <code>pythran</code>, <code>nodejs</code>; it names the layer and branch that provides each.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/layers.html">Understanding and Creating Layers</a><span class="tag">dev-manual · §3</span></div><p><code>bblayers.conf</code>, <code>LAYERSERIES_COMPAT</code>, priorities, your own <code>meta-symoneural</code>.</p></li>
+          <li><div class="head"><a href="https://git.openembedded.org/meta-openembedded/">meta-openembedded source</a><span class="tag">cgit</span></div><p><code>meta-python</code> and <code>meta-oe</code>. Recipes only; no distro identity.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/custom-distribution.html">Creating Your Own Distribution</a><span class="tag">dev-manual · §26</span></div><p>SyMoNeuRaL as its own <code>DISTRO</code> instead of poky.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/custom-template-configuration-directory.html">Custom Template Configuration Directory</a><span class="tag">dev-manual · §27</span></div><p><code>TEMPLATECONF</code>: <code>oe-init-build-env</code> starts as SyMoNeuRaL — the <code>symonbuild</code> launcher without a fork.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/libraries.html">Working With Libraries</a><span class="tag">dev-manual · §18</span></div><p>How a <code>.so</code> becomes packages; the route to <code>symoneural-*.so</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/packages.html">Working with Packages</a><span class="tag">dev-manual · §29</span></div><p><code>PACKAGES</code>, <code>FILES</code>, runtime dependencies, feeds, npm packaging.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/customizing-images.html">Customizing Images</a><span class="tag">dev-manual · §4</span></div><p>A runtime as a deliverable image.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/building.html">Building</a><span class="tag">dev-manual · §14</span></div><p>Images, single recipes, <code>populate_sdk</code>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/sdk-manual/index.html">Application Development and SDKs</a><span class="tag">sdk-manual</span></div><p>Build against SyMoNeuRaL headers and libraries, not the host's.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/dev-manual/limiting-resources.html">Limiting the Host Resources Usage</a><span class="tag">dev-manual · §17</span></div><p><code>BB_NUMBER_THREADS</code>, <code>PARALLEL_MAKE</code> — leave the desktop some cores.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/migration-guides/index.html">Release Notes and Migration Guides</a><span class="tag">migration-guides</span></div><p>Read the relevant guide every time a pin moves.</p></li>
+        </ul>
+
+        <h3>Canonical roots and structured learning</h3>
+        <ul class="entries">
+          <li><div class="head"><a class="url" href="https://git.openembedded.org/openembedded-core/">git.openembedded.org/openembedded-core</a><span class="tag">cgit</span></div><p>The authoritative root. <a class="url" href="https://git.openembedded.org/bitbake/">bitbake</a> beside it. <a class="url" href="https://git.openembedded.org/openembedded-core/tree/meta/recipes-devtools/python">recipes-devtools/python</a> holds <code>python3-numpy_2.5.3</code>, the reference that fixed your numpy build.</p></li>
+          <li><div class="head"><a href="https://bootlin.com/doc/training/yocto/yocto-slides.pdf">Bootlin — Yocto Project and OpenEmbedded training slides</a><span class="tag">free · PDF</span></div><p>The standard course, free, updated to Wrynose. <a class="url" href="https://bootlin.com/training/yocto/">bootlin.com/training/yocto</a>.</p></li>
+          <li><div class="head"><a href="https://docs.yoctoproject.org/dev/brief-yoctoprojectqs/index.html">Yocto Project Quick Build</a><span class="tag">quick build</span></div><p>Thirty minutes, once, to watch the whole machine turn.</p></li>
+          <li><div class="head"><span class="plain">Books</span><span class="tag">print</span></div><ul class="plain-list"><li><em>Embedded Linux Systems with the Yocto Project</em> — Rudolf J. Streif. Depth.</li><li><em>Embedded Linux Development Using Yocto Project</em> — Otavio Salvador and Daiane Angolini (Packt). The fast ramp.</li></ul></li>
+          <li><div class="head"><span class="plain">Your own documents</span><span class="tag">repo</span></div><p><code>docs/01-hardware-dossier.md</code>, <code>symoneural-manual.md</code> (8,400 lines), <code>docs/03-playbooks/00–10</code> (hardware math, profiling, engine shoot-out, LoRA/QLoRA/DPO, distillation, KV cache, speculative decoding, RAG, agents, edge), <code>docs/04-cuda-curriculum/</code> (34 samples with results on this box). They are the primary source for every measured number above.</p></li>
+        </ul>
+      </section>
+
+      <footer>
+        Facts from acquisition/*.json at HEAD 3e36972 and the August 2026 deployment snapshot; links checked 12 Sep 2026 against manuals updated Sep 2026.<br>
+        Numbers are measured on the RTX 5070 Ti unless marked vendor. Recommendations are marked as such and are yours to accept or refuse.<br>
+        Handbook revision <strong>v4</strong> — 13 Sep 2026. v1: the reading list. v2: the estate handbook. v3: plan for phases 10–19, customer runtimes and onboarding, secrets and configuration. v4: Phase 10 gate state, real versions in the register, REFERENCE-ONLY rulings, ordering, provisioned secrets and DNS.
+      </footer>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>
