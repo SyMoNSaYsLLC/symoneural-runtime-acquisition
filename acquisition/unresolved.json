@@ -16,14 +16,6 @@
       "resolution": "OWNED BY PHASE 19, deliberately left OPEN. Phase 11's GATE requires \"open decisions at 1 (FreeToken, owned by Phase 19)\", so closing it would make that gate unsatisfiable. Phase 19 S3 tests FreeToken UNMODIFIED on Common's torch 2.14; runs -> Adaptive-Fabric proceeds, does not run -> Adaptive-Fabric DEFERRED WITH EVIDENCE. Outcome recorded either way.",
       "resolved_phase": "10",
       "state": "OPEN-OWNED-BY-PHASE-19"
-    },
-    {
-      "blocks": "Phase 12 12e (models register completeness)",
-      "category": "BUILD-DESIGN",
-      "description": "The prior run built THREE models that are not in acquisition/model-register.json: symon-1.0-32b-q2_k_xl (12,797,352,608 B, unsloth/Qwen3-32B-GGUF), symon-1.0-30b-a3b-q2_k_l (11,331,539,360 B, unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF), and symon-openai-20b (openai/gpt-oss-20b). Recovered from Claude history 2026-09-11; they exist in no other record and are not on disk.",
-      "identifier": "model-register-three-extra",
-      "resolution": "ADD or DROP - Garrett's call, not inferable. Adding costs ~35 GB of fetch and three more licence characterisations (gpt-oss carries its own LICENSE and USAGE_POLICY, distinct from the Apache-2.0 Qwen rows). Dropping means the register describes what the estate actually consumes. NOT ADDED UNILATERALLY: a register listing models nothing consumes is the same class of defect as a LIC_FILES_CHKSUM naming a path the export never contains - a declaration that cannot be satisfied. Phase 12 S4 already serves the 7B by default with the 27B opt-in, so none of the three is needed for the GATE.",
-      "state": "DECISION-FOR-GARRETT"
     }
   ],
   "phase": {
@@ -147,6 +139,15 @@
       "resolution": "REFERENCE-ONLY by ruling. Tree stays ACQUIRED and PINNED at 135f71e9297683e14614d4307081c0273ed0a09c; the recipe retires. EVIDENCE: no DEPENDS or RDEPENDS anywhere names it - the only recipe hits are its own HOMEPAGE and SYMON_TREE, and the single phase-spec hit (phase-15-report.md:113) is incidental prose, not a consumer. CLI's actual client is symoneural-anthropic-sdk-python, built clean at 2817 files. Same rule already applied to mcp typescript-sdk and workers-sdk. CONSEQUENCE: with hls.js dropping target nodejs (RDEPENDS:${PN}:remove), TARGET NODEJS IS REQUIRED BY NOTHING and never enters a shipped image. nodejs-native stays - it is what builds the hls.js bundle. COST ALREADY PAID AND CACHED: target nodejs 9.1 GB / ~1 h, nodejs-native 1.6 GB / ~30 min, both in sstate. Not wasted - the build proved the hand-authored recipe is correct, and sstate makes any future need free.",
       "resolved_phase": "10",
       "state": "REFERENCE-ONLY"
+    },
+    {
+      "blocks": "Phase 12 12e (models register completeness)",
+      "category": "BUILD-DESIGN",
+      "description": "The prior run built THREE models that are not in acquisition/model-register.json: symon-1.0-32b-q2_k_xl (12,797,352,608 B, unsloth/Qwen3-32B-GGUF), symon-1.0-30b-a3b-q2_k_l (11,331,539,360 B, unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF), and symon-openai-20b (openai/gpt-oss-20b). Recovered from Claude history 2026-09-11; they exist in no other record and are not on disk.",
+      "identifier": "model-register-three-extra",
+      "resolution": "DECIDED (DECISIONS.md \u00a74). DROP Qwen3-32B (11.9 GB) and Qwen3-30B-A3B (10.6 GB): no gate consumes them, and a register listing models nothing uses is the same defect class as a LIC_FILES_CHKSUM naming an absent path. ACQUIRE gpt-oss-20b, register it with sha256, but DO NOT REBRAND and DO NOT DEFAULT it. Evidence from this estate's own history: it needs ~12.8 GiB against 7.1 GiB free with Qwen holding 8.3 GiB, so on a 16 GB card it EVICTS chat rather than joining it; the benchmark that would justify it was not base-vs-base (Qwen ran on the production engine with adapter, draft model and -c 65536 -np 2, gpt-oss ran bare on -ngl 99 -c 8192); it carries its own LICENSE and USAGE_POLICY rather than Apache-2.0; and its reasoning_effort control was never varied. Phase 16b settles it by fair measurement.",
+      "resolved_phase": "12",
+      "state": "RESOLVED"
     }
   ],
   "schema": "symoneural-unresolved/2"
