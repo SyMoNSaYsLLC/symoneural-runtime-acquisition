@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+# claude-desktop-fix - repair the Claude Desktop developer configuration.
+#
+# Fixes, all verified against this machine on 2026-09-13:
+#   1. inferenceProvider="gateway" -> http://localhost:9001, where NOTHING listens.
+#      That puts the app in third-party mode, which DISABLES features. The log
+#      proves it: "custom_3p_not_available", /api/account_profile 503.
+#   2. isCoworkSdkDebuggingEnabled - keep false (was writing 2.5 MB/session).
+#   3. Stale mcp-server-ai-local-nvidia.log from 2026-08-19, server long gone.
+#   4. Verify the symoneural MCP server is registered and its script exists.
+#
+# SAFETY
+#   - Dry run by default. Nothing changes without --apply.
+#   - Backs up both config files, timestamped, mode 0600, before any write.
+#   - NEVER reads, prints or copies the API key. json round-trip preserves it.
+#   - Nothing is deleted. The stale log is MOVED to a quarantine directory.
+#   - Refuses to run while Claude Desktop is up, because the app rewrites its
+#     config on exit and would silently undo the edit.
+set -uo pipefail
+
+CFG_DIR="$HOME/.config/Claude"
+APP_CFG="$CFG_DIR/claude_desktop_config.json"
+DEV_CFG="$CFG_DIR/developer_settings.json"
+LOGS="$CFG_DIR/logs"
+QUAR="$HOME/symoneural-archive/claude-desktop-quarantine"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+APPLY=0
+
+for a in "$@"; do
+  case "$a" in
+    --apply) APPLY=1 ;;
+    --dry-run) APPLY=0 ;;
+    -h|--help) sed -n '2,26p' "$0"; exit 0 ;;
+    *) echo "unknown arg: $a" >&2; exit 2 ;;
+  esac
+done
+
+say()  { printf '  %s\n' "$*"; }
+head2(){ printf '\n== %s ==\n' "$*"; }
+[ "$APPLY" -eq 1 ] && MODE="APPLY" || MODE="DRY RUN (pass --apply to make changes)"
+printf '\nclaude-desktop-fix  [%s]\n' "$MODE"
+
+# ---------------------------------------------------------------- preflight
+head2 "preflight"
+if pgrep -f 'claude-desktop|claude_desktop' >/dev/null 2>&1; then
+    say "Claude Desktop is RUNNING."
+    say "Quit it fully before applying - the app rewrites its config on exit"
+    say "and would silently undo these edits."
+    [ "$APPLY" -eq 1 ] && { echo; say "refusing to apply while it is running"; exit 1; }
+    say "(continuing in dry run)"
+else
+    say "Claude Desktop not running - safe to edit"
+fi
+for f in "$APP_CFG" "$DEV_CFG"; do
+    [ -f "$f" ] && say "found $(basename "$f")  mode $(stat -c %a "$f")" \
+                || { say "MISSING: $f"; exit 1; }
+done
+
+# ---------------------------------------------------------------- backup
+head2 "backup"
+if [ "$APPLY" -eq 1 ]; then
+    for f in "$APP_CFG" "$DEV_CFG"; do
+        b="$f.bak-$STAMP"; cp -p "$f" "$b"; chmod 600 "$b"; say "backed up -> $(basename "$b")"
+    done
+else
+    say "would back up both config files as *.bak-$STAMP (mode 0600)"
+fi
+
+# ---------------------------------------------------------------- fix 1 + 2
+head2 "third-party inference / cowork debugging"
+APPLY=$APPLY APP_CFG="$APP_CFG" DEV_CFG="$DEV_CFG" python3 <<'PY'
+import json, os, sys
+
+apply_ = os.environ["APPLY"] == "1"
+dev_p, app_p = os.environ["DEV_CFG"], os.environ["APP_CFG"]
+
+def load(p):
+    with open(p) as f: return json.load(f)
+
+def save(p, d):
+    # preserve mode; write in place so the key never lands in a temp file
+    mode = os.stat(p).st_mode & 0o777
+    with open(p, "w") as f: json.dump(d, f, indent=2); f.write("\n")
+    os.chmod(p, mode)
+
+dev = load(dev_p)
+changed = False
+
+prov = dev.get("inferenceProvider")
+if prov and prov != "anthropic":
+    print(f"  inferenceProvider is {prov!r} -> removing (falls back to default)")
+    print( "    the gateway URL and credential fields are LEFT IN PLACE and untouched,")
+    print( "    so this is reversible by re-adding the one key.")
+    if apply_:
+        dev.pop("inferenceProvider", None); changed = True
+else:
+    print("  inferenceProvider already default - nothing to do")
+
+# never print any value whose key smells like a credential
+for k in dev:
+    if any(s in k.lower() for s in ("key", "token", "secret")):
+        print(f"  {k}: present, PRESERVED, value never read")
+
+if changed and apply_:
+    save(dev_p, dev); print("  developer_settings.json written")
+elif not apply_:
+    print("  (dry run - not written)")
+
+app = load(app_p)
+if app.get("isCoworkSdkDebuggingEnabled") is not False:
+    print("  isCoworkSdkDebuggingEnabled is not false -> setting false")
+    if apply_:
+        app["isCoworkSdkDebuggingEnabled"] = False
+        save(app_p, app); print("  claude_desktop_config.json written")
+else:
+    print("  isCoworkSdkDebuggingEnabled already false")
+PY
+
+# ---------------------------------------------------------------- fix 3
+head2 "stale MCP log"
+STALE="$LOGS/mcp-server-ai-local-nvidia.log"
+if [ -f "$STALE" ]; then
+    say "found $(basename "$STALE")  last written $(date -r "$STALE" '+%Y-%m-%d')"
+    if [ "$APPLY" -eq 1 ]; then
+        mkdir -p "$QUAR"; mv "$STALE" "$QUAR/"
+        say "MOVED (not deleted) -> $QUAR/$(basename "$STALE")"
+    else
+        say "would MOVE to $QUAR/  (never deleted)"
+    fi
+else
+    say "no stale ai-local-nvidia log"
+fi
+
+# ---------------------------------------------------------------- verify
+head2 "verify"
+APP_CFG="$APP_CFG" python3 <<'PY'
+import json, os
+d = json.load(open(os.environ["APP_CFG"]))
+srv = d.get("mcpServers", {})
+print(f"  mcpServers: {list(srv) or 'NONE'}")
+s = srv.get("symoneural")
+if not s:
+    print("  symoneural NOT registered")
+else:
+    args = s.get("args", [])
+    p = args[0] if args else ""
+    print(f"  symoneural -> {s.get('command')} {p}")
+    print("  script exists: " + ("YES" if os.path.isfile(p) else "NO - path is wrong"))
+tf = d.get("preferences", {}).get("localAgentModeTrustedFolders", [])
+bad = [x for x in tf if not os.path.isdir(x)]
+print(f"  trusted folders: {len(tf)}" + (f"  ({len(bad)} do not exist: {bad})" if bad else "  (all exist)"))
+PY
+
+if ss -ltn 2>/dev/null | grep -qE ':9001\b'; then
+    say "port 9001: something IS listening (gateway would have worked)"
+else
+    say "port 9001: nothing listening - confirms the gateway setting was dead"
+fi
+
+if pgrep -f 'symoneural-mcp' >/dev/null 2>&1; then
+    say "symoneural MCP process: RUNNING"
+else
+    say "symoneural MCP process: not running (starts with the app)"
+fi
+
+head2 "next"
+if [ "$APPLY" -eq 1 ]; then
+    say "1. Start Claude Desktop."
+    say "2. Developer -> Open MCP Log File, confirm 'connected successfully'."
+    say "3. Ask for estate_status to prove the tools are live."
+else
+    say "This was a DRY RUN. Nothing changed."
+    say "Quit Claude Desktop, then run:  tools/claude-desktop-fix --apply"
+fi
+echo
