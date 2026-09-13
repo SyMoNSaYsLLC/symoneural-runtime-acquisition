@@ -47,6 +47,44 @@ accounts, they still get Symon. The product must be worth using with one head.
 
 ---
 
+## ONE SESSION — and the fork it creates
+
+All four heads share **one session**: the same conversation, each seeing what the
+others have said. Not four isolated chats stitched together afterwards.
+`tools/modelbus` already implements exactly this — one append-only transcript that
+every participant reads in full.
+
+### The fork: does a head see the others BEFORE it answers?
+
+This is the most consequential design decision in the whole surface, and the two
+options are not interchangeable.
+
+| | Blind round | Shared round |
+|---|---|---|
+| Each head sees | only the question | the question **and** other heads' answers |
+| When they agree it means | **independent confirmation** | possibly just **anchoring** |
+| Failure mode | four confidently wrong answers, no cross-check | one head's error propagates and the rest ratify it |
+| Feels like | a panel of experts polled separately | a meeting where the first speaker sets the frame |
+
+**Agreement is only evidence when the answers were independent.** If Gemini reads
+Claude's answer first and then agrees, that agreement carries almost no
+information — and the surface would display it identically to genuine independent
+confirmation. That is a lie by interface.
+
+### Recommended: blind first round, then shared discussion
+
+1. **Round 1 — blind.** The question goes to every head. No head sees another.
+   Agreement computed here is real, and this is the round the agreement badge
+   reports on.
+2. **Round 2 onward — shared.** Every head now sees the full transcript and may
+   revise, object, or explain. This is where the "all models know what is going
+   on" property lives.
+3. **The badge never moves off round 1.** Later convergence is shown as discussion,
+   never as confirmation.
+
+That preserves both properties Garrett asked for — independent cross-checking
+*and* a shared session — without one quietly destroying the value of the other.
+
 ## THE BLOCKER — verified, not assumed
 
 **The estate serves nothing right now.**
@@ -140,3 +178,6 @@ model gave.
    removes the entire custody problem, at the cost of no server-side history.
 4. Does a **single-head** customer (Symon only) get the same surface, or a
    simpler one?
+5. **Blind first round, or shared from the start?** The recommendation above is
+   blind-then-shared. Shared-from-the-start is simpler to build and makes the
+   agreement badge meaningless; that trade should be made knowingly.
