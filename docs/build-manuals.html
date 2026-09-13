@@ -587,7 +587,24 @@
         <div class="callout">
           <span class="lbl">Where the truth actually lives</span>
           <p><strong>What is done?</strong> <code>generated/phase-NN-report.md</code> — and only where the artifact exists on disk. <strong>What changed, when?</strong> <code>git log</code>. <strong>Does this claim hold?</strong> the MCP tool <code>verify_claim</code>, which checks disk rather than a report.</p>
-          <p><strong>R16 — declared is not done.</strong> An item is done when its artifact exists or a consumer exercised it. A report saying &ldquo;complete&rdquo; is not evidence.</p>
+          <p><strong>R16 — declared is not done.</strong> An item is done only when its artifact exists on disk or a consumer has exercised it, <em>and the report names the evidence</em>: a path, a hash, a <code>bitbake -e</code> line, or the consuming task that succeeded.</p>
+        </div>
+        <h3>The three phantom completions that produced R16</h3>
+        <p>The rule is not abstract. Three items were reported complete having never executed, and the shared property is the point — <strong>not one was caught by a check run at the time. All three were caught by something downstream needing them.</strong></p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Declared done</th><th>What was actually true</th><th>How it surfaced</th></tr></thead>
+            <tbody>
+              <tr><td class="m">Fortran runtime</td><td>never built</td><td>scipy&rsquo;s meson sanity check needed it</td></tr>
+              <tr><td class="m">symoneural.conf</td><td>never loaded — no <code>local.conf</code> sets <code>DISTRO</code>, so nothing in the distro conf has ever applied</td><td>nothing in it ever took effect</td></tr>
+              <tr><td class="m">assertion tasks</td><td>defined, but never bound into the task graph</td><td>the Phase 10 gate looked for their output</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <span class="lbl">The second one is still open</span>
+          <p>Re-verified 13 September against disk: <strong>21 <code>local.conf</code> files across the estate, zero of them set <code>DISTRO</code>.</strong> <code>symoneural.conf</code> remains inert, and Fortran works only because it was also written into <code>local.conf</code> as a stopgap. It is item X2, carried by Phase 11.</p>
+          <p>Recorded here as open rather than quietly fixed, because a rule about unverified completions should show its own outstanding case.</p>
         </div>
       </section>
 
