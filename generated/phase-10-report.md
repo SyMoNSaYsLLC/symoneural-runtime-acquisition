@@ -77,3 +77,26 @@ exists to catch loudly rather than pass quietly.
 Negative-test message, verbatim:
 
 > `PIN MISMATCH. .../hls.js is at e5ff3583... but SRCREV says deadbeef.... Refusing to build a tree that is not at its pinned revision.`
+
+## PHASE 10 — progress
+
+| Item | Status |
+|---|---|
+| 10a Fortran | **DONE** — `FORTRAN BUILD rc=0`, ~10 min wall; sstate rsync'd to `/home/google/sstate-backup`, **2.4 GB / 255 entries** |
+| 10b class | **DONE** — positive export works; **negative test FAILS correctly** with PIN MISMATCH |
+| 10c migration | **38 of 41** recipes in `meta-symoneural/recipes-<runtime>/`; **0 EXTERNALSRC remains** |
+| 10d defects | **DONE** — 0 non-SPDX LICENSE, 0 stubs-beside-inherit, 0 recipes without inherit; R12 empty-`${D}` check added |
+| 10e npm | running — `recipetool` npm handler on the TypeScript SDKs |
+| 10f parity | running |
+
+The 3 not migrated are the TypeScript SDKs, which have no recipe yet — that is 10e's job.
+
+**Defect found by the R12 check itself, before it ever ran a build.** My first task name was
+`do_install_append_symon_empty_check`. Newer bitbake parses `_append` in a variable name as
+the **old override syntax** and rejected every recipe in the layer — 2794 files failed to
+parse. Renamed to `symon_assert_nonempty_d`. A check meant to catch silent failure would
+itself have failed loudly; it did, which is the right direction.
+
+**`sv2-spec` was `LICENSE = "CLOSED"` — a false statement.** Its tree carries
+`License/BSD-3-Clause` and `License/CC0-1.0`. Corrected to `BSD-3-Clause OR CC0-1.0`.
+The files sit in a `License/` **directory**, which is why every scanner missed them.

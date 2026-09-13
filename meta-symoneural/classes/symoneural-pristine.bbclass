@@ -103,7 +103,7 @@ do_patch[noexec] = "1"
 # notices. Recipes that legitimately install nothing set SYMON_ALLOW_EMPTY_D = "1".
 SYMON_ALLOW_EMPTY_D ?= "0"
 
-python do_install_append_symon_empty_check() {
+python symon_assert_nonempty_d() {
     import os
     if d.getVar("SYMON_ALLOW_EMPTY_D") == "1":
         return
@@ -120,4 +120,6 @@ python do_install_append_symon_empty_check() {
                  "recipe genuinely installs nothing, set SYMON_ALLOW_EMPTY_D = \"1\"."
                  % d.getVar("PF"))
 }
-addtask do_install_append_symon_empty_check after do_install before do_populate_sysroot
+# NB: the task name must not contain "_append" - newer bitbake parses that as the
+# old override syntax and rejects the whole layer.
+addtask symon_assert_nonempty_d after do_install before do_populate_sysroot
