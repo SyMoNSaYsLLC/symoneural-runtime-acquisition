@@ -265,7 +265,12 @@ LIC_FILES_CHKSUM = "file://.ci/manywheel/LICENSE;md5=40a70f85c8da9f0d41e5f3b71e3
 SRC_URI = "gitsm://github.com/pytorch/pytorch;protocol=https;branch=release/2.14"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "2.14.0"
 SRCREV = "2b3ec34829036a65cd9d1398ea72a0167dc37470"
 
 # NOTE: recipetool emitted "inherit distutils3"; that class was REMOVED in scarthgap.

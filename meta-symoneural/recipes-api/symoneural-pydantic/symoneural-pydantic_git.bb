@@ -17,7 +17,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=09280955509d1c4ca14bae02f21d49a6 \
 SRC_URI = "git://github.com/pydantic/pydantic;protocol=https;branch=v2.13-fixes"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "2.13.5"
 SRCREV = "001dea020e0809844e5b17666432c9135a976f46"
 
 # NOTE: the following library dependencies are unknown, ignoring: h

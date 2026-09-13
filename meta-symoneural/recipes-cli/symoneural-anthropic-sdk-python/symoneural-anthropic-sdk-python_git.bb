@@ -32,7 +32,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2453eb85b33e21e22cb4fa811c650d75 \
 SRC_URI = "git://github.com/anthropics/anthropic-sdk-python;protocol=https;branch=main"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "1.5.0"
 SRCREV = "eb21a4352015686c30f5759e8c2f02d70f5371e2"
 
 # recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE

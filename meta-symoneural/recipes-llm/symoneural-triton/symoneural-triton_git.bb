@@ -17,7 +17,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=048160ce07d177648e699b6f41a72b9a \
 SRC_URI = "git://github.com/triton-lang/triton;protocol=https;branch=release/3.8.x"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "3.8.0"
 SRCREV = "c01b6774b1865984607d89d89d3a10833de92037"
 
 inherit python_setuptools_build_meta

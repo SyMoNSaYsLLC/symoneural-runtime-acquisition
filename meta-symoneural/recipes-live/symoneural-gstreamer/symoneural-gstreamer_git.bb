@@ -92,7 +92,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=69333daa044cb77e486cc36129f7a770 \
 SRC_URI = "gitsm://gitlab.freedesktop.org/gstreamer/gstreamer.git;protocol=https;branch=1.28"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "1.28.7"
 SRCREV = "070125524a8422e29d3b69a372ed4f62fd343ffa"
 
 # NOTE: no Makefile found, unable to determine what needs to be done

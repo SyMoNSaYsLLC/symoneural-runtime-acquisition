@@ -33,7 +33,12 @@ LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=86d3f3a95c324c9479bd8986968f4327 \
 SRC_URI = "git://github.com/stratum-mining/sv2-apps;protocol=https;branch=release/v0.7.0"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "0.7.0"
 SRCREV = "d7d556d1a3c7e1c26dfccd076b491a38c038a5e0"
 
 # NOTE: no Makefile found, unable to determine what needs to be done

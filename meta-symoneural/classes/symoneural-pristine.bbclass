@@ -26,10 +26,23 @@ S = "${SYMON_PRISTINE_DIR}"
 B = "${WORKDIR}/build"
 
 do_unpack[dirs] = "${WORKDIR}"
-do_unpack[cleandirs] = "${SYMON_PRISTINE_DIR}"
-do_unpack[network] = "0"
 
-python do_unpack() {
+# cleandirs belongs to the PREFUNC, not to do_unpack. A task's cleandirs flag is
+# applied when that task runs, which is AFTER its prefuncs - so leaving it on
+# do_unpack deleted the export that symon_export_pristine had just written, and
+# do_populate_lic then failed with "LIC_FILES_CHKSUM points to an invalid file"
+# because ${S} was empty. It only worked before because the export WAS do_unpack.
+symon_export_pristine[cleandirs] = "${SYMON_PRISTINE_DIR}"
+
+# The export runs BEFORE the stock unpack rather than replacing it. Replacing it
+# was a real defect: it meant no SRC_URI entry was ever unpacked, so cargo's
+# crate:// closure landed nowhere and `sources/cargo_home/bitbake` stayed EMPTY.
+# stratum then failed with "no matching package named `bitcoin` found" against a
+# vendor directory containing 0 crates. Recipes with no extra SRC_URI never
+# noticed, which is exactly why it went undetected.
+do_unpack[prefuncs] += "symon_export_pristine"
+
+python symon_export_pristine() {
     import subprocess, os
 
     tree = d.getVar("SYMON_TREE")
@@ -91,7 +104,17 @@ python do_unpack() {
             % (pf, want[:12], n, dest))
 }
 
-# There is nothing to fetch: the tree is already acquired and verified.
+# The upstream git:// URI is redundant - SYMON_TREE already holds that source,
+# verified against SRCREV. Strip it at parse time so do_fetch has no reason to
+# touch the network for it. Every OTHER SRC_URI entry (crate://, file://, extra
+# tarballs) is left alone and fetched normally: that is the whole point.
+python () {
+    uris = (d.getVar("SRC_URI") or "").split()
+    keep = [u for u in uris if not u.startswith(("git://", "gitsm://"))]
+    if len(keep) != len(uris):
+        d.setVar("SRC_URI", " ".join(keep))
+}
+
 # A `git archive` export carries NO .git directory - that is the whole point of
 # the class, and it is what makes ${S} disposable. But setuptools-scm, hatch-vcs
 # and vcs-versioning all derive the package version by asking git, so under this
@@ -104,7 +127,22 @@ python do_unpack() {
 # Harmless for recipes that do not use setuptools-scm - nothing reads it.
 export SETUPTOOLS_SCM_PRETEND_VERSION = "${PV}"
 
-do_fetch[noexec] = "1"
+# Same defect, different backend. VCS-derived versioning is a whole family, and
+# each member has its own bypass. Found so far by building:
+#   setuptools-scm / hatch-vcs  -> SETUPTOOLS_SCM_PRETEND_VERSION  (mpmath, vllm)
+#   uv-dynamic-versioning       -> UV_DYNAMIC_VERSIONING_BYPASS    (mcp-python-sdk)
+# mcp-python-sdk failed with:
+#   RuntimeError: Error getting the version from source `uv-dynamic-versioning`:
+#   This does not appear to be a Git project
+# The variable name is read straight from the plugin
+# (uv_dynamic_versioning/main.py:30), not guessed.
+#
+# If a future recipe fails with some third backend asking git for a version, add
+# its bypass here rather than to the recipe - the cause is the class, so the fix
+# belongs to the class.
+export UV_DYNAMIC_VERSIONING_BYPASS = "${PV}"
+
+# do_fetch is NOT noexec - see the SRC_URI stripping above.
 do_patch[noexec] = "1"
 
 # R12: a recipe that installs NOTHING must fail, not pass quietly.

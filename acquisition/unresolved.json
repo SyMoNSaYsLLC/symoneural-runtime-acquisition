@@ -92,9 +92,9 @@
       "category": "VERIFICATION",
       "description": "No component demonstrated to compile with no network after bitbake -c fetch. Enumeration is not proof.",
       "identifier": "offline-compile",
-      "resolution": "RESOLVED by Phase 5. symoneural-stratum: `--runall=fetch` rc=0, then `BB_NO_NETWORK=1 bitbake symoneural-stratum` -> do_compile Succeeded, 0 NetworkAccess denials, 102 rlibs produced, across rust 1.98.1 + LLVM 23 + 233 crate:// entries. Proof by execution, not by enumeration. (do_install failed separately on 'Did not find anything to install' - stratum is a library workspace with no bin targets; that is the open pydantic-core-class packaging question, not a network question.)",
+      "resolution": "PROVEN UNDER EXTERNALSRC ONLY - not yet reproduced under symoneural-pristine. Phase 5, symoneural-stratum: `--runall=fetch` rc=0, then `BB_NO_NETWORK=1 bitbake symoneural-stratum` -> do_compile Succeeded, 0 NetworkAccess denials, 102 rlibs, across rust 1.98.1 + LLVM 23 + 233 crate:// entries. That run predates symoneural-pristine. The class as first written set do_fetch[noexec]=1, which silently prevented the crate:// closure from being fetched at all (empty sources/cargo_home/bitbake; stratum failed with 'no matching package named bitcoin'). Fixed by stripping only the upstream git:// URI at parse time and letting do_fetch run. RE-PROOF REQUIRED under the class before any release claim - do not cite the Phase 5 numbers as current.",
       "resolved_phase": "10",
-      "state": "RESOLVED"
+      "state": "RESOLVED-SCOPED"
     }
   ],
   "schema": "symoneural-unresolved/2"

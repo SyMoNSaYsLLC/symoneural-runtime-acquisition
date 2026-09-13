@@ -24,7 +24,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8c22b1b3074f826155dbc85e6a0d4d1f"
 SRC_URI = "git://github.com/video-dev/hls.js;protocol=https;branch=master"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "1.7.3"
 SRCREV = "e5ff3583965e3af16c4a4b4d2b5f7bd1ffb5b7de"
 
 # NOTE: no Makefile found, unable to determine what needs to be done

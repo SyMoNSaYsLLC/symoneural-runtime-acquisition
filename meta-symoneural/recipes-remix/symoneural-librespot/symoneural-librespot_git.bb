@@ -34,7 +34,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=98b2b0c9a6081259c441045ca68b640f \
 SRC_URI = "git://github.com/librespot-org/librespot;protocol=https;branch=dev"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "0.8.0"
 SRCREV = "d36f9f1907e8cc9d68a93f8ebc6b627b1bf7267d"
 
 # NOTE: no Makefile found, unable to determine what needs to be done

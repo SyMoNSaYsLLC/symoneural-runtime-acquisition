@@ -44,7 +44,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=223b26b3c1143120c87e2b13111d3e99 \
 SRC_URI = "gitsm://github.com/ggml-org/llama.cpp;protocol=https;branch=master"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "0.4.0"
 SRCREV = "5266f24da75dc449bd56cbed7addb9c8e4a6a73e"
 
 # NOTE: spec file indicates the license may be "MIT"

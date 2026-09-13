@@ -24,7 +24,12 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=1c1f23b073da202e1f4f9e426490210c"
 SRC_URI = "git://github.com/encode/httpcore;protocol=https;branch=master"
 
 # Modify these as desired
-PV = "1.0+git"
+# PV is the real upstream release tag at SRCREV, not recipetool's "1.0+git"
+# placeholder. The placeholder is not merely cosmetic: it names every .ipk
+# <pkg>_1.0+git-r0, and symoneural-pristine exports it as the wheel version
+# via *_PRETEND_VERSION/*_BYPASS, where uv-dynamic-versioning parsed it and
+# died with IndexError on int(parts[index]).
+PV = "1.0.9"
 SRCREV = "98209758cc14e1a5f966fe1dfdc1064b94055d8c"
 
 # recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE

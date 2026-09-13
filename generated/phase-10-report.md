@@ -1,5 +1,52 @@
 # SyMoNeuRaL Phase 10 Report
 
+## ITEM LEDGER — resume from the first item not marked DONE
+
+Per COMMON/STATE. Appended after every item; this file is the report.
+
+| Item | State | Evidence |
+|---|---|---|
+| 10a Fortran toolchain | **DONE** | rc=0, ~10 min, sstate rsync'd 2.4 GB / 255 entries (R10) |
+| 10b symoneural-pristine class | **DONE** | positive + negative test; PIN MISMATCH fatal fires |
+| 10c Recipes -> meta-symoneural | **DONE** | 38/38 migrated, 0 left in any workspace |
+| 10d Six defect classes | **DONE** | 0 non-SPDX, 0 stubs-beside-inherit, 0 missing inherit, R12 task added |
+| 10e npm recipes (4) | **IN PROGRESS** | blocked on nodejs-native (V8 compiling in CLI cooker) |
+| 10f Parity rebuild | **10 of 12 DONE** | Ravencalc rc=0, API rc=0; CLI 2 pending on 10e's nodejs |
+| R11 zero externalsrc | **DONE** | 0 in any parsed layer, all 9 runtimes |
+| R12' stratum rlibs -> staticdev | **IN PROGRESS** | CARGO_INSTALL_LIBRARIES set; 16 rlibs; building |
+| R6' threads per build dir | **DONE** | BB=10 / PM=-j 12 on all 10 build dirs (Adaptive-Fabric was unset) |
+| Trees clean --ignored | **DONE** | 41/41 during a live build, 41/41 after |
+| Control-plane verifier | **DONE** | CONTROL-PLANE PASS, ESTATE-COMPLETENESS PASS |
+| Phase 10 GATE | **OPEN** | waits on 10e + CLI parity |
+
+### DECISIONS FOR GARRETT
+
+1. **sv2-apps: "one recipe per workspace, four recipes" does not match the tree.**
+   Advisor Item 2 says both. On disk there are exactly **two** cargo workspaces,
+   holding **four** binary packages between them:
+
+   | workspace | members |
+   |---|---|
+   | `miner-apps/` | `jd-client`, `translator` |
+   | `pool-apps/` | `jd-server`, `pool` |
+
+   So "one per workspace" gives 2 and "four recipes" gives 4. Both readings are
+   buildable. Two is the technically cheaper one: a cargo workspace shares a
+   single `Cargo.lock`, so one recipe per workspace means one generated
+   `-crates.inc` closure each, whereas four recipes duplicate that closure twice
+   over and must be kept in lockstep by hand. Four gives independently
+   installable binaries and matches the literal instruction.
+   **Not acted on** — it is Crypto/Phase-11 work and does not block the Phase 10
+   gate. Recorded rather than guessed because the two readings produce materially
+   different recipe sets.
+2. **`--skip-dependency-check` as policy.** Used on scipy's PEP-517 build to get
+   past a transitive closure gap. Works, but it disables the backend's own
+   dependency assertion estate-wide if adopted as a pattern.
+3. **`pydantic-core` ownership** — still open from the earlier phase.
+4. **mpmath tests no longer installed** (192 -> 115). Correct per upstream
+   packaging, documented below. Flagging only because anything that ran
+   `mpmath.tests` implicitly will now fail to import.
+
 ## DECISIONS CLEARED — actioned
 
 | # | Decision | Action taken |
@@ -103,6 +150,15 @@ The files sit in a `License/` **directory**, which is why every scanner missed t
 
 ## PHASE 10f — PARITY REBUILD
 
+> **SUPERSEDED — the table below is NOT current evidence.** These counts were
+> produced under the first version of `symoneural-pristine`. That class has since
+> changed three times: `do_fetch` no longer noexec (it was silently starving every
+> `crate://`/npm SRC_URI), the export became a `do_unpack` prefunc instead of
+> replacing the task, and `cleandirs` moved onto the prefunc (on `do_unpack` it
+> deleted the export before `do_populate_lic` ran). Parity must be re-captured
+> under the fixed class before the gate. Kept for the findings, not the numbers.
+
+
 Rebuilt every recipe built so far under `symoneural-pristine`, in all three
 runtimes that have builds. `FILES` counts regular files in `${D}` (the baseline
 definition — symlinks excluded).
@@ -188,3 +244,155 @@ so report-agreement did not flip.
 `Found duplicated BBFILE_COLLECTIONS 'workspacelayer'`. This killed the first 10e
 run; Symoneural-Crypto carried the same latent conflict. Both cleared: all nine
 runtimes now reference `meta-symoneural` only.
+
+## R13 / R15 — SECRETS AND OWNER (read-only; no value was read or written)
+
+`symoneural-secrets` is installed at `/usr/local/sbin/symoneural-secrets` and has
+provisioned `/etc/symoneural` (`schema symoneural-secrets/1`, updated
+2026-09-13T01:20:02-0400). Read `manifest.json` only — names, `kind` and `status`.
+No `.env` file was opened; all six are `0600 root`.
+
+**44 keys across 6 files — 40 `set`, 4 `unset`.** By kind: 24 `config`,
+11 `internal`, 9 `external`. `suspect: []`.
+
+Per R13, the units configured **OFF** because their secret is unset:
+
+| Unset key | Unit held off |
+|---|---|
+| `SYM_GATEWAY_BENEFICIARY` | TRON licensing |
+| `SYM_GATEWAY_CONTRACT` | TRON licensing |
+| `SYM_MINER_POOL` | real mining (benchmark still works) |
+| `SYM_MINER_WALLET` | real mining |
+
+The manifest's own `units_that_stay_off_until_set` additionally lists five keys
+that are `set` but gate optional features (`SMTP_PASS`, `SMTP_USER`,
+`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `TUNNEL_TOKEN`). All five are
+currently `set`, so those units are **not** held off. Only the four above are.
+
+**R15 owner:** `SYM_OWNER_EMAIL` and `SYM_OWNER_TOKEN` are both present in
+`api.env` and both `status: set`. `SYM_OWNER_EMAIL` shares a fingerprint with
+`MAIL_ADMIN`, `MAIL_FROM` and `SMTP_USER`, i.e. one identity across all four.
+Nothing further is needed from a human for the accounts service to create the
+owner account on first start.
+
+Two signing keypairs are provisioned, public halves only in the manifest:
+`contract-signing` (`5ee48936edd69d74`) and `settlement-signing` (`8f753c19fdfbd141`).
+
+**`SYMON_MODELS_DIR` = `/home/google/symoneural-models` exists** with
+`hf/ image/ llm/ rembg/ whisper/` — **all empty, 24K total**. The MODELS-ABSENT
+finding recorded earlier in this report still stands; no weights are on disk.
+
+## CLASS DEFECTS FOUND BY BUILDING — the export has no `.git`, and that is load-bearing
+
+Four distinct defects, all one root cause: `symoneural-pristine` exports with
+`git archive HEAD`, so `${S}` has **no `.git`** and **no SRC_URI is unpacked into
+it**. Under externalsrc both facts were accidentally untrue, so nothing had ever
+exercised these paths. Each was found by a build, not by inspection.
+
+| # | Symptom | Root cause | Fix (all in the class) |
+|---|---|---|---|
+| 1 | `LookupError: setuptools-scm was unable to detect version` (mpmath) | setuptools-scm asks git for the version | `export SETUPTOOLS_SCM_PRETEND_VERSION = "${PV}"` |
+| 2 | `no matching package named 'bitcoin'`, vendor dir **0 crates** (stratum) | `do_fetch[noexec]="1"` starved *every* SRC_URI, not just the upstream git one | strip only `git://`/`gitsm://` at parse; let `do_fetch` run |
+| 3 | `LIC_FILES_CHKSUM points to an invalid file` x45, `${S}` empty | `do_unpack[cleandirs]` runs **after** prefuncs, deleting the export | move flag to `symon_export_pristine[cleandirs]` |
+| 4 | `Error getting the version from source uv-dynamic-versioning: This does not appear to be a Git project` (mcp-python-sdk) | a *second* VCS-versioning backend | `export UV_DYNAMIC_VERSIONING_BYPASS = "${PV}"` |
+
+Defect 2 is the one worth remembering. `do_fetch[noexec] = "1"` was written on the
+reasoning "the tree is already acquired, there is nothing to fetch." True of the
+upstream URI, false of everything else — it silently starved cargo's 233
+`crate://` entries and would have done the same to every npm recipe. The 37
+recipes with no extra SRC_URI could never have exposed it. Only building a cargo
+recipe did. Vendored crates went **0 -> 183** after the fix.
+
+Defect 4 shows the family is open-ended: VCS-derived versioning is a *class* of
+backend, not one tool. Both bypass variable names were read from the installed
+plugin source, not guessed (`uv_dynamic_versioning/main.py:30`). A third backend
+will need a third line, and it belongs in the class, because the cause is the class.
+
+### Consequence for evidence already recorded
+
+The Phase 10f parity table above is SUPERSEDED: it was captured under the class
+*before* defects 2-4 were fixed. `offline-compile` in `acquisition/unresolved.json`
+was likewise re-stated as **RESOLVED-SCOPED** — its proof (102 rlibs, 0
+NetworkAccess denials) is real but was produced under externalsrc, and defect 2
+means it had never been reproduced under the class. Re-proof is required before
+any release claim.
+
+## PHASE 10f — PARITY, RE-CAPTURED UNDER THE FIXED CLASS
+
+Supersedes the earlier table. All four runtimes rebuilt after defects 1-4 and the
+PV correction. `bitbake -k` exit codes: **Ravencalc rc=0, API rc=0, CLI rc=0,
+Crypto rc=0 — 0 ERRORs in all four.**
+
+| Runtime | Recipe | before | after | .so | Verdict |
+|---|---|---|---|---|---|
+| Ravencalc | symoneural-mpmath | 192 | 115 | 0 | EXPLAINED DELTA (see above) |
+| Ravencalc | symoneural-numpy | 1330 | **1330** | 19 | match |
+| Ravencalc | symoneural-openblas | 14 | **14** | 1 | match |
+| Ravencalc | symoneural-sympy | 3103 | **3103** | 0 | match |
+| API | symoneural-fastapi | 109 | **109** | 0 | match |
+| API | symoneural-httpcore | 66 | **66** | 0 | match |
+| API | symoneural-httpx | 52 | **52** | 0 | match |
+| API | symoneural-pydantic | 215 | **215** | 0 | match |
+| API | symoneural-starlette | 74 | **74** | 0 | match |
+| API | symoneural-uvicorn | 90 | **90** | 0 | match |
+| CLI | symoneural-anthropic-sdk-python | 2817 | **2817** | 0 | match |
+| CLI | symoneural-mcp-python-sdk | 252 | **252** | 0 | match |
+| Crypto | symoneural-stratum | (empty ${D}) | **16** | 0 | R12' SATISFIED |
+
+**11 of 12 identical; the twelfth is the documented mpmath case.**
+
+### R12' — stratum installs a real artifact
+
+16 rlibs into `/usr/lib/rustlib/x86_64-oe-linux-gnu/lib/`, packaged
+`${PN}-staticdev`: both workspace packages (`libstratum_core.rlib`,
+`libstratum_translation.rlib`) plus 14 SV2 protocol libraries
+(codec, framing, mining, noise, channels, handlers, parsers, ...).
+**0 host `.so` leaked** into the target package.
+
+### DEFECT — every package in the estate was versioned `1.0+git`
+
+23 recipes carried recipetool's placeholder `PV = "1.0+git"`. Not cosmetic:
+
+* every `.ipk` was named `<pkg>_1.0+git-r0`, so version-based dependency
+  resolution across the estate was meaningless;
+* `symoneural-pristine` exports `PV` as the wheel version, so the placeholder was
+  written into Python package metadata. `uv-dynamic-versioning` parsed
+  `"1.0+git"` and died on `int(parts[index])` -> `IndexError`. mpmath only ever
+  worked because it happened to carry a real `PV`.
+
+Fixed by deriving `PV` from the release tag at each pinned SHA. **22 of 23
+resolved**, all matching the pins already on record. Two needed care - a
+first-match pick would have got both wrong:
+
+| Recipe | Tags at the SAME commit | Correct PV |
+|---|---|---|
+| `symoneural-pydantic` | `core-v2.46.5`, `v2.13.5` | **2.13.5** |
+| `symoneural-llama-cpp` | `b10809`, `v0.4.0` | **0.4.0** |
+
+Selection is by version *shape* (`^v?\d+(\.\d+)*$`, shortest match), not by
+position. `symoneural-sv2-spec` is the single skip: no version tag exists at its
+SHA, so there is nothing to derive and none was invented.
+
+### R1 VIOLATION FOUND AND REVERSED — by the cleanliness check, as designed
+
+`Symoneural-CLI/src/anthropic/source/anthropic-sdk-typescript` was **dirty**:
+
+```
+?? npm-shrinkwrap.json.copy
+!! node_modules/            (3.0 MB)
+!! npm-shrinkwrap.json
+```
+
+Residue from the FIRST 10e attempt, which handed recipetool the acquired tree
+directly. `create_npm.py:_generate_shrinkwrap()` runs `npm shrinkwrap` **inside
+the srctree it is given**, so it wrote into pristine upstream source. This is
+precisely the hazard R1 exists to prevent, and it is why 10e was redesigned to
+export a disposable copy first and only then hand that to recipetool.
+
+Verified before touching anything: **no tracked file was altered** (`git status`
+showed only `??`/`!!` entries) and HEAD was still exactly
+`135f71e9297683e14614d4307081c0273ed0a09c`, the pinned SHA. The three added paths
+were removed; the tree is pristine again.
+
+**41/41 trees clean under `--ignored` after a cargo build** — cargo writes
+`.cargo/` and `target/` and had never been exercised against an export until now.
