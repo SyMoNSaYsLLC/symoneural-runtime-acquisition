@@ -1,0 +1,85 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Detect companion line
+        id: detect
+        env:
+          BODY_NEW: ${{ github.event.pull_request.body }}
+          BODY_OLD: ${{ github.event.changes.body.from || '' }}
+          ACTION: ${{ github.event.action }}
+        run: |
+          OLD_COMPANION=$(printf "%s" "$BODY_OLD" \
+            | grep -Eo 'companion https://github\.com/stratum-mining/sv2-apps/pull/[0-9]+' \
+            || true)
+
+          NEW_COMPANION=$(printf "%s" "$BODY_NEW" \
+            | grep -Eo 'companion https://github\.com/stratum-mining/sv2-apps/pull/[0-9]+' \
+            || true)
+
+          if [ "$ACTION" = "edited" ]; then
+            if [ "$OLD_COMPANION" != "$NEW_COMPANION" ]; then
+              echo "should_run_integration_test=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "should_run_integration_test=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "should_run_integration_test=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          COMPANION_NUM=$(printf "%s" "$NEW_COMPANION" | grep -Eo '[0-9]+$' || true)
+          echo "COMPANION_PR_NUMBER=${COMPANION_NUM:-}" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.85
+        id: toolchain
+
+      # NOTE: A repo-local `rust-toolchain.toml` is still respected by rustup.
+      # `dtolnay/rust-toolchain` installs the requested toolchain but does not
+      # automatically override it.
+      - name: Override toolchain
+        run: |
+          rustup override set ${{ steps.toolchain.outputs.name }}
+
+      - name: Install capnproto (Ubuntu)
+        if: steps.detect.outputs.should_run_integration_test == 'true' && matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y capnproto libcapnp-dev
+
+      - name: Install capnproto (macOS)
+        if: steps.detect.outputs.should_run_integration_test == 'true' && matrix.os == 'macos-latest'
+        run: |
+          brew install capnp
+
+      # Install cargo-binstall so tool installs below use prebuilt binaries.
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.20.0
+        with:
+          version: "1.20.0"
+
+      # Install cargo-nextest via cargo-binstall (no source build).
+      # Keep quick-install disabled to only use upstream release artifacts.
+      - name: Install cargo-nextest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: cargo binstall --no-confirm --disable-telemetry --disable-strategies quick-install --locked cargo-nextest@0.9.100
+
+      - name: Run Integration Tests Script
+        if: steps.detect.outputs.should_run_integration_test == 'true'
+        run: ./scripts/run-integration-tests.sh

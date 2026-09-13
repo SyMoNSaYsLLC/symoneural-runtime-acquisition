@@ -1,0 +1,508 @@
+// Provides a flexible container for managing either owned or mutable references to byte arrays.
+//
+// # Overview
+// Defines the `Inner` enum to manage both mutable references to byte slices and owned vectors
+// (`Vec<u8>`). Accommodates both fixed-size and variable-size data using const generics, offering
+// control over size and header length constraints.
+//
+// # `Inner` Enum
+// The `Inner` enum has two variants for data management:
+// - `Ref(&'a mut [u8])`: A mutable reference to a byte slice, allowing in-place data modification.
+// - `Owned(Vec<u8>)`: An owned byte vector, providing full control over data and supporting move
+//   semantics.
+//
+// ## Const Parameters
+// Configured using const generics for the following constraints:
+// - `ISFIXED`: Indicates whether the data has a fixed size.
+// - `SIZE`: Specifies the size when `ISFIXED` is true.
+// - `HEADERSIZE`: Defines the size of the header, useful for variable-size data with a prefix
+//   length.
+// - `MAXSIZE`: Limits the maximum allowable size of the data.
+//
+// # Usage
+// `Inner` offers several methods for data manipulation, including:
+// - `as_bytes()` and `as_mut_bytes()`: Provide immutable or mutable access to the data.
+// - `to_owned_bytes()` and `into_bytes()`: Return owned payload bytes.
+// - `len()` and `is_empty()`: Inspect payload size directly.
+// - `expected_length(data: &[u8])`: Computes the expected length, validating it against
+//   constraints.
+// - `get_header()`: Returns the data's header based on `HEADERSIZE`.
+//
+// # Implementations
+// The `Inner` enum implements `PartialEq`, `Eq`, `GetSize`, `SizeHint`, and `Sv2DataType` traits,
+// enabling buffer size calculations, reading, and writing to byte slices.
+//
+// # Error Handling
+// Methods return `Error` types when data exceeds size limits or deviates from the configuration,
+// ensuring compliance with defined constraints.
+use crate::{
+    codec::{GetSize, SizeHint},
+    datatypes::Sv2DataType,
+    Error,
+};
+
+use alloc::vec::Vec;
+use core::convert::{TryFrom, TryInto};
+#[cfg(not(feature = "no_std"))]
+use std::io::{Error as E, Read, Write};
+
+// The `Inner` enum represents a flexible container for managing both reference to mutable
+// slices and owned bytes arrays (`Vec<u8>`). This design allows the container to either own
+// its data or simply reference existing mutable data. It uses const generics to differentiate
+// between fixed-size and variable-size data, as well as to specify key size-related parameters.
+//
+// It has two variants:
+// - `Ref(&'a mut [u8])`: A mutable reference to an external byte slice.
+// - `Owned (Vec<u8>)`: A vector that owns its data, enabling dynamic ownership.
+//
+// The const parameters that govern the behavior of this enum are:
+//  - `ISFIXED`: A boolean indicating whether the data has a fixed size.
+//  - `SIZE`: The size of the data if `ISFIXED` is true.
+//  - `HEADERSIZE`: The size of the header, which is used for types that require a prefix to
+//    describe the content's length.
+//  - `MAXSIZE`: The maximum allowable size for the data.
+
+#[derive(Debug)]
+pub enum Inner<
+    'a,
+    const ISFIXED: bool,
+    const SIZE: usize,
+    const HEADERSIZE: usize,
+    const MAXSIZE: usize,
+> {
+    Ref(&'a mut [u8]),
+    Owned(Vec<u8>),
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    PartialEq for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    // Provides equality comparison between two `Inner` instances by checking the equality
+    // of their data, regardless of whether they are references or owned vectors.
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Inner::Ref(b), Inner::Owned(a)) => *b == &a[..],
+            (Inner::Owned(b), Inner::Ref(a)) => *a == &b[..],
+            (Inner::Owned(b), Inner::Owned(a)) => b == a,
+            (Inner::Ref(b), Inner::Ref(a)) => b == a,
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize> Eq
+    for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    // Calculates the expected length of the data based on the type's parameters (fixed-size
+    // or variable-size). It checks if the length conforms to the specified constraints like
+    // `SIZE`, `MAXSIZE`, and `HEADERSIZE`, returning the length or an error if the data
+    // exceeds the limits.
+    fn expected_length(data: &[u8]) -> Result<usize, Error> {
+        match ISFIXED {
+            true => Ok(Self::expected_length_fixed()),
+            false => Self::expected_length_variable(data),
+        }
+    }
+
+    // For fixed-size data, the expected length is always `SIZE`.
+    fn expected_length_fixed() -> usize {
+        SIZE
+    }
+
+    // For variable-size data, this method calculates the size based on the header.
+    // The header describes the length of the data, and this method ensures the data
+    // is correctly sized relative to the header information.
+    fn expected_length_variable(data: &[u8]) -> Result<usize, Error> {
+        if data.len() >= HEADERSIZE {
+            let payload_len = match HEADERSIZE {
+                1 => Ok(data[0] as usize),
+                2 => Ok(u16::from_le_bytes([data[0], data[1]]) as usize),
+                3 => Ok(u32::from_le_bytes([data[0], data[1], data[2], 0]) as usize),
+                // HEADERSIZE for Sv2 datatypes is at maximum 3 bytes
+                // When HEADERSIZE is 0 datatypes ISFIXED only exception is Bytes datatypes but is
+                // not used
+                _ => unreachable!(),
+            };
+            payload_len.and_then(|payload_len| {
+                if payload_len <= MAXSIZE {
+                    Ok(payload_len + HEADERSIZE)
+                } else {
+                    Err(Error::ValueExceedsMaxSize(
+                        ISFIXED,
+                        SIZE,
+                        HEADERSIZE,
+                        MAXSIZE,
+                        data.to_vec(),
+                        payload_len,
+                    ))
+                }
+            })
+        } else {
+            Err(Error::ReadError(data.len(), HEADERSIZE))
+        }
+    }
+
+    // Similar to the above but operates on a reader instead of a byte slice, reading
+    // the header from the input and calculating the expected length of the data to be read.
+    #[cfg(not(feature = "no_std"))]
+    fn expected_length_for_reader(mut reader: impl Read) -> Result<usize, Error> {
+        if ISFIXED {
+            Ok(SIZE)
+        } else {
+            let mut header = [0_u8; HEADERSIZE];
+            reader.read_exact(&mut header)?;
+            let payload_len = match HEADERSIZE {
+                1 => header[0] as usize,
+                2 => u16::from_le_bytes([header[0], header[1]]) as usize,
+                3 => u32::from_le_bytes([header[0], header[1], header[2], 0]) as usize,
+                // HEADERSIZE for Sv2 datatypes is at maximum 3 bytes
+                // When HEADERSIZE is 0 datatypes ISFIXED only exception is Bytes datatypes but is
+                // not used
+                _ => unreachable!(),
+            };
+            if payload_len <= MAXSIZE {
+                Ok(payload_len)
+            } else {
+                Err(Error::ValueExceedsMaxSize(
+                    ISFIXED,
+                    SIZE,
+                    HEADERSIZE,
+                    MAXSIZE,
+                    header.to_vec(),
+                    payload_len,
+                ))
+            }
+        }
+    }
+
+    /// Returns the length of the data, either from the reference or the owned vector,
+    /// or the fixed size if `ISFIXED` is true.
+    pub fn len(&self) -> usize {
+        match (self, ISFIXED) {
+            (Inner::Ref(data), false) => data.len(),
+            (Inner::Owned(data), false) => data.len(),
+            (_, true) => SIZE,
+        }
+    }
+
+    /// Returns true when the payload has no bytes.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    // Retrieves the header as a byte vector. If `HEADERSIZE` is zero, an empty vector is
+    // returned. Otherwise, the header is constructed from the length of the data.
+    fn get_header(&self) -> Vec<u8> {
+        if HEADERSIZE == 0 {
+            Vec::new()
+        } else {
+            let len = self.len();
+            len.to_le_bytes().into()
+        }
+    }
+}
+
+impl<'a, const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    TryFrom<&'a mut [u8]> for Inner<'a, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    type Error = Error;
+
+    fn try_from(value: &'a mut [u8]) -> Result<Self, Self::Error> {
+        if ISFIXED && value.len() == SIZE {
+            Ok(Self::Ref(value))
+        } else if ISFIXED {
+            Err(Error::ValueExceedsMaxSize(
+                ISFIXED,
+                SIZE,
+                HEADERSIZE,
+                MAXSIZE,
+                value.to_vec(),
+                value.len(),
+            ))
+        } else if value.len() <= MAXSIZE {
+            Ok(Self::Ref(value))
+        } else {
+            Err(Error::ValueExceedsMaxSize(
+                ISFIXED,
+                SIZE,
+                HEADERSIZE,
+                MAXSIZE,
+                value.to_vec(),
+                value.len(),
+            ))
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    TryFrom<Vec<u8>> for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    type Error = Error;
+
+    fn try_from(value: Vec<u8>) -> Result<Self, Self::Error> {
+        if ISFIXED && value.len() == SIZE {
+            Ok(Self::Owned(value))
+        } else if ISFIXED {
+            Err(Error::ValueExceedsMaxSize(
+                ISFIXED,
+                SIZE,
+                HEADERSIZE,
+                MAXSIZE,
+                value.to_vec(),
+                value.len(),
+            ))
+        } else if value.len() <= MAXSIZE {
+            Ok(Self::Owned(value))
+        } else {
+            Err(Error::ValueExceedsMaxSize(
+                ISFIXED,
+                SIZE,
+                HEADERSIZE,
+                MAXSIZE,
+                value.to_vec(),
+                value.len(),
+            ))
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize> GetSize
+    for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    fn get_size(&self) -> usize {
+        match self {
+            Inner::Ref(data) => data.len() + HEADERSIZE,
+            Inner::Owned(data) => data.len() + HEADERSIZE,
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const HEADERSIZE: usize, const SIZE: usize, const MAXSIZE: usize> SizeHint
+    for Inner<'_, ISFIXED, HEADERSIZE, SIZE, MAXSIZE>
+{
+    fn size_hint(data: &[u8], offset: usize) -> Result<usize, Error> {
+        if offset >= data.len() {
+            return Err(Error::ReadError(data.len(), offset));
+        }
+        Self::expected_length(&data[offset..])
+    }
+
+    fn size_hint_(&self, data: &[u8], offset: usize) -> Result<usize, Error> {
+        if offset >= data.len() {
+            return Err(Error::ReadError(data.len(), offset));
+        }
+        Self::expected_length(&data[offset..])
+    }
+}
+use crate::codec::decodable::FieldMarker;
+
+impl<'a, const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    Sv2DataType<'a> for Inner<'a, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+where
+    Self: TryInto<FieldMarker>,
+{
+    fn from_bytes_(data: &'a mut [u8]) -> Result<Self, Error> {
+        let size = Self::size_hint(data, 0)?;
+        if size > data.len() {
+            return Err(Error::ReadError(data.len(), size));
+        }
+        let (head, _) = data.split_at_mut(size);
+        if ISFIXED {
+            Ok(Self::Ref(head))
+        } else {
+            Ok(Self::Ref(&mut head[HEADERSIZE..]))
+        }
+    }
+
+    #[cfg(not(feature = "no_std"))]
+    fn from_reader_(mut reader: &mut impl Read) -> Result<Self, Error> {
+        let size = Self::expected_length_for_reader(&mut reader)?;
+
+        let mut dst = vec![0; size];
+
+        reader.read_exact(&mut dst)?;
+        Ok(Self::Owned(dst))
+    }
+
+    fn to_slice(&'a self, dst: &mut [u8]) -> Result<usize, Error> {
+        let size = self.get_size();
+        if dst.len() < size {
+            return Err(Error::WriteError(size, dst.len()));
+        }
+        let header = self.get_header();
+        dst[0..HEADERSIZE].copy_from_slice(&header[..HEADERSIZE]);
+        match self {
+            Inner::Ref(data) => {
+                let dst = &mut dst[0..size];
+                dst[HEADERSIZE..].copy_from_slice(data);
+            }
+            Inner::Owned(data) => {
+                let dst = &mut dst[0..size];
+                dst[HEADERSIZE..].copy_from_slice(data);
+            }
+        }
+        Ok(size)
+    }
+
+    #[cfg(not(feature = "no_std"))]
+    fn to_writer_(&self, writer: &mut impl Write) -> Result<(), E> {
+        let header = self.get_header();
+        writer.write_all(&header[..HEADERSIZE])?;
+        match self {
+            Inner::Ref(data) => {
+                writer.write_all(data)?;
+            }
+            Inner::Owned(data) => {
+                writer.write_all(data)?;
+            }
+        };
+        Ok(())
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    /// Returns the payload bytes without any SV2 length header.
+    pub fn as_bytes(&self) -> &[u8] {
+        match self {
+            Inner::Ref(data) => data,
+            Inner::Owned(data) => data,
+        }
+    }
+
+    /// Returns the payload bytes mutably without any SV2 length header.
+    pub fn as_mut_bytes(&mut self) -> &mut [u8] {
+        match self {
+            Inner::Ref(data) => data,
+            Inner::Owned(data) => data,
+        }
+    }
+
+    /// Clones the payload bytes into an owned vector.
+    pub fn to_owned_bytes(&self) -> Vec<u8> {
+        self.as_bytes().to_vec()
+    }
+
+    /// Consumes the value and returns owned payload bytes.
+    pub fn into_bytes(self) -> Vec<u8> {
+        match self {
+            Inner::Ref(data) => data.to_vec(),
+            Inner::Owned(data) => data,
+        }
+    }
+
+    /// Copies the payload bytes into an array of the requested size.
+    pub fn try_as_array<const N: usize>(&self) -> Result<[u8; N], Error> {
+        self.as_bytes()
+            .try_into()
+            .map_err(|_| Error::ReadError(self.as_bytes().len(), N))
+    }
+
+    pub fn into_static(self) -> Inner<'static, ISFIXED, SIZE, HEADERSIZE, MAXSIZE> {
+        match self {
+            Inner::Ref(data) => {
+                let mut v = Vec::with_capacity(data.len());
+                v.extend_from_slice(data);
+                Inner::Owned(v)
+            }
+            Inner::Owned(data) => Inner::Owned(data),
+        }
+    }
+}
+
+impl<const SIZE: usize> Inner<'_, true, SIZE, 0, 0> {
+    /// Returns the payload bytes as an array reference.
+    pub fn as_array(&self) -> &[u8; SIZE] {
+        self.as_bytes()
+            .try_into()
+            .expect("fixed-size SV2 byte wrapper must always match SIZE")
+    }
+
+    /// Copies the payload bytes into an array.
+    pub fn to_array(&self) -> [u8; SIZE] {
+        *self.as_array()
+    }
+
+    /// Consumes the value and returns the payload bytes as an array.
+    pub fn into_array(self) -> [u8; SIZE] {
+        match self {
+            Inner::Ref(data) => data
+                .try_into()
+                .expect("fixed-size SV2 byte wrapper must always match SIZE"),
+            Inner::Owned(data) => data
+                .try_into()
+                .expect("fixed-size SV2 byte wrapper must always match SIZE"),
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize> Clone
+    for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    fn clone(&self) -> Inner<'static, ISFIXED, SIZE, HEADERSIZE, MAXSIZE> {
+        match self {
+            Inner::Ref(data) => {
+                let mut v = Vec::with_capacity(data.len());
+                v.extend_from_slice(data);
+                Inner::Owned(v)
+            }
+            Inner::Owned(data) => Inner::Owned(data.clone()),
+        }
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    AsRef<[u8]> for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    fn as_ref(&self) -> &[u8] {
+        self.as_bytes()
+    }
+}
+
+impl<const ISFIXED: bool, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    TryFrom<&[u8]> for Inner<'_, ISFIXED, SIZE, HEADERSIZE, MAXSIZE>
+{
+    type Error = Error;
+
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        value.to_vec().try_into()
+    }
+}
+
+impl<const SIZE: usize> From<[u8; SIZE]> for Inner<'_, true, SIZE, 0, 0> {
+    fn from(value: [u8; SIZE]) -> Self {
+        Inner::Owned(value.into())
+    }
+}
+
+impl<const N: usize, const SIZE: usize, const HEADERSIZE: usize, const MAXSIZE: usize>
+    TryFrom<[u8; N]> for Inner<'_, false, SIZE, HEADERSIZE, MAXSIZE>
+{
+    type Error = Error;
+
+    fn try_from(value: [u8; N]) -> Result<Self, Self::Error> {
+        value.to_vec().try_into()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{GetSize, Signature, U256};
+
+    #[test]
+    fn fixed_inner_len_reports_real_size() {
+        let mut u = [0u8; 32];
+        let u256: U256 = (&mut u[..]).try_into().unwrap();
+        assert_eq!(u256.len(), 32, "U256::len() must be 32, not 1");
+        assert_eq!(u256.len(), u256.get_size());
+
+        let mut s = [0u8; 64];
+        let sig: Signature = (&mut s[..]).try_into().unwrap();
+        assert_eq!(sig.len(), 64, "Signature::len() must be 64, not 1");
+    }
+}

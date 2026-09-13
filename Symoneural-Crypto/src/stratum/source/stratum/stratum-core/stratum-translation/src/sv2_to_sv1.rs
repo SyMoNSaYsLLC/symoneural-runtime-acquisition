@@ -1,0 +1,554 @@
+//! SV2 to SV1 translation module
+//!
+//! This module provides functions to convert Stratum V2 (SV2) mining protocol messages
+//! to Stratum V1 (SV1) format. It handles BIP141 (SegWit) data stripping and
+//! protocol compatibility between the two versions.
+//!
+//! The main functions convert:
+//! - SV2 mining jobs to SV1 notify messages
+//! - SV2 difficulty targets to SV1 set_difficulty messages
+
+use crate::error::{Result, StratumTranslationError};
+use bitcoin::Target;
+use channels_sv2::bip141::try_strip_bip141;
+use mining_sv2::{NewExtendedMiningJob, SetNewPrevHash, SetTarget};
+use serde_json::Value;
+use tracing::debug;
+use v1::{
+    json_rpc, server_to_client,
+    utils::{HexU32Be, MerkleNode, PrevHash},
+};
+
+/// Builds an SV1 `mining.notify` message from SV2 messages.
+///
+/// This function attempts to strip BIP141 (SegWit) data from the coinbase transaction
+/// if present, creating a compatible SV1 mining job. If BIP141 data is not present,
+/// the original job is used unchanged.
+///
+/// # Arguments
+/// * `new_prev_hash` - The SV2 `SetNewPrevHash` message containing the new previous hash and
+///   related fields.
+/// * `new_job` - The SV2 `NewExtendedMiningJob` message containing the new mining job details.
+/// * `clean_jobs` - Boolean indicating whether the mining jobs should be cleaned (true if a new
+///   block is found).
+///
+/// # Returns
+/// * `Ok(server_to_client::Notify<'static>)` - The constructed SV1 mining.notify message.
+/// * `Err(StratumTranslationError)` - If BIP141 stripping or serialization fails.
+///
+/// # Errors
+/// * `FailedToTryToStripBip141` - When BIP141 data stripping fails
+/// * `FailedToSerializeToB064K` - When serializing stripped data to B064K format fails
+pub fn build_sv1_notify_from_sv2(
+    new_prev_hash: SetNewPrevHash<'static>,
+    new_job: NewExtendedMiningJob<'static>,
+    clean_jobs: bool,
+) -> Result<server_to_client::Notify<'static>> {
+    let new_job = match try_strip_bip141(
+        new_job.coinbase_tx_prefix.as_bytes(),
+        new_job.coinbase_tx_suffix.as_bytes(),
+    )
+    .map_err(StratumTranslationError::FailedToTryToStripBip141)?
+    {
+        Some((coinbase_tx_prefix_stripped, coinbase_tx_suffix_stripped)) => {
+            // Create a new job with stripped BIP141 data
+            let mut new_job_stripped = new_job.clone();
+            new_job_stripped.coinbase_tx_prefix = coinbase_tx_prefix_stripped
+                .try_into()
+                .map_err(|_| StratumTranslationError::FailedToSerializeToB064K)?;
+            new_job_stripped.coinbase_tx_suffix = coinbase_tx_suffix_stripped
+                .try_into()
+                .map_err(|_| StratumTranslationError::FailedToSerializeToB064K)?;
+            new_job_stripped
+        }
+        None => new_job,
+    };
+
+    let job_id = new_job.job_id.to_string();
+    let prev_hash = PrevHash(new_prev_hash.prev_hash.clone());
+    let coin_base1 = new_job.coinbase_tx_prefix.to_owned_bytes().into();
+    let coin_base2 = new_job.coinbase_tx_suffix.to_owned_bytes().into();
+    let merkle_path = new_job.merkle_path.clone().into_static().into_inner();
+    let merkle_branch: Vec<MerkleNode> = merkle_path.into_iter().map(MerkleNode).collect();
+    let version = HexU32Be(new_job.version);
+    let bits = HexU32Be(new_prev_hash.nbits);
+    let time = HexU32Be(if new_job.is_future() {
+        new_prev_hash.min_ntime
+    } else {
+        new_job.min_ntime.clone().into_inner().unwrap()
+    });
+
+    let notify_response = server_to_client::Notify {
+        job_id,
+        prev_hash,
+        coin_base1,
+        coin_base2,
+        merkle_branch,
+        version,
+        bits,
+        time,
+        clean_jobs,
+    };
+    debug!("\nNextMiningNotify: {}\n", notify_response);
+    Ok(notify_response)
+}
+
+/// Builds an SV1 `mining.set_difficulty` JSON-RPC message from an SV2 `SetTarget`.
+///
+/// # Arguments
+/// * `set_target` - The SV2 `SetTarget` message containing the new maximum target.
+///
+/// # Returns
+/// * `Ok(json_rpc::Message)` - The constructed SV1 mining.set_difficulty message.
+pub fn build_sv1_set_difficulty_from_sv2_set_target(
+    set_target: SetTarget<'_>,
+) -> Result<json_rpc::Message> {
+    build_sv1_set_difficulty_from_sv2_target(Target::from_le_bytes(
+        set_target
+            .maximum_target
+            .clone()
+            .as_ref()
+            .try_into()
+            .unwrap(),
+    ))
+}
+
+/// Builds an SV1 `mining.set_difficulty` JSON-RPC message from an SV2 target.
+///
+/// # Arguments
+/// * `target` - The SV2 `Target` value to convert to SV1 set_difficulty.
+///
+/// # Returns
+/// * `Ok(json_rpc::Message)` - The constructed SV1 mining.set_difficulty message.
+pub fn build_sv1_set_difficulty_from_sv2_target(target: Target) -> Result<json_rpc::Message> {
+    let value = target.difficulty_float();
+    let set_target = v1::methods::server_to_client::SetDifficulty { value };
+    Ok(set_target.into())
+}
+
+/// Builds an SV1 `mining.set_difficulty` message using integer power-of-two rounding above a
+/// configurable minimum difficulty.
+///
+/// The difficulty is computed from the SV2 target using Bitcoin's standard difficulty-1 target.
+/// Difficulties below `minimum_difficulty_for_integer_power_of_two_rounding` are emitted unchanged
+/// as JSON numbers built from `f64`, preserving fractional values.
+///
+/// Difficulties at or above the threshold are rounded down to the largest integer power of two
+/// not exceeding the difficulty and emitted as JSON numbers built from `u64`.
+///
+/// Rounding must never round up: the upstream credits shares against its own (unrounded) target,
+/// so a miner told a higher difficulty than upstream silently discards every share between the
+/// upstream target and the next power of two - up to half its hashrate. Rounding down merely
+/// makes the miner submit some shares below the upstream target, which the proxy filters.
+pub fn build_sv1_set_difficulty_from_sv2_target_with_integer_power_of_two_rounding(
+    target: Target,
+    minimum_difficulty_for_integer_power_of_two_rounding: f64,
+) -> Result<json_rpc::Message> {
+    let value = integer_power_of_two_sv1_difficulty_value_from_difficulty(
+        target.difficulty_float(),
+        minimum_difficulty_for_integer_power_of_two_rounding,
+    )?;
+    Ok(build_sv1_set_difficulty_notification(value))
+}
+
+/// Returns the SV1 difficulty that will be advertised for `difficulty` under the integer
+/// power-of-two rounding policy: unchanged below the threshold, otherwise the largest integer
+/// power of two not exceeding it.
+fn advertised_sv1_difficulty_from_difficulty(
+    difficulty: f64,
+    minimum_difficulty_for_integer_power_of_two_rounding: f64,
+) -> Result<f64> {
+    if !difficulty.is_finite() || difficulty <= 0.0 {
+        return Err(StratumTranslationError::InvalidSv1Difficulty(difficulty));
+    }
+
+    if !minimum_difficulty_for_integer_power_of_two_rounding.is_finite()
+        || minimum_difficulty_for_integer_power_of_two_rounding < 1.0
+    {
+        return Err(
+            StratumTranslationError::InvalidSv1IntegerPowerOfTwoRoundingThreshold(
+                minimum_difficulty_for_integer_power_of_two_rounding,
+            ),
+        );
+    }
+
+    if difficulty < minimum_difficulty_for_integer_power_of_two_rounding {
+        return Ok(difficulty);
+    }
+
+    let integer_difficulty = difficulty.floor();
+    if integer_difficulty >= u64::MAX as f64 {
+        return Err(StratumTranslationError::Sv1DifficultyOverflow(difficulty));
+    }
+
+    let integer_difficulty = integer_difficulty as u64;
+    let power_of_two = if integer_difficulty == 0 {
+        1
+    } else {
+        1u64 << (63 - integer_difficulty.leading_zeros())
+    };
+
+    Ok(power_of_two as f64)
+}
+
+/// Returns the target corresponding to the SV1 difficulty that
+/// [`build_sv1_set_difficulty_from_sv2_target_with_integer_power_of_two_rounding`] advertises for
+/// `target`.
+///
+/// Callers validating SV1 shares should use this target for downstream validation, then use the
+/// original upstream target to decide whether an accepted downstream share is strong enough to
+/// forward upstream.
+pub fn sv1_advertised_target_from_sv2_target(
+    target: Target,
+    minimum_difficulty_for_integer_power_of_two_rounding: f64,
+) -> Result<Target> {
+    let advertised = advertised_sv1_difficulty_from_difficulty(
+        target.difficulty_float(),
+        minimum_difficulty_for_integer_power_of_two_rounding,
+    )?;
+
+    if advertised < minimum_difficulty_for_integer_power_of_two_rounding {
+        return Ok(target);
+    }
+
+    Ok(target_from_power_of_two_difficulty(advertised as u64))
+}
+
+fn target_from_power_of_two_difficulty(difficulty: u64) -> Target {
+    let shift = difficulty.trailing_zeros() as usize;
+    let bytes = Target::MAX.to_be_bytes();
+    let byte_shift = shift / 8;
+    let bit_shift = shift % 8;
+    let mut out = [0u8; 32];
+
+    for i in (byte_shift..32).rev() {
+        let src = i - byte_shift;
+        let mut byte = bytes[src] >> bit_shift;
+        if bit_shift > 0 && src > 0 {
+            byte |= bytes[src - 1] << (8 - bit_shift);
+        }
+        out[i] = byte;
+    }
+
+    Target::from_be_bytes(out)
+}
+
+fn integer_power_of_two_sv1_difficulty_value_from_difficulty(
+    difficulty: f64,
+    minimum_difficulty_for_integer_power_of_two_rounding: f64,
+) -> Result<Value> {
+    let advertised = advertised_sv1_difficulty_from_difficulty(
+        difficulty,
+        minimum_difficulty_for_integer_power_of_two_rounding,
+    )?;
+
+    if advertised < minimum_difficulty_for_integer_power_of_two_rounding {
+        let value = serde_json::Number::from_f64(advertised)
+            .ok_or(StratumTranslationError::InvalidSv1Difficulty(advertised))?;
+        return Ok(Value::Number(value));
+    }
+
+    Ok(Value::from(advertised as u64))
+}
+
+fn build_sv1_set_difficulty_notification(value: Value) -> json_rpc::Message {
+    json_rpc::Message::Notification(json_rpc::Notification {
+        method: "mining.set_difficulty".to_string(),
+        params: Value::Array(vec![value]),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use binary_sv2::{Seq0255, Sv2Option, U256};
+    use bitcoin::{CompactTarget, Target};
+    use mining_sv2::{NewExtendedMiningJob, SetNewPrevHash, SetTarget as Sv2SetTarget};
+
+    fn dummy_target() -> Target {
+        Target::from_le_bytes([0xffu8; 32])
+    }
+
+    fn set_difficulty_value(msg: &json_rpc::Message) -> &Value {
+        match msg {
+            json_rpc::Message::Notification(notif) => {
+                assert_eq!(notif.method, "mining.set_difficulty");
+                notif
+                    .params
+                    .as_array()
+                    .expect("params must be an array")
+                    .first()
+                    .expect("params must contain difficulty")
+            }
+            _ => panic!("Expected mining.set_difficulty notification"),
+        }
+    }
+
+    #[test]
+    fn test_build_sv1_set_difficulty_from_sv2_target() {
+        let msg = build_sv1_set_difficulty_from_sv2_target(dummy_target())
+            .expect("Should convert target to difficulty");
+
+        // Check that we get a JSON-RPC Notification message
+        assert!(matches!(msg, v1::json_rpc::Message::Notification(_)));
+
+        if let v1::json_rpc::Message::Notification(notif) = msg {
+            assert_eq!(notif.method, "mining.set_difficulty");
+            assert!(!notif.params.is_null());
+            // Just verify it has parameters - detailed checking would require serde_json
+        }
+    }
+
+    #[test]
+    fn test_build_sv1_set_difficulty_from_sv2_set_target() {
+        let set_target = Sv2SetTarget {
+            channel_id: 1,
+            maximum_target: dummy_target().to_le_bytes().into(),
+        };
+        let msg = build_sv1_set_difficulty_from_sv2_set_target(set_target)
+            .expect("Should convert SetTarget to difficulty");
+
+        // Verify the result is a proper JSON-RPC Notification message
+        assert!(matches!(msg, v1::json_rpc::Message::Notification(_)));
+
+        if let v1::json_rpc::Message::Notification(notif) = msg {
+            assert_eq!(notif.method, "mining.set_difficulty");
+            assert!(!notif.params.is_null());
+            // Just verify it has parameters - detailed checking would require serde_json
+        }
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_keeps_value_below_threshold() {
+        let value = integer_power_of_two_sv1_difficulty_value_from_difficulty(0.25, 1.0)
+            .expect("valid value");
+
+        assert_eq!(value.as_f64(), Some(0.25));
+        assert_eq!(value.as_u64(), None);
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_rejects_threshold_below_one() {
+        assert!(matches!(
+            integer_power_of_two_sv1_difficulty_value_from_difficulty(0.25, 0.1),
+            Err(StratumTranslationError::InvalidSv1IntegerPowerOfTwoRoundingThreshold(_))
+        ));
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_rounds_down() {
+        let cases = [
+            (1.0, 1),
+            (2.0, 2),
+            (2.1, 2),
+            (3.9, 2),
+            (10_000.0, 8_192),
+            (12_500.0, 8_192),
+            (20_000.0, 16_384),
+            (50_000.0, 32_768),
+            (65_536.0, 65_536),
+            (100_000.0, 65_536),
+        ];
+
+        for (difficulty, expected) in cases {
+            let value = integer_power_of_two_sv1_difficulty_value_from_difficulty(difficulty, 1.0)
+                .expect("valid value");
+
+            assert_eq!(value.as_u64(), Some(expected), "difficulty={difficulty}");
+        }
+    }
+
+    #[test]
+    fn test_integer_power_of_two_set_difficulty_uses_configurable_rounding_threshold() {
+        let target = Target::from_compact(CompactTarget::from_consensus(0x1b00ffff));
+
+        let default_msg =
+            build_sv1_set_difficulty_from_sv2_target_with_integer_power_of_two_rounding(
+                target, 1.0,
+            )
+            .expect("valid default threshold");
+        let high_threshold_msg =
+            build_sv1_set_difficulty_from_sv2_target_with_integer_power_of_two_rounding(
+                target, 100_000.0,
+            )
+            .expect("valid custom threshold");
+
+        assert_eq!(set_difficulty_value(&default_msg).as_u64(), Some(65_536));
+        assert_eq!(
+            set_difficulty_value(&high_threshold_msg).as_f64(),
+            Some(65_536.0)
+        );
+        assert_eq!(set_difficulty_value(&high_threshold_msg).as_u64(), None);
+    }
+
+    #[test]
+    fn test_sv1_advertised_target_keeps_target_below_threshold() {
+        let target = dummy_target();
+
+        assert_eq!(
+            sv1_advertised_target_from_sv2_target(target, 1.0).expect("valid target"),
+            target
+        );
+    }
+
+    #[test]
+    fn test_sv1_advertised_target_matches_power_of_two_difficulty() {
+        let target = Target::from_compact(CompactTarget::from_consensus(0x1b00ffff));
+
+        assert_eq!(
+            sv1_advertised_target_from_sv2_target(target, 1.0).expect("valid target"),
+            target_from_power_of_two_difficulty(65_536)
+        );
+    }
+
+    #[test]
+    fn test_sv1_advertised_target_rounds_down_to_power_of_two_target() {
+        let expected = target_from_power_of_two_difficulty(65_536);
+        let mut bytes = expected.to_be_bytes();
+        bytes[6] = 0xaa;
+        bytes[7] = 0xaa;
+        let target = Target::from_be_bytes(bytes);
+
+        assert!(target.difficulty_float() > 65_536.0);
+        assert!(target.difficulty_float() < 131_072.0);
+        assert_eq!(
+            sv1_advertised_target_from_sv2_target(target, 1.0).expect("valid target"),
+            expected
+        );
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_rejects_invalid_values() {
+        for difficulty in [0.0, -1.0, f64::NAN, f64::INFINITY] {
+            assert!(matches!(
+                integer_power_of_two_sv1_difficulty_value_from_difficulty(difficulty, 1.0),
+                Err(StratumTranslationError::InvalidSv1Difficulty(_))
+            ));
+        }
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_rejects_invalid_rounding_threshold() {
+        for rounding_threshold in [0.0, 0.5, -1.0, f64::NAN, f64::INFINITY] {
+            assert!(matches!(
+                integer_power_of_two_sv1_difficulty_value_from_difficulty(1.0, rounding_threshold),
+                Err(StratumTranslationError::InvalidSv1IntegerPowerOfTwoRoundingThreshold(_))
+            ));
+        }
+    }
+
+    #[test]
+    fn test_integer_power_of_two_difficulty_rejects_overflow() {
+        assert!(matches!(
+            integer_power_of_two_sv1_difficulty_value_from_difficulty(u64::MAX as f64, 1.0),
+            Err(StratumTranslationError::Sv1DifficultyOverflow(_))
+        ));
+    }
+
+    #[test]
+    fn test_build_sv1_notify_from_sv2_with_future_job() {
+        // Test with a future job using realistic data from existing tests
+        let new_prev = SetNewPrevHash {
+            channel_id: 1,
+            job_id: 456,
+            prev_hash: [
+                200, 53, 253, 129, 214, 31, 43, 84, 179, 58, 58, 76, 128, 213, 24, 53, 38, 144,
+                205, 88, 172, 20, 251, 22, 217, 141, 21, 221, 21, 0, 0, 0,
+            ]
+            .into(),
+            min_ntime: 1746839904,
+            nbits: 503543726,
+        };
+
+        // A future job (min_ntime is None)
+        let job = NewExtendedMiningJob {
+            channel_id: 1,
+            job_id: 456,
+            version: 536870912,
+            version_rolling_allowed: true,
+            merkle_path: Seq0255::new(vec![U256::from([0x03u8; 32])]).unwrap(),
+            min_ntime: Sv2Option::new(None), // Future job
+            coinbase_tx_prefix: vec![
+                2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 34, 82, 0,
+            ]
+            .try_into()
+            .unwrap(),
+            coinbase_tx_suffix: vec![
+                255, 255, 255, 255, 2, 0, 242, 5, 42, 1, 0, 0, 0, 22, 0, 20, 235, 225, 183, 220,
+                194, 147, 204, 170, 14, 231, 67, 168, 111, 137, 223, 130, 88, 194, 8, 252, 0, 0, 0,
+                0, 0, 0, 0, 0, 38, 106, 36, 170, 33, 169, 237, 226, 246, 28, 63, 113, 209, 222,
+                253, 63, 169, 153, 223, 163, 105, 83, 117, 92, 105, 6, 137, 121, 153, 98, 180, 139,
+                235, 216, 54, 151, 78, 140, 249, 1, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+            .try_into()
+            .unwrap(),
+        };
+
+        let res = build_sv1_notify_from_sv2(new_prev.into_static(), job.into_static(), true);
+        assert!(res.is_ok());
+
+        // Verify it uses prev_hash.min_ntime since job is future
+        let notify = res.unwrap();
+        assert_eq!(notify.time.0, 1746839904);
+    }
+
+    #[test]
+    fn test_build_sv1_notify_from_sv2_with_non_future_job() {
+        // Test with a non-future job using realistic data from existing tests
+        let new_prev = SetNewPrevHash {
+            channel_id: 1,
+            job_id: 456,
+            prev_hash: [
+                200, 53, 253, 129, 214, 31, 43, 84, 179, 58, 58, 76, 128, 213, 24, 53, 38, 144,
+                205, 88, 172, 20, 251, 22, 217, 141, 21, 221, 21, 0, 0, 0,
+            ]
+            .into(),
+            min_ntime: 1746839904,
+            nbits: 503543726,
+        };
+
+        // A non-future job with realistic coinbase and merkle data from existing tests
+        let job = NewExtendedMiningJob {
+            channel_id: 1,
+            job_id: 456,
+            version: 536870912,
+            version_rolling_allowed: true,
+            merkle_path: Seq0255::new(vec![U256::from([0x03u8; 32])]).unwrap(),
+            min_ntime: Sv2Option::new(Some(1746839905)), // Non-future job with specific timestamp
+            coinbase_tx_prefix: vec![
+                2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 34, 82, 0,
+            ]
+            .try_into()
+            .unwrap(),
+            coinbase_tx_suffix: vec![
+                255, 255, 255, 255, 2, 0, 242, 5, 42, 1, 0, 0, 0, 22, 0, 20, 235, 225, 183, 220,
+                194, 147, 204, 170, 14, 231, 67, 168, 111, 137, 223, 130, 88, 194, 8, 252, 0, 0, 0,
+                0, 0, 0, 0, 0, 38, 106, 36, 170, 33, 169, 237, 226, 246, 28, 63, 113, 209, 222,
+                253, 63, 169, 153, 223, 163, 105, 83, 117, 92, 105, 6, 137, 121, 153, 98, 180, 139,
+                235, 216, 54, 151, 78, 140, 249, 1, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+            .try_into()
+            .unwrap(),
+        };
+
+        let res = build_sv1_notify_from_sv2(new_prev.into_static(), job.into_static(), false);
+        assert!(res.is_ok());
+
+        // Verify the notify message structure for non-future job
+        let notify = res.unwrap();
+        assert_eq!(notify.job_id, "456");
+        assert!(!notify.clean_jobs); // clean_jobs set to false
+        assert_eq!(notify.merkle_branch.len(), 1); // One merkle node
+        assert_eq!(notify.version.0, 536870912);
+        assert_eq!(notify.bits.0, 503543726);
+        assert_eq!(notify.time.0, 1746839905); // Should use job's min_ntime since not future
+
+        // Verify coinbase prefix and suffix are properly set
+        assert!(!notify.coin_base1.is_empty());
+        assert!(!notify.coin_base2.is_empty());
+    }
+}

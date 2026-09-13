@@ -1,0 +1,9 @@
+[wrap-file]
+directory = libnice-0.1.24
+source_url = https://libnice.freedesktop.org/releases/libnice-0.1.24.tar.gz
+source_fallback_url = https://nice.freedesktop.org/releases/libnice-0.1.24.tar.gz
+source_filename = libnice-0.1.24.tar.gz
+source_hash = cfb5e8e778534f2f5b3c6f4958a1eb057c6b95c537c0f100817a537cf5d64fcc
+
+[provide]
+nice = libnice_dep

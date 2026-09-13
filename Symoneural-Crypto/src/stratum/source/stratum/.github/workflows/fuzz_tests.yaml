@@ -1,0 +1,73 @@
+name: Fuzz Regression Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+        id: toolchain
+      
+      # NOTE: A repo-local `rust-toolchain.toml` is still respected by rustup.
+      # `dtolnay/rust-toolchain` installs the requested toolchain but does not
+      # automatically override it.
+      - name: Override toolchain
+        run: |
+          rustup override set ${{ steps.toolchain.outputs.name }}
+
+      # Install cargo-binstall so tool installs below use prebuilt binaries.
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.20.0
+        with:
+          version: "1.20.0"
+
+      # Install cargo-fuzz via cargo-binstall (no source build).
+      # Keep quick-install disabled to only use upstream release artifacts.
+      - name: Install cargo-fuzz
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: cargo binstall --no-confirm --disable-telemetry --disable-strategies quick-install --locked cargo-fuzz
+
+      - name: Checkout fuzzing corpus
+        uses: actions/checkout@v4
+        with:
+          repository: stratum-mining/stratum-fuzzing-corpus
+          path: fuzz/repo-corpus
+
+      - name: Run fuzz regressions
+        run: |
+          # cargo-fuzz binaries installed via cargo-binstall can default to a
+          # musl target triple; derive the runner's rustc host triple so
+          # sanitizer builds run against the native target instead.
+          HOST_TARGET="$(rustc -vV | sed -n 's/^host: //p')"
+
+          if [ -z "$HOST_TARGET" ]; then
+            echo "Failed to detect rustc host target" >&2
+            exit 1
+          fi
+
+          for TARGET in $(cargo fuzz list); do
+            CORPUS_DIR="fuzz/repo-corpus/corpus/$TARGET"
+
+            echo "==> Checking corpus for: $TARGET"
+
+            if [ ! -d "$CORPUS_DIR" ]; then
+              echo "==> Skipping $TARGET (no corpus found at $CORPUS_DIR)"
+              continue
+            fi
+
+            echo "==> Running fuzz target: $TARGET"
+            # Keep target explicit to avoid sanitizer/libc mismatches when
+            # cargo-fuzz's bundled default target differs from the runner.
+            cargo fuzz run --target "$HOST_TARGET" "$TARGET" "$CORPUS_DIR" -- -runs=0 -max_total_time=30
+          done
