@@ -211,3 +211,103 @@ Those three were acquired by plain `git clone` under the v1.2 rules, which permi
 cloning but not `devtool add`. They have source at the intended revision and no recipe to
 build it. Creating recipes needs `devtool add` against an existing tree, or hand-authored
 recipes — an acquisition-path decision, not a build fix. Recorded; not invented tonight.
+
+---
+
+# MORNING REPORT
+
+## PHASES
+
+| Phase | Status | Commit |
+|---|---|---|
+| 0 · Protect the run | **GATE PASSED** | `2a996bb` |
+| 1 · meta-openembedded admitted | **GATE PASSED** | `1632be3` |
+| 2 · Ravencalc | **PASSED, 4 of 6** (blocker recorded) | `2d5e78d`, `9ad5f7a` |
+| 3 · Symoneural-API | **GATE PASSED, 6 of 6** | `2008227` |
+| 4 · CLI python half | **GATE PASSED, 2 of 2** | `e76fff4` |
+| 5 · Rust | **IN PROGRESS** — llvm-native compiling | `c247b2f` (prep) |
+| 6 · Node consumers | **BLOCKED** — 3 of 4 have no recipe | `c247b2f` |
+| 7 · llama.cpp | **PREPARED**, not built — queued behind Phase 5 | `c247b2f` |
+| 8 · Build runtime matches stack | **GATE PASSED** | `30cda16` |
+
+## BUILT — 12 components across 3 runtimes
+
+| Runtime | Component | files | .so |
+|---|---|---|---|
+| Ravencalc | openblas | 14 | **1** |
+| Ravencalc | numpy | 1330 | **19** |
+| Ravencalc | sympy | 3103 | 0 |
+| Ravencalc | mpmath | 192 | 0 |
+| API | fastapi | 109 | 0 |
+| API | starlette | 74 | 0 |
+| API | uvicorn | 90 | 0 |
+| API | httpcore | 66 | 0 |
+| API | httpx | 52 | 0 |
+| API | pydantic | 215 | 0 |
+| CLI | anthropic-sdk-python | 2817 | 0 |
+| CLI | mcp-python-sdk | 252 | 0 |
+
+ELF proof: `libopenblas.so.0.3` — ELF 64-bit LSB shared object, x86-64, dynamically linked.
+
+Started the night at **1** built component (openblas). Ending at **12**.
+
+## FAILED
+
+| Component | Task | Root cause | Log | Change | Result |
+|---|---|---|---|---|---|
+| scipy | do_compile | needs Fortran; OE toolchain is `c,c++` only, no `x86_64-oe-linux-gfortran` (`meson.build:91`) | `symoneural-scipy/1.18.1/temp/log.do_compile.2878019` | none — toolchain decision | BLOCKED, recorded |
+| scikit-learn | do_compile | transitively on scipy | — | none | BLOCKED |
+
+## PRISTINE — 41 of 41 trees clean, tracked AND `--ignored`
+
+**dirty = 0 · residue = 0**
+
+## OFFLINE
+
+`--runall=fetch` for stratum returned **rc=0** with the full closure pulled, including
+`rust-source` and `llvm-project-source`. The `BB_NO_NETWORK=1` compile was still running
+at report time. **Not yet proven** — an honest not-yet, not a pass.
+
+## META-OE
+
+SHA `43b79d8e372c4f69ebab6c85b39d97b41522080f`, pinned in `LOCKED_STACK`.
+Layers `meta-oe` + `meta-python` added to Ravencalc, API, CLI, Crypto, Remix, Streamer,
+Web, LLM. Providers consumed: `python3-pybind11`, `nodejs`, `python3-pydantic-core`,
+`python3-uv-dynamic-versioning`, `python3-jinja2`, `python3-tomlkit`, `python3-dunamai`.
+
+## DECISIONS RECORDED
+
+The D2 seven — autoconf, automake, libtool, m4, ninja → **OE-CORE**; numpy, gstreamer →
+**SYMONEURAL-OWNED** — are in `acquisition/provider-decisions.json` (CURATED) and are
+MERGED by both provider scanners on every regeneration. Plus, new tonight:
+
+1. `scipy-fortran` — toolchain lacks Fortran
+2. `externalsrc-native-shared-tree` — hazard, see below
+3. `pydantic-core-ownership` — borrowed from meta-python; D2 says own what you ship
+4. scipy `use-pythran=false` — pythran unobtainable, chain drags ply
+5. anthropic `hatchling==1.26.3` exact pin skipped — build backend only
+
+## DECISIONS FOR GARRETT
+
+1. **Rebuild gcc-cross with Fortran?** `FORTRAN:forcevariable = ",fortran"` unblocks scipy and scikit-learn. Without it those two never build.
+2. **Own pydantic-core?** It is linked into the shipped API runtime, and D2 says own what you ship. Borrowed tonight from meta-python 2.46.4.
+3. **How do the three TypeScript SDKs get recipes?** They have source at the intended revision and no recipe, because v1.2 permitted `git clone` but not `devtool add`. Phase 6 cannot proceed without an acquisition-path decision.
+4. **Accept `--skip-dependency-check` as policy, or package the exact versions?** Used twice tonight (scipy/pythran, anthropic/hatchling), both times for build-only backends.
+5. **Drop `BBCLASSEXTEND` on externalsrc recipes?** See hazard 1.
+
+## HAZARD CLASSES FOUND
+
+1. **Classes that write into `${S}`.** `cython.bbclass`'s postfunc `sed -i`s every `.c`/`.cpp` under `${S}`, which under externalsrc is pristine source. Dropped the class, took only its DEPENDS.
+2. **`BBCLASSEXTEND = "native"` on an externalsrc recipe** gives target and native the same tree and bitbake runs them concurrently. Isolated empirically: either build alone is clean; both together flip a file 100755 → 100644.
+3. **Python build backends write into `${S}` regardless of build dir** — `.egg-info`, `_version.py`, `.pdm-build/`. `.gitignore` was hiding all of it, which is why the verifier now checks `--ignored`.
+4. **recipetool emits non-SPDX LICENSE tokens** (`Unknown`, `Apache`) that newer OE-Core rejects outright. 13 recipes affected.
+5. **recipetool emits stubs that override an inherited class** — and, worse, sometimes stubs with **no** inherit, which report success while installing nothing (fastapi).
+6. **recipetool misdetects build systems** — llama.cpp, a C++/cmake project, inherited `python_poetry_core` from a helper-script `pyproject.toml`.
+
+## VERDICTS
+
+| | |
+|---|---|
+| CONTROL-PLANE | **PASS** |
+| ESTATE-COMPLETENESS | **PASS** |
+| ACQUISITION-STATE | **FAIL** — by design; open decisions, not defects |
