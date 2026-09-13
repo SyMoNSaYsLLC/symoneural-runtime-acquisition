@@ -1,0 +1,112 @@
+{
+  "coworkUserFilesPath": "/home/google/Claude",
+  "isCoworkSdkDebuggingEnabled": false,
+  "mcpServers": {
+    "symoneural": {
+      "args": [
+        "/home/google/SymonSaysLLC/tools/mcp/symoneural-mcp.py"
+      ],
+      "command": "python3"
+    }
+  },
+  "preferences": {
+    "bypassPermissionsGateByAccount": {
+      "104ff73e-a745-416f-b640-b5bb3b43e2ef": true,
+      "51d2657c-d0bb-46a3-adf0-1dd7ac7a766e": true,
+      "af601bf1-70fd-4c1a-b138-96a2c91b2905": false,
+      "ef4c430c-f952-42a1-8173-5e1fb3fb6108": true
+    },
+    "ccdScheduledTasksEnabled": true,
+    "chillingSlothLocation": "default",
+    "coworkBrowserToolsEnabled": true,
+    "coworkHipaaRestricted": false,
+    "coworkLegacyRootGrantsPruned": true,
+    "coworkModelAutoFallbackByAccount": {
+      "104ff73e-a745-416f-b640-b5bb3b43e2ef": true,
+      "51d2657c-d0bb-46a3-adf0-1dd7ac7a766e": true,
+      "af601bf1-70fd-4c1a-b138-96a2c91b2905": true,
+      "ef4c430c-f952-42a1-8173-5e1fb3fb6108": true
+    },
+    "coworkPreferredBrowser": "built_in",
+    "coworkScheduledTasksEnabled": true,
+    "coworkWebSearchEnabled": false,
+    "earlyWindowShowLatched": true,
+    "epitaxyPrefs": {
+      "cc-landing-draft-permission-mode": "default",
+      "cc-landing-worktree-enabled": false,
+      "ccd-sessions-filter": {
+        "state": {
+          "selectedProjects": []
+        },
+        "version": 0
+      },
+      "desktop-frame.paneStore.v1": {
+        "state": {
+          "colWeightsByMode": {},
+          "draftNonce": 0,
+          "extraPanesByMode": {},
+          "rowSplit": 0.5
+        },
+        "version": 4
+      },
+      "dframe-group-scopes": {},
+      "dframe-local-slice": {
+        "homeProjectsPinnedOrder": [],
+        "pinnedOrder": []
+      },
+      "epitaxy-default-transcript-view-nudge": {
+        "verbose": "f0614c70"
+      },
+      "epitaxy-diff-group-by-kind": true,
+      "epitaxy-diff-layout": "unified",
+      "epitaxy-files-tree-width": 260,
+      "starred-cowork-spaces": [
+        "1c9f276a-6424-45d7-b16f-036ee585b8a0"
+      ],
+      "starred-local-code-sessions": [],
+      "starred-session-groups": []
+    },
+    "hybridDetectLatched": true,
+    "keepAwakeEnabled": true,
+    "launchPreviewAllowedOrigins": [
+      "http://127.0.0.1"
+    ],
+    "launchPreviewPersistedWorkspaces": [
+      "cowork-shared"
+    ],
+    "launchPreviewStorage": "shared",
+    "localAgentModeTrustedFolders": [
+      "/home/google/Desktop",
+      "/home/google/Downloads",
+      "/home/google/SymonSaysLLC"
+    ],
+    "orgWorkAcrossAppsDisabled": false,
+    "remoteFolderConsentMemory": [
+      "/home/google/symonsaysllc",
+      "/home/google/AI_Local_NVIDIA",
+      "/home/google/batch-staging",
+      "/home/google/Downloads",
+      "/home/google/IPTV_Rehost",
+      "/home/google/Linux_OE",
+      "/home/google/MIT_AI_Training",
+      "/home/google/Open_Mujina",
+      "/home/google/Open_PyAsic",
+      "/home/google/Open_Stratum",
+      "/home/google/SyOsML",
+      "/mnt/gdrive",
+      "/home/google/symon_llm",
+      "/home/google/symon-optimizer",
+      "/home/google/yuki",
+      "/home/google/vendor",
+      "/home/google/symon-native",
+      "/home/google/symon-docs",
+      "/home/google/darwin_build",
+      "/home/google/Desktop",
+      "/home/google/attic",
+      "/home/google/Symoneural"
+    ],
+    "remoteSessionFolderGrants": {},
+    "remoteToolsDeviceName": "symon",
+    "sidebarMode": "chat"
+  }
+}

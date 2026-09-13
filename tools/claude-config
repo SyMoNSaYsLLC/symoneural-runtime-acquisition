@@ -1,0 +1,68 @@
+#!/bin/bash
+# claude-config — version-control Claude Desktop's settings so they cannot be
+# lost or corrupted irrecoverably.
+#
+# Settings are NOT per account. claude_desktop_config.json carries no account or
+# org key; one file serves all four accounts. So they are already identical
+# across accounts by construction — the real risk is that a single corrupt file
+# breaks all four at once, with no way back.
+#
+#   claude-config save     snapshot live config into the repo
+#   claude-config diff     what changed since the last snapshot
+#   claude-config restore  put the repo's copy back (backs up live first)
+#
+# Never snapshots buddy-tokens.json or anything holding a credential.
+set -u
+LIVE=/home/google/.config/Claude
+REPO=/home/google/SymonSaysLLC/config/claude-desktop
+FILES="claude_desktop_config.json mcp-user-tool-toggles.json extensions-blocklist.json os-entry-points.json"
+# EXCLUDED, deliberately — each holds a credential or identity:
+#   developer_settings.json   carries inferenceGatewayApiKey (a bearer token)
+#   buddy-tokens.json         tokens
+#   ant-device-registry.json  device identity
+# This list was learned by scanning the snapshot before committing it: the
+# inference key was caught one step short of entering git.
+
+case "${1:-}" in
+  save)
+    mkdir -p "$REPO"
+    for f in $FILES; do
+      [ -f "$LIVE/$f" ] || continue
+      python3 - "$LIVE/$f" "$REPO/$f" <<'PY' && echo "  saved  $f" || echo "  SKIP   $f"
+import json,sys,io,re
+src,dst=sys.argv[1],sys.argv[2]
+d=json.load(open(src))
+# strip conversation references - they identify specific chats and are not settings
+def clean(o):
+    if isinstance(o,dict):
+        return {k:clean(v) for k,v in o.items()
+                if k not in ("launchPreviewSessionScopedSessions",)
+                and not re.match(r"^session_01[A-Za-z0-9]+$", k)}
+    if isinstance(o,list):
+        return [clean(v) for v in o if not (isinstance(v,str) and re.match(r"^session_01[A-Za-z0-9]+$",v))]
+    return o
+io.open(dst,"w").write(json.dumps(clean(d),indent=2,sort_keys=True)+"\n")
+PY
+    done
+    ;;
+  diff)
+    for f in $FILES; do
+      [ -f "$LIVE/$f" ] && [ -f "$REPO/$f" ] || continue
+      if ! diff -q <(python3 -m json.tool "$LIVE/$f" 2>/dev/null) "$REPO/$f" >/dev/null 2>&1; then
+        echo "  CHANGED  $f"
+        diff <(python3 -m json.tool "$LIVE/$f" 2>/dev/null) "$REPO/$f" | head -12 | sed 's/^/      /'
+      fi
+    done
+    echo "  (no output above = in sync)"
+    ;;
+  restore)
+    ts=$(date +%Y%m%d-%H%M%S)
+    for f in $FILES; do
+      [ -f "$REPO/$f" ] || continue
+      [ -f "$LIVE/$f" ] && cp -p "$LIVE/$f" "$LIVE/$f.bak-$ts"
+      cp "$REPO/$f" "$LIVE/$f" && echo "  restored  $f  (live backed up .bak-$ts)"
+    done
+    echo "  RESTART Claude Desktop for these to take effect."
+    ;;
+  *) echo "usage: claude-config {save|diff|restore}"; exit 1 ;;
+esac
