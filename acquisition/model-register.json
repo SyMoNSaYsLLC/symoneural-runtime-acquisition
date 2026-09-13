@@ -1,0 +1,41 @@
+{
+ "SYMON_MODELS_DIR": "/home/google/symoneural-models",
+ "consolidation": "NOT PERFORMED - nothing to move. No files were copied or moved.",
+ "note": "Per D3: if nothing is found, report ABSENT for all and stop looking. The full table is inline in Phase 12, which has not been pasted; rows below are the three probes only. Garrett answers where the weights are.",
+ "provenance": "CURATED. Weights NEVER enter git.",
+ "rows": [
+  {
+   "file": "flux1-schnell-q4_k.gguf",
+   "model_card_url": "UNRESOLVED",
+   "previous_path": "UNKNOWN",
+   "runtime": "Diffuse",
+   "sha256": "UNKNOWN",
+   "state": "ABSENT",
+   "subfolder": "image",
+   "weight_licence": "UNRESOLVED"
+  },
+  {
+   "file": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+   "model_card_url": "UNRESOLVED",
+   "previous_path": "UNKNOWN",
+   "runtime": "LLM",
+   "sha256": "UNKNOWN",
+   "state": "ABSENT",
+   "subfolder": "llm",
+   "weight_licence": "UNRESOLVED"
+  },
+  {
+   "file": "ggml-base.en.bin",
+   "model_card_url": "UNRESOLVED",
+   "previous_path": "UNKNOWN",
+   "runtime": "Diffuse",
+   "sha256": "UNKNOWN",
+   "state": "ABSENT",
+   "subfolder": "whisper",
+   "weight_licence": "UNRESOLVED"
+  }
+ ],
+ "schema": "symoneural-model-register/1",
+ "search_performed": "find /home/google -xdev for flux1-schnell-q4_k.gguf, Qwen2.5-7B-Instruct-Q4_K_M.gguf, ggml-base.en.bin",
+ "search_result": "NO MATCHES. The old deployment's backend/models is not on this host."
+}

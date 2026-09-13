@@ -8,6 +8,8 @@
  "census_shared_primitive": "lib_acq.is_submodule -> git rev-parse --show-superproject-working-tree",
  "determinism_curated_declared": [
   "exceptions.json",
+  "model-register.json",
+  "pending-acquisitions.json",
   "provider-decisions.json",
   "source-manifest.json",
   "unresolved.json"
@@ -36,6 +38,8 @@
   "dependency-graph.json": "SCANNER-DERIVED",
   "exceptions.json": "CURATED",
   "license-inventory.json": "SCANNER-DERIVED",
+  "model-register.json": "CURATED",
+  "pending-acquisitions.json": "CURATED",
   "provider-collisions.json": "SCANNER-DERIVED",
   "provider-decisions.json": "CURATED",
   "source-collisions.json": "SCANNER-DERIVED",
@@ -50,6 +54,8 @@
   "dependency-graph.json": "symoneural-dependency-graph/2",
   "exceptions.json": "symoneural-exceptions/1",
   "license-inventory.json": "symoneural-license-inventory/2",
+  "model-register.json": "symoneural-model-register/1",
+  "pending-acquisitions.json": "symoneural-pending-acquisitions/1",
   "provider-collisions.json": "symoneural-provider-collisions/2",
   "provider-decisions.json": "symoneural-provider-decisions/1",
   "source-collisions.json": "symoneural-source-collisions/1",
@@ -83,7 +89,7 @@
   }
  },
  "tool_sha256": {
-  "check-determinism.py": "0ffb3933d5829e41b7e277408800195afffaa4056e0532d39363b898863d94f6",
+  "check-determinism.py": "65ac8bd99acc0a3cd04766181a14b5a75fcecdd283dd6503ca89d8015696af64",
   "generate-runtime-acquisition.py": "af1f441b777d6ac99d5fa4f5592ac31c9fd634c1383b11d1cab53ca3817b8fc3",
   "lib_acq.py": "ee1775b55ca94711875e123471c5f5875ac3f70ec5cd1e429c95774620ca6c7e",
   "scan-acquisition.py": "ae2811347fd2c7f6a0432e7dfdf25bec606604923da29c7b67604941ca227433",

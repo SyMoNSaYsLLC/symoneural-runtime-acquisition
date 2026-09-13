@@ -1,0 +1,189 @@
+{
+ "not_acquired": [
+  {
+   "component": "ComfyUI",
+   "reason": "GPL-3.0; replaced by diffusers. NOT ACQUIRED."
+  },
+  {
+   "component": "nvidia-ml-py",
+   "reason": "PyPI sdist, not a git tag - acquired with sdist sha256 in its own phase."
+  },
+  {
+   "component": "CUDA Toolkit 13.3 / driver 610.57.04",
+   "reason": "BINARY / REFERENCE under NVIDIA EULA - not a source acquisition."
+  }
+ ],
+ "policy": "Curate before adding. Rows sit here until the phase that owns them runs.",
+ "provenance": "CURATED. Resolved tag -> SHA, not yet acquired. Each later phase acquires only its own rows (A7).",
+ "rows": [
+  {
+   "category": "image",
+   "component": "stable-diffusion.cpp",
+   "licence_expected": "MIT",
+   "notes": "PROVENANCE: submodule ggml is leejet/ggml, a PERSONAL FORK of ggml-org/ggml. No stable release line exists upstream - tags are master-<N>-<sha> per commit, so this pin is a commit snapshot, not a release.",
+   "required_by": "Diffuse: CPU/GPU diffusion inference in C++",
+   "runtime": "Diffuse",
+   "sha": "7f410a3793c5bba8eb198e962ce7a3d6095f9d89",
+   "tag": "master-859-7f410a3",
+   "tag_kind": "SNAPSHOT",
+   "upstream_url": "https://github.com/leejet/stable-diffusion.cpp"
+  },
+  {
+   "category": "diffusion",
+   "component": "diffusers",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Diffuse: diffusion pipelines. Replaces ComfyUI.",
+   "runtime": "Diffuse",
+   "sha": "d035dcd7cc7c88e0a154609b62887d50bba9fdc2",
+   "tag": "v0.40.0",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/huggingface/diffusers"
+  },
+  {
+   "category": "cutout",
+   "component": "rembg",
+   "licence_expected": "MIT",
+   "notes": "",
+   "required_by": "Diffuse: background removal",
+   "runtime": "Diffuse",
+   "sha": "47ac53f593ac1f7e6b17c3531ee4a455de092bcb",
+   "tag": "v2.0.84",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/danielgatis/rembg"
+  },
+  {
+   "category": "asr",
+   "component": "whisper.cpp",
+   "licence_expected": "MIT",
+   "notes": "Will be the 2nd of 3 ggml copies in the estate.",
+   "required_by": "Diffuse: speech recognition",
+   "runtime": "Diffuse",
+   "sha": "927cfce34f31707e17f2bff35c349632fb9e2c3a",
+   "tag": "v1.9.4",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/ggml-org/whisper.cpp"
+  },
+  {
+   "category": "train",
+   "component": "peft",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Studio: parameter-efficient fine-tuning",
+   "runtime": "Studio",
+   "sha": "a5526d27a9d47d1e8264d5e1b1f96c0fdc79464e",
+   "tag": "v0.20.0",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/huggingface/peft"
+  },
+  {
+   "category": "train",
+   "component": "trl",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Studio: RL fine-tuning",
+   "runtime": "Studio",
+   "sha": "3d9261f1fec9f9a8140099c78a65c7da73dce79c",
+   "tag": "v1.13.0",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/huggingface/trl"
+  },
+  {
+   "category": "train",
+   "component": "bitsandbytes",
+   "licence_expected": "MIT",
+   "notes": "",
+   "required_by": "Studio: quantised training",
+   "runtime": "Studio",
+   "sha": "08a9956b939857ae2c4fbd56753960cc370fa7cf",
+   "tag": "0.50.2",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/bitsandbytes-foundation/bitsandbytes"
+  },
+  {
+   "category": "data",
+   "component": "datasets",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Studio: dataset handling",
+   "runtime": "Studio",
+   "sha": "921c2a7c0c9494e86fd145e03f68d12fa4ef90a2",
+   "tag": "5.0.1",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/huggingface/datasets"
+  },
+  {
+   "category": "edge",
+   "component": "caddy",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Gateway: reverse proxy",
+   "runtime": "Gateway",
+   "sha": "e2eee6a7fce366321294c9c2a79f3146891dcbdf",
+   "tag": "v2.11.4",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/caddyserver/caddy"
+  },
+  {
+   "category": "edge",
+   "component": "cloudflared",
+   "licence_expected": "Apache-2.0",
+   "notes": "",
+   "required_by": "Gateway: tunnel posture - no inbound ports on this box",
+   "runtime": "Gateway",
+   "sha": "f11dea9cb7079e90a982c1a2d5548ab40847fdcf",
+   "tag": "2026.9.1",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/cloudflare/cloudflared"
+  },
+  {
+   "category": "licensing",
+   "component": "tronpy",
+   "licence_expected": "MIT",
+   "notes": "",
+   "required_by": "Gateway: licensing",
+   "runtime": "Gateway",
+   "sha": "a0731f77e228b81fe1aab1484ee9450e0523385e",
+   "tag": "0.6.2",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/andelf/tronpy"
+  },
+  {
+   "category": "licensing",
+   "component": "coincurve",
+   "licence_expected": "MIT OR Apache-2.0",
+   "notes": "",
+   "required_by": "Gateway: licensing",
+   "runtime": "Gateway",
+   "sha": "4285045a4cf9ec7a09121b0c85721baaaf76180a",
+   "tag": "v21.0.0",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/ofek/coincurve"
+  },
+  {
+   "category": "kernels",
+   "component": "cupy",
+   "licence_expected": "MIT",
+   "notes": "",
+   "required_by": "Tune: GPU array kernels",
+   "runtime": "Tune",
+   "sha": "dc1552a32f5489bdf6a5a721dfd952a92d47d934",
+   "tag": "v14.2.0",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/cupy/cupy"
+  },
+  {
+   "category": "kernels",
+   "component": "cuda-python",
+   "licence_expected": "UNRESOLVED",
+   "notes": "LICENCE MUST BE CHARACTERISED FROM THE TREE at acquisition; not assumed.",
+   "required_by": "Tune: CUDA bindings",
+   "runtime": "Tune",
+   "sha": "0770ab6ced8931ae8b6c6e5f622f48cb07ea99fa",
+   "tag": "v13.4.1",
+   "tag_kind": "RELEASE",
+   "upstream_url": "https://github.com/NVIDIA/cuda-python"
+  }
+ ],
+ "schema": "symoneural-pending-acquisitions/1"
+}

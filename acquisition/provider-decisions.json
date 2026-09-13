@@ -36,7 +36,23 @@
    "selected_provider": "SYMONEURAL-OWNED"
   }
  ],
+ "not_acquired": [
+  {
+   "component": "ComfyUI",
+   "decision": "NOT ACQUIRED",
+   "rationale": "GPL-3.0-or-later; replaced by diffusers (Apache-2.0). Strictest-licence posture."
+  }
+ ],
  "not_deleted": "The five Build-runtime source trees are retained; only the provider selection changed.",
+ "pending_collisions": [
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "decision": "UNRESOLVED",
+   "evidence": "ggml will exist three times once Diffuse is acquired: llama.cpp (LLM, ggml-org upstream), whisper.cpp (Diffuse, ggml-org upstream), and stable-diffusion.cpp (Diffuse, leejet/ggml - a PERSONAL FORK). Two upstreams, three copies. Recorded before acquiring, per A3.",
+   "logical": "ggml",
+   "selected_provider": "UNRESOLVED"
+  }
+ ],
  "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
  "rule": "Own what you ship; borrow what you only build with.",
  "schema": "symoneural-provider-decisions/1"
