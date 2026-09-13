@@ -14,27 +14,54 @@ list, so the integration is **Custom SAML**.
 - **Application Username:** Primary email address
 - **Attribute mapping:** `email` / `firstName` / `lastName`
 
-## SSO — what REMAINS (3 steps)
+## SSO — COMPLETE (13 September 2026)
 
-**The ordering trap, because it has cost time twice.** Anthropic's step 3 asks for
-three values that **Zoho does not produce until Zoho's own step 2 is finished**.
-The Zoho app showed *"Custom app created — 0 out of 3 completed"*: assign users,
-**configure SSO**, test. It is the middle one that prints the IdP Login URL,
-Entity ID and certificate. Sitting on Anthropic's step 3 waiting for values is the
-symptom of Zoho's step 2 not being done — not of a missing field.
+All three remaining steps closed, in this order:
 
-Also: `YtgXgNBn2yIWMIIadbpBgincL` is the **SP** Issuer that went **into Zoho**.
-It is not what Anthropic's step 3 wants. Pasting it there gives a signature
-validation failure that reads like a certificate problem.
+1. **Configure SSO** — Manual configuration, values taken from Zoho's own metadata
+   (`Claude.xml`, saved to `~/Desktop/zoho/`). Anthropic reports **Connection
+   activated**: Custom SAML, domain `symoneural.com`, X.509 valid
+   **Sep 12 2026 → Sep 12 2029**.
+2. **Assign Users** — Claude app now shows **3 Member(s)**, all Active:
+   `symonsayadmin@`, `gmcdonald@`, `bhesley@`.
+3. **Test** — org checklist reports SSO complete.
 
-1. **Configure SSO** — finish Zoho's step 2, then paste Zoho's **IdP Login URL**,
-   **IdP Entity ID** and **X.509 certificate** into Anthropic's step 3.
-2. **Assign Users** in Zoho to the Claude application.
-3. **Test SSO** — in a **clean browser profile**, before enabling JIT
-   provisioning. Testing while already signed in proves nothing.
+### Four things learned doing it, so they are not re-learned
 
-Enable JIT provisioning **only after** a clean-browser test passes. JIT plus a
-misconfigured attribute map creates accounts you then have to clean up.
+**The ordering trap.** Anthropic's step 3 asks for three values that Zoho does not
+produce until Zoho's own "Set up SSO" step is finished. Sitting on step 3 with
+nothing to paste is the symptom of the Zoho side being incomplete, not a missing
+field on the Anthropic page.
+
+**Zoho publishes no metadata URL.** Dynamic configuration cannot work. Verified by
+fetching every candidate: `/sso/metadata` returns 200 but `text/html` (a login
+page), `/metadata` and `/sso/metadata.xml` both 404. Zoho gives a **downloadable
+file** instead. Use Manual.
+
+**The Entity ID and the SSO URL are the same string.** Both are
+`https://directory.zoho.com/p/938948405/app/1353981000000004007/sso`. It looks
+like a copy-paste error and is not. The logout endpoint is that URL plus
+`/logout` — do not use it here.
+
+**There is no Zoho user ID to map to `id`.** The metadata declares exactly one
+NameID format, `emailAddress`, and no attributes. In Zoho's Attribute Mapping the
+**Attribute Name is free text** (you type `id`) while the **Attribute Value is a
+fixed dropdown**. The dropdown offers First name, Last name, Email ID Prefix,
+Primary email address, Full name, Employee Id, Designation, Department, Reporting
+To, Work Location, Country Code, Date of Birth — no ZUID. Map `id` to **Primary
+email address**, the same value as `email`; Anthropic's step 4 sanctions exactly
+this. Not *Email ID Prefix* (drops the domain) and not *Employee Id* (unpopulated,
+and an empty required attribute fails login in a way that looks like a config
+error).
+
+Final mapping: `firstName`→First name, `lastName`→Last name, `email`→Primary email
+address, `id`→Primary email address.
+
+**Consequence accepted:** identity is tied to the email address, so changing
+someone's email reads as a new user. Fine at three people.
+
+**`groups` was skipped** — Zoho's picker exposes user profile fields only. Sign-in
+works; roles are assigned by hand in Claude.
 
 ## Two things that are settled
 
