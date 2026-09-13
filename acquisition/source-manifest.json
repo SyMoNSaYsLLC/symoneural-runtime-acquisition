@@ -1,6 +1,18 @@
 {
  "entries": [
   {
+   "acquisition_state": "ACQUIRED",
+   "category": "layer",
+   "component": "meta-openembedded",
+   "intended_revision": "43b79d8e372c4f69ebab6c85b39d97b41522080f",
+   "intended_tag_version": "master @ pinned SHA",
+   "notes": "Admitted as a PINNED layer under the same pin-and-bump doctrine as OE-Core and BitBake. Only meta-oe and meta-python enter bblayers. Consumed only for named providers. Never track HEAD. Carries no distro identity - that objection applied to Poky (meta-yocto, DISTRO=poky), not to this.",
+   "required_by": "Providers absent from OE-Core and needed by acquired components: python3-pybind11 and python3-pythran (scipy build deps), nodejs (npm.bbclass DEPENDS nodejs-native; blocks hls.js, anthropic-sdk-typescript, typescript-sdk, workers-sdk). Authoring pythran in-stack would drag gast, beniget and ply, making the ply vendoring collision live.",
+   "revision_authority": "Garrett decision D1 (overnight build order)",
+   "runtime": "<build-stack>",
+   "upstream_url": "https://git.openembedded.org/meta-openembedded"
+  },
+  {
    "acquisition_state": "DEFERRED",
    "category": "provider",
    "component": "nodejs",

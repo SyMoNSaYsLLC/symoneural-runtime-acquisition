@@ -35,3 +35,25 @@ at `--ignored` rather than trust a clean `git status`.
 should stop recurrence; to be re-checked after every Python build tonight.
 
 GATE: verifier **PASS** · 41/41 trees clean under both `--short` and `--ignored`.
+
+## PHASE 1 — meta-openembedded admitted (D1) · **GATE PASSED**
+
+| | |
+|---|---|
+| Pinned SHA | `43b79d8e372c4f69ebab6c85b39d97b41522080f` (master, pinned — never tracked) |
+| Declared in manifest | before cloning, with URL / SHA / required-by |
+| In `LOCKED_STACK` | yes — `control-plane.json` now carries it every regeneration |
+| Layers added | `meta-oe`, `meta-python` — **Ravencalc only** |
+
+**Providers found:** `python3-pybind11_3.0.4` ✓ · `nodejs_24.21.0` ✓ · **`pythran` ABSENT**.
+
+pythran is in neither OE-Core nor meta-openembedded, and its chain is missing too
+(`beniget`, `ply` both absent; only `gast` present). Authoring it in-stack would drag
+beniget and **ply** — making the ply vendoring collision live immediately.
+
+**Resolved without it:** scipy's `meson.options` exposes `use-pythran` as a boolean
+defaulting to true, so scipy builds with `-Duse-pythran=false`. Cost is the loss of
+Pythran-accelerated kernels (slower fallbacks), not loss of function. Recorded as a
+BUILD-DESIGN decision rather than a blocker.
+
+GATE: `bitbake -p` parses with both layers · verifier **PASS**.

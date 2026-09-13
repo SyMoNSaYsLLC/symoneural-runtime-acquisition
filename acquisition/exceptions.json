@@ -1,42 +1,42 @@
 {
- "schema": "symoneural-exceptions/1",
- "note": "Actions taken outside the acquisition gate. History is recorded, not rewritten.",
  "exceptions": [
   {
-   "id": "EXC-001",
-   "component": "symoneural-openblas",
-   "command": "bitbake symoneural-openblas",
-   "oe_core_sha": "fe7a24bc67118e7e184b5f5247258715e3904e7c",
-   "bitbake_sha": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
-   "result": "SUCCESS rc=0, 984 tasks, 0 errors",
    "artifact_observed": "image/usr/lib/libopenblas.so.0.3 (ELF 64-bit LSB shared object, x86-64)",
-   "upstream_source_modified": "NO - HEAD matched pin and git diff HEAD --stat was empty after the build",
-   "outputs_tracked_in_git": "NO - build output is excluded by .gitignore",
+   "bitbake_sha": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
    "classification": [
     "EXPLORATORY",
-    "OUTSIDE ACQUISITION GATE",
-    "NON-AUTHORITATIVE"
+    "OUTSIDE ACQUISITION GATE"
    ],
+   "command": "bitbake symoneural-openblas",
+   "component": "symoneural-openblas",
+   "host": "BUILD HOST (this machine)",
+   "id": "EXC-001",
+   "oe_core_sha": "fe7a24bc67118e7e184b5f5247258715e3904e7c",
+   "outputs_tracked_in_git": "NO - build output is excluded by .gitignore",
    "purpose": "Validate that the master re-baseline toolchain functions end to end.",
-   "release_status": "NON-AUTHORITATIVE FOR RELEASE"
+   "release_status": "Performed on the designated build host; authoritative as evidence that the toolchain functions. Not a release artifact - no release has been cut.",
+   "result": "SUCCESS rc=0, 984 tasks, 0 errors",
+   "upstream_source_modified": "NO - HEAD matched pin and git diff HEAD --stat was empty after the build"
   },
   {
-   "id": "EXC-002",
-   "component": "symoneural-openblas",
-   "command": "devtool build symoneural-openblas (earlier, scarthgap baseline)",
-   "oe_core_sha": "2814f0962f56c8d1afa4de76d2895ba9b5cb767d",
-   "bitbake_sha": "0880963fea4d91a034e4a6e007d23f98658ab986",
-   "result": "SUCCESS rc=0, 773 tasks after adding cross-compile options",
    "artifact_observed": "libopenblas.so.0.3",
-   "upstream_source_modified": "NO",
-   "outputs_tracked_in_git": "NO - TMPDIR subsequently deleted (non-relocatable after workspace move)",
+   "bitbake_sha": "0880963fea4d91a034e4a6e007d23f98658ab986",
    "classification": [
     "EXPLORATORY",
-    "OUTSIDE ACQUISITION GATE",
-    "NON-AUTHORITATIVE"
+    "OUTSIDE ACQUISITION GATE"
    ],
+   "command": "devtool build symoneural-openblas (earlier, scarthgap baseline)",
+   "component": "symoneural-openblas",
+   "host": "BUILD HOST (this machine)",
+   "id": "EXC-002",
+   "oe_core_sha": "2814f0962f56c8d1afa4de76d2895ba9b5cb767d",
+   "outputs_tracked_in_git": "NO - TMPDIR subsequently deleted (non-relocatable after workspace move)",
    "purpose": "Validate the recipe/externalsrc chain on the original baseline.",
-   "release_status": "NON-AUTHORITATIVE FOR RELEASE"
+   "release_status": "Performed on the designated build host; authoritative as evidence that the toolchain functions. Not a release artifact - no release has been cut.",
+   "result": "SUCCESS rc=0, 773 tasks after adding cross-compile options",
+   "upstream_source_modified": "NO"
   }
- ]
+ ],
+ "note": "Actions taken outside the acquisition gate. History is recorded, not rewritten. Classification updated: this machine is the BUILD HOST, so work performed here is authoritative. The builds below remain OUTSIDE THE ACQUISITION GATE (they happened during an acquisition-only phase) but they are NOT non-authoritative for being run here.",
+ "schema": "symoneural-exceptions/1"
 }

@@ -1,6 +1,7 @@
 {
  "build_stack": {
   "bitbake": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+  "meta-openembedded": "43b79d8e372c4f69ebab6c85b39d97b41522080f",
   "openembedded-core": "fe7a24bc67118e7e184b5f5247258715e3904e7c"
  },
  "census_note": "METHOD A and METHOD B differ in discovery but BOTH call is_submodule(), which depends on `git rev-parse --show-superproject-working-tree`. The methods are therefore NOT fully independent. Their agreement remains meaningful evidence about discovery, but must not be read as two wholly independent confirmations.",
@@ -22,6 +23,13 @@
  ],
  "determinism_verified": true,
  "determinism_verified_scope": "SCANNER-DERIVED records only",
+ "host_designation": {
+  "consequence": "No build, hash or record needs re-performing elsewhere to become authoritative.",
+  "path": "/home/google/SymonSaysLLC",
+  "role": "BUILD HOST / REFERENCE MACHINE / SERVER - all of the above",
+  "statement": "Everything is done here. Acquisition, recipe curation, scanning, verification and BUILD all execute on this machine. There is no second host.",
+  "supersedes": "Earlier control-plane revisions split evidence into 'research host' versus 'accepted reference machine' and filed work done here as NON-AUTHORITATIVE. That split was a distinction without a second host: no other machine ever existed in this estate. Withdrawn. Work performed here is authoritative."
+ },
  "record_provenance": {
   "artifact-plan.json": "SCANNER-DERIVED",
   "dependency-graph.json": "SCANNER-DERIVED",
@@ -72,13 +80,13 @@
   }
  },
  "tool_sha256": {
-  "check-determinism.py": "f08dee4ca4d697a6e964a47818cebdc631dfc7f41a0facd6268237ab7ff13f1e",
+  "check-determinism.py": "2d1183c73a952f3e97fb5f9a12a44e74bf801c9f27108fa40b7660f447d52821",
   "generate-runtime-acquisition.py": "af1f441b777d6ac99d5fa4f5592ac31c9fd634c1383b11d1cab53ca3817b8fc3",
-  "lib_acq.py": "e15ffb0046a2fac663650c79b5b961bc97b140c81de4f07e1c886f854f67a964",
+  "lib_acq.py": "ee1775b55ca94711875e123471c5f5875ac3f70ec5cd1e429c95774620ca6c7e",
   "scan-acquisition.py": "ae2811347fd2c7f6a0432e7dfdf25bec606604923da29c7b67604941ca227433",
   "scan-dependencies.py": "81e0041c7f251a8b568070e58996bc4ff6fc5536fca052fa762c5a319a9589e9",
   "scan-oe-providers.py": "16dec735fc1f1f84ee9ff5290aa6e174687f5cbc309493a9687656179c62abef",
   "scan-source-collisions.py": "15f7096b172e888cabd5da26abc55c53b221c5629a4cfd122f122aa0ec721f2f",
-  "verify-acquisition.py": "9241455d7e71db85b476f5da3b7b25c3f9f116e3a5af2930df0045af42f6c167"
+  "verify-acquisition.py": "f45e1f4b6b9346a046cff08e5b9f3619d045c2a00f8d8070ef376d7090bc8412"
  }
 }

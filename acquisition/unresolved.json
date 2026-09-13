@@ -65,5 +65,10 @@
    "state": "UNRESOLVED"
   }
  ],
+ "phase": {
+  "acquisition": "CLOSED",
+  "rule_precedence": "The estate being correct beats category purity. Settled; not relitigated per case.",
+  "statement": "Acquisition is CLOSED: 41/41 sources at intended revision, estate completeness PASS. No further control-plane revisions. Remaining items are BUILD-DESIGN decisions, not acquisition defects, and are not resolvable by further scanning."
+ },
  "schema": "symoneural-unresolved/2"
 }

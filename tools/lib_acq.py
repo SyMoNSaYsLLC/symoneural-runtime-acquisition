@@ -15,6 +15,24 @@ BOOT = os.path.expanduser("~/symoneural-bootstrap-master")
 LOCKED_STACK = {
     "openembedded-core": "fe7a24bc67118e7e184b5f5247258715e3904e7c",
     "bitbake":           "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+    # D1: admitted as a pinned layer. Only meta-oe and meta-python enter
+    # bblayers; consumed only for named providers. Pin and bump, never HEAD.
+    "meta-openembedded": "43b79d8e372c4f69ebab6c85b39d97b41522080f",
+}
+
+HOST_DESIGNATION = {
+    "role": "BUILD HOST / REFERENCE MACHINE / SERVER - all of the above",
+    "path": ROOT,
+    "statement": ("Everything is done here. Acquisition, recipe curation, scanning, "
+                  "verification and BUILD all execute on this machine. There is no "
+                  "second host."),
+    "supersedes": ("Earlier control-plane revisions split evidence into 'research host' "
+                   "versus 'accepted reference machine' and filed work done here as "
+                   "NON-AUTHORITATIVE. That split was a distinction without a second "
+                   "host: no other machine ever existed in this estate. Withdrawn. "
+                   "Work performed here is authoritative."),
+    "consequence": ("No build, hash or record needs re-performing elsewhere to become "
+                    "authoritative."),
 }
 
 # Skip classes are by MEANING (build output / cache / vcs internals), never by depth.
