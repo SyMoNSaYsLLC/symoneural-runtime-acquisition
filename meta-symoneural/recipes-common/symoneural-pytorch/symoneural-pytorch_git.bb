@@ -825,6 +825,36 @@ do_configure:prepend() {
     else
         bbfatal "native sleef mkrename was not produced at $nb/bin/mkrename"
     fi
+
+    # --- protoc MUST BE NATIVE, for the same reason ---------------------------
+    # With sleef fixed the build reached 46% and died the same way, one tool later:
+    #   [ 46%] Running C++ protocol buffer compiler on onnx_onnx_torch-ml.proto
+    #   /bin/sh: 1: ../../bin/protoc-3.21.12.0: not found
+    #   make[2]: *** [...onnx_onnx_torch-ml.pb.cc] Error 127
+    # Same signature, same cause: pristine/build/bin/protoc-3.21.12.0 carries
+    # interpreter /usr/lib/ld-linux-x86-64.so.2, which does not exist on this host.
+    # protoc is a CODE GENERATOR that must run here, while libprotobuf must be the
+    # target's. torch says so itself in cmake/ProtoBuf.cmake:140-146: "This is
+    # typically the case when cross-compiling where protoc must be compiled for the
+    # host architecture and libprotobuf must be compiled for the target architecture."
+    #
+    # The layer's protobuf is 6.33.6 while torch vendors 3.21.12, and a 6.x protoc
+    # against a 3.21 runtime is a version-skew hazard, so the generator is built
+    # from THE PINNED VENDORED SOURCE - no new acquisition, no download, no skew.
+    # cmake/Dependencies.cmake:1384 copies CAFFE2_CUSTOM_PROTOC_EXECUTABLE into
+    # ONNX_CUSTOM_PROTOC_EXECUTABLE, so one variable serves torch and onnx alike.
+    pb="${WORKDIR}/protobuf-native"
+    if [ ! -x "$pb/protoc" ]; then
+        bbnote "building the vendored protobuf's protoc natively for CAFFE2_CUSTOM_PROTOC_EXECUTABLE"
+        mkdir -p "$pb"
+        cmake -S "${S}/third_party/protobuf/cmake" -B "$pb"               -DCMAKE_C_COMPILER="${BUILD_CC}"               -DCMAKE_CXX_COMPILER="${BUILD_CXX}"               -DCMAKE_C_FLAGS="" -DCMAKE_CXX_FLAGS="" -DCMAKE_EXE_LINKER_FLAGS=""               -Dprotobuf_BUILD_TESTS=OFF               -Dprotobuf_BUILD_SHARED_LIBS=OFF               -Dprotobuf_BUILD_CONFORMANCE=OFF               -Dprotobuf_BUILD_EXAMPLES=OFF >/dev/null 2>&1 ||             bbwarn "native protobuf configure reported errors; continuing to build protoc"
+        cmake --build "$pb" --target protoc -j ${@oe.utils.cpu_count()} >/dev/null 2>&1 ||             bbwarn "native protoc build reported errors"
+    fi
+    if [ -x "$pb/protoc" ]; then
+        bbnote "native protoc ready at $pb/protoc"
+    else
+        bbfatal "native protoc was not produced at $pb/protoc"
+    fi
 }
 
 # The two halves of the repair above have to reach the cmake that actually runs,
@@ -872,4 +902,4 @@ do_configure:prepend() {
 #      never consumes that toolchain file. torch's own cmake contains no try_run,
 #      so switching to cross mode costs nothing here (only third_party/benchmark
 #      uses try_run, and BUILD_TEST=0).
-export CMAKE_ARGS = "-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DNATIVE_BUILD_DIR=${WORKDIR}/sleef-native"
+export CMAKE_ARGS = "-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DNATIVE_BUILD_DIR=${WORKDIR}/sleef-native -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=${WORKDIR}/protobuf-native/protoc"
