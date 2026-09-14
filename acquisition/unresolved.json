@@ -184,6 +184,15 @@
     "defer accelerate to the final PyTorch feature-set/CUDA phase by recorded ruling"
    ],
    "resolution": "DEFERRED BY RECORDED RULING (approved by Garrett 2026-09-14): accelerate is deferred to the final PyTorch feature-set/CUDA phase; torch is NOT rebuilt now. component-state.json Common/accelerate -> DEFERRED. It stays acquired, pinned, recipe'd with estate-owned edges and packaged in the feed, and out of packagegroup-symoneural-common. Re-evaluate when symoneural-pytorch is built with distributed support. Evidence: docs/common/COMMON-CLOSURE.md."
+  },
+  {
+   "blocks": "Crypto: Phase 17b GPU miner (kawpowminer 1.2.4) - not P7",
+   "category": "LICENCE-POSTURE",
+   "description": "kawpowminer is GPL-3.0 (ethminer lineage). acquisition/pending-acquisitions.json has recorded it since 2026-09-13 with the note that the INCOMPATIBLE_LICENSE posture must be decided before acquisition. P7 C8 confirmed the CUDA authority (13.4.1, sm_120) would serve it; the product/distribution question is separate from P7.",
+   "identifier": "kawpowminer-gpl-distribution",
+   "resolution": "DEFERRED - GPL-3.0 PRODUCT/DISTRIBUTION RULING REQUIRED IN P11/PHASE 20e (Garrett, 2026-09-14, P7 C8). Not acquired, built, packaged or integrated in P7; does not block P7. If approved later: separate executable/process boundary; separate package; never linked into SyMoNeuRaL proprietary/native libraries; upstream licence/source obligations preserved; GPL status neither weakened nor relabelled; a commercial-distribution decision must explicitly accept the applicable GPL obligations before release.",
+   "resolved_phase": "P7 C8 2026-09-14 (deferral); ruling due P11 / Phase 20e",
+   "state": "DEFERRED"
   }
  ],
  "schema": "symoneural-unresolved/2"
