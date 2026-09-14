@@ -258,3 +258,8 @@ do_install:append() {
         bbnote "sanitised build paths in scipy/__config__.py; dropped stale .pyc"
     fi
 }
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-numpy"

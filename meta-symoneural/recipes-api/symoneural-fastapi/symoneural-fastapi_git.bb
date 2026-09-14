@@ -37,3 +37,10 @@ SRCREV = "95f8322ee1dcda7ceace7b1c4f6c9915b36d748f"
 inherit python_pep517 python_setuptools_build_meta
 PEP517_BUILD_API = "pdm.backend"
 DEPENDS += "python3-pdm-backend-native"
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-starlette symoneural-pydantic"
+# Runtime edges to the acquired Tier-B distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-typing-extensions symoneural-typing-inspection symoneural-annotated-doc"

@@ -42,3 +42,8 @@ inherit python_hatchling
 # uv-dynamic-versioning drags its own closure into the NATIVE sysroot; a native
 # recipe's RDEPENDS do not populate it, so the transitive deps are explicit.
 DEPENDS += "python3-uv-dynamic-versioning-native python3-jinja2-native python3-tomlkit-native python3-dunamai-native"
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-pydantic symoneural-starlette symoneural-uvicorn"

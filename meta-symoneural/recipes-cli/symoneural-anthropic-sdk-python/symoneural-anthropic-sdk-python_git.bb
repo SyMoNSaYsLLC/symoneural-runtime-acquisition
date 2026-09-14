@@ -62,3 +62,8 @@ DEPENDS += "python3-hatch-fancy-pypi-readme-native"
 # rather than a hard requirement. The check is skipped and the stack version used.
 # DECISION RECORDED: if the exact backend version matters, package 1.26.3.
 PEP517_BUILD_OPTS += "--skip-dependency-check"
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-pydantic"

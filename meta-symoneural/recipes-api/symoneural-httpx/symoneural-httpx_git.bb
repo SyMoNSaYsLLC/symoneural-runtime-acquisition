@@ -48,3 +48,10 @@ inherit python_hatchling
 # PEP-517 build backend needs hatch-fancy-pypi-readme importable by nativepython3.
 # Proven by build failure, not inferred.
 DEPENDS += "python3-hatch-fancy-pypi-readme-native"
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-httpcore"
+# Runtime edges to the acquired Tier-B distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-anyio symoneural-certifi symoneural-idna"

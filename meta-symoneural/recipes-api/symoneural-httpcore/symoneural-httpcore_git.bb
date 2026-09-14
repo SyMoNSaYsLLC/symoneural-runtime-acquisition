@@ -48,3 +48,5 @@ inherit python_hatchling
 # PEP-517 build backend needs hatch-fancy-pypi-readme importable by nativepython3.
 # Proven by build failure, not inferred.
 DEPENDS += "python3-hatch-fancy-pypi-readme-native"
+# Runtime edges to the acquired Tier-B distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-certifi symoneural-h11"

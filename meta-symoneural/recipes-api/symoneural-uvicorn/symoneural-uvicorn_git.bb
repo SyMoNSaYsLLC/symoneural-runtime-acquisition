@@ -40,7 +40,5 @@ SRCREV = "8988c23704fc373c9206cca53ec57dd8ad7f44a5"
 inherit python_hatchling
 
 # NOTE: no Makefile found, unable to determine what needs to be done
-
-
-
-
+# Runtime edges to the acquired Tier-B distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-click symoneural-h11"

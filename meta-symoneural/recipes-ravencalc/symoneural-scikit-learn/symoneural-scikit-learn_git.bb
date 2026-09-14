@@ -114,3 +114,8 @@ do_configure:prepend() {
     done < "${WORKDIR}/.pxd-dirs"
     bbnote "mirrored `wc -l < ${WORKDIR}/.pxd-list` scipy .pxd/.pxi declarations into the native sysroot"
 }
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-numpy symoneural-scipy"

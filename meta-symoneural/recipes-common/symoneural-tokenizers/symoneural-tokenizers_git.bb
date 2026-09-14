@@ -64,3 +64,8 @@ DEPENDS += "python3-maturin-native"
 # Pinned from bindings/python/Cargo.lock, tracked in git, so the crate closure is
 # fixed and nothing is resolved from the network at build time.
 require ${THISDIR}/symoneural-tokenizers-crates.inc
+
+# Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
+# distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
+# Checked by tools/check-python-runtime-closures.py.
+RDEPENDS:${PN} += "symoneural-huggingface-hub"

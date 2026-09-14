@@ -40,7 +40,5 @@ SRCREV = "4f250d6b814587e20c5365f0a5f0c4d42bcb929f"
 inherit python_hatchling
 
 # NOTE: no Makefile found, unable to determine what needs to be done
-
-
-
-
+# Runtime edges to the acquired Tier-B distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-anyio"

@@ -45,3 +45,8 @@ inherit python_hatchling
 # PEP-517 build backend needs hatch-fancy-pypi-readme importable by nativepython3.
 # Proven by build failure, not inferred.
 DEPENDS += "python3-hatch-fancy-pypi-readme-native"
+
+# Runtime edges from pydantic-2.13.5.dist-info METADATA (target Python 3.14, no extras):
+#   pydantic-core==2.46.5  annotated-types>=0.6.0  typing-extensions>=4.14.1  typing-inspection>=0.4.2
+# The core is built from THIS tree's pydantic-core/ subdirectory (symoneural-pydantic-core).
+RDEPENDS:${PN} += "symoneural-pydantic-core symoneural-annotated-types symoneural-typing-extensions symoneural-typing-inspection"
