@@ -51,7 +51,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/encode/httpx",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "f6bc290d5ec30e882f9d6215a016aa7aac2c02a1",
+      "pins_path": "Symoneural-API/src/http/.gitpins/httpx.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-API/build/devtool-workspace/appends/symoneural-pydantic_git.bbappend",
