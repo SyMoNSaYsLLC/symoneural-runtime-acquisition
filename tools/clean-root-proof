@@ -25,7 +25,18 @@ PY=$(ls "$R"/usr/bin/python3.1[0-9] 2>/dev/null | head -1)
 [ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
 PYV=$(basename "$PY" | sed 's/python//')
 mkdir -p "$R/tmp"
-run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" \
+# A re-execable target interpreter. Anything in the closure that spawns
+# sys.executable - multiprocessing's resource_tracker, joblib's loky backend, even
+# joblib's threading backend (it builds a multiprocessing Lock) - cannot work when
+# the interpreter is reached as `ld.so --library-path ... python`, because the child
+# re-execs the bare python and cannot resolve its own libraries: BrokenPipeError from
+# the resource tracker. This wrapper re-applies the SAME loader and library path, so a
+# spawned child is still the target interpreter against target libraries and nothing
+# from the host leaks in. A proof body passes it to multiprocessing.set_executable().
+WRAP="$R/tmp/target-python"
+{ echo '#!/bin/sh'; echo "exec \"$LD\" --library-path \"$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload\" \"$PY\" \"\$@\""; } > "$WRAP"
+chmod +x "$WRAP"
+run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" SYM_TARGET_PYTHON="$WRAP" \
         "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload" "$PY" -I "$@"; }
 echo "--- interpreter"
 run -c 'import sys; print("python", sys.version.split()[0], "prefix", sys.prefix); assert "SymonSaysLLC/Symoneural-" not in " ".join(sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
