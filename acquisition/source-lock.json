@@ -1,7 +1,7 @@
 {
   "census": {
-    "method_a_count": 72,
-    "method_b_count": 72,
+    "method_a_count": 73,
+    "method_b_count": 73,
     "only_in_a": [],
     "only_in_b": [],
     "sets_identical": true
@@ -1026,14 +1026,16 @@
       "requested_tag": "UNKNOWN",
       "runtime": "CLI",
       "source_path": "Symoneural-CLI/src/json/source/referencing",
-      "submodule_count": 0,
+      "submodule_count": 1,
       "submodules": [
         {
-          "path": "suite",
           "commit_sha": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
-          "tree_sha": "9702dcf9d376a3d68c00dea470550efac89107db",
+          "content_check": "AT-RECORDED-TREE",
+          "gitlink_check": "GITLINK-VERIFIED",
+          "path": "suite",
           "pins_path": "Symoneural-CLI/src/json/.gitpins/referencing.git/modules/suite",
-          "provenance": "PIN"
+          "provenance": "PIN",
+          "tree_sha": "9702dcf9d376a3d68c00dea470550efac89107db"
         }
       ],
       "tree_sha": "904b32c2d6f5c2ffd23f4811b99688d689168d05",
@@ -1168,6 +1170,32 @@
       "submodules": [],
       "tree_sha": "50ca66f1d24de0296bc4cea6e9b6db8f070b2866",
       "upstream_url": "https://github.com/rr-/docstring_parser",
+      "worktree": "clean",
+      "worktree_detail": []
+    },
+    {
+      "bbappend_path": "NOT-APPLICABLE",
+      "branch_context": "HEAD",
+      "category": "tls",
+      "commit_sha": "0714f72a739d182cdb8502f4e1bb4cf7ebfe4eb5",
+      "component": "truststore",
+      "declared_version_PV": "UNKNOWN",
+      "excluded": [],
+      "lock_state": "UNRESOLVED",
+      "pins_path": "Symoneural-CLI/src/tls/.gitpins/truststore.git",
+      "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
+      "recipe_LICENSE": "NOT-APPLICABLE",
+      "recipe_SRCREV": "NOT-APPLICABLE",
+      "recipe_name": "NOT-APPLICABLE",
+      "recipe_path": "NOT-APPLICABLE",
+      "recipe_retired": false,
+      "requested_tag": "UNKNOWN",
+      "runtime": "CLI",
+      "source_path": "Symoneural-CLI/src/tls/source/truststore",
+      "submodule_count": 0,
+      "submodules": [],
+      "tree_sha": "eaf67e3febfd695cef445be3ed8df51d325b7617",
+      "upstream_url": "https://github.com/sethmlarson/truststore",
       "worktree": "clean",
       "worktree_detail": []
     },

@@ -57,6 +57,20 @@
       "tree_sha": "55e539c98a5f900cf8fd5617d3b3d419c2a0d6fe"
     },
     {
+      "commit_sha": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
+      "configured_url": "https://github.com/python-jsonschema/referencing-suite",
+      "gitmodules_section": "suite",
+      "identity": "Symoneural-CLI/src/json/source/referencing::suite",
+      "init_state": "AT-RECORDED-COMMIT",
+      "owner_component": "referencing",
+      "owner_runtime": "CLI",
+      "owner_source_path": "Symoneural-CLI/src/json/source/referencing",
+      "pins_path": "Symoneural-CLI/src/json/.gitpins/referencing.git/modules/suite",
+      "status": "VERIFIED",
+      "submodule_path": "suite",
+      "tree_sha": "9702dcf9d376a3d68c00dea470550efac89107db"
+    },
+    {
       "commit_sha": "7e1e1fe3858c63c251c637ae41a20de425dde96f",
       "configured_url": "https://github.com/facebookincubator/fbjni.git",
       "gitmodules_section": "android/libs/fbjni",
@@ -1189,18 +1203,6 @@
       "status": "VERIFIED",
       "submodule_path": "subprojects/xsf",
       "tree_sha": "e96a8fdadf48a7815bb97c5fac23b24aa8b34bc5"
-    },
-    {
-      "commit_sha": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
-      "configured_url": "https://github.com/python-jsonschema/referencing-suite",
-      "gitmodules_section": "suite",
-      "identity": "Symoneural-CLI/src/json/source/referencing::suite",
-      "init_state": "AT-RECORDED-COMMIT",
-      "owner_component": "referencing",
-      "owner_runtime": "CLI",
-      "owner_source_path": "Symoneural-CLI/src/json/source/referencing",
-      "status": "RECORDED-AT-INGEST",
-      "submodule_path": "suite"
     }
   ],
   "identity_key": "owner_source_path + submodule_path",
