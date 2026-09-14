@@ -42,7 +42,7 @@
       "declared_version_PV": "2026.07.22",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/http/.gitpins/certifi.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "MPL-2.0",
       "recipe_SRCREV": "f4bc676bc101fe2235846e37044e8c693d6cbaf4",
