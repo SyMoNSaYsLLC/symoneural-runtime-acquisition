@@ -19,4 +19,4 @@ inherit python_setuptools_build_meta
 DEPENDS += "python3-setuptools-scm-native"
 
 # Runtime edges from this wheel's own Requires-Dist (target Python 3.14; no extras).
-RDEPENDS:${PN} += "symoneural-idna symoneural-sniffio"
+RDEPENDS:${PN} += "symoneural-idna symoneural-sniffio symoneural-typing-extensions"

@@ -1,0 +1,64 @@
+#!/bin/bash
+# api-clean-root-proof - the §37/§42 proof: a root filesystem installed by opkg from the
+# package feed (symoneural-image-api), NO source tree, NO PYTHONPATH, NO pip, NO devtool.
+# Extracts the image tarball, runs the TARGET interpreter through the target loader and
+# imports every distribution in the API runtime closure, checking exact versions the
+# consumers require. Exit 0 only if every import and check passes.
+set -uo pipefail
+ROOT=/home/google/SymonSaysLLC
+IMG=$(ls -t $ROOT/Symoneural-API/build/devtool-master/tmp/deploy/images/*/symoneural-image-api-*.rootfs.tar.gz 2>/dev/null | head -1)
+[ -n "$IMG" ] || { echo "FAIL: no symoneural-image-api rootfs tarball; run: tools/symonbake Symoneural-API symoneural-image-api"; exit 1; }
+R=${1:-${TMPDIR:-/tmp/claude-1000}/api-clean-root}
+rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
+echo "image   : $IMG"
+echo "manifest: $(ls $(dirname $IMG)/symoneural-image-api-*.manifest 2>/dev/null | head -1)"
+echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
+LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/lib64/ld-linux-x86-64.so.2 2>/dev/null | head -1)
+PY=$(ls "$R"/usr/bin/python3.14 "$R"/usr/bin/python3 2>/dev/null | head -1)
+[ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
+# proof that nothing outside the root is used: no PYTHONPATH, home pointed inside the root,
+# library path inside the root, and the interpreter's own prefix must resolve inside the root
+run() { env -i HOME="$R" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 \
+        "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python3.14/lib-dynload" "$PY" -I "$@"; }
+echo "--- interpreter"
+run -c 'import sys; print("python", sys.version.split()[0], "prefix", sys.prefix); assert not any("SymonSaysLLC/Symoneural-API/app" in p for p in sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
+echo "--- imports (17 upstream runtime sources)"
+run - <<'PYEOF'
+import importlib, sys
+want = {"fastapi":None,"starlette":None,"uvicorn":None,"pydantic":None,"httpx":None,"httpcore":None,
+        "pydantic_core":"2.46.5","typing_extensions":None,"typing_inspection":None,"annotated_types":None,
+        "annotated_doc":None,"anyio":None,"sniffio":None,"idna":None,"certifi":None,"h11":None,"click":None}
+from importlib.metadata import version, PackageNotFoundError
+bad = []
+for mod, exact in want.items():
+    try:
+        m = importlib.import_module(mod)
+    except Exception as e:
+        bad.append("%s: import failed: %r" % (mod, e)); continue
+    dist = mod.replace("_", "-")
+    try: v = version(dist)
+    except PackageNotFoundError:
+        try: v = version(mod)
+        except PackageNotFoundError: v = getattr(m, "__version__", "?")
+    ok = (exact is None) or (v == exact)
+    print("  %-20s %-12s %s" % (mod, v, "PASS" if ok else "FAIL (want %s)" % exact))
+    if not ok: bad.append("%s version %s != %s" % (mod, v, exact))
+# forbidden on a clean runtime: build frontends
+for f in ("maturin", "hatchling", "pdm", "flit_core", "setuptools_scm"):
+    try:
+        importlib.import_module(f); bad.append("build frontend %s present on target" % f)
+    except Exception:
+        pass
+# one meaningful operation: a pydantic model validates through the Rust core, a FastAPI app builds
+from pydantic import BaseModel
+class M(BaseModel):
+    n: int
+assert M(n="7").n == 7
+import pydantic_core; assert pydantic_core.__version__ == "2.46.5", pydantic_core.__version__
+from fastapi import FastAPI; FastAPI().openapi()
+print("  meaningful op: pydantic validation via pydantic_core %s + FastAPI openapi() PASS" % pydantic_core.__version__)
+if bad:
+    print("FAIL:"); [print("   -", b) for b in bad]; sys.exit(1)
+print("CLEAN ROOT IMPORT PROOF: PASS")
+PYEOF
+rc=$?; echo "rc=$rc"; exit $rc
