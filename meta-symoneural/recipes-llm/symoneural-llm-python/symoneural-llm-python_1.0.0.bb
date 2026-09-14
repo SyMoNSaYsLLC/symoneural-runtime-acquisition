@@ -15,7 +15,10 @@ SYMON_FP_PATH = "Symoneural-LLM/app"
 
 # stdlib modules the runtime imports, mapped through oe-core's python3-manifest.json:
 #   http.server/hmac/uuid/base64 -> netclient; socketserver -> netserver;
-#   hashlib -> crypt; socket -> io; ctypes; json; logging; the rest -> core
+#   hashlib -> crypt; socket -> io; ctypes; json; logging; the rest -> core.
+#   python3-html: http.server imports it at module load - the clean-root proof found the
+#   import failing on 2026-09-14 (tools/llm-clean-root-proof), which is what the
+#   proof is for.
 RDEPENDS:${PN} += " \
     symoneural-llm \
     python3-core \
@@ -26,4 +29,5 @@ RDEPENDS:${PN} += " \
     python3-crypt \
     python3-io \
     python3-logging \
+    python3-html \
 "
