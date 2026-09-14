@@ -251,7 +251,26 @@
       "submodule_count": 2,
       "upstream_url": "https://git.savannah.gnu.org/git/libtool.git",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "91c1080c7ded7e324bcd92e0614344101b82a681",
+      "pins_path": "Symoneural-Build/src/autotools/.gitpins/libtool.git",
+      "submodules": [
+        {
+          "path": "gl-mod/bootstrap",
+          "commit_sha": "bfdcc277cd237fde115d3aa972add7608d348b90",
+          "tree_sha": "0334d12efbc21ff3cfbe18145fda9f01c619415a",
+          "pins_path": "Symoneural-Build/src/autotools/.gitpins/libtool.git/modules/bootstrap",
+          "provenance": "PIN"
+        },
+        {
+          "path": "gnulib",
+          "commit_sha": "491f1bb7d3049f3ab7825f3ee665c209658e9965",
+          "tree_sha": "4a217014fa22036c79c55d7e805e9f03e74e9657",
+          "pins_path": "Symoneural-Build/src/autotools/.gitpins/libtool.git/modules/gnulib",
+          "provenance": "PIN"
+        }
+      ],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-m4_git.bbappend",

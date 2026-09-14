@@ -1,7 +1,7 @@
 {
   "entries": [
     {
-      "commit_sha": "fdcc277cd237fde115d3aa972add7608d348b90",
+      "commit_sha": "bfdcc277cd237fde115d3aa972add7608d348b90",
       "configured_url": "https://github.com/gnulib-modules/bootstrap.git",
       "gitmodules_section": "bootstrap",
       "identity": "Symoneural-Build/src/autotools/source/libtool::gl-mod/bootstrap",
