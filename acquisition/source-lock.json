@@ -373,7 +373,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/ninja-build/ninja",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "70dd1324a3997a3ce38bfe70a8291b2ef4a0bf65",
+      "pins_path": "Symoneural-Build/src/ninja/.gitpins/ninja.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-CLI/build/devtool-workspace/appends/symoneural-anthropic-sdk-python_git.bbappend",
