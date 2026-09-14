@@ -31,8 +31,11 @@ want = {"numpy": None, "scipy": None, "sklearn": None, "sympy": None,
         "fastapi": None, "pydantic": None, "uvicorn": None, "symoneural_api": None}
 dist = {"sklearn": "scikit-learn", "symoneural_api": "symoneural-api"}
 def _square(v):
-    """Module-level so the loky backend can ship it to a worker process."""
-    return v * v
+    """Module-level so the loky backend can ship it to a worker process.
+    Returns the pid too: a process backend that silently degraded to in-process
+    execution would still return the right numbers, so the proof checks that the
+    work ran somewhere other than here."""
+    return v * v, os.getpid()
 
 
 bad = []
@@ -80,7 +83,9 @@ if not bad:
     # the work is sent to real worker processes of the target interpreter.
     procs = joblib.Parallel(n_jobs=2, backend="loky")(
         joblib.delayed(_square)(v) for v in (2, 5, 9))
-    assert procs == [4, 25, 81], procs
+    assert [v for v, _ in procs] == [4, 25, 81], procs
+    worker_pids = {pid for _, pid in procs}
+    assert os.getpid() not in worker_pids, "loky degraded to in-process: %r" % procs
 
     # threadpoolctl is REACHED THROUGH sklearn, not imported in isolation:
     # ThreadpoolController is sklearn's threadpoolctl integration, and it must be
@@ -121,9 +126,10 @@ if not bad:
           "and restored; cloudpickle round-tripped a lambda pickle refused; sympy "
           "integrate(t**2, 0..3) = 9; mpmath pi @30dps; narwhals %s"
           % (len([p for p in pools if p["user_api"] == "blas"]), nw.__version__))
-    print("  process parallelism PASS: joblib loky backend ran on real worker processes "
-          "of the target interpreter (multiprocessing.set_executable -> %s) -> [4, 25, 81]"
-          % _wrap)
+    print("  process parallelism PASS: joblib loky backend -> [4, 25, 81] computed in "
+          "%d worker process(es) %s, none of them this one (pid %d); workers are the "
+          "target interpreter re-entered through %s"
+          % (len(worker_pids), sorted(worker_pids), os.getpid(), _wrap))
     # the declared constraint sympy places on mpmath, evaluated on the installed pair
     # the declared closure is the gate: sympy's own metadata, evaluated against the
     # mpmath actually installed here. Upper bound parsed without `packaging`, which
