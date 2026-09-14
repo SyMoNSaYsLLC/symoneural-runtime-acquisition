@@ -1189,6 +1189,18 @@
       "status": "VERIFIED",
       "submodule_path": "subprojects/xsf",
       "tree_sha": "e96a8fdadf48a7815bb97c5fac23b24aa8b34bc5"
+    },
+    {
+      "commit_sha": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
+      "configured_url": "https://github.com/python-jsonschema/referencing-suite",
+      "gitmodules_section": "suite",
+      "identity": "Symoneural-CLI/src/json/source/referencing::suite",
+      "init_state": "AT-RECORDED-COMMIT",
+      "owner_component": "referencing",
+      "owner_runtime": "CLI",
+      "owner_source_path": "Symoneural-CLI/src/json/source/referencing",
+      "status": "RECORDED-AT-INGEST",
+      "submodule_path": "suite"
     }
   ],
   "identity_key": "owner_source_path + submodule_path",

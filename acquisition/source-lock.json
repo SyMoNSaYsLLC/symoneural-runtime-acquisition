@@ -1016,7 +1016,7 @@
       "declared_version_PV": "UNKNOWN",
       "excluded": [],
       "lock_state": "UNRESOLVED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-CLI/src/json/.gitpins/referencing.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "NOT-APPLICABLE",
       "recipe_SRCREV": "NOT-APPLICABLE",
@@ -1027,7 +1027,15 @@
       "runtime": "CLI",
       "source_path": "Symoneural-CLI/src/json/source/referencing",
       "submodule_count": 0,
-      "submodules": [],
+      "submodules": [
+        {
+          "path": "suite",
+          "commit_sha": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
+          "tree_sha": "9702dcf9d376a3d68c00dea470550efac89107db",
+          "pins_path": "Symoneural-CLI/src/json/.gitpins/referencing.git/modules/suite",
+          "provenance": "PIN"
+        }
+      ],
       "tree_sha": "904b32c2d6f5c2ffd23f4811b99688d689168d05",
       "upstream_url": "https://github.com/python-jsonschema/referencing",
       "worktree": "clean",
