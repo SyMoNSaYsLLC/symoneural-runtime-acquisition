@@ -1,0 +1,21 @@
+# symoneural-stratum 1.11.1 - first target build (Crypto), 2026-09-14
+generated : 2026-09-14 19:37 EDT
+source    : stratum                    Crypto           c1a799139425 ·     235 files · VERIFIED
+recipe    : meta-symoneural/recipes-crypto/symoneural-stratum/symoneural-stratum_git.bb (symoneural-pristine + cargo; 233 crates declared in symoneural-stratum-crates.inc, all present in DL_DIR before the build)
+bitbake   : Attempted 1136 tasks of which 1116 didn't need to be rerun and all succeeded (rc=0, first launch)
+toolchain : cargo-native rust-native  (from Ravencalc's shared sstate)
+cargo     : cargo build -v --frozen --target x86_64-oe-linux-gnu --profile=release --manifest-path=/home/google/SymonSaysLLC/Symoneural-Crypto/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-stratum/1
+network   : --frozen (cargo may not touch the network); crates from DL_DIR by sha256
+QA        : do_package_qa 0 issues; no INSANE_SKIP
+
+## Packages
+  symoneural-stratum-dbg_1.11.1-r0_x86-64-v3.ipk  594 B  sha256 875deb654b2b068e21a41d95adaaae4dcf4e877902dcfc20679e0326896a88a6
+  symoneural-stratum-dev_1.11.1-r0_x86-64-v3.ipk  636 B  sha256 050b2b395a48656b5ebfbd34b9dada6ec1bc77b5e3fea3e1d6a1d0bb70be15db
+  symoneural-stratum-staticdev_1.11.1-r0_x86-64-v3.ipk  2270526 B  sha256 292acbd82fdf4055d407cd58325dd87cde1d29311503e7b3a97ef5a50a8f1672
+  NOTE: stratum is a LIBRARY workspace (Stratum V2 protocol crates, no [[bin]] targets): the main runtime package is
+  EMPTY and therefore not emitted (OE skips empty packages); the deliverable is -staticdev (rlibs via
+  CARGO_INSTALL_LIBRARIES = 1) for consumers such as sv2-apps. -dbg and -dev are empty shells.
+  staticdev rlibs: 16
+
+## Status
+  BUILD PASS ; PACKAGE/QA PASS (library-only: -staticdev with 16 rlibs, no executable package) ; consumer proof = the sv2-apps builds ; REPRODUCIBILITY NOT TESTED
