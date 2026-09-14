@@ -769,7 +769,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/mpmath/mpmath",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "780cae95e903ebd1fe3c06245ef23bb5bd4bd051",
+      "pins_path": "Symoneural-Ravencalc/src/symbolic/.gitpins/mpmath.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Ravencalc/build/devtool-workspace/appends/symoneural-sympy_git.bbappend",
