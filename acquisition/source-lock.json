@@ -668,7 +668,19 @@
       "submodule_count": 1,
       "upstream_url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "6175bff47954ee4cef1d4894f79ffa4d55e72f6e",
+      "pins_path": "Symoneural-Live/src/gstreamer/.gitpins/gstreamer.git",
+      "submodules": [
+        {
+          "path": "subprojects/gst-integration-testsuites/medias",
+          "commit_sha": "8850d668e87752c863b3fb01954464b0d1fffe4c",
+          "tree_sha": "07fc12a46780edfcffdce01424b6504b63f71a98",
+          "pins_path": "Symoneural-Live/src/gstreamer/.gitpins/gstreamer.git/modules/subprojects/gst-integration-testsuites/medias",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        }
+      ],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Ravencalc/build/devtool-workspace/appends/symoneural-openblas_git.bbappend",
