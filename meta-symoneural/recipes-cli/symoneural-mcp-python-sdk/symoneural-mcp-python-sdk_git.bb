@@ -46,4 +46,10 @@ DEPENDS += "python3-uv-dynamic-versioning-native python3-jinja2-native python3-t
 # Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
 # distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
 # Checked by tools/check-python-runtime-closures.py.
-RDEPENDS:${PN} += "symoneural-pydantic symoneural-starlette symoneural-uvicorn"
+# runtime closure of the mcp wheel (tools/check-python-runtime-closures.py --runtime CLI):
+# anyio, httpx2, jsonschema, mcp-types, opentelemetry-api, pydantic, pyjwt[crypto],
+# python-multipart, sse-starlette, starlette, typing-extensions, typing-inspection, uvicorn
+RDEPENDS:${PN} += "symoneural-pydantic symoneural-starlette symoneural-uvicorn \
+    symoneural-anyio symoneural-httpx2 symoneural-jsonschema symoneural-mcp-types \
+    symoneural-opentelemetry-api symoneural-pyjwt symoneural-python-multipart \
+    symoneural-sse-starlette symoneural-typing-extensions symoneural-typing-inspection"

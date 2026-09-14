@@ -66,4 +66,6 @@ PEP517_BUILD_OPTS += "--skip-dependency-check"
 # Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
 # distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
 # Checked by tools/check-python-runtime-closures.py.
-RDEPENDS:${PN} += "symoneural-pydantic"
+# runtime closure of the anthropic wheel (tools/check-python-runtime-closures.py --runtime CLI):
+# anyio, docstring-parser, httpx2, jiter, pydantic, sniffio, typing-extensions
+RDEPENDS:${PN} += "symoneural-pydantic symoneural-anyio symoneural-docstring-parser symoneural-httpx2 symoneural-jiter symoneural-sniffio symoneural-typing-extensions"

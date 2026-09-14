@@ -17,3 +17,8 @@ NO_RECOMMENDATIONS = "1"
 # tarball under qemu; tools/*-clean-root-proof runs the target interpreter
 # through its own ld.so.
 IMAGE_CLASSES:remove = "qemuboot"
+# no kernel either: image.bbclass hooks do_build on virtual/kernel:do_deploy and
+# do_rootfs on virtual/kernel:do_packagedata (depmod data). A userspace proof root
+# installs no kernel modules; both hooks are emptied.
+KERNEL_DEPLOY_DEPEND = ""
+KERNELDEPMODDEPEND = ""
