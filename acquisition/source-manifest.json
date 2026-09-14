@@ -757,6 +757,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "cloudpickle",
+      "intended_revision": "7576fff24b9769432f76cc6d2c01282583ee87a9",
+      "intended_tag_version": "v3.1.2",
+      "notes": "Licence BSD-3-Clause (LICENSE in tree). Pure Python (flit_core). Version rule: newest release tag at acquisition (2026-09-14) satisfying joblib's cloudpickle>=3.0.",
+      "required_by": "Ravencalc: joblib 1.6.0 wheel Requires-Dist cloudpickle>=3.0 (clean-root proof: sklearn/joblib import failed for want of it)",
+      "revision_authority": "same",
+      "runtime": "Ravencalc",
+      "upstream_url": "https://github.com/cloudpipe/cloudpickle"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "devtools",
       "component": "cython",
       "intended_revision": "ec152091ca7c535e04b5da96e5bedfc9b33def22",

@@ -13,3 +13,6 @@ PV = "1.6.0"
 SRCREV = "cd9a6b05fc4f2b1c8202eb62c4e863484f8cc099"
 
 inherit python_setuptools_build_meta
+
+# joblib 1.6.0 wheel: Requires-Dist cloudpickle>=3.0 (loky/parallel backends import it at module load)
+RDEPENDS:${PN} += "symoneural-cloudpickle"

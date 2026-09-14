@@ -113,6 +113,14 @@
       "source": "Symoneural-API/src/web/source/click @ 8.5.0"
     },
     {
+      "consumers": "joblib >=3.0",
+      "distribution": "cloudpickle",
+      "rationale": "Runtime-shipped by the Ravencalc closure (joblib); acquired at v3.1.2; the meta-python copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship'",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Ravencalc/src/util/source/cloudpickle @ v3.1.2"
+    },
+    {
       "consumers": "pyjwt[crypto] >=3.4.0",
       "distribution": "cryptography",
       "rationale": "Runtime-shipped by CLI wheels; acquired at 50.0.1; layer copies are not the provider. Rust/maturin + target OpenSSL. Layer oe-core copy is not the provider.",
