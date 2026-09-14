@@ -119,3 +119,5 @@ do_configure:prepend() {
 # distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
 # Checked by tools/check-python-runtime-closures.py.
 RDEPENDS:${PN} += "symoneural-numpy symoneural-scipy"
+# Runtime edges to the acquired distributions (wheel METADATA, target 3.14, no extras).
+RDEPENDS:${PN} += "symoneural-joblib symoneural-narwhals symoneural-threadpoolctl"
