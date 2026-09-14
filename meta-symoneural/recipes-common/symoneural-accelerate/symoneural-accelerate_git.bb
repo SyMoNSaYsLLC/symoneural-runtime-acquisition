@@ -70,9 +70,10 @@ RDEPENDS:${PN} += "symoneural-packaging symoneural-psutil symoneural-pyyaml"
 #   ModuleNotFoundError: No module named 'torch._C._distributed_c10d'
 # symoneural-pytorch is built USE_DISTRIBUTED=0 (its recipe records why); upstream
 # accelerate guards that import on torch VERSION only, not on
-# torch.distributed.is_available(). Not carried in packagegroup-symoneural-common
-# until torch is built with distributed (upstream's Linux default) or a ruling
-# defers accelerate. Pristine source is not patched.
+# torch.distributed.is_available(). RULING (Garrett, 2026-09-14): DEFERRED BY
+# RECORDED RULING to the final PyTorch feature-set/CUDA phase; torch is not rebuilt
+# now. component-state.json -> DEFERRED; unresolved.json:accelerate-torch-distributed.
+# Stays out of packagegroup-symoneural-common until then. Pristine source not patched.
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.

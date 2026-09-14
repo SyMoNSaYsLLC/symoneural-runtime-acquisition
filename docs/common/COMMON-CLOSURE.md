@@ -18,9 +18,9 @@ Proof harness: `tools/clean-root-proof Common symoneural-image-common` running
 | REPRODUCIBILITY PASS | NOT TESTED (partial evidence) | two independent `do_rootfs`+`do_image_tar` executions from the same recipe state produced byte-identical rootfs tarballs (`08fb05df…`, see below); package-level differing-root comparison not run |
 | INTEGRATION PASS | NOT TESTED | Common is consumed by Adaptive-Fabric / Tune; those stages are P11 |
 
-**accelerate is BLOCKED, not shipped** — see below. Common is PASS for the surface
-`packagegroup-symoneural-common` declares; the audit's owed-component count still
-lists accelerate as TARGET and unresolved.
+**accelerate is DEFERRED BY RECORDED RULING** (Garrett, 2026-09-14; see below) and is
+not shipped. Common is PASS for the surface `packagegroup-symoneural-common` declares;
+the audit counts accelerate as exempt by ruling.
 
 ## What changed to get here
 
@@ -120,7 +120,7 @@ Two independent assemblies of the same declared input produced a byte-identical
 tarball. This is evidence for the image-assembly stage only; it is not the
 differing-build-root, package-level comparison the reproducibility gate requires.
 
-## accelerate — BLOCKED, recorded, not shipped
+## accelerate — DEFERRED BY RECORDED RULING, not shipped
 
 `symoneural-accelerate` was the one Common TARGET component `tools/audit-workscope.sh`
 reported as `RECIPE, NEVER PACKAGED`. Its recipe borrowed three runtime providers from
@@ -155,18 +155,21 @@ So accelerate was **removed from the packagegroup again** and the finding record
 its recipe and the packagegroup. The audit will still print it as DONE because an ipk
 exists — that DONE is not a usable component and this record says so.
 
-**Decision needed (Garrett):**
+**Ruling (Garrett, 2026-09-14): DEFERRED BY RECORDED RULING** to the final PyTorch
+feature-set/CUDA phase. Torch is **not** rebuilt now. The alternative considered —
+rebuilding torch with `USE_DISTRIBUTED=1` (upstream's Linux default; gloo on CPU) —
+would have reversed the recipe's recorded CPU-only decision at a cost of hours; that
+decision's stated purpose, "unblocks Common's chain (accelerate RDEPENDS on
+pytorch)", is noted here as not achieved, for the phase that revisits it.
 
-1. Rebuild torch with `USE_DISTRIBUTED=1` (upstream's Linux default; gloo backend on
-   CPU, no NCCL). Cost: a torch rebuild of hours, and it reverses the recipe's recorded
-   CPU-only decision — whose stated purpose, "unblocks Common's chain (accelerate
-   RDEPENDS on pytorch)", this finding shows was not achieved.
-2. Defer accelerate to the Phase 12 (CUDA/distributed) torch by recorded ruling:
-   `component-state.json` → `DEFERRED`, citing this section.
-
-Until one is taken, `component-state.json` keeps accelerate as `TARGET`. The
-workscope prints Common `24/24 packaged` (psutil and accelerate both have ipks);
-read it as 23 usable of 24 owed.
+Recorded in `acquisition/component-state.json` (Common/accelerate → `DEFERRED`, with
+reason and ruling) and `acquisition/unresolved.json` (`accelerate-torch-distributed`,
+BUILD-DESIGN, resolved DEFERRED). accelerate stays acquired, pinned, recipe'd with
+estate-owned edges and packaged in the feed. `tools/audit-workscope.sh` now prints the row
+as `DEFERRED`, lists accelerate among the 15 exemptions, and prints Common
+`sources committed 24/24 · packaged 24/23` — the numerator still counts the exempt
+package because its ipk exists while the denominator excludes it; read it as 23 owed,
+23 packaged, 1 deferred.
 
 ## Records
 

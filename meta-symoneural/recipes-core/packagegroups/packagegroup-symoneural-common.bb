@@ -8,9 +8,9 @@
 # USE_DISTRIBUTED=0) Accelerator.prepare() fails - accelerate/utils/other.py
 # model_has_dtensor imports torch.distributed.tensor guarded only by torch VERSION,
 # never by torch.distributed.is_available(). Shipping it would be a phantom
-# completion. Evidence: docs/common/COMMON-CLOSURE.md. Decision pending: rebuild
-# torch with USE_DISTRIBUTED=1 (upstream's Linux default; gloo CPU backend) or
-# defer accelerate to the Phase 12 torch by recorded ruling.
+# completion. Evidence: docs/common/COMMON-CLOSURE.md. RULING 2026-09-14: DEFERRED
+# BY RECORDED RULING to the final PyTorch feature-set/CUDA phase
+# (unresolved.json:accelerate-torch-distributed); torch is not rebuilt now.
 SUMMARY = "SyMoNeuRaL Common runtime - Torch + Transformers foundation"
 LICENSE = "MIT"
 inherit packagegroup

@@ -1,4 +1,4 @@
-Common      accelerate                  VERIFIED                              6afc1e5ee   ok    y     symoneural-accelerate             ok         y       7     DONE                    
+Common      accelerate                  VERIFIED                              6afc1e5ee   ok    y     symoneural-accelerate             ok         y       7     DEFERRED                
 Common      filelock                    VERIFIED                              4efd93e04   ok    y     symoneural-filelock               ok         y       7     DONE                    
 Common      fsspec                      VERIFIED                              9e22b60ea   ok    y     symoneural-fsspec                 ok         y       7     DONE                    
 Common      hf-xet                      VERIFIED                              de71453d9   ok    y     symoneural-hf-xet                 ok         y       7     DONE                    
@@ -22,4 +22,4 @@ Common      tokenizers                  VERIFIED                              88
 Common      tqdm                        VERIFIED                              9cf5a12b1   ok    y     symoneural-tqdm                   ok         y       7     DONE                    
 Common      transformers                VERIFIED                              856157a2f   ok    y     symoneural-transformers           ok         y       7     DONE                    
 Common      typer                       VERIFIED                              99eb220df   ok    y     symoneural-typer                  ok         y       7     DONE                    
-  Common: sources committed 24/24 · packaged 24/24
+  Common: sources committed 24/24 · packaged 24/23

@@ -194,9 +194,11 @@
   },
   {
    "component": "accelerate",
+   "reason": "Packaged and QA-clean, but unusable on the estate's torch: Accelerator.prepare() -> accelerate/utils/other.py model_has_dtensor imports torch.distributed.tensor guarded on torch VERSION only, and symoneural-pytorch is built USE_DISTRIBUTED=0 (ModuleNotFoundError: torch._C._distributed_c10d). Deferred to the final PyTorch feature-set/CUDA phase; torch is not rebuilt now. Pristine source not patched.",
+   "ruling": "unresolved.json:accelerate-torch-distributed (DEFERRED) + docs/common/COMMON-CLOSURE.md; approved by Garrett 2026-09-14",
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/accelerate",
-   "state": "TARGET"
+   "state": "DEFERRED"
   },
   {
    "component": "filelock",

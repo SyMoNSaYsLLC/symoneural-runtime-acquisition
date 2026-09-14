@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| Parent HEAD | `b16379ec201b22834821f5e6c1fcf835c9b3c4ab` |
+| Parent HEAD | `f1213f3902fc4149ab72a61a520d75f8e6d9511c` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
 | Scanner identity | `acquisition/control-plane.json` (14 tools hashed) |

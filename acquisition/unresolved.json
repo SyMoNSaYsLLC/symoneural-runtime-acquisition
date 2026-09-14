@@ -173,6 +173,17 @@
    "resolved_phase": "reconstruction 2026-09-13",
    "state": "RESOLVED-DEFAULT",
    "supersedes": "generated/phase-12-report.md 12a '13.3'; acquisition/pending-acquisitions.json not_acquired 'CUDA Toolkit 13.3 / driver 610.57.04' (stale host facts)."
+  },
+  {
+   "blocks": "Common: symoneural-accelerate in packagegroup-symoneural-common; workscope TARGET count for Common",
+   "category": "BUILD-DESIGN",
+   "description": "symoneural-accelerate 1.15.0 builds, packages (do_package_qa 0 ERROR, buildpaths clean) and every runtime edge is estate-owned (packaging, psutil, pyyaml acquired), but in the clean-root proof Accelerator(cpu=True).prepare(model) fails: accelerator.py:1558 prepare -> :1404 _prepare_one -> :1802 prepare_model -> utils/other.py:243 model_has_dtensor -> from torch.distributed.tensor import DTensor -> ModuleNotFoundError: No module named 'torch._C._distributed_c10d'. torch.distributed.is_available() is False because symoneural-pytorch is built USE_DISTRIBUTED=0 (recipe's recorded CPU-only decision). Upstream guards on torch version (>=2.5.0), never on is_available(), assuming torch's Linux default USE_DISTRIBUTED=1. import accelerate itself succeeds; the core API does not.",
+   "identifier": "accelerate-torch-distributed",
+   "options_considered": [
+    "rebuild torch with USE_DISTRIBUTED=1 (gloo CPU backend; reverses the recorded CPU-only decision; hours)",
+    "defer accelerate to the final PyTorch feature-set/CUDA phase by recorded ruling"
+   ],
+   "resolution": "DEFERRED BY RECORDED RULING (approved by Garrett 2026-09-14): accelerate is deferred to the final PyTorch feature-set/CUDA phase; torch is NOT rebuilt now. component-state.json Common/accelerate -> DEFERRED. It stays acquired, pinned, recipe'd with estate-owned edges and packaged in the feed, and out of packagegroup-symoneural-common. Re-evaluate when symoneural-pytorch is built with distributed support. Evidence: docs/common/COMMON-CLOSURE.md."
   }
  ],
  "schema": "symoneural-unresolved/2"
