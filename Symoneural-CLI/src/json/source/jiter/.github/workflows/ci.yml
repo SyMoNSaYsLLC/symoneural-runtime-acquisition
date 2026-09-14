@@ -1,0 +1,837 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '**'
+  pull_request: {}
+
+permissions: {}
+
+env:
+  JITER_BENCH_SEED: '0'
+  # the json-cases corpus the json_cases test and benchmark run over; pinned so that a commit there
+  # can't turn this repository's CI red, and so the benchmark numbers stay comparable between runs
+  JSON_CASES_REF: 12caaa624f399d603db09dd634ae866425f737f0 # 2026-08-22
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      MSRV: ${{ steps.resolve-msrv.outputs.MSRV }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: resolve MSRV
+        id: resolve-msrv
+        run: echo MSRV=`cargo metadata --format-version 1 --no-deps --frozen --quiet --offline --manifest-path Cargo.toml | jq -r '.packages[0].rust_version'` >> $GITHUB_OUTPUT
+
+  test:
+    needs: [resolve]
+    name: test rust-${{ matrix.rust-version }} on ${{ matrix.runs-on }}, Python ${{ matrix.python-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-version: [stable]
+        runs-on: [ubuntu, macos]
+        python-version: ['']
+        include:
+          - rust-version: ${{ needs.resolve.outputs.MSRV }}
+            runs-on: ubuntu
+          - rust-version: stable
+            runs-on: ubuntu
+            python-version: '3.14t'
+          - rust-version: nightly
+            runs-on: ubuntu
+
+    runs-on: ${{ matrix.runs-on }}-latest
+
+    env:
+      RUNS_ON: ${{ matrix.runs-on }}-latest
+      RUST_VERSION: ${{ matrix.rust-version }}
+      # the corpus the json_cases tests run over, checked out and built below
+      JSON_CASES: ${{ github.workspace }}/json-cases
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python-version || '3.13' }}
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: ${{ matrix.rust-version }}
+
+      - name: Generate MSRV-compatible lockfile
+        if: matrix.rust-version == needs.resolve.outputs.MSRV
+        run: |
+          CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS=fallback cargo +stable update
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
+        with:
+          tool: cargo-llvm-cov
+
+      - name: check out the json-cases corpus
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: samuelcolvin/json-cases
+          ref: ${{ env.JSON_CASES_REF }}
+          path: json-cases
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          enable-cache: false # the corpus generator has no dependencies, there is nothing to cache
+
+      # cases/ and cases.json are gitignored build artifacts, so a fresh checkout has to build
+      # them; the indexer is a separate crate, built with stable rather than this job's toolchain
+      - name: build the json-cases corpus
+        run: make -C json-cases build
+        env:
+          RUSTUP_TOOLCHAIN: stable
+
+      - name: install cargo-careful
+        if: matrix.rust-version == 'nightly'
+        uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
+        with:
+          tool: cargo-careful
+
+      - if: matrix.rust-version == 'nightly'
+        run: cargo careful t -F python
+
+      - run: cargo llvm-cov -F python --codecov --output-path codecov.json
+        env:
+          RUST_BACKTRACE: 1
+
+      - run: uv run crates/jiter/benches/generate_big.py
+
+        # since not all benchmarks are run with codspeed, we test them all there
+      - run: cargo bench -p jiter -- --test
+        env:
+          RUST_BACKTRACE: 1
+
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        with:
+          env_vars: RUNS_ON,RUST_VERSION
+          files: codecov.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  test-python:
+    name: test jiter-python ${{ matrix.python-version }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.14', '3.14t', 'graalpy3.12']
+
+    env:
+      RUNS_ON: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
+        with:
+          tool: cargo-llvm-cov
+
+      - name: Install dependencies
+        run: |
+          source <(cargo llvm-cov show-env --export-prefix)
+          cargo llvm-cov clean --workspace --profraw-only
+          uv sync --group dev --all-packages
+
+      - name: Run tests
+        run: |
+          source <(cargo llvm-cov show-env --export-prefix)
+          uv run pytest crates/jiter-python/tests
+          uv run crates/jiter-python/bench.py jiter jiter-cache --fast
+        env:
+          RUST_BACKTRACE: 1
+
+      - name: Coverage report
+        run: |
+          source <(cargo llvm-cov show-env --export-prefix)
+          cargo llvm-cov report --codecov --output-path codecov.json
+
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        with:
+          files: codecov.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  bench:
+    runs-on: codspeed-macro
+
+    env:
+      # the corpus the json_cases benchmarks run over, checked out and built below; without it they
+      # register nothing and CodSpeed sees only the benchmarks in main.rs
+      JSON_CASES: ${{ github.workspace }}/json-cases
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          python-version: '3.13'
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - name: check out the json-cases corpus
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: samuelcolvin/json-cases
+          ref: ${{ env.JSON_CASES_REF }}
+          path: json-cases
+          persist-credentials: false
+
+      - uses: moonrepo/setup-rust@abb2d32350334249b178c401e5ec5836e0cd88d3 # v1.3.0
+        with:
+          channel: stable
+          cache-target: release
+          bins: cargo-codspeed
+
+      - run: uv run crates/jiter/benches/generate_big.py
+
+      # cases/ and cases.json are gitignored build artifacts, so a fresh checkout has to build them
+      - name: build the json-cases corpus
+        run: make -C json-cases build
+
+      - run: cargo codspeed build -F python -p jiter
+
+      - uses: CodSpeedHQ/action@4296e51e7041e24dadb86d1d6e8b9320d223dbe8 # v5.0.3
+        with:
+          # ASLR shifts the memory layout per process, moving small benches ~5-10% between runs,
+          # see https://github.com/pydantic/jiter/pull/284
+          run: setarch $(uname -m) -R cargo codspeed run
+          mode: walltime
+          token: ${{ secrets.CODSPEED_TOKEN }}
+
+  test-latest-deps:
+    name: test with latest dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: stable
+
+      # resolve dependencies fresh, as they are for anyone adding jiter to their
+      # project; every other job builds against the committed Cargo.lock
+      - run: rm Cargo.lock
+
+      - run: cargo test -F python
+        env:
+          RUST_BACKTRACE: 1
+          JSON_CASES_SKIP: '1'
+
+  fuzz:
+    name: fuzz on ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [ubuntu, macos]
+
+    runs-on: ${{ matrix.runs-on }}-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: nightly
+
+      - id: cache-rust
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - if: steps.cache-rust.outputs.cache-hit != 'true'
+        run: cargo install cargo-fuzz
+      - run: |
+          # cargo fuzz defaults to musl targets, which is seemingly incompatible with sanitizers according to CI failures
+          RUST_TARGET=$(rustc --print host-tuple)
+          cargo fuzz run --target=$RUST_TARGET --fuzz-dir crates/fuzz compare_to_serde --release -- -max_total_time=300s
+
+  fuzz-skip:
+    name: fuzz skip
+    # we only run this on ubuntu since architecture should make no difference
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: nightly
+
+      - id: cache-rust
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - if: steps.cache-rust.outputs.cache-hit != 'true'
+        run: cargo install cargo-fuzz
+
+      - run: |
+          # cargo fuzz defaults to musl targets, which is seemingly incompatible with sanitizers according to CI failures
+          RUST_TARGET=$(rustc --print host-tuple)
+          cargo fuzz run --target=$RUST_TARGET --fuzz-dir crates/fuzz compare_skip --release -- -max_total_time=300s
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          python-version: '3.13'
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - name: Install dependencies
+        run: uv sync --all-packages --group linting
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: stable
+          components: rustfmt,clippy
+
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          lookup-only: false # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+        with:
+          extra_args: --all-files --verbose
+        env:
+          PRE_COMMIT_COLOR: always
+          SKIP: test
+          UV_NO_PROGRESS: '1'
+
+      - run: cargo doc -F python
+
+  build-sdist:
+    name: build sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      - uses: PyO3/maturin-action@04ac600d27cdf7a9a280dadf7147097c42b757ad # v1.50.1
+        with:
+          command: sdist
+          args: --out dist
+          rust-toolchain: stable
+          working-directory: crates/jiter-python
+      - name: verify sdist lockfile for locked vendoring
+        run: |
+          set -euxo pipefail
+          sdist_path=$(echo crates/jiter-python/dist/*.tar.gz)
+          sdist_name=$(basename "$sdist_path" .tar.gz)
+          mkdir sdist-check
+          tar -xzf "$sdist_path" -C sdist-check
+          cd "sdist-check/$sdist_name"
+          cargo vendor --locked > /dev/null
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: pypi_files_sdist
+          path: crates/jiter-python/dist
+
+  build:
+    name: build on ${{ matrix.os }} (${{ matrix.target }} - ${{ matrix.interpreter || 'all' }}${{ matrix.os == 'linux' && format(' - {0}', matrix.manylinux == 'auto' && 'manylinux' || matrix.manylinux) || '' }})
+    # only run on push to main and on release
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'Full Build')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [linux, windows] # windows and macos builds added manually
+        target: [i686]
+        manylinux: [auto]
+        include:
+          # manylinux for various platforms
+          # x86_64 and aarch64 are PGO optimized below
+          - os: linux
+            manylinux: auto
+            target: i686
+          - os: linux
+            manylinux: auto
+            target: armv7
+          - os: linux
+            manylinux: auto
+            target: ppc64le
+          - os: linux
+            manylinux: auto
+            target: s390x
+          - os: linux
+            manylinux: auto
+            target: riscv64
+
+          # manylinux graalpy on major architectures
+          - os: linux
+            manylinux: auto
+            target: x86_64
+            interpreter: graalpy3.11 graalpy3.12
+          - os: linux
+            manylinux: auto
+            target: aarch64
+            interpreter: graalpy3.11 graalpy3.12
+
+          # musllinux
+          - os: linux
+            manylinux: musllinux_1_1
+            target: x86_64
+          - os: linux
+            manylinux: musllinux_1_1
+            target: aarch64
+            runs-on: ubuntu-24.04-arm
+
+          # macos;
+          # all versions x86_64
+          - os: macos
+            target: x86_64
+            interpreter: 3.10 3.11 3.12 3.13 3.14 3.15 graalpy3.11 graalpy3.12
+          - os: macos
+            target: aarch64
+            interpreter: graalpy3.11 graalpy3.12
+
+          # windows 11 arm supports 3.11 and up
+          - os: windows
+            target: aarch64
+            runs-on: windows-11-arm
+            interpreter: '3.11 3.12 3.13 3.14 3.14t 3.15 3.15t'
+
+    runs-on: ${{ matrix.runs-on || format('{0}-latest', (matrix.os == 'linux' && 'ubuntu') || matrix.os)  }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+      - uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: stable
+
+      - name: build wheels
+        uses: PyO3/maturin-action@04ac600d27cdf7a9a280dadf7147097c42b757ad # v1.50.1
+        with:
+          target: ${{ matrix.target }}
+          manylinux: ${{ matrix.manylinux }}
+          args: --release --out dist --interpreter ${{ matrix.interpreter || '3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t' }}
+          rust-toolchain: stable
+          working-directory: crates/jiter-python
+
+      - run: ${{ (matrix.os == 'windows' && 'dir') || 'ls -lh' }} crates/jiter-python/dist/
+
+      - run: |
+          pip install --upgrade twine
+          twine check --strict crates/jiter-python/dist/*
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: pypi_files_${{ matrix.os }}_${{ matrix.target }}_${{ matrix.interpreter || 'all' }}_${{ matrix.manylinux }}
+          path: crates/jiter-python/dist
+
+  build-pgo:
+    name: build pgo-optimized on ${{ matrix.platform.os }} / ${{ matrix.interpreter }}
+    # only run on push to main and on release
+    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'Full Build')
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - {os: linux, runs-on: ubuntu-latest}
+          - {os: linux_aarch64, runs-on: ubuntu-24.04-arm}
+          - {os: windows, runs-on: windows-latest}
+          - {os: macos, runs-on: macos-latest}
+        interpreter: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.14t', '3.15', '3.15t']
+
+    runs-on: ${{ matrix.platform.runs-on }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        id: setup-python
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          python-version: ${{ matrix.interpreter }}
+          enable-cache: false
+
+      # make sure UV has the desired interpreter installed so PGO can use it
+      - run: uv python install
+
+      - name: build pgo-optimized wheel
+        uses: PyO3/maturin-action@04ac600d27cdf7a9a280dadf7147097c42b757ad # v1.50.1
+        with:
+          manylinux: auto
+          args: >
+            --release
+            --pgo
+            --out dist
+            --interpreter ${{ matrix.interpreter }}
+          rust-toolchain: stable
+          working-directory: crates/jiter-python
+
+      - run: ${{ (startsWith(matrix.platform.os, 'windows') && 'dir') || 'ls -lh' }} crates/jiter-python/dist/
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: pypi_files_${{ matrix.platform.os }}_${{ matrix.interpreter }}
+          path: crates/jiter-python/dist
+
+  build-wasm-emscripten:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Our MSRV is currently 1.88.
+          # We can't build for 3.12 as Rust 1.88 is incompatible with the emsdk version (https://github.com/PyO3/maturin/issues/2549).
+          # For 3.13, pyodide recommends nightly-2025-02-01 (1.86.0), which is below our MSRV — trying to use newer nightly releases
+          # fails when building.
+          - python-version: '3.14'
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+
+      - run: uv sync --only-group pyodide-build
+
+      - name: Get pyodide config
+        id: pyodide-config
+        run: |
+          echo "rust-toolchain=$(uv run pyodide config get rust_toolchain)" >> "$GITHUB_OUTPUT"
+          echo "emscripten-version=$(uv run pyodide config get emscripten_version)" >> "$GITHUB_OUTPUT"
+          echo "pyodide-abi-version=$(uv run pyodide config get pyodide_abi_version)" >> "$GITHUB_OUTPUT"
+          echo "rustflags=$(uv run pyodide config get rustflags)" >> "$GITHUB_OUTPUT"
+
+      - uses: emscripten-core/setup-emsdk@4528d102f7230f0e7b276855c01ea1159be0e984 # v16
+        with:
+          version: ${{ steps.pyodide-config.outputs.emscripten-version }}
+          no-cache: ${{ startsWith(github.ref, 'refs/tags/') }}
+
+      - name: Build wheels
+        uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+        # Unclear how to avoid manually specifying this yet (https://github.com/PyO3/maturin/issues/3189):
+        env:
+          CARGO_TARGET_WASM32_UNKNOWN_EMSCRIPTEN_RUSTFLAGS: ${{ steps.pyodide-config.outputs.rustflags }}
+          MATURIN_PYEMSCRIPTEN_PLATFORM_VERSION: ${{ steps.pyodide-config.outputs.pyodide-abi-version }}
+        with:
+          working-directory: crates/jiter-python
+          target: wasm32-unknown-emscripten
+          args: --release --out dist --interpreter ${{ matrix.python-version }}
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+          rust-toolchain: ${{ steps.pyodide-config.outputs.rust-toolchain }}
+
+      - run: ls -lh dist/
+        working-directory: crates/jiter-python
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pypi_files_wasm_${{ matrix.python-version }}
+          path: crates/jiter-python/dist
+
+  inspect-pypi-assets:
+    needs: [build, build-sdist, build-pgo]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: get dist artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pypi_files_*
+          merge-multiple: true
+          path: dist
+
+      - name: list dist files
+        run: |
+          ls -lh dist/
+          ls -l dist/
+          echo "`ls dist | wc -l` files"
+
+      - name: extract and list sdist file
+        run: |
+          mkdir sdist-files
+          tar -xvf dist/*.tar.gz -C sdist-files
+          tree -a sdist-files
+
+      - name: extract and list wheel file
+        run: |
+          ls dist/*cp310-manylinux*x86_64.whl | head -n 1
+          python -m zipfile --list `ls dist/*cp310-manylinux*x86_64.whl | head -n 1`
+
+  test-builds-arch:
+    name: test build on ${{ matrix.target }}-${{ matrix.distro }}
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64, armv7, s390x, ppc64le]
+        distro: ['ubuntu22.04']
+        include:
+          - target: aarch64
+            distro: alpine_latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: get dist artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pypi_files_linux_*
+          merge-multiple: true
+          path: crates/jiter-python/dist
+
+      - uses: uraimo/run-on-arch-action@d94c13912ea685de38fccc1109385b83fd79427d # v3.0.1
+        name: install & test
+        with:
+          arch: ${{ matrix.target }}
+          distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+          install: |
+            set -x
+            if command -v apt-get &> /dev/null; then
+              echo "installing python, pip and curl with apt-get..."
+              apt-get update
+              apt-get install -y --no-install-recommends python3 python3-pip python3-venv git curl
+            else
+              echo "installing python, pip and curl with apk..."
+              apk update
+              apk add python3 py3-pip git curl
+            fi
+          env: |
+            UV_NO_PROGRESS: '1'
+          run: |
+            set -x
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+            source $HOME/.local/bin/env  # So that uv can be found once installed
+            uv sync --group dev --no-install-package jiter
+            cd crates/jiter-python
+            uv pip install jiter --no-index --no-deps --find-links dist --force-reinstall
+            uv run --no-sync pytest
+            uv run --no-sync python -c 'import jiter; print(jiter.__version__)'
+
+  test-builds-os:
+    name: test build on ${{ matrix.os }}
+    needs: [build, build-pgo]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        id: setup-python
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          python-version: '3.14'
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - name: get dist artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pypi_files_*
+          merge-multiple: true
+          path: crates/jiter-python/dist
+
+      - name: run tests
+        run: |
+          uv sync --group dev --no-install-package jiter
+          cd crates/jiter-python
+          uv pip install jiter --no-index --no-deps --find-links dist --force-reinstall
+          uv run pytest
+          uv run python -c 'import jiter; print(jiter.__version__)'
+
+  test-pyemscripten:
+    name: Test build on PyEmscripten (Pyodide) (${{ matrix.python-version }})
+    needs: [build-wasm-emscripten]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.14'
+            pylock-suffix: '314'
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+
+      - name: get dist artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pypi_files_wasm_${{ matrix.python-version }}
+          path: dist
+
+      - run: |
+          uv sync --only-group pyodide-build
+          uv run pyodide venv .venv-pyodide
+          source .venv-pyodide/bin/activate
+          python -m pip install --upgrade pip>=26.1.1
+          python -m pip install -r .github/pyodide/pylock.${{ matrix.pylock-suffix }}.toml
+          python -m pip install jiter --no-index --no-deps --find-links dist
+          python -m pytest
+          python -c 'import jiter; print(jiter.__version__)'
+
+  # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
+  check:
+    if: always()
+    needs: [test, test-latest-deps, test-python, bench, fuzz, fuzz-skip, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}
+
+  release:
+    needs: [check]
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment: release
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: install rust stable
+        # no release versioning, see https://github.com/dtolnay/rust-toolchain/issues/180
+        uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9
+        with:
+          toolchain: stable
+
+      - run: cargo publish -p jiter
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  release-python:
+    needs:
+      - check
+      - test-builds-arch
+      - test-builds-os
+      - build-sdist
+      - test-pyemscripten
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment: release-python
+    permissions:
+      id-token: write
+      # needed to be able to upload wasm wheels
+      contents: write
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: set up python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      - name: get dist artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pypi_files_*
+          merge-multiple: true
+          path: dist
+
+      - run: |
+          pip install --upgrade twine
+          ls -l dist/
+          twine check --strict dist/*
+
+      - name: upload to pypi
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
+        with:
+          packages-dir: dist/

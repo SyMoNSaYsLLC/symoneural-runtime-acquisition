@@ -1,0 +1,35 @@
+[package]
+name = "fuzz"
+# Internal-only crate (`publish = false`): keep version decoupled from release crates.
+publish = false
+version = "0.0.0"
+edition = "2021"
+authors = ["Samuel Colvin <samuel@pydantic.dev>"]
+
+[package.metadata]
+cargo-fuzz = true
+
+# not a member of the workspace to avoid upsetting maturin and fuzz profiles
+# empty workspace so fuzzing works from a worktree directory nested inside the main repo
+[workspace]
+
+[dependencies]
+libfuzzer-sys = "0.4.7"
+serde_json = {version = "1.0.107", features = ["preserve_order", "float_roundtrip"]}
+serde = "1.0.190"
+indexmap = "2.0.0"
+num-bigint = "0.4.4"
+num-traits = "0.2.17"
+jiter = {path = "../jiter"}
+
+[[bin]]
+name = "compare_to_serde"
+path = "fuzz_targets/compare_to_serde.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "compare_skip"
+path = "fuzz_targets/compare_skip.rs"
+test = false
+doc = false

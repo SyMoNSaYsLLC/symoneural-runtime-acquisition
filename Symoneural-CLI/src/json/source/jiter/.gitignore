@@ -1,0 +1,13 @@
+target
+.idea/
+**/big.json
+/profiling/
+/scratch/
+/scratch-project/
+/*.bm
+env*/
+
+profile.json
+__pycache__
+/worktrees/
+/crates/fuzz/Cargo.lock

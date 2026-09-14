@@ -1,0 +1,45 @@
+[build-system]
+requires = ["maturin>=1.15.0,<2"]
+build-backend = "maturin"
+
+[project]
+name = "jiter"
+description = "Fast iterable JSON parser."
+requires-python = ">=3.10"
+authors = [
+    {name = "Samuel Colvin", email = "s@muelcolvin.com"}
+]
+license = 'MIT'
+license-files = ['LICENSE']
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: GraalPy",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console",
+    "Environment :: MacOS X",
+    "Topic :: File Formats :: JSON",
+    "Framework :: Pydantic :: 2",
+]
+dynamic = ["version"]
+
+[tool.maturin]
+module-name = "jiter"
+bindings = "pyo3"
+features = []
+editable-profile = "dev"
+pgo-command = "python bench.py jiter jiter-cache"

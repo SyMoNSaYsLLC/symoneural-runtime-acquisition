@@ -1,0 +1,37 @@
+[project]
+name = "jiter-workspace"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[dependency-groups]
+dev = [
+    "maturin>=1.15",
+    "pytest",
+    "pytest-pretty",
+    "dirty-equals",
+]
+bench = [
+    "orjson",
+    "ujson",
+]
+linting = [
+    "ruff",
+    # markdown formatting, `make format-md`
+    "mdformat",
+    "mdformat-tables",
+]
+pyodide-build = [
+    "pyodide-build",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["crates/jiter-python"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.format]
+quote-style = "single"
