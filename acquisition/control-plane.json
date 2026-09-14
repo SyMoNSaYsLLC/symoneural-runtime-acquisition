@@ -109,7 +109,7 @@
   "scan-dependencies.py": "163f137408fec52d11214e206362ec90c0a9a8fa79c9a91fc37a159b190061be",
   "scan-oe-providers.py": "fcf8d107e0b22fbe458721b5a87fa34cbc032beca098da04af0c200ced52e043",
   "scan-source-collisions.py": "690d939d3950c74804d0d7e3b9452839d0f1805630c5bbc7ed8ceb3ca4606565",
-  "test-estate-operators.py": "a56c07d7e90ff8e27cbabdce49c3411dcea216495d9fef8c09fec514665c506a",
+  "test-estate-operators.py": "ac82cf6560c732ebc8f31ec1475021ea5264ac9064014c5188f243b5a378b4cd",
   "verify-acquisition.py": "bd4fc8d923672083ef306bf0f63e683c8ca788d39510616e3bacfdf4277fefb0"
  }
 }

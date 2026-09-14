@@ -6,13 +6,13 @@
 
 | | |
 |---|---|
-| Parent HEAD | `f1213f3902fc4149ab72a61a520d75f8e6d9511c` |
+| Parent HEAD | `4bee9bce9560c6f3eec2e95367f51162c89f72ec` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
-| Scanner identity | `acquisition/control-plane.json` (14 tools hashed) |
+| Scanner identity | `acquisition/control-plane.json` (19 tools hashed) |
 | Determinism verified | YES |
-| Tree inventory | `generated/runtime-tree.txt` (31155 dirs) |
-| Tree SHA-256 | `b1ddeeb222b6500a1d63fa81e69ab5fd6d5a87c69d95f880f3399d70efbea0a6` |
+| Tree inventory | `generated/runtime-tree.txt` (31805 dirs) |
+| Tree SHA-256 | `a30a991b1ac96dcc19ad939de74c3a61ab492f601b1c9b7c3c7dd391491dbed5` |
 | Report self-validation | PASS (10/10 totals re-derived) |
 
 ## Verdicts
@@ -30,7 +30,7 @@ Acquisition FAIL reasons:
 - 87 provider collision(s) unresolved (57 direct-vs-OE-Core)
 - 366 vendored decision(s) unresolved
 - 429 licence file(s) without an established identifier
-- 1 explicit control-plane decisions open (FreeToken/torch)
+- 3 explicit control-plane decisions open (FreeToken/torch, nvidia-userspace-driver-provider, nvidia-gsp-firmware-provider)
 
 This FAIL is expected and is a statement of open decisions, not a defect.
 
@@ -39,8 +39,8 @@ This FAIL is expected and is a statement of open decisions, not a defect.
 
 | Method | Count |
 |---|---|
-| A — filesystem candidate + `git rev-parse` validation | 92 |
-| B — independent git work-tree-top census | 92 |
+| A — filesystem candidate + `git rev-parse` validation | 93 |
+| B — independent git work-tree-top census | 93 |
 | **Sets identical** | **YES** |
 
 `.git` is accepted as a file or a directory; submodules are excluded from the
@@ -70,11 +70,12 @@ This locks the **build stack only**, never the application sources.
 | Crypto | 3 | 3 | 3 |
 | LLM | 4 | 4 | 4 |
 | Live | 1 | 1 | 1 |
+| Platform | 1 | 1 | 1 |
 | Ravencalc | 12 | 12 | 12 |
 | Remix | 1 | 1 | 1 |
 | Streamer | 1 | 1 | 1 |
 | Web | 2 | 1 | 2 |
-| **TOTAL** | **92** | **90** | **92** |
+| **TOTAL** | **93** | **91** | **93** |
 
 ## Top-level source lock
 
@@ -156,6 +157,7 @@ This locks the **build stack only**, never the application sources.
 | LLM | triton | `c01b6774b186` | VERIFIED | 0 | yes |
 | LLM | vllm | `98dff2a81d74` | VERIFIED | 0 | yes |
 | Live | gstreamer | `070125524a84` | VERIFIED | 1 | yes |
+| Platform | open-gpu-kernel-modules | `61dcc93722ec` | VERIFIED | 0 | yes |
 | Ravencalc | openblas | `e0166008be8e` | VERIFIED | 0 | yes |
 | Ravencalc | narwhals | `e34715d1e9e2` | VERIFIED | 0 | yes |
 | Ravencalc | cython | `ec152091ca7c` | VERIFIED | 0 | yes |
@@ -311,7 +313,7 @@ Provider kinds indexed: DIRECT-ACQUISITION, OE-CORE-RECIPE, SUBMODULE, VENDORED
 
 | | |
 |---|---|
-| Logical sources indexed | 387 |
+| Logical sources indexed | 388 |
 | With more than one provider | **133** |
 | INTRA-COMPONENT-DUPLICATE | 119 |
 | CROSS-COMPONENT-DUPLICATE | 7 |
@@ -335,10 +337,10 @@ no copy is collapsed, deleted or rewritten; every entry is `UNRESOLVED`.
 
 ## Licence inventory
 
-Licence-bearing files: **551**
+Licence-bearing files: **553**
 
-- NESTED/DEPENDENCY: 440
-- TOP-LEVEL: 111
+- NESTED/DEPENDENCY: 441
+- TOP-LEVEL: 112
 
 **LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts.**
 This inventory is drift evidence, not a licensing conclusion.
@@ -356,8 +358,8 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 | RUST-RLIB | 15 |
 | NODE-BUNDLE | 14 |
 | RUST-CDYLIB | 11 |
+| UNKNOWN | 7 |
 | SHARED-LIBRARY | 7 |
-| UNKNOWN | 6 |
 | STATIC-LIBRARY|SHARED-LIBRARY | 6 |
 
 ## Unresolved decisions
@@ -366,6 +368,8 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 |---|---|---|
 | ARCHITECTURE | FreeToken/torch | Adaptive-Fabric build design |
 | VERSION-CONFLICT | sympy-mpmath-constraint | Ravencalc runtime closure PASS (sympy) |
+| BUILD-DESIGN | nvidia-userspace-driver-provider | Platform: complete fresh-machine GPU deployment from estate artifacts |
+| BUILD-DESIGN | nvidia-gsp-firmware-provider | Platform: loading the estate-built nvidia.ko on Blackwell/Ada/Ampere hardware |
 
 - artifact decisions pending: **41**
 - licence files unresolved: **429**
@@ -389,4 +393,8 @@ Recorded as history. Neither build is authoritative for release.
 1. **[ARCHITECTURE] FreeToken/torch** — FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.
 
 2. **[VERSION-CONFLICT] sympy-mpmath-constraint** — sympy 1.14.0 (sympy-1.14.0 tag, built wheel METADATA) declares Requires-Dist mpmath<1.4,>=1.1.0; the estate pins mpmath 1.4.1 (c1131e2d64ab). Python imports work regardless, but the declared closure is violated and pip-style resolution would refuse it.
+
+3. **[BUILD-DESIGN] nvidia-userspace-driver-provider** — No estate provider for the NVIDIA driver userspace ABI (libcuda.so.1, libnvidia-ml.so.1, libnvidia-gpucomp, libnvidia-nvvm, libnvidia-ptxjitcompiler, nvidia-modprobe) at 615.71.09. The Debian profile consumes the host's NVIDIA Debian 13 packages (615.71.09-2; the P7 S2 boundary). The estate profile has none, so a fresh estate machine cannot run CUDA even with the estate-built kernel modules and kernel.
+
+4. **[BUILD-DESIGN] nvidia-gsp-firmware-provider** — No estate provider for the GSP firmware the open kernel modules request at load (nvidia/615.71.09/gsp_tu10x.bin, gsp_ga10x.bin, ucodes_*.bin; modinfo firmware:). Debian profile: firmware-nvidia-gsp 615.71.09-2 from NVIDIA's Debian 13 index (sha256 2f72dd12294aba56...). Estate profile: oe-core linux-firmware ships nouveau-era NVIDIA firmware, not 615.71.09 GSP.
 

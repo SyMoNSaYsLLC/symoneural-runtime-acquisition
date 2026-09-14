@@ -9331,6 +9331,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "open-gpu-kernel-modules",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "open-gpu-kernel-modules",
+     "path": "Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules",
+     "resolved_revision": "61dcc93722ecb418bb5f2e00923f05b4b8051dd1",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/NVIDIA/open-gpu-kernel-modules"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "openblas",
    "provider_count": 1,
    "provider_kinds": [

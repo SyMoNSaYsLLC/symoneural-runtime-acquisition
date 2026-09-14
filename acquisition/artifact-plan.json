@@ -827,6 +827,16 @@
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
+   "component": "open-gpu-kernel-modules",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 1583,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
    "component": "openblas",
    "declared_capabilities": [
     "EXECUTABLE",
