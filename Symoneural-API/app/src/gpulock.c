@@ -188,6 +188,13 @@ sym_lock_status sym_gpulock_current(sym_lock_holder *out)
 {
     sym_lock_holder h;
     sym_lock_status st = read_holder(&h);
+    if (st == SYM_LOCK_CORRUPT) {
+        /* Unparseable is treated as ABSENT - and absent means the file must
+         * go, or O_EXCL creation fails with EEXIST forever and the card is
+         * stranded behind garbage. Found by tests/native/test_gpulock.c. */
+        unlink(sym_gpulock_path());
+        return SYM_LOCK_NOT_HELD;
+    }
     if (st != SYM_LOCK_OK)
         return st;
 

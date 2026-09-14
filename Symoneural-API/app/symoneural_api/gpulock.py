@@ -81,12 +81,26 @@ class Holder:
 def _read() -> Holder | None:
     try:
         raw = json.loads(LOCK_PATH.read_text())
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        return None
+    except json.JSONDecodeError:
+        _reap_corrupt()
         return None
     try:
         return Holder(unit=raw["unit"], pid=int(raw["pid"]), since=float(raw["since"]))
     except (KeyError, TypeError, ValueError):
+        _reap_corrupt()
         return None              # corrupt = absent, not fatal
+
+
+def _reap_corrupt() -> None:
+    """Absent means the file must go: with it left in place, O_EXCL creation
+    fails with EEXIST until the deadline and the card is stranded behind
+    garbage. Same rule as the C half."""
+    try:
+        LOCK_PATH.unlink()
+    except FileNotFoundError:
+        pass
 
 
 def current() -> Holder | None:

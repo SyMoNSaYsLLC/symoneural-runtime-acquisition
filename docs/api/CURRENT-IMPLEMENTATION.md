@@ -1,0 +1,105 @@
+# Symoneural-API — current implementation (A0 capture, 2026-09-13)
+
+Read from `Symoneural-API/app/` at estate HEAD after commit `fc813f711`. This is the
+regression authority for the refactor toward `libsymoneural-api`: behaviour listed
+here is preserved by the tests in `Symoneural-API/app/tests/` before any primitive
+is extracted. Facts only; the target architecture is in `docs/api/ARCHITECTURE.md`.
+
+## Files
+
+| Path | Lines | Tracked | What |
+|---|---|---|---|
+| `symoneural_api/main.py` | 165 | yes | FastAPI app "SyMoNeuRaL DispatchOS"; routes below; `main()` runs uvicorn on `$SYMONEURAL_HOST:$SYMONEURAL_PORT` (127.0.0.1:8800) |
+| `symoneural_api/routeclass.py` | 144 | yes | five route classes; `authenticate()`, `enforce()`, `classified()`; `Principal`; `AuthzError(status, detail)` |
+| `symoneural_api/units.py` | 144 | yes | `Unit` dataclass; `REGISTRY` of 8 units; `unit()`, `gpu_units()`, `backing_packages()` |
+| `symoneural_api/gpulock.py` | 171 | yes | file lock at `$SYM_GPU_LOCK` (default `/run/symoneural/gpu.lock`); `PRIORITY`; `Holder`; `current/acquire/release/hold` |
+| `src/gpulock.c` + `include/symoneural/gpulock.h` | 288 + 78 | yes | same protocol in C; `sym_gpulock_{priority,path,current,acquire,release,strerror}` |
+| `src/rack.c` + `include/symoneural/rack.h` | 173 + 62 | yes | `/proc` host state + `nvidia-smi` subprocess GPU state; JSON that refuses to truncate |
+| `src/unit.c` + `include/symoneural/unit.h` | 213 + 89 | **no (untracked)** | unit supervisor: fork/exec, poll, stop; GPU lock before exec |
+
+No build file, no tests existed before this capture. The C was compiled by hand
+(`-std=c11 -Wall -Wextra -Werror`, commit `5052b4c4ff`).
+
+## Python surface (`main.py`)
+
+| Route | Class | Behaviour |
+|---|---|---|
+| `GET /api/status` | PUBLIC_BOOTSTRAP | per unit: `UNCONFIGURED` if `$<token_env>` unset; `OFFLINE` unless `$SYM_<UNIT>_ENABLED=1`; `BUSY` if it holds the GPU lock; `QUEUED` if GPU-class and another holds it; else `READY` |
+| `GET /api/health` | PUBLIC_BOOTSTRAP | `{"status":"ready","uptime_s":…}` |
+| `GET /api/operator/lock` | OPERATOR_ONLY | holder dict or null, `PRIORITY`, `lock_path` |
+| `POST /api/operator/lock/release?unit=` | OPERATOR_ONLY | `gpulock.release(unit, force=True)` |
+| `GET /api/unit/{name}` | ENTITLEMENT_REQUIRED, `application=name` | 404 for unknown unit **before** authentication; unit detail + principal kind |
+
+Route-class semantics (`routeclass.enforce`): PUBLIC_BOOTSTRAP → no checks;
+SHARED_AUTH → 503 if the unit's token is unprovisioned, else no identity;
+otherwise `authenticate()`: 401 without a bearer, operator token (`$SYM_OWNER_TOKEN`)
+checked first, then `$SYM_<UNIT>_TOKEN` → `unit:<name>` principal, else 401;
+OPERATOR_ONLY → **404** (not 403) for a non-operator; ENTITLEMENT_REQUIRED → 500 if no
+application named, 403 unless operator or entitled. Comparison is `hmac.compare_digest`.
+Secrets are read from the environment only; missing means unconfigured.
+
+Observed: `Principal.entitlements` is never populated by `authenticate()` — a unit
+principal can only pass ENTITLEMENT_REQUIRED as an operator today. `/api/unit/{name}`
+passes the **unit name as the application** — the application concept is conflated
+with the unit; the generic registry (A10) must separate them.
+
+## Unit registry (`units.py`)
+
+`REGISTRY` (insertion order): ravencalc 8801 CPU · chat 8802 GPU · coder 8803 CPU ·
+project 8804 CPU · streamer 8805 NET · remix 8806 NET · studio 8807 GPU · miner 8808
+GPU (height 6). Each carries `backed_by` (estate package names), `token_env`
+(`SYM_<NAME>_TOKEN`), `enabled_variable` (`SYM_<NAME>_ENABLED` unless overridden).
+Names in `DECISIONS.md` §1 not in the registry: live, rack, exp, asic, image, sigils,
+voice, reinforce. `gpu_units()` filters by resource; `backing_packages()` is the
+unit→package graph the API uses to make "offline" checkable.
+
+## GPU lock — the C↔Python contract
+
+Lock file JSON `{"unit":"<name>","pid":<int>,"since":<float epoch>}`; path from
+`$SYM_GPU_LOCK` else `/run/symoneural/gpu.lock`. Both halves: `O_CREAT|O_EXCL`
+creation, re-entrant for the same unit, stale holder (dead pid; EPERM counts as
+alive) is **reaped** by `current()`, release refuses another unit's lock unless
+`force`, corrupt file is treated as absent (fail toward an unlocked card), bounded
+acquire (Python 30 s / 0.25 s poll; C `timeout_ms`, 250 ms poll), higher priority
+**waits**, never preempts. Priorities duplicated in both languages: chat 100, image
+100, sigils 90, studio 50, reinforce 50, miner 10, unknown 50. C `fsync`s the file;
+Python does not. C caps unit name at 64.
+
+## Unit supervisor (`unit.c`, untracked)
+
+`sym_unit_start`: refuses `UNCONFIGURED` when `$<token_env>` is empty; GPU units
+call `sym_gpulock_acquire(name, 30000)` **before** fork; child `setpgid(0,0)`,
+resets SIGTERM/SIGINT/SIGPIPE, `execv(exec_path, argv)`, `_exit(127)` on failure.
+`sym_unit_poll`: `waitpid(WNOHANG)`; `STARTING→READY` after surviving **2 s** (a
+heuristic, no port probe); exit 0 → OFFLINE, non-zero → FAILED (`last_exit_code`),
+signal → 128+sig, SIGTERM during STOPPING counts as clean; releases the GPU lock on
+exit. `sym_unit_stop`: SIGTERM to the process group, 10 s grace (100 ms polls),
+SIGKILL, force-release lock, returns −1 for the unclean path. `sym_unit_json`
+refuses to truncate. `restart_count` is never incremented anywhere.
+
+## Rack telemetry (`rack.c`)
+
+`sym_rack_host`: `/proc/meminfo` (MemTotal, MemAvailable, SwapTotal, SwapFree),
+`/proc/loadavg`, `/proc/stat procs_running`. **`threads_total` is declared in
+`rack.h` and never set.** `sym_rack_gpu`: `popen("nvidia-smi --query-gpu=…")` — a
+fixed string through `/bin/sh -c`; absence → `present=false`, rc −1. `sym_rack_json`
+refuses to truncate. Verified on this host at commit time ("RTX 5070 Ti, 16303 MiB").
+
+## Deviations from the reconstruction's target (to be resolved, not silently)
+
+1. `popen()` in `rack.c` is a shell invocation — target forbids `/bin/sh -c`; use
+   `posix_spawn` + pipe with an argv.
+2. Priority table lives in two languages — target: one source (C ABI, Python reads).
+3. `unit.c/unit.h` untracked — adopted by this capture (tests below), committed.
+4. No library, no build file, no ABI version — targets A7.
+5. `rack.h threads_total` unimplemented; `restart_count` unused.
+6. Application/unit conflation in `/api/unit/{name}` — target A10 registry.
+
+## Tests written by this capture
+
+`Symoneural-API/app/tests/native/` (C, `make test`): gpulock acquire/busy/reentrant/
+release-refusal/stale-reap/corrupt-as-absent/race (one winner among 6); unit
+start/STARTING→READY/stop/unconfigured/exec-failure-127/GPU-lock-before-exec/json
+non-truncation; rack host fields/JSON parse/non-truncation.
+`Symoneural-API/app/tests/python/` (unittest): gpulock protocol incl. the C↔Python
+file contract; registry invariants; route classes; FastAPI routes via TestClient.
