@@ -198,7 +198,7 @@
       "declared_version_PV": "0.0.5",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/model/.gitpins/annotated-doc.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "MIT",
       "recipe_SRCREV": "ef48d6ad51d226f772fd9c5284f55199afe4007c",
