@@ -71,7 +71,34 @@ inherit cmake
 # runtime dependencies to the bitbake packages which include them:
 #    torch
 
-# CPU-only build. llama.cpp defaults BUILD_SHARED_LIBS off; we want the shared
-# library so it can become a SyMoNeuRaL artifact. GGML_NATIVE is disabled because
-# -march=native would bake the build host's CPU into a cross-compiled artifact.
-EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF"
+# LIBRARY BOUNDARY (reconstruction v1.1, LLM L2/L3): this recipe ships libllama
+# and nothing else. llama-server, the tools, examples, tests and the WebUI are
+# REFERENCE ONLY; SyMoNeuRaL's own libsymoneural-llm / symoneural-llm consume
+# libllama directly. Consequences that matter for a hermetic build:
+#  LLAMA_USE_SYSTEM_GGML=ON  link symoneural-ggml (canonical tree, proven
+#                            byte-identical to the embedded ggml/ copy) instead
+#                            of compiling ggml a second time
+#  LLAMA_BUILD_TOOLS/SERVER/APP/UI/EXAMPLES/TESTS/COMMON=OFF
+#                            common/ carries the llguidance ExternalProject and
+#                            tools/server pulls scripts/ui-assets.cmake (network)
+#  USE_PREBUILT_UI=OFF, LLAMA_LLGUIDANCE=OFF, LLAMA_CURL=OFF
+#                            every build-time fetch point named by
+#                            tools/map-llama-upstreams.py is switched off
+#  GGML_NATIVE=OFF           -march=native would bake the build host's CPU in
+DEPENDS += "symoneural-ggml"
+EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON \
+                  -DGGML_NATIVE=OFF \
+                  -DLLAMA_USE_SYSTEM_GGML=ON \
+                  -DLLAMA_BUILD_COMMON=OFF \
+                  -DLLAMA_BUILD_TESTS=OFF \
+                  -DLLAMA_BUILD_TOOLS=OFF \
+                  -DLLAMA_BUILD_EXAMPLES=OFF \
+                  -DLLAMA_BUILD_SERVER=OFF \
+                  -DLLAMA_BUILD_APP=OFF \
+                  -DLLAMA_BUILD_UI=OFF \
+                  -DUSE_PREBUILT_UI=OFF \
+                  -DLLAMA_LLGUIDANCE=OFF \
+                  -DLLAMA_CURL=OFF"
+RDEPENDS:${PN} += "symoneural-ggml"
+FILES:${PN} += "${libdir}/libllama.so.*"
+FILES:${PN}-dev += "${libdir}/cmake ${libdir}/pkgconfig"
