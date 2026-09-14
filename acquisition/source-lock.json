@@ -151,7 +151,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/encode/uvicorn",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "6997dc7b797de9003fc317e975ee8273557f1c1a",
+      "pins_path": "Symoneural-API/src/web/.gitpins/uvicorn.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Adaptive-Fabric/build/devtool-workspace/appends/symoneural-freetoken_git.bbappend",
