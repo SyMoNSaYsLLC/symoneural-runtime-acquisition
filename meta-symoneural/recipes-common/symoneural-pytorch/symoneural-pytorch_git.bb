@@ -780,3 +780,50 @@ RDEPENDS:${PN} += "python3-core"
 #    yaml.nodes
 #    z3
 #    zipfile
+# --- SLEEF CODE GENERATORS MUST BE NATIVE ------------------------------------
+# torch vendors sleef, which BUILDS code generators (mkrename, mkalias, mkdisp)
+# and then RUNS them during the build to emit headers. Cross-compiled, they are
+# target binaries, and running one on the build host gives:
+#   [ 11%] Built target mkrename
+#   [ 12%] Generating include/renameavx512f.h
+#   /bin/sh: 1: ../../bin/mkrename: not found
+#   make[2]: *** [...renameavx512f.h] Error 127
+#
+# "not found" is misleading - the file is there. Its ELF INTERPRETER is not:
+#   interpreter        /lib/ld-linux-x86-64.so.2   (the target sysroot layout)
+#   this Debian host   /lib64/ld-linux-x86-64.so.2
+# Proven: invoking it through the host loader works and prints its usage, while
+# direct execution returns 127.
+#
+# sleef anticipates this - CMakeLists.txt:252/265 import the tools from
+# NATIVE_BUILD_DIR instead of building them, but only when CMAKE_CROSSCOMPILING
+# is true. It is NOT true here, because torch builds through scikit-build-core
+# rather than cmake.bbclass, so OE's cross toolchain file (which sets
+# CMAKE_SYSTEM_NAME, and with it CMAKE_CROSSCOMPILING) is never applied.
+#
+# So build sleef's tools with the BUILD compiler into a scratch dir and hand that
+# to the cross build. Host compiler, host loader, runnable. Nothing is written to
+# the acquired tree; ${WORKDIR} is disposable.
+do_configure:prepend() {
+    nb="${WORKDIR}/sleef-native"
+    if [ ! -x "$nb/bin/mkrename" ]; then
+        bbnote "building sleef code generators natively for NATIVE_BUILD_DIR"
+        mkdir -p "$nb"
+        ( cd "$nb" &&           ${BUILD_CC} --version >/dev/null 2>&1 || true
+          cmake -S "${S}/third_party/sleef" -B "$nb" \
+                -DCMAKE_C_COMPILER="${BUILD_CC}" \
+                -DCMAKE_CXX_COMPILER="${BUILD_CXX}" \
+                -DCMAKE_C_FLAGS="" -DCMAKE_EXE_LINKER_FLAGS="" \
+                -DSLEEF_BUILD_SHARED_LIBS=OFF \
+                -DSLEEF_BUILD_TESTS=OFF \
+                -DSLEEF_BUILD_DFT=OFF >/dev/null 2>&1 ||           bbwarn "native sleef configure reported errors; continuing to build tools"
+          cmake --build "$nb" --target mkrename mkalias mkdisp mkmasked_gnuabi -j ${@oe.utils.cpu_count()} >/dev/null 2>&1 ||           bbwarn "some native sleef tools did not build"
+        )
+    fi
+    if [ -x "$nb/bin/mkrename" ]; then
+        bbnote "native sleef tools ready at $nb/bin"
+        export CMAKE_ARGS="${CMAKE_ARGS} -DNATIVE_BUILD_DIR=$nb"
+    else
+        bbfatal "native sleef mkrename was not produced at $nb/bin/mkrename"
+    fi
+}
