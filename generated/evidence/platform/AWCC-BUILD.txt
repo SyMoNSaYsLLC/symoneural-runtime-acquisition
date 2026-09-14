@@ -1,0 +1,60 @@
+# symoneural-awcc 1.19.0 - build identity (Platform, estate cross toolchain, qemux86-64 / x86-64-v3)
+generated : 2026-09-14 19:27 EDT
+bitbake   : four launches. (1) CMake 4.4 stores ExternalProject dirs as _EP_SOURCE_DIR/_EP_BINARY_DIR - shadow module fixed. (2) buildpaths QA: sources compiled from the dependency exports embedded ${WORKDIR}/deps paths (57 strings: glfw 26, libusb 11, json 8, imgui 8, loguru 3, stb 1) - symoneural-pristine now prefix-maps SYMON_DEPS_DIR. (3) QA clean; staged install showed the feed lacked the runtime closure and Depends named no X11 library (GLFW dlopen). (4) --runall=package_write_ipk with explicit X11 RDEPENDS: Attempted 3856 tasks of which 3693 didn't need to be rerun and all succeeded - this pulled mesa 26.2.2 + llvm 23.1.0 because libglvnd's GLX dispatch package requires a GLX ICD provider (virtual-libglx-icd).
+
+## Sources (all VERIFIED from HEAD; tools/ingest-tree verify)
+  AWCC                       Platform         0ec42c4b3ddc ·      46 files · VERIFIED
+  glfw                       Platform         d9d6f0f1f967 ·     165 files · VERIFIED
+  imgui                      Platform         f1cc2ae15e53 ·     281 files · VERIFIED
+  json                       Platform         55f93686c015 ·    1163 files · VERIFIED
+  libusb-cmake               Platform         c8477c10ac2a ·     181 files · VERIFIED
+  loguru                     Platform         ba2240d19bae ·      36 files · VERIFIED
+  stb                        Platform         2c980bb59875 ·     431 files · VERIFIED
+
+## Configure: dependency exports and the libevdev shadow
+  symoneural-awcc-1.19.0-r0: dependency tree loguru <- loguru (ba2240d19bae, 36 files): loguru                     Platform         ba2240d19bae ·      36 files · VERIFIE
+  symoneural-awcc-1.19.0-r0: dependency tree json <- json (55f93686c015, 1163 files): json                       Platform         55f93686c015 ·    1163 files · VERIFIED
+  symoneural-awcc-1.19.0-r0: dependency tree glfw <- glfw (d9d6f0f1f967, 159 files): glfw                       Platform         d9d6f0f1f967 ·     165 files · VERIFIED
+  symoneural-awcc-1.19.0-r0: dependency tree imgui <- imgui (f1cc2ae15e53, 281 files): imgui                      Platform         f1cc2ae15e53 ·     281 files · VERIFIED
+  symoneural-awcc-1.19.0-r0: dependency tree libusb <- libusb-cmake (c8477c10ac2a, 177 files): libusb-cmake               Platform         c8477c10ac2a ·     181 files · 
+  symoneural-awcc-1.19.0-r0: dependency tree stb <- stb (2c980bb59875, 431 files): stb                        Platform         2c980bb59875 ·     431 files · VERIFIED
+  -- symoneural: ExternalProject 'libevdev' replaced by the sysroot libevdev (Symoneural-Platform/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-awcc/1.19.0/recipe-sysroot/usr/lib/libevdev.
+  cmake -D flags for the six trees: 
+
+## Compile identity
+  x86_64-oe-linux-g++ invocations: 20; host g++: 0; -std=gnu++23 units: 19
+  prefix maps: -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-awcc/1.19.0/build=/usr/src/debug/symoneural-awcc/1.19.0 -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-awcc/1.19.0/deps=/usr/src/debug/symoneural-awcc/1.19.0/deps -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-awcc/1.19.0/pristine=/usr/src/debug/symoneural-awcc/1.19.0 -ffile-prefix-map=Symoneural-Pl
+
+## Package QA: 0 issues (no INSANE_SKIP)
+
+## Packages
+  symoneural-awcc_1.19.0-r0_x86-64-v3.ipk  1697344 B  sha256 445fe8cc15dcc68e1263fa263d977a480839265ad0b291f05759769e1bf8266f
+  symoneural-awcc-dbg_1.19.0-r0_x86-64-v3.ipk  6243212 B  sha256 4519471f37553854896e5469e5f5104332e71d49b5ce796f4d8f37dd675cd034
+  symoneural-awcc-dev_1.19.0-r0_x86-64-v3.ipk  784 B  sha256 88c1035680acdc53d4a3565177c67c54cb550c09859f953b9ad3fea69578e8a5
+  symoneural-awcc-src_1.19.0-r0_x86-64-v3.ipk  3543138 B  sha256 9ed451ed6e68d5fc8b43109cef0ca562541c4e80bf1cf0296c717932621033ef
+  control (symoneural-awcc):
+    Package: symoneural-awcc
+    Version: 1.19.0-r0
+    License: GPL-3.0-only
+    Architecture: x86-64-v3
+    Depends: libc6 (>= 2.44+git0+5c479454d1), libgcc1 (>= 16.2.0), libglvnd (>= 1.7.0), libstdc++6 (>= 16.2.0), libudev1 (>= 261.2), libx11, libxcursor, libxext, libxi, libxinerama, libxrandr, libxrender
+    Source: symoneural-awcc_1.19.0.bb
+  files:
+    ./etc/awcc/database.json
+    ./etc/systemd/system/awccd.service
+    ./etc/udev/rules.d/70-awcc.rules
+    ./usr/bin/awcc
+    ./usr/share/applications/awcc.desktop
+    ./usr/share/icons/awcc.png
+
+## Executable
+  ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /usr/lib/ld-linux-x86-64.so.2, BuildID[sha1]=7489e56588a800abffc07
+  NEEDED: [libOpenGL.so.0] [libudev.so.1] [libstdc++.so.6] [libm.so.6] [libgcc_s.so.1] [libc.so.6] 
+  build-path strings: 0; /usr/src/debug/symoneural-awcc strings (mapped): 81
+  upstream project(VERSION) is 1.17.0 while the tag is v1.19.0 - the binary reports the CMake VERSION define (upstream inconsistency, recorded)
+
+## Feed closure for the proof: 4973 ipks after --runall (mesa 6, libglvnd 1, libc6 1)
+
+## Statuses
+  BUILD PASS ; PACKAGE/QA PASS ; STAGED INSTALL (opkg, 45-package closure) PASS ; EXECUTABLE RUNS from the root to its device-resolution step PASS (AWCC-PROOF.txt, 32 checks) ; REPRODUCIBILITY NOT TESTED
+  --help/--version output, daemon, GUI, device control: NOT TESTED / not reachable without acpi_call (not acquired), Alienware USB devices and a display ; Debian-profile .deb NOT STARTED

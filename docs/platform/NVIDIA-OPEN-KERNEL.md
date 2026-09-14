@@ -125,4 +125,4 @@ provider decisions above, even with both module packages built.
 3. **Signing / live activation on the development machine** — BLOCKED by policy; a separate gate. The .deb is never installed on the host by this work; a runbook for any future activation must be written to the Desktop stakeholder folder first.
 4. **Reproducibility** — NOT TESTED for both targets; the Debian target additionally depends on host toolchain identity.
 5. **Hardware qualification** — the qemux86-64 result is a build/package result, not RTX 5070 Ti compatibility.
-6. **Adjacent, not started**: AWCC (pending row, GPL-3.0 ruling), kawpowminer (DEFERRED P11), acpi_call module.
+6. **Adjacent**: AWCC — approved and built the same night (`docs/platform/AWCC.md`); kawpowminer (DEFERRED P11); acpi_call module (NOT ACQUIRED, needed by AWCC at run time).

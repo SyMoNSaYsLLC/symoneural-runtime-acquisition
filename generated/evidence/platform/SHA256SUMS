@@ -19,3 +19,9 @@ d486297d579a8e32ee0589f4408cdc23e325dec4e079852fc2cf3db87bda2687  Symoneural-Pla
 a30c99a0c1c59cc018ba6d94a9c18e741210d064c635982a0f6dd14040ea566b  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/qemux86_64/symoneural-nvidia-open-kernel-dev_615.71.09-r0_qemux86_64.ipk
 ae60b691fc4cfa5d49b5d90440cee9556d25c03dd1455e1dabffa1804c066de9  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/qemux86_64/kernel-6.18.48-yocto-standard_6.18.48+git0+c8484925c8_ad9d5e4518-r0_qemux86_64.ipk
 97c34f3eadbb3853e57485d04ea6c1ee27b28818225c6eeb6daed75c0df7311b  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/qemux86_64/kernel-dev_6.18.48+git0+c8484925c8_ad9d5e4518-r0_qemux86_64.ipk
+544358ea286b840d3629b17b663d09a052bda33bab460797977ffd4d0a0815b9  generated/evidence/platform/AWCC-BUILD.txt
+e13257e5a992ec6496fb6e7d75009ca2621c82d43d0439a96928c32c5055fb8c  generated/evidence/platform/AWCC-PROOF.txt
+445fe8cc15dcc68e1263fa263d977a480839265ad0b291f05759769e1bf8266f  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-awcc_1.19.0-r0_x86-64-v3.ipk
+4519471f37553854896e5469e5f5104332e71d49b5ce796f4d8f37dd675cd034  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-awcc-dbg_1.19.0-r0_x86-64-v3.ipk
+88c1035680acdc53d4a3565177c67c54cb550c09859f953b9ad3fea69578e8a5  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-awcc-dev_1.19.0-r0_x86-64-v3.ipk
+9ed451ed6e68d5fc8b43109cef0ca562541c4e80bf1cf0296c717932621033ef  Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-awcc-src_1.19.0-r0_x86-64-v3.ipk

@@ -393,11 +393,67 @@
    "state": "TARGET"
   },
   {
+   "component": "AWCC",
+   "reason": "GPL-3.0 executable approved by Garrett 2026-09-14 ('you can do the awcc'); built as symoneural-awcc (Platform, cmake, symoneural-pristine + SYMON_DEP_TREES) with its six FetchContent dependencies pinned as separate components and libevdev from oe-core; staged-install + --version/--help proof in generated/evidence/platform/AWCC-PROOF.txt. Needs the acpi_call kernel module at run time (not acquired).",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/AWCC",
+   "state": "TARGET"
+  },
+  {
+   "component": "glfw",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/glfw",
+   "state": "TARGET"
+  },
+  {
+   "component": "imgui",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/imgui",
+   "state": "TARGET"
+  },
+  {
+   "component": "json",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/json",
+   "state": "TARGET"
+  },
+  {
+   "component": "libusb-cmake",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/libusb-cmake",
+   "state": "TARGET"
+  },
+  {
+   "component": "loguru",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/loguru",
+   "state": "TARGET"
+  },
+  {
    "component": "open-gpu-kernel-modules",
    "reason": "NVIDIA open GPU kernel modules 615.71.09, built from the pinned tree for two kernel targets: Debian 6.12.107+deb13-amd64 (symoneural-nvidia-open-kernel-debian, .deb, HOST-CONDITIONED toolchain) and the estate linux-yocto 6.18.48 qemux86-64 kernel (symoneural-nvidia-open-kernel, kernel-module-nvidia-* ipks). Kernel modules only; NVIDIA driver userspace and GSP firmware are separate external dependencies (deployment blockers for the estate profile).",
    "ruling": "docs/platform/NVIDIA-OPEN-KERNEL.md (Garrett's charter 2026-09-14)",
    "runtime": "Platform",
    "source_path": "Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules",
+   "state": "TARGET"
+  },
+  {
+   "component": "stb",
+   "reason": "Dependency tree of symoneural-awcc: compiled INTO the awcc executable through symoneural-pristine SYMON_DEP_TREES (FETCHCONTENT_SOURCE_DIR_*, fully disconnected). No package of its own; the pin is the lock entry, verified at AWCC's do_unpack.",
+   "ruling": "docs/platform/AWCC.md (Garrett's approval 2026-09-14)",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/stb",
    "state": "TARGET"
   },
   {

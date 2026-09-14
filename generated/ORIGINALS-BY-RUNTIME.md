@@ -1,20 +1,17 @@
 # SyMoNeuRaL: the ORIGINAL upstream sources, sectioned by future runtime
+Generated 2026-09-14 19:32 EDT by tools/originals-by-runtime.py from acquisition/source-lock.json, source-manifest.json,
+component-state.json, pending-acquisitions.json and a live run of tools/audit-workscope.sh (rc=1). Nothing
+was renamed or moved: every row is an upstream project committed at its pin under
+`Symoneural-<Runtime>/src/<category>/source/<component>/` and verified byte-identical to upstream.
 
-Generated 2026-09-14 18:08 EDT from acquisition/source-lock.json, source-manifest.json, component-state.json,
-pending-acquisitions.json and tools/audit-workscope.sh (run at the same time). Nothing here was renamed or moved:
-every row is an upstream project committed at its pin under `Symoneural-<Runtime>/src/<category>/source/<component>/`
-and verified byte-identical to upstream (`tools/ingest-tree verify --all`: 93 of 93).
-
-Build-status vocabulary (audit): PACKAGED = an estate package was produced from this tree in the runtime's build
-directory (historical pkgdata; QA/consumer proofs are recorded separately in generated/evidence/); RECIPE, NEVER
-PACKAGED = recipe exists, nothing built; STUB = placeholder recipe without a build class; REFERENCE_ONLY /
-RETIRED_TO_PROVIDER = acquired and pinned, never built for a target, by recorded ruling.
-
+Build-status vocabulary (audit): PKGDATA EXISTS = an estate package was produced from this tree in the runtime's
+build directory (historical pkgdata; QA and consumer proofs are recorded separately under generated/evidence/);
+BUILT INTO <recipe> = compiled into that recipe's executable (dependency tree, no package of its own);
+RECIPE, NEVER PACKAGED = recipe exists, nothing built; STUB = placeholder recipe without a build class;
+REFERENCE_ONLY / RETIRED_TO_PROVIDER = acquired, pinned, committed; never built for a target, by recorded ruling.
 
 ## Symoneural-API  (16 upstream sources)
-
 Image on disk: `symoneural-image-api-qemux86-64.rootfs-20260914061826.tar.gz`; runtime proofs: `generated/evidence/api/`
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | annotated-doc | gh:fastapi/annotated-doc | 0.0.5 | `ef48d6ad51d2` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
@@ -35,27 +32,45 @@ Image on disk: `symoneural-image-api-qemux86-64.rootfs-20260914061826.tar.gz`; r
 | uvicorn | gh:encode/uvicorn | 0.52.4 | `8988c23704fc` | BSD-3-Clause | TARGET | PKGDATA EXISTS; NOT QA |
 
 ## Symoneural-Adaptive-Fabric  (1 upstream source)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | FreeToken | gh:FlashML-org/FreeToken | v0.1.2 | `9db1a39455a3` | Apache-2.0 | TARGET | RECIPE, NEVER PACKAGED |
 
-## Symoneural-Build  (7 upstream sources)
+- Pending (NOT ACQUIRED): apache-tvm-ffi v0.1.13-post3 `f59eae05349d` gh:apache/tvm-ffi — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
 
+- Pending (NOT ACQUIRED): flashlib v0.3.0 `9e16ff5e78f2` gh:FlashML-org/flashlib — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): sglang-kernel v0.5.19 (sgl-kernel subdirectory; version 0.4.5 required by flashlib - confirm) `59f20bffdde5` gh:sgl-project/sglang — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): einops v0.8.2 `8e911db71f2e` gh:arogozhnikov/einops — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): gguf (shared provider: llama.cpp pin 5266f24da75d) `5266f24da75d` gh:ggml-org/llama.cpp (gguf-py/ subdirectory of the OWNED llama.cpp tree) — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): msgpack v1.2.2 `7381b318f516` gh:msgpack/msgpack-python — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): modelscope v1.40.0 `e7b24ee97f22` gh:modelscope/modelscope — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): openai v3.13.0 `f0fa922ef12f` gh:openai/openai-python — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): partial-json-parser v0.2.1.1.post7 `7539dde18558` gh:promplate/partial-json-parser — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): prompt_toolkit 3.0.53 `583b3412c792` gh:prompt-toolkit/python-prompt-toolkit — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+- Pending (NOT ACQUIRED): pyzmq v27.2.0 `2de4a595de84` gh:zeromq/pyzmq — Held behind unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19). Not to be acquired until that ruling settles.
+
+## Symoneural-Build  (7 upstream sources)
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
-| autoconf | https://git.savannah.gnu.org/git/autoconf.git | 2.73 | `44d712a26b0e` | GPL-3.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> O |
-| automake | https://git.savannah.gnu.org/git/automake.git | 1.19 | `e82d2d34d462` | GPL-2.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> O |
+| autoconf | https://git.savannah.gnu.org/git/autoconf.git | 2.73 | `44d712a26b0e` | GPL-3.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> OE-CORE |
+| automake | https://git.savannah.gnu.org/git/automake.git | 1.19 | `e82d2d34d462` | GPL-2.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> OE-CORE |
 | bitbake | https://git.openembedded.org/bitbake | UNTAGGED yocto-6.1_M2-99-g046a90b0e (bitbake 2.19.1) | `046a90b0e9b7` | GPL-2.0-only AND MIT | REFERENCE_ONLY | REFERENCE_ONLY |
-| libtool | https://git.savannah.gnu.org/git/libtool.git | 2.6.2 | `309bb53a8adf` | GPL-2.0-or-later AND LGPL-2.1-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> O |
-| m4 | https://git.savannah.gnu.org/git/m4.git | 1.4.21 | `fe2f13ab9ab9` | GPL-3.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> O |
-| ninja | gh:ninja-build/ninja | 1.13.2 | `3441b633c2fe` | Apache-2.0 | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> O |
+| libtool | https://git.savannah.gnu.org/git/libtool.git | 2.6.2 | `309bb53a8adf` | GPL-2.0-or-later AND LGPL-2.1-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> OE-CORE |
+| m4 | https://git.savannah.gnu.org/git/m4.git | 1.4.21 | `fe2f13ab9ab9` | GPL-3.0-or-later | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> OE-CORE |
+| ninja | gh:ninja-build/ninja | 1.13.2 | `3441b633c2fe` | Apache-2.0 | RETIRED_TO_PROVIDER | RETIRED_TO_PROVIDER -> OE-CORE |
 | openembedded-core | https://git.openembedded.org/openembedded-core | UNTAGGED uninative-5.2-753-gfe7a24bc67 (master) | `fe7a24bc6711` | MIT AND GPL-2.0-only | REFERENCE_ONLY | REFERENCE_ONLY |
 
 ## Symoneural-CLI  (20 upstream sources)
-
 Image on disk: `symoneural-image-cli-qemux86-64.rootfs-20260914053558.tar.gz`; runtime proofs: `generated/evidence/cli/`
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | anthropic-sdk-python | gh:anthropics/anthropic-sdk-python | v1.5.0 | `eb21a4352015` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
@@ -79,10 +94,10 @@ Image on disk: `symoneural-image-cli-qemux86-64.rootfs-20260914053558.tar.gz`; r
 | truststore | gh:sethmlarson/truststore | v0.10.4 | `0714f72a739d` | MIT | - | PKGDATA EXISTS; NOT QA |
 | typescript-sdk | gh:modelcontextprotocol/typescript-sdk | v2 GA 2.0.0 | `cc4b41617ce3` | - | REFERENCE_ONLY | REFERENCE_ONLY |
 
+- Pending (NOT ACQUIRED): opentelemetry-api v1.44.0 `53a5a40c9604` gh:open-telemetry/opentelemetry-python
+
 ## Symoneural-Common  (24 upstream sources)
-
 Image on disk: `symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz`; runtime proofs: `generated/evidence/common/`
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | accelerate | gh:huggingface/accelerate | 1.15.0+git | `6afc1e5ee217` | Apache-2.0 | TARGET | PKGDATA EXISTS; NOT QA |
@@ -110,28 +125,30 @@ Image on disk: `symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz`
 | transformers | gh:huggingface/transformers | 5.17.0+git | `856157a2f3e9` | Apache-2.0 | TARGET | PKGDATA EXISTS; NOT QA |
 | typer | gh:fastapi/typer | 0.27.2 | `99eb220df7c6` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
 
-- BINARY-EXTERNAL inputs (not sources): cuda-toolkit-bin 13.4.1 (NVIDIA EULA), cudnn-bin 9.25.1.1 (NVIDIA SLA; Common only) - pinned by NVIDIA debian13 index sha256.
+- BINARY-EXTERNAL inputs (not sources): cuda-toolkit-bin 13.4.1 (NVIDIA EULA), cudnn-bin 9.25.1.1 (NVIDIA SLA) — pinned by NVIDIA debian13 index sha256.
 
 ## Symoneural-Crypto  (3 upstream sources)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | stratum | gh:stratum-mining/stratum | v1.11.1 | `c1a799139425` | Apache-2.0 AND MIT | TARGET | RECIPE, NEVER PACKAGED |
 | sv2-apps | gh:stratum-mining/sv2-apps | v0.7.0 | `d7d556d1a3c7` | Apache-2.0 AND MIT | TARGET | STUB — no build class |
 | sv2-spec | gh:stratum-mining/sv2-spec | UNTAGGED (commit pin 67d2178e12b2) | `67d2178e12b2` | BSD-3-Clause OR CC0-1.0 | REFERENCE_ONLY | REFERENCE_ONLY |
 
-- Pending: kawpowminer - DEFERRED to P11 / Phase 20e (GPL-3.0 product/distribution ruling required).
+- Pending (NOT ACQUIRED): kawpowminer 1.2.4 `8bd0d598fa29` gh:RavenCommunity/kawpowminer — unresolved.json:kawpowminer-gpl-distribution
+
+- Pending (NOT ACQUIRED): pyasic v0.79.0 `bb5442a373ec` gh:UpstreamData/pyasic
+
+- Pending: kawpowminer — DEFERRED to P11 / Phase 20e (GPL-3.0 product/distribution ruling required).
 
 ## Symoneural-Live  (1 upstream source)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | gstreamer | https://gitlab.freedesktop.org/gstreamer/gstreamer.git | 1.28.7 | `070125524a84` | LGPL-2.1-or-later | TARGET | STUB — no build class |
 
+- Pending (NOT ACQUIRED): gst-plugins-rs 0.15.3 `656a1d12ff21` https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git
+
 ## Symoneural-LLM  (4 upstream sources)
-
 Image on disk: `symoneural-image-llm-qemux86-64.rootfs-20260914133906.tar.gz`; runtime proofs: `generated/evidence/llm/`
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | ggml | gh:ggml-org/ggml | v0.23.0 (= llama.cpp scripts/sync-ggml.last e91ded11) | `e91ded11bdcd` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
@@ -139,24 +156,24 @@ Image on disk: `symoneural-image-llm-qemux86-64.rootfs-20260914133906.tar.gz`; r
 | triton | gh:triton-lang/triton | v3.8.0 | `c01b6774b186` | MIT | REFERENCE_ONLY | REFERENCE_ONLY |
 | vllm | gh:vllm-project/vllm | v0.29.0 | `98dff2a81d74` | Apache-2.0 AND MIT | REFERENCE_ONLY | REFERENCE_ONLY |
 
-- BINARY-EXTERNAL inputs (not sources): cuda-toolkit-bin 13.4.1 (NVIDIA EULA), cudnn-bin 9.25.1.1 (NVIDIA SLA; Common only) - pinned by NVIDIA debian13 index sha256.
+- BINARY-EXTERNAL inputs (not sources): cuda-toolkit-bin 13.4.1 (NVIDIA EULA) — pinned by NVIDIA debian13 index sha256.
 
-## Symoneural-Platform  (1 upstream source)
-
+## Symoneural-Platform  (8 upstream sources)
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
-| open-gpu-kernel-modules | gh:NVIDIA/open-gpu-kernel-modules | 615.71.09 | `61dcc93722ec` | MIT OR GPL-2.0-only | TARGET | STUB — no build class |
+| AWCC | gh:tr1xem/AWCC | v1.19.0 | `0ec42c4b3ddc` | GPL-3.0-only | TARGET | PKGDATA EXISTS; NOT QA |
+| glfw | gh:glfw/glfw.git | 3.5.1 | `d9d6f0f1f967` | Zlib (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
+| imgui | gh:ocornut/imgui.git | v1.92.9b | `f1cc2ae15e53` | MIT (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
+| json | gh:nlohmann/json.git | v3.12.0 | `55f93686c015` | MIT (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
+| libusb-cmake | gh:libusb/libusb-cmake.git | v1.0.30-0 | `c8477c10ac2a` | LGPL-2.1 (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
+| loguru | gh:emilk/loguru | v2.2.0 | `ba2240d19bae` | Public-domain/Unlicense-style (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
+| open-gpu-kernel-modules | gh:NVIDIA/open-gpu-kernel-modules | 615.71.09 | `61dcc93722ec` | MIT OR GPL-2.0-only | TARGET | PKGDATA EXISTS; NOT QA |
+| stb | gh:nothings/stb.git | master@2c980bb5 | `2c980bb59875` | MIT OR Unlicense (curated) | TARGET | BUILT INTO symoneural-awcc; NOT QA |
 
-- BINARY-EXTERNAL build inputs (not sources): Debian linux-headers/kbuild/image 6.12.107+deb13-amd64 (6.12.107-1) pinned by sha256 - Debian profile only.
-
-- Pending (NOT ACQUIRED): AWCC v1.19.0 `0ec42c4b3ddc` gh:tr1xem/AWCC - GPL-3.0; rulings open (distribution posture, runtime placement, FetchContent closure, acpi_call module).
-
-- External providers still missing for a fresh-machine GPU: NVIDIA driver userspace (libcuda.so.1 ...) and GSP firmware 615.71.09 - BLOCKED.
+- BINARY-EXTERNAL build inputs (not sources): Debian linux-headers/kbuild/image 6.12.107+deb13-amd64 (6.12.107-1) pinned by sha256 — Debian profile only. External providers still missing for a fresh-machine GPU: NVIDIA driver userspace and GSP firmware 615.71.09 (BLOCKED); acpi_call kernel module for AWCC (NOT ACQUIRED).
 
 ## Symoneural-Ravencalc  (12 upstream sources)
-
 Image on disk: `symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.tar.gz`; runtime proofs: `generated/evidence/ravencalc/`
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | cloudpickle | gh:cloudpipe/cloudpickle | v3.1.2 | `7576fff24b97` | BSD-3-Clause | - | PKGDATA EXISTS; NOT QA |
@@ -173,19 +190,16 @@ Image on disk: `symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.tar.
 | threadpoolctl | gh:joblib/threadpoolctl | 3.6.0 | `d5bf10bcf90d` | BSD-3-Clause | TARGET | PKGDATA EXISTS; NOT QA |
 
 ## Symoneural-Remix  (1 upstream source)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | librespot | gh:librespot-org/librespot | v0.8.0 | `d36f9f1907e8` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
 
 ## Symoneural-Streamer  (1 upstream source)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | hls.js | gh:video-dev/hls.js | v1.7.3 | `e5ff3583965e` | Apache-2.0 | TARGET | PKGDATA EXISTS; NOT QA |
 
 ## Symoneural-Web  (2 upstream sources)
-
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | workerd | gh:cloudflare/workerd | v1.20260911.1 | `925464ba9fe5` | Apache-2.0 AND ISC AND MIT | REFERENCE_ONLY | REFERENCE_ONLY |
@@ -193,15 +207,12 @@ Image on disk: `symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.tar.
 
 
 ## Planned runtimes without a source directory yet
-
-Named in the estate records as future consumers but with no `Symoneural-<Runtime>/` directory and no acquired source: **Tune** (CuPy / cuda-python), **Diffuse** (diffusers; ComfyUI was rejected: GPL-3.0), **Studio**. Nothing to section for them yet.
-
+Named in the estate records as future consumers but with no `Symoneural-<Runtime>/` directory and no acquired source: **Tune** (CuPy / cuda-python), **Diffuse** (diffusers; ComfyUI was rejected: GPL-3.0), **Studio**.
 
 ## Recorded as NOT ACQUIRED (by ruling)
-
 - ComfyUI: GPL-3.0; replaced by diffusers. NOT ACQUIRED.
 - nvidia-ml-py: PyPI sdist, not a git tag - acquired with sdist sha256 in its own phase.
 - CUDA Toolkit 13.3 / driver 610.57.04: BINARY / REFERENCE under NVIDIA EULA - not a source acquisition.
 
 
-Total upstream originals committed: 93. Runtime directories on disk: 14 (13 application/build runtimes + Platform).
+Total upstream originals committed: 100. Runtime directories on disk: 13.

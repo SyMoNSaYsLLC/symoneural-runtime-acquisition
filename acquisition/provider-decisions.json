@@ -44,6 +44,16 @@
       "logical": "nvidia-open-kernel-modules",
       "rationale": "Platform deliverable; built from the acquired open-gpu-kernel-modules tree at tag 615.71.09 (commit 61dcc937...) through symoneural-pristine for TWO kernel targets: Debian 6.12.107+deb13-amd64 (symoneural-nvidia-open-kernel-debian, .deb, HOST-CONDITIONED toolchain declared via HOSTTOOLS) and the estate linux-yocto 6.18.48 qemux86-64 kernel (symoneural-nvidia-open-kernel, module.bbclass, kernel-module-nvidia-* ipks). Dual MIT/GPL-2.0 modules. The NVIDIA driver userspace (libcuda.so.1, libnvidia-ml.so.1 ...) and GSP firmware are NOT provided by this decision: they remain BINARY-EXTERNAL (Debian profile: NVIDIA's Debian 13 packages 615.71.09-2; estate profile: no provider - deployment blockers recorded in unresolved.json). Evidence: generated/evidence/platform/, docs/platform/NVIDIA-OPEN-KERNEL.md.",
       "selected_provider": "SYMONEURAL-OWNED"
+    },
+    {
+      "logical": "awcc",
+      "rationale": "Platform deliverable, GPL-3.0, approved by Garrett 2026-09-14 as a separate executable (own package and process; never linked into proprietary or native estate libraries). Built from the acquired AWCC tree; its six FetchContent dependencies (loguru, json, glfw, imgui, libusb-cmake, stb) are acquired, pinned and compiled into the executable (SYMON_DEP_TREES); system libraries (GL dispatch libglvnd, X11, libudev) are oe-core's, dynamically linked. Run-time boundary: the acpi_call kernel module is required and not yet acquired.",
+      "selected_provider": "SYMONEURAL-OWNED"
+    },
+    {
+      "logical": "libevdev",
+      "rationale": "System library from oe-core (libevdev 1.13.7), built as shared AND static in the Platform estate build (EXTRA_OEMESON -Ddefault_library=both) because AWCC's CMake consumes a static libevdev.a through an ExternalProject the estate replaces with the sysroot copy (recipe-level ExternalProject.cmake shadow). Statically linked into awcc; same class as libX11 / libglvnd / libudev (OE-provided system libraries), recorded because it ships inside the executable.",
+      "selected_provider": "OE-CORE"
     }
   ],
   "not_acquired": [
