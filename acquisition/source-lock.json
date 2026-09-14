@@ -675,9 +675,9 @@
         {
           "path": "subprojects/gst-integration-testsuites/medias",
           "commit_sha": "8850d668e87752c863b3fb01954464b0d1fffe4c",
-          "tree_sha": "07fc12a46780edfcffdce01424b6504b63f71a98",
+          "tree_sha": "86c533efed0bbe64c1bc6c371406146f9cd6fd18",
           "pins_path": "Symoneural-Live/src/gstreamer/.gitpins/gstreamer.git/modules/subprojects/gst-integration-testsuites/medias",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         }
       ],
       "excluded": []
