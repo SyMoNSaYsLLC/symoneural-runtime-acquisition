@@ -66,6 +66,58 @@ host-compiler bound and no pinned consumer exercises it.
   index — cuDNN 9.25.1.1/9.26.0.51, NCCL 2.31.2+cuda13.4). They are separate
   BINARY_EXTERNAL decisions for C7; the toolkit recipe does not pull them.
 
+## C6 — the LLM CUDA consumer against the authority (2026-09-14)
+
+**Result: PASS at the backend level; GPU inference on a real model stays BLOCKED on
+external model availability (the P9 exception, unchanged).**
+
+What was built. `symoneural-ggml` gained `PACKAGECONFIG[cuda]` (`-DGGML_CUDA=ON`,
+`GGML_CUDA_CUB_3DOT2=OFF`) and inherits `symoneural-cuda` — nothing in the recipe names
+a toolkit path, a version or an architecture; all of that is the class. The first build
+of it exposed a shape problem, fixed before anything was accepted:
+
+- **Static backend registration made the whole stack driver-dependent.** With the CUDA
+  backend compiled into the registry, `libggml.so.0` NEEDs `libggml-cuda.so.0`, which
+  NEEDs `libcuda.so.1`. Under the target loader with the host's `ld.so.cache`
+  inhibited, `symoneural-llm-util` exited 127 before `main`: not "no GPU", but no
+  libsymoneural-llm at all on a machine without the driver. The earlier CPU-mode proof
+  had hidden this by letting the target loader fall through to the host cache
+  (`/lib/x86_64-linux-gnu/libcuda.so.1`), which was a harness gap as well.
+- **Fix: backends are dlopen'ed modules** (`GGML_BACKEND_DL=ON`,
+  `GGML_BACKEND_DIR=/usr/lib/ggml`), the mechanism upstream ships its own binaries
+  with. `libggml.so.0` NEEDs no backend. `libggml-cpu.so` lives in `symoneural-ggml`;
+  `libggml-cuda.so` is its own package `symoneural-ggml-cuda`, so the S2 boundary and
+  the `cuda-toolkit-bin` dependency stop at one package and the CPU composition is the
+  same image minus that package. The packagegroup names it explicitly (the image sets
+  `NO_RECOMMENDATIONS`; the manifest is the install record).
+- **libsymoneural-llm 1.1.1** loads the modules once per process from the directory
+  next to itself (`dladdr` → `<dir>/ggml`) before anything asks the registry. llama's
+  own `ggml_backend_load_all` (compiled-in dir, executable dir, **cwd**) runs only when
+  nothing is registered yet, so it never runs while the packages are intact. A module
+  whose dependencies are missing simply fails to dlopen. `capabilities` now says
+  `gpu:CUDA` / `cpu` / `backend:none` for what this process can see. ABI 1.1 unchanged
+  (`abi_version` 65793 = 1.1.1).
+
+Evidence (all from packages, through the target loader, `env -i`, host cache inhibited):
+
+| Item | Value |
+|---|---|
+| build | `symoneural-image-llm`: 4802 tasks, 0 ERROR; 3 pre-existing WARNINGs (CLOSED licence on symoneural-api, shared sstate dir), none QA |
+| image | `symoneural-image-llm-qemux86-64.rootfs-20260914133906.tar.gz`, 1,258,934,760 B, sha256 `55fd6fb3203da786483a2d3f5b70dc03385efab4a3ccf016882c85a6445d554e`, 42 packages (`+symoneural-ggml-cuda`) |
+| symoneural-ggml | 612,010 B: `libggml.so.0.23.0` 42,992 B, `libggml-base.so.0.23.0` 649,512 B, `ggml/libggml-cpu.so` 838,152 B |
+| symoneural-ggml-cuda | 40,316,162 B: `ggml/libggml-cuda.so` 63,468,088 B, 143 sm_120 SASS; NEEDED `libggml-base.so.0 libcudart.so.13 libcublas.so.13 libcuda.so.1 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6`; RDEPENDS `cuda-toolkit-bin (>= 13.4.1)` |
+| class S2 QA (`symon_cuda_qa_s2`) | "22 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1" — `libcuda.so.1` is the only NEEDED without a package provider, in the one module allowed to have it |
+| linkage audit | PASS — `libsymoneural-llm.so.1` NEEDED `libggml.so.0 libggml-base.so.0 libllama.so.0 libc.so.6`; no driver library anywhere in the chain except the cuda module (`generated/evidence/llm/NATIVE-LINKAGE.json`) |
+| proof, CPU mode | **PASS** — modules present `libggml-cpu.so libggml-cuda.so`; `libggml.so.0 NEEDs no backend`; only `libggml-cpu.so` loaded; `capabilities … cpu`; **no file mapped from outside the root**; chat unit PASS (`generated/evidence/llm/LLM-CLEAN-ROOT-PROOF.txt`) |
+| proof, S2 mode | **PASS** — same image; both modules loaded; `gpu:CUDA` (driver 615.71.09); host files mapped: `libcuda.so.1`, `libnvidia-gpucomp`, `libnvidia-nvvm70`, `libnvidia-ptxjitcompiler`, each owned by a package at 615.71.09; chat unit PASS; `/v1/capabilities` → `gpu:CUDA` (`generated/evidence/cuda/LLM-CLEAN-ROOT-PROOF-S2.txt`) |
+| probe proof re-run | PASS under the same inhibited-cache rule (`generated/evidence/cuda/CUDA-CLEAN-ROOT-PROOF.txt`) |
+| GPU inference | **BLOCKED** — `gpu_layers > 0` on a real model needs weights the estate does not hold; `sym_llm_runtime_open` refuses `gpu_layers != 0` when no GPU backend is loaded (`EBACKEND`), which is now a runtime fact, not a build fact |
+
+Not done here, recorded: the API registry's chat row still says `symoneural-llama-cpp`
+"via llama-server" (integration work, not P7); a CPU-only image composition is
+possible (packagegroup without `symoneural-ggml-cuda`, ggml `PACKAGECONFIG = ""`) but
+was not built — the P9 CPU checkpoint image remains the CPU evidence.
+
 ## C7 — PyTorch CUDA / distributed feature matrix (drafted from the pinned tree; build NOT started)
 
 The pinned `symoneural-pytorch` is CPU-only by recorded decision (`USE_CUDA=0`,
@@ -118,6 +170,25 @@ accelerate back in the packagegroup can promote it.
    what gives CUDA-linked executables GNU_HASH/RELRO for the `ldflags` QA.
 5. `SKIP_FILEDEPS` on the runtime package removed the `FILERPROVIDES` that consumers'
    `file-rdeps` QA consults; it now applies to `-dev` only.
+6. `file-rdeps` honours only its hardcoded ignores, RPROVIDES and `INSANE_SKIP` — not
+   `PRIVATE_LIBS` — and `libcuda.so.1` has no package provider by design (S2). The class
+   therefore skips `file-rdeps` for the consumer package and replaces it with
+   `symon_cuda_qa_s2`, which walks every ELF in every package and fails on any NEEDED
+   that is neither the S2 pair (`libcuda.so.1 libnvidia-ml.so.1`) nor a shlibs provider.
+7. `ld` follows transitive DT_NEEDED when linking an executable, so anything linked
+   against a CUDA-linked library needs `libcuda.so` at link time. `cuda-toolkit-bin`
+   stages NVIDIA's link-time stubs into the *target sysroot only*
+   (`SYSROOT_PREPROCESS_FUNCS`); they are never packaged, and the proofs confirm the
+   runtime `libcuda.so.1` comes from the driver.
+8. A statically registered GPU backend turns "GPU optional" into "driver required to
+   load" for the whole stack. ggml backends are dlopen'ed modules (C6); and the
+   clean-root harnesses now pass `--inhibit-cache` to the target loader in every mode,
+   so the host's `ld.so.cache` can no longer quietly satisfy a NEEDED.
+
+Running the proofs: the Claude Code sandbox hides `/dev/nvidia*`, so
+`tools/cuda-clean-root-proof` and `SYM_CUDA_S2=1 tools/llm-clean-root-proof` must run
+outside it (`cudaGetDeviceCount: no CUDA-capable device is detected` otherwise); the
+CPU-mode LLM proof does not touch the device.
 
 ## Status (updated as C4–C10 land)
 
@@ -126,8 +197,8 @@ accelerate back in the packagegroup can promote it.
 | C0 recover · C1 matrix · C2 decision · C3 policy | DONE (this document) |
 | C4 one recipe/sysroot authority | **PASS** — `cuda-toolkit-bin` 13.4.1 (runtime 1.10 GB) + `-dev` (1.26 GB) + native variant; `do_package_qa` 0 ERROR / 0 issues (buildpaths not skipped); 33 debs fetched by the SHA256s the index publishes |
 | C5 sm_120 low-level compile + run | **PASS** — `symoneural-cuda-probe`: nvcc-native, cross g++ 16.2 host compiler, `--generate-code=arch=compute_120,code=[compute_120,sm_120]`; binary NEEDED `libcudart.so.13 libstdc++ libgcc_s libc`, no RUNPATH, GNU_HASH, 0 build-path bytes; run from packages through the target loader: **RTX 5070 Ti cc 12.0, runtime 13040 == driver 13040, saxpy n=1048576 max_abs_err 0**. Host files mapped: `libcuda.so.1` + three driver helpers, all owned by packages at 615.71.09 (S2). `generated/evidence/cuda/CUDA-CLEAN-ROOT-PROOF.txt` |
-| C6 LLM CUDA consumer | NOT TESTED |
+| C6 LLM CUDA consumer | **PASS** at the backend level — ggml CUDA backend as a dlopen'ed module (`symoneural-ggml-cuda`), 143 sm_120 SASS, S2 QA clean; libsymoneural-llm 1.1.1 reports `gpu:CUDA` with the driver and `cpu` without it from the same image; GPU inference on a real model BLOCKED on external weights (see C6) |
 | C7 PyTorch CUDA/distributed matrix · accelerate | NOT STARTED |
 | C8 Crypto/Tune compatibility | NOT STARTED |
-| C9 package / clean-install / host-leakage | PASS for the authority + probe (`tools/cuda-clean-root-proof`: every non-driver library resolves inside the root; the S2 boundary is enforced as "owned by a package at the installed driver version"); consumers pending |
+| C9 package / clean-install / host-leakage | PASS for the authority + probe and for the LLM consumer image (both proofs, host cache inhibited: CPU mode maps nothing from outside the root; S2 mode maps only files owned by packages at the installed driver version); PyTorch consumer pending C7 |
 | C10 records / evidence / commits | NOT STARTED |

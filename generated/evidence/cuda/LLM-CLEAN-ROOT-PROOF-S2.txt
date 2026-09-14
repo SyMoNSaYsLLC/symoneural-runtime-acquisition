@@ -1,9 +1,9 @@
 image   : /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914133906.tar.gz
 sha256  : 55fd6fb3203da786483a2d3f5b70dc03385efab4a3ccf016882c85a6445d554e
 manifest: /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914133906.manifest (42 packages)
-root    : /tmp/claude-1000/llm-clean-root-cpu  (859 files)
+root    : /tmp/claude-1000/llm-clean-root-s2  (859 files)
 --- interpreter
-  python 3.14.7 prefix /tmp/claude-1000/llm-clean-root-cpu/usr
+  python 3.14.7 prefix /tmp/claude-1000/llm-clean-root-s2/usr
 --- first-party packages installed from the feed
   SOURCE-TREE: 7479a901274ba4edc5c1b05696e0d7de03c6a92a  HEAD:Symoneural-LLM/app: 7479a901274ba4edc5c1b05696e0d7de03c6a92a  MATCH
 --- native linkage resolves INSIDE the root
@@ -13,10 +13,14 @@ root    : /tmp/claude-1000/llm-clean-root-cpu  (859 files)
   no RUNPATH/RPATH in libsymoneural-llm, libllama, libggml
   no build-path bytes in the shipped library
 --- symoneural-llm-util through the target loader
-  version=1.1.1 abi=65793 capabilities=[text streaming cancellation tokenize cpu] (rc=0)
+  version=1.1.1 abi=65793 capabilities=[text streaming cancellation tokenize gpu:CUDA] (rc=0)
   module loaded: /usr/lib/ggml/libggml-cpu.so
-  backend: cpu (the cuda module cannot dlopen without the driver; the CPU module did)
-  no file mapped from outside the root
+  module loaded: /usr/lib/ggml/libggml-cuda.so
+  backend (S2, driver 615.71.09): gpu:CUDA
+  HOST  /usr/lib/x86_64-linux-gnu/libcuda.so.1  (libcuda1 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-gpucomp.so.615.71.09  (libnvidia-gpucomp 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-nvvm70.so.4  (libnvidia-nvvm704 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1  (libnvidia-ptxjitcompiler1 615.71.09-2, S2)
   empty registry -> 0 models, rc ok
 --- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)
   registry: vocab-llama-bpe vocab-qwen2 
@@ -26,7 +30,7 @@ root    : /tmp/claude-1000/llm-clean-root-cpu  (859 files)
   generate on a vocabulary: refused as designed (symoneural-llm-util: session_open: invalid argument (-1))
 --- symoneural-llm (Python) in the root: ctypes -> the shipped library
   request --fake: message via the packaged adapter (rc=0)
-  capabilities: native 1.1.1 abi 65793 ['text', 'streaming', 'cancellation', 'tokenize', 'cpu']; registry models ['vocab-llama-bpe', 'vocab-qwen2']; unit chat -> PASS
+  capabilities: native 1.1.1 abi 65793 ['text', 'streaming', 'cancellation', 'tokenize', 'gpu:CUDA']; registry models ['vocab-llama-bpe', 'vocab-qwen2']; unit chat -> PASS
   request on a vocabulary model: RuntimeError: vocab-qwen2 is vocabulary-only; it cannot generate (no path in the error)
 --- the chat unit: HTTP on 127.0.0.1, bearer token, fail-closed
   serve without SYM_CHAT_TOKEN: refused, exit 78 (symoneural-llm: unconfigured: SYM_CHAT_TOKEN is not provisioned; refusing to serve)
@@ -34,7 +38,7 @@ root    : /tmp/claude-1000/llm-clean-root-cpu  (859 files)
   ok   /v1/models without token -> 401
   ok   /v1/models wrong token -> 401
   ok   /v1/models -> 200 ['vocab-llama-bpe', 'vocab-qwen2']
-  ok   /v1/capabilities -> 200 native 1.1.1 ['text', 'streaming', 'cancellation', 'tokenize', 'cpu']
+  ok   /v1/capabilities -> 200 native 1.1.1 ['text', 'streaming', 'cancellation', 'tokenize', 'gpu:CUDA']
   ok   /v1/messages on a vocabulary model -> 502 RuntimeError: backend failure (no path)
   ok   /v1/messages without token -> 401
   ok   /v1/messages unknown model -> 404 not_found_error

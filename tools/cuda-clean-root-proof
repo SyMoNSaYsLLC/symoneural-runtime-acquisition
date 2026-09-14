@@ -38,7 +38,7 @@ echo "  host-driver libraries the loader may use (S2): libcuda.so.1 libnvidia-ml
 HOSTDRV=/usr/lib/x86_64-linux-gnu
 DRV=$(cat /sys/module/nvidia/version 2>/dev/null); echo "  installed driver release (S2 boundary): ${DRV:-UNKNOWN}"
 echo "--- run through the target loader (env -i)"
-OUT=$(env -i LD_DEBUG=libs "$LD" --library-path "$R/lib:$R/usr/lib:$HOSTDRV" "$BIN" 2>"$R/ld-debug.txt"); rc=$?
+OUT=$(env -i LD_DEBUG=libs "$LD" --inhibit-cache --library-path "$R/lib:$R/usr/lib:$HOSTDRV" "$BIN" 2>"$R/ld-debug.txt"); rc=$?
 echo "  rc=$rc"; echo "  $OUT"
 echo "--- what the loader actually mapped"
 # S2 precisely: a library outside the root is admitted only if the installed NVIDIA

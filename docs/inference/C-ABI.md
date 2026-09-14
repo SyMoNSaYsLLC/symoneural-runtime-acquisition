@@ -11,7 +11,9 @@ user, result)` streaming one decoded piece per callback, cancellable from anothe
 thread (`cancel` → `ECANCELLED` at the next token) → `session_close` →
 `model_unload` → `runtime_close`. Also `tokenize`/`detokenize` (bounded),
 `model_info` JSON, `capabilities` ("text streaming cancellation tokenize
-gpu:<backend>|cpu"). Errors: `OK 0, EINVAL, ENOSPC, ENOENT, EIO, EBUSY,
+gpu:<backend>|cpu|backend:none" — what this process can see on this machine, not
+what was built: `gpu:CUDA` when the cuda module loaded and a GPU is enumerable,
+`cpu` when only the CPU module loaded, `backend:none` when no module loaded). Errors: `OK 0, EINVAL, ENOSPC, ENOENT, EIO, EBUSY,
 ECANCELLED, EABI, EBACKEND`.
 
 Threading: one session is used by one thread at a time; `cancel` is the only
@@ -47,7 +49,19 @@ not at run time.
 - **Diagnostics.** libllama's log goes to stderr only at ERROR level unless
   `SYM_LLM_LOG` is set; status codes and `strerror` text never carry a path.
 - **Linkage.** `llama.pc` → `-lggml -lggml-base -lllama`; `gguf_*` comes from
-  libggml-base. The public header is C17 with no llama type in it.
+  libggml-base, the device registry from libggml. The public header is C17 with no
+  llama type in it.
+- **Backends (1.1.1, P7 C6).** ggml is built with `GGML_BACKEND_DL`: each backend is
+  a dlopen'ed module in `<libdir>/ggml/` (`libggml-cpu.so` in symoneural-ggml,
+  `libggml-cuda.so` in symoneural-ggml-cuda), so libggml itself never NEEDs the
+  driver. The library loads the modules once per process from the directory next to
+  itself (`dladdr` → `<dir>/ggml`) before anything asks the registry; because llama
+  only runs its own `ggml_backend_load_all` (compiled-in dir, executable dir, cwd) when
+  nothing is registered yet, that fallback never runs while the packages are intact.
+  A module whose dependencies are missing — the cuda module without the driver's
+  `libcuda.so.1` — fails to dlopen and that backend is absent; nothing else changes.
+- **Version integer.** `abi_version()` is `major<<16 | minor<<8 | patch`: 1.1.0 →
+  65792, 1.1.1 → 65793. Consumers compare the major (the Python binding does).
 - **Consumers.** `symoneural_llm/native.py` (ctypes, ABI-major-checked, runs the
   blocking call on a worker thread and streams pieces through an incremental UTF-8
   decoder) and `symoneural-llm-util` (argv-only operator/proof tool).

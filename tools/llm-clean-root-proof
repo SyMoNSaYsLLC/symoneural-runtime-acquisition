@@ -37,8 +37,8 @@ LIB="$R/usr/lib/libsymoneural-llm.so.1"; UTIL="$R/usr/bin/symoneural-llm-util"; 
 REG="$R/var/lib/symoneural/models/llm"; mkdir -p "$REG" "$R/tmp"
 fail=0
 run()  { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_LLM_NATIVE="$LIB" "$@" ; }
-tpy()  { run "$LD" --library-path "$LIBPATH" "$PY" -I "$@"; }
-util() { run "$LD" --library-path "$LIBPATH" "$UTIL" "$@"; }
+tpy()  { run "$LD" --inhibit-cache --library-path "$LIBPATH" "$PY" -I "$@"; }
+util() { run "$LD" --inhibit-cache --library-path "$LIBPATH" "$UTIL" "$@"; }
 
 echo "--- interpreter"
 tpy -c 'import sys; print("  python", sys.version.split()[0], "prefix", sys.prefix); assert not any("SymonSaysLLC/Symoneural-LLM/app" in p for p in sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
@@ -55,25 +55,39 @@ need_lib=$(readelf -d "$LIB" | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}' |
 soname=$(readelf -d "$LIB" | awk '/SONAME/ {gsub(/[\[\]]/,"",$5); print $5}')
 echo "  $soname  NEEDED=[$need_lib]"
 [ "$soname" = "libsymoneural-llm.so.1" ] || { echo "  FAIL: SONAME"; fail=1; }
-[ "$need_lib" = "libc.so.6 libggml-base.so.0 libllama.so.0 " ] || { echo "  FAIL: NEEDED is not exactly libc + libggml-base + libllama"; fail=1; }
-for so in $need_lib $(readelf -d "$R/usr/lib/libllama.so.0" | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}') libggml-cpu.so.0; do
+# 1.1.1 = abi 65793 (0x010101: the patch byte counts). 1.1.0: the device registry (ggml_backend_dev_*) lives in libggml.so.0, so it joins
+# libggml-base (gguf) and libllama; still no libsymoneural-api, no driver library
+[ "$need_lib" = "libc.so.6 libggml-base.so.0 libggml.so.0 libllama.so.0 " ] || { echo "  FAIL: NEEDED is not exactly libc + libggml-base + libggml + libllama"; fail=1; }
+for so in $need_lib $(readelf -d "$R/usr/lib/libllama.so.0" | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}'); do
   ls "$R/usr/lib/$so" "$R/lib/$so" >/dev/null 2>&1 || { echo "  FAIL: $so not present in the root"; fail=1; }; done
+# ggml backends are dlopen'ed modules next to the library (GGML_BACKEND_DL, P7 C6):
+# libggml must not NEED any backend, and the cuda module is the only ELF that NEEDs the driver
+mods=$(ls "$R/usr/lib/ggml/" 2>/dev/null | tr '\n' ' ' | sed 's/ $//'); echo "  ggml backend modules: ${mods:-NONE}"
+[ -f "$R/usr/lib/ggml/libggml-cpu.so" ] || { echo "  FAIL: libggml-cpu.so module missing"; fail=1; }
+readelf -d "$R/usr/lib/libggml.so.0" | grep -q 'libggml-cuda' && { echo "  FAIL: libggml.so.0 NEEDs the cuda backend (static registration)"; fail=1; } || echo "  libggml.so.0 NEEDs no backend"
+for f in "$R"/usr/lib/*.so* "$R"/usr/lib/ggml/*.so; do case "$f" in */libggml-cuda.so) continue;; esac
+  readelf -d "$f" 2>/dev/null | grep -qE 'libcuda\.so|libnvidia-ml\.so' && { echo "  FAIL: $(basename $f) NEEDs a driver library"; fail=1; }; done
 readelf -d "$LIB" "$R/usr/lib/libllama.so.0" "$R/usr/lib/libggml.so.0" | grep -qE 'RUNPATH|RPATH' && { echo "  FAIL: RUNPATH/RPATH present"; fail=1; } || echo "  no RUNPATH/RPATH in libsymoneural-llm, libllama, libggml"
 grep -c -F "$ROOT" "$LIB" >/dev/null 2>&1 && { echo "  FAIL: build path bytes in the shipped library"; fail=1; } || echo "  no build-path bytes in the shipped library"
 
 echo "--- symoneural-llm-util through the target loader"
 v=$(util version); a=$(util abi); c=$(util capabilities); rc=$?
 echo "  version=$v abi=$a capabilities=[$c] (rc=$rc)"
-[ "$v" = "1.1.0" ] && [ "$a" = "65792" ] && [ $rc -eq 0 ] && [[ "$c" == *tokenize* ]] && [[ "$c" == *streaming* ]] || { echo "  FAIL: util version/abi/capabilities"; fail=1; }
+[ "$v" = "1.1.1" ] && [ "$a" = "65793" ] && [ $rc -eq 0 ] && [[ "$c" == *tokenize* ]] && [[ "$c" == *streaming* ]] || { echo "  FAIL: util version/abi/capabilities"; fail=1; }
+# every file the loader mapped from outside the root, in either mode (the dlopen'ed
+# backend modules included: LD_DEBUG sees them too)
+env -i LD_DEBUG=libs "$LD" --inhibit-cache --library-path "$LIBPATH" "$UTIL" capabilities >/dev/null 2>"$R/tmp/ld-debug.txt"
+grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | sort -u | grep -v "^$R/" > "$R/tmp/host-mapped.txt" || true
+grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | grep -F "$R/usr/lib/ggml/" | sed "s|^$R||" | sort -u | sed 's/^/  module loaded: /'
 if [ "$S2" = "1" ]; then
   [[ "$c" == *" gpu:"* ]] && echo "  backend (S2, driver $DRV): ${c##* }" || { echo "  FAIL: S2 mode but no GPU backend enumerable: $c"; fail=1; }
-  # every host-mapped library must belong to the installed driver release
-  env -i LD_DEBUG=libs "$LD" --library-path "$LIBPATH" "$UTIL" capabilities >/dev/null 2>"$R/tmp/ld-debug.txt"
-  grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | sort -u | grep -v "^$R/" > "$R/tmp/host-mapped.txt" || true
+  # every host-mapped library must belong to a package at the installed driver release
   while read -r l; do owner=$(dpkg -S "$l" 2>/dev/null | cut -d: -f1 | head -1); over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)
     case "$over" in "$DRV"*) echo "  HOST  $l  ($owner $over, S2)" ;; *) echo "  FAIL  host leak: $l (${owner:-none})"; fail=1 ;; esac; done < "$R/tmp/host-mapped.txt"
 else
-  [[ "$c" == *" cpu"* ]] && echo "  backend: cpu (no GPU device enumerable without the host driver on the loader path)" || { echo "  FAIL: expected cpu without S2: $c"; fail=1; }
+  # the cuda module must have FAILED to dlopen (no libcuda.so.1 reachable) and the CPU module must have loaded
+  [[ "$c" == *" cpu" ]] && echo "  backend: cpu (the cuda module cannot dlopen without the driver; the CPU module did)" || { echo "  FAIL: expected exactly cpu without S2: $c"; fail=1; }
+  if [ -s "$R/tmp/host-mapped.txt" ]; then sed 's/^/  FAIL  host leak: /' "$R/tmp/host-mapped.txt"; fail=1; else echo "  no file mapped from outside the root"; fi
 fi
 n=$(util models "$REG" | wc -l); [ "$n" -eq 0 ] && echo "  empty registry -> 0 models, rc ok" || { echo "  FAIL: empty registry listed $n"; fail=1; }
 
@@ -105,7 +119,7 @@ python3 - "$caps" "$rc" <<'PY' || fail=1
 import json, sys
 j = json.loads(sys.argv[1]); rc = int(sys.argv[2])
 ids = sorted(m["model_id"] for m in j["models"])
-ok = rc == 0 and j["native"]["version"] == "1.0.0" and j["native"]["abi"] == 65536 and "tokenize" in j["native"]["capabilities"] and ids == ["vocab-llama-bpe", "vocab-qwen2"] and j["unit"] == "chat"
+ok = rc == 0 and j["native"]["version"] == "1.1.1" and j["native"]["abi"] == 65793 and "tokenize" in j["native"]["capabilities"] and ids == ["vocab-llama-bpe", "vocab-qwen2"] and j["unit"] == "chat"
 print("  capabilities: native %s abi %d %s; registry models %s; unit %s -> %s" % (j["native"]["version"], j["native"]["abi"], j["native"]["capabilities"], ids, j["unit"], "PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)
 PY
@@ -116,12 +130,12 @@ assert int(sys.argv[2])==1 and j['type']=='error' and j['error']['type']=='api_e
 print('  request on a vocabulary model: %s (no path in the error)' % j['error']['message'])" "$err" "$rc" "$R" || { echo "  FAIL: request error shape: $err"; fail=1; }
 
 echo "--- the chat unit: HTTP on 127.0.0.1, bearer token, fail-closed"
-noconf=$(run "$LD" --library-path "$LIBPATH" "$PY" -I "$CLI" serve --fake --port 0 2>&1); rc=$?
+noconf=$(run "$LD" --inhibit-cache --library-path "$LIBPATH" "$PY" -I "$CLI" serve --fake --port 0 2>&1); rc=$?
 [ $rc -eq 78 ] && echo "  serve without SYM_CHAT_TOKEN: refused, exit 78 ($noconf)" || { echo "  FAIL: unconfigured unit came up (rc=$rc)"; fail=1; }
 PORT=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
 TOKEN="proof-$$-$(date +%s)"
 env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_LLM_NATIVE="$LIB" SYM_CHAT_TOKEN="$TOKEN" \
-  "$LD" --library-path "$LIBPATH" "$PY" -I "$CLI" serve --host 127.0.0.1 --port "$PORT" --registry-root "$REG" >"$R/tmp/serve.log" 2>&1 &
+  "$LD" --inhibit-cache --library-path "$LIBPATH" "$PY" -I "$CLI" serve --host 127.0.0.1 --port "$PORT" --registry-root "$REG" >"$R/tmp/serve.log" 2>&1 &
 SPID=$!
 python3 - "$PORT" "$TOKEN" "$R" <<'PY' || fail=1
 import json, sys, time, urllib.request, urllib.error
@@ -148,7 +162,7 @@ st, b = call("/v1/models"); check(st == 401 and b["error"]["type"] == "authentic
 st, b = call("/v1/models", auth="wrong-" + token); check(st == 401, "/v1/models wrong token -> %d" % st)
 st, b = call("/v1/models", auth=token); ids = sorted(m["id"] for m in b.get("data", []))
 check(st == 200 and ids == ["vocab-llama-bpe", "vocab-qwen2"], "/v1/models -> %d %s" % (st, ids))
-st, b = call("/v1/capabilities", auth=token); check(st == 200 and b["native"]["version"] == "1.0.0", "/v1/capabilities -> %d native %s" % (st, b.get("native", {}).get("version")))
+st, b = call("/v1/capabilities", auth=token); check(st == 200 and b["native"]["version"] == "1.1.1", "/v1/capabilities -> %d native %s %s" % (st, b.get("native", {}).get("version"), b.get("native", {}).get("capabilities")))
 req = {"model": "vocab-qwen2", "max_tokens": 8, "messages": [{"role": "user", "content": "hello"}]}
 st, b = call("/v1/messages", "POST", req, auth=token)
 check(st == 502 and b["error"]["type"] == "api_error" and root not in json.dumps(b), "/v1/messages on a vocabulary model -> %d %s (no path)" % (st, b["error"]["message"]))

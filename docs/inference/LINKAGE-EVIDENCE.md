@@ -69,3 +69,19 @@ No generation has been run: models are external inputs and none is registered
 (`acquisition/model-register.json`: LLM row ABSENT). The tokenize/detokenize path is
 proven in `LLM-CLEAN-ROOT-PROOF.txt` on tensor-free vocabulary fixtures. Reproducibility
 and integration are NOT TESTED.
+
+## Addendum 2026-09-14 (P7 C6): CUDA backend as a module, libsymoneural-llm 1.1.1
+
+Regenerated `generated/evidence/llm/NATIVE-LINKAGE.json` after the ggml recipe moved
+to dlopen'ed backends (`GGML_BACKEND_DL`) and libsymoneural-llm 1.1.1; RESULT PASS. The
+table above is the P9 L8 rendering and is left as recorded. What changed:
+
+| Artifact | SONAME | NEEDED (now) |
+|---|---|---|
+| `libsymoneural-llm` 1.1.1 | `libsymoneural-llm.so.1` | `libggml.so.0 libggml-base.so.0 libllama.so.0 libc.so.6` — libggml joined for the device registry (1.1.0); no driver library, no dl library (glibc 2.44 has `dladdr` in libc) |
+| `libggml.so.0` | `libggml.so.0` | no backend — `libggml-cpu.so` and `libggml-cuda.so` are modules under `/usr/lib/ggml/`, loaded by libsymoneural-llm from its own directory |
+| `libggml-cuda.so` (symoneural-ggml-cuda) | – (module) | `libggml-base.so.0 libcudart.so.13 libcublas.so.13 libcuda.so.1 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6` — the only ELF in the image that NEEDs the driver (S2) |
+
+Both clean-root proofs pass on the same image (`55fd6fb3…`): `cpu` with nothing mapped
+from outside the root, `gpu:CUDA` with only driver-owned host files. Details and the
+static-registration finding that forced the change: `docs/cuda/P7-CUDA-AUTHORITY.md` §C6.
