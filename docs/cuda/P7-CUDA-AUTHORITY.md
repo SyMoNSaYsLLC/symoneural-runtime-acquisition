@@ -252,3 +252,21 @@ CPU-mode LLM proof does not touch the device.
 | C8 Crypto/Tune compatibility | recorded — cuda-python 13.4.1 and cupy compatible by release line; **kawpowminer DEFERRED by Garrett's ruling to P11 / Phase 20e** (GPL-3.0 product/distribution ruling required; `unresolved.json:kawpowminer-gpl-distribution`); nothing pulled forward |
 | C9 package / clean-install / host-leakage | PASS for the authority + probe, the LLM image and the Common image (all proofs run with the host loader cache inhibited and `PATH` confined to the root; CPU modes map nothing from outside the root; S2 modes map only files owned by packages at the installed driver version) |
 | C10 records / evidence / commits | records for C0–C7 in place (`cuda-toolkit-authority` RESOLVED, `cuda-toolkit` BINARY-EXTERNAL, `accelerate-torch-distributed` RESOLVED BY EVIDENCE, `kawpowminer-gpl-distribution` DEFERRED); `generated/evidence/cuda/CUDA-SHA256SUMS`; logical commits local — push only on Garrett's authorization |
+
+## Addendum (2026-09-14, after C7): the NVIDIA driver stack is three layers, not one
+
+P7 named the whole NVIDIA driver an "external proprietary condition" (the S2 boundary). That was the
+correct statement for the runtime proofs and their meaning is preserved: every C4–C7 GPU proof ran
+estate-built CUDA userspace against the HOST's driver stack (Debian DKMS-built modules, NVIDIA's
+Debian 13 userspace 615.71.09-2, NVIDIA's GSP firmware) and identified those host files by package.
+The follow-on Platform work (docs/platform/NVIDIA-OPEN-KERNEL.md) splits that condition:
+
+| Layer | Now |
+|---|---|
+| Kernel-module implementation | pinned open source (`open-gpu-kernel-modules` 615.71.09, dual MIT/GPL-2.0), **estate-built** for the Debian 6.12.107+deb13-amd64 ABI and for the estate linux-yocto 6.18.48 kernel; packaged and proven in staged roots; NOT loaded anywhere |
+| NVIDIA driver userspace (`libcuda.so.1`, `libnvidia-ml.so.1`, helpers) | external/binary dependency — host packages in the Debian profile; no estate provider (OPEN decision `nvidia-userspace-driver-provider`) |
+| GSP firmware (`nvidia/615.71.09/gsp_*.bin`) | external/binary dependency — `firmware-nvidia-gsp` 615.71.09-2 in the Debian profile; no estate provider (OPEN decision `nvidia-gsp-firmware-provider`) |
+
+The S2 check in `symoneural-cuda.bbclass` is unchanged: `libcuda.so.1` and `libnvidia-ml.so.1` are
+still resolved by the driver at run time and never by an estate package. Nothing in C6/C7 evidence
+is rewritten by this addendum; the P9 history is untouched.

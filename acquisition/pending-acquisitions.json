@@ -762,6 +762,20 @@
       "tag_kind": "RELEASE",
       "tag_object_sha": "d2a24f90e843359450ab313a286f43a88d95c6ce",
       "upstream_url": "https://github.com/NVIDIA/open-gpu-kernel-modules"
+    },
+    {
+      "category": "alienware",
+      "component": "AWCC",
+      "licence_expected": "GPL-3.0 (LICENSE, 'Version 3, 29 June 2007') - PRODUCT/DISTRIBUTION RULING REQUIRED, the same class as kawpowminer (P11 / Phase 20e): separate executable and process boundary, never linked into proprietary or native libraries, GPL obligations preserved",
+      "notes": "Unofficial Alienware Command Center for Linux (Alienware / Dell G series): fan and thermal modes, G-mode, lighting, daemon + GUI (C++17, CMake + Ninja, ImGui/GLFW/OpenGL/X11 or Wayland). Recon of the v1.19.0 tree (scratch clone, 2026-09-14): CMakeLists.txt pulls loguru, nlohmann/json, glfw, imgui and libusb-cmake with FetchContent from GitHub at configure time - each must become a pinned acquisition (or an offline FetchContent source) before any estate build; the estate forbids network FetchContent. Runtime dependency on the acpi_call out-of-tree kernel module (acpi-call-dkms) - a further kernel-module acquisition for the Platform runtime - plus libX11, OpenGL, libudev, pkexec; ships awccd systemd/OpenRC units and udev rules. Tag v1.19.0 is a lightweight tag (no tag object). NOT ACQUIRED.",
+      "recorded": "2026-09-14 (Garrett, during the NVIDIA open-kernel run: 'we need to add this to our build')",
+      "required_by": "Garrett's request 2026-09-14; consumer runtime not yet assigned (Platform proposed: hardware control beside the NVIDIA kernel modules)",
+      "ruling": "OPEN - three decisions before acquisition: (1) GPL-3.0 product/distribution posture, (2) runtime placement, (3) dependency closure for the five FetchContent sources and acpi_call",
+      "runtime": "Platform (proposed)",
+      "sha": "0ec42c4b3ddc3c4e412ad69353cd251e1f348280",
+      "tag": "v1.19.0",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/tr1xem/AWCC"
     }
   ],
   "schema": "symoneural-pending-acquisitions/1"

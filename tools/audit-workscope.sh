@@ -73,7 +73,8 @@ for line in open(AUD, errors="replace"):
         committed[parts[0]] = m.group(1) if m else "?"
 
 BUILD_CLASSES = ("cargo","cmake","meson","python_","maturin","npm","autotools",
-                 "bin_package","go","setuptools")
+                 "bin_package","go","setuptools",
+                 "module")   # OE kernel-module class (out-of-tree modules: symoneural-nvidia-open-kernel)
 
 recipes = {}
 for bb in glob.glob(os.path.join(ROOT, "meta-symoneural/recipes-*/*/*.bb")):

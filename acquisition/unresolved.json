@@ -32,6 +32,40 @@
    },
    "ruling_2026_09_14": "A: mpmath re-pinned to 1.3.0 (b5c04506ef0cd4a1f1213f8389ee21c9c3551582, newest release satisfying sympy 1.14.0's declared mpmath<1.4,>=1.1.0). The shipped pair must satisfy the DECLARED closure; that is the gate. Evidence that the bound is not functional: sympy master setup.py line 328 reads 'mpmath >= 1.1.0' (read 2026-09-14), the released sympy-1.14.0 setup.py line 324 still reads 'mpmath >= 1.1.0, < 1.4'. Revisit: when a sympy release carries the lifted bound, move mpmath forward again (the only consumer of mpmath is sympy).",
    "state": "RESOLVED-A"
+  },
+  {
+   "blocks": "Platform: complete fresh-machine GPU deployment from estate artifacts",
+   "category": "BUILD-DESIGN",
+   "default_if_unanswered": "B: nothing acquired; the estate profile's GPU path stays BLOCKED and is reported as such",
+   "description": "No estate provider for the NVIDIA driver userspace ABI (libcuda.so.1, libnvidia-ml.so.1, libnvidia-gpucomp, libnvidia-nvvm, libnvidia-ptxjitcompiler, nvidia-modprobe) at 615.71.09. The Debian profile consumes the host's NVIDIA Debian 13 packages (615.71.09-2; the P7 S2 boundary). The estate profile has none, so a fresh estate machine cannot run CUDA even with the estate-built kernel modules and kernel.",
+   "evidence": "docs/platform/NVIDIA-OPEN-KERNEL.md section 4; generated/evidence/platform/NVIDIA-OPEN-KERNEL-*-PROOF.txt (firmware: lines); generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt (host-provided libraries)",
+   "executed": "2026-09-14: recorded as an explicit deployment blocker after both kernel-module targets built and passed their staged-install proofs; nothing acquired",
+   "identifier": "nvidia-userspace-driver-provider",
+   "options": [
+    "A: acquire NVIDIA's debian13 userspace packages as BINARY-EXTERNAL under the driver licence (same mechanism as cuda-toolkit-bin), pinned to 615.71.09-2",
+    "B: keep the S2 boundary (host-provided) and record the estate profile as host-conditioned for GPU use",
+    "C: defer"
+   ],
+   "resolution": "OPEN - Garrett's decision (licence + product boundary); the kernel-module packages do not and must not provide these",
+   "resolved_phase": "",
+   "state": "OPEN"
+  },
+  {
+   "blocks": "Platform: loading the estate-built nvidia.ko on Blackwell/Ada/Ampere hardware",
+   "category": "BUILD-DESIGN",
+   "default_if_unanswered": "B: nothing acquired; the estate profile's GPU path stays BLOCKED and is reported as such",
+   "description": "No estate provider for the GSP firmware the open kernel modules request at load (nvidia/615.71.09/gsp_tu10x.bin, gsp_ga10x.bin, ucodes_*.bin; modinfo firmware:). Debian profile: firmware-nvidia-gsp 615.71.09-2 from NVIDIA's Debian 13 index (sha256 2f72dd12294aba56...). Estate profile: oe-core linux-firmware ships nouveau-era NVIDIA firmware, not 615.71.09 GSP.",
+   "evidence": "docs/platform/NVIDIA-OPEN-KERNEL.md section 4; generated/evidence/platform/NVIDIA-OPEN-KERNEL-*-PROOF.txt (firmware: lines); generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt (host-provided libraries)",
+   "executed": "2026-09-14: recorded as an explicit deployment blocker after both kernel-module targets built and passed their staged-install proofs; nothing acquired",
+   "identifier": "nvidia-gsp-firmware-provider",
+   "options": [
+    "A: acquire firmware-nvidia-gsp 615.71.09-2 as BINARY-EXTERNAL (NVIDIA firmware licence) pinned by index sha256",
+    "B: defer until the userspace decision",
+    "C: never ship firmware (GPU support stays host-conditioned)"
+   ],
+   "resolution": "OPEN - Garrett's decision (licence + product boundary); the kernel-module packages do not and must not provide these",
+   "resolved_phase": "",
+   "state": "OPEN"
   }
  ],
  "phase": {

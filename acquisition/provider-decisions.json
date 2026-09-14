@@ -39,6 +39,11 @@
       "logical": "cuda-toolkit",
       "rationale": "Proprietary; there is no source to own. CUDA 13.4.1 from NVIDIA's debian13/x86_64 repository, 33 packages pinned by index SHA256 (recipe cuda-toolkit-bin, LicenseRef-NVIDIA-CUDA-EULA), version resolved from evidence not history (driver 615.71.09 generation, torch CI, nvcc 13.4 host_config accepts GCC 16, cuda-python 13.4.1). Every consumer inherits symoneural-cuda.bbclass; nothing binds to /usr/local/cuda-*. libcuda.so.1 and libnvidia-ml.so.1 stay host-driver provided (S2) and are reported as such. Ruling: unresolved.json:cuda-toolkit-authority; evidence: docs/cuda/P7-CUDA-AUTHORITY.md.",
       "selected_provider": "BINARY-EXTERNAL"
+    },
+    {
+      "logical": "nvidia-open-kernel-modules",
+      "rationale": "Platform deliverable; built from the acquired open-gpu-kernel-modules tree at tag 615.71.09 (commit 61dcc937...) through symoneural-pristine for TWO kernel targets: Debian 6.12.107+deb13-amd64 (symoneural-nvidia-open-kernel-debian, .deb, HOST-CONDITIONED toolchain declared via HOSTTOOLS) and the estate linux-yocto 6.18.48 qemux86-64 kernel (symoneural-nvidia-open-kernel, module.bbclass, kernel-module-nvidia-* ipks). Dual MIT/GPL-2.0 modules. The NVIDIA driver userspace (libcuda.so.1, libnvidia-ml.so.1 ...) and GSP firmware are NOT provided by this decision: they remain BINARY-EXTERNAL (Debian profile: NVIDIA's Debian 13 packages 615.71.09-2; estate profile: no provider - deployment blockers recorded in unresolved.json). Evidence: generated/evidence/platform/, docs/platform/NVIDIA-OPEN-KERNEL.md.",
+      "selected_provider": "SYMONEURAL-OWNED"
     }
   ],
   "not_acquired": [
