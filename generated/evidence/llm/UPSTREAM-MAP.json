@@ -1,0 +1,143 @@
+{
+ "ggml": {
+  "canonical_commit": "e91ded11bdcd78c42f9c8d3978ff6686eb4c1226",
+  "canonical_matches_sync": true,
+  "canonical_tags": [
+   "v0.23.0"
+  ],
+  "canonical_tree_present": true,
+  "canonical_upstream": "https://github.com/ggml-org/ggml",
+  "compatibility_evidence": "vendored llama.cpp/ggml/{include,src,cmake,CMakeLists.txt} diff -rq against canonical ggml at the sync commit",
+  "embedded_sync_commit": "e91ded11bdcd78c42f9c8d3978ff6686eb4c1226",
+  "embedded_version": "0.23.0",
+  "vendored_vs_canonical": {
+   "differences": {
+    "CMakeLists.txt": 0,
+    "cmake": 0,
+    "include": 0,
+    "src": 0
+   },
+   "identical": true
+  }
+ },
+ "library_only_build_plan": {
+  "libggml": {
+   "cmake": [
+    "-DGGML_BUILD_TESTS=OFF",
+    "-DGGML_BUILD_EXAMPLES=OFF",
+    "-DBUILD_SHARED_LIBS=ON",
+    "-DGGML_NATIVE=OFF",
+    "(CUDA later: -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=120 from the estate toolkit)"
+   ],
+   "source": "canonical ggml tree at the sync commit"
+  },
+  "libllama": {
+   "cmake": [
+    "-DLLAMA_USE_SYSTEM_GGML=ON",
+    "-DLLAMA_BUILD_COMMON=OFF",
+    "-DLLAMA_BUILD_TESTS=OFF",
+    "-DLLAMA_BUILD_TOOLS=OFF",
+    "-DLLAMA_BUILD_EXAMPLES=OFF",
+    "-DLLAMA_BUILD_SERVER=OFF",
+    "-DLLAMA_BUILD_UI=OFF",
+    "-DLLAMA_USE_PREBUILT_UI=OFF",
+    "-DLLAMA_CURL=OFF",
+    "-DBUILD_SHARED_LIBS=ON"
+   ],
+   "result": "libllama.so + include/llama.h; no server, no WebUI, no network",
+   "source": "llama.cpp tree"
+  },
+  "libsymoneural_llm": {
+   "abi": "C (docs/inference/C-ABI.md)",
+   "on_top_of": "libllama + libggml"
+  },
+  "reference_llama_server": {
+   "purpose": "differential test target only",
+   "requirement": "if built, LLAMA_USE_PREBUILT_UI=OFF and LLAMA_BUILD_UI=OFF (no UI) or a separately pinned+checksummed dist.tar.gz via SRC_URI; never a product dependency"
+  }
+ },
+ "llama_cpp": {
+  "commit": "5266f24da75dc449bd56cbed7addb9c8e4a6a73e",
+  "date": "2026-09-04",
+  "release_status": "b-tag build (b10809) plus v0.4.0 release tag at the same commit",
+  "source_path": "Symoneural-LLM/src/inference/source/llama.cpp",
+  "tags": [
+   "b10809",
+   "devtool-base",
+   "v0.4.0"
+  ],
+  "tree": "0424752fbbc3bb01469ec830a30f2bc035497cd4"
+ },
+ "network_fetches": [
+  {
+   "evidence": "file(DOWNLOAD ...dist.tar.gz?download=true ...) at line 206",
+   "gated_by": "LLAMA_USE_PREBUILT_UI (default ON) together with LLAMA_BUILD_SERVER (default ${LLAMA_STANDALONE}); LLAMA_BUILD_UI builds it from tools/ui with npm instead",
+   "what": "tools/server WebUI dist.tar.gz (+ .sha256) from a GitHub release or Hugging Face bucket at CONFIGURE time",
+   "where": "scripts/ui-assets.cmake"
+  },
+  {
+   "gated_by": "see file",
+   "what": "ExternalProject_Add",
+   "where": "common/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "file(DOWNLOAD",
+   "where": "ggml/src/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "FetchContent_Declare",
+   "where": "ggml/src/ggml-cpu/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "ExternalProject_Add",
+   "where": "ggml/src/ggml-hexagon/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "FetchContent_Declare",
+   "where": "ggml/src/ggml-cuda/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "ExternalProject_Add",
+   "where": "ggml/src/ggml-vulkan/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "ExternalProject_Add",
+   "where": "ggml/src/ggml-virtgpu/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "ExternalProject_Add",
+   "where": "ggml/src/ggml-zendnn/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "FetchContent_Declare",
+   "where": "vendor/cpp-httplib/CMakeLists.txt"
+  },
+  {
+   "gated_by": "see file",
+   "what": "file(DOWNLOAD",
+   "where": "cmake/download-models.cmake"
+  }
+ ],
+ "schema": "symoneural-llama-upstream-map/1",
+ "vendored_closure": {
+  "dir": "vendor/",
+  "entries": [
+   "cpp-httplib",
+   "hash",
+   "miniaudio",
+   "nlohmann",
+   "sheredom",
+   "stb"
+  ],
+  "note": "header-only/bundled C/C++ (cpp-httplib, nlohmann json, miniaudio, stb, sheredom utf8, hash) used by tools/server and examples; libllama itself needs none of them except as the build selects",
+  "sync_tool": "scripts/sync_vendor.py"
+ }
+}

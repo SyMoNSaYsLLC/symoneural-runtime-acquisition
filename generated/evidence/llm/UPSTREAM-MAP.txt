@@ -1,0 +1,15 @@
+llama.cpp  5266f24da75d  tags=b10809,devtool-base,v0.4.0  2026-09-04
+ggml       embedded 0.23.0 (sync e91ded11bdcd)  canonical present=True at e91ded11bdcd tags=v0.23.0  matches_sync=True
+           vendored vs canonical: IDENTICAL  {'include': 0, 'src': 0, 'cmake': 0, 'CMakeLists.txt': 0}
+vendor/    cpp-httplib, hash, miniaudio, nlohmann, sheredom, stb
+FETCH      scripts/ui-assets.cmake: tools/server WebUI dist.tar.gz (+ .sha256) from a GitHub release or Hugging Face bucket at [LLAMA_USE_PREBUILT_UI (default ON) together with LLAMA_BUILD_SERVER (d]
+FETCH      common/CMakeLists.txt: ExternalProject_Add [see file]
+FETCH      ggml/src/CMakeLists.txt: file(DOWNLOAD [see file]
+FETCH      ggml/src/ggml-cpu/CMakeLists.txt: FetchContent_Declare [see file]
+FETCH      ggml/src/ggml-hexagon/CMakeLists.txt: ExternalProject_Add [see file]
+FETCH      ggml/src/ggml-cuda/CMakeLists.txt: FetchContent_Declare [see file]
+FETCH      ggml/src/ggml-vulkan/CMakeLists.txt: ExternalProject_Add [see file]
+FETCH      ggml/src/ggml-virtgpu/CMakeLists.txt: ExternalProject_Add [see file]
+FETCH      ggml/src/ggml-zendnn/CMakeLists.txt: ExternalProject_Add [see file]
+FETCH      vendor/cpp-httplib/CMakeLists.txt: FetchContent_Declare [see file]
+FETCH      cmake/download-models.cmake: file(DOWNLOAD [see file]
