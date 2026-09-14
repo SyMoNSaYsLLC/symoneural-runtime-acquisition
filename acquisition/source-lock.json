@@ -450,7 +450,467 @@
       "submodule_count": 65,
       "upstream_url": "https://github.com/pytorch/pytorch",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "9501d4777948887b804c4f0ed07e4f62d1bc1828",
+      "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git",
+      "submodules": [
+        {
+          "path": "android/libs/fbjni",
+          "commit_sha": "7e1e1fe3858c63c251c637ae41a20de425dde96f",
+          "tree_sha": "395ffc4053c8cedaaca92effa5d23c14be40b8d7",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/android/libs/fbjni",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/FP16",
+          "commit_sha": "4dfe081cf6bcd15db339cf2680b9281b8451eeb3",
+          "tree_sha": "163fb25e56cc7dea72ff60812fb7023d961b08cf",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NNPACK_deps/FP16",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/FXdiv",
+          "commit_sha": "b408327ac2a15ec3e43352421954f5b1967701d1",
+          "tree_sha": "78613e826a675f4ed72c4571935e5d398db44cd1",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NNPACK_deps/FXdiv",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/NNPACK",
+          "commit_sha": "c07e3a0400713d546e0dea2d5466dd22ea389c73",
+          "tree_sha": "2926babb9a8747e598b488024b644b5542f856e5",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NNPACK",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/NVTX",
+          "commit_sha": "7d113f290f89eeeae9c957011c497101f3948d9e",
+          "tree_sha": "99f7f61ea39d9e11a0ca88ff65f0f798c1784397",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NVTX",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/VulkanMemoryAllocator",
+          "commit_sha": "1d8f600fd424278486eade7ed3e877c99f0846b1",
+          "tree_sha": "2ae80133b8d9cc6febaaeef61c374d0da711e079",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/VulkanMemoryAllocator",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/XNNPACK",
+          "commit_sha": "51a0103656eff6fc9bfd39a4597923c4b542c883",
+          "tree_sha": "955097a5276de2f506a24d53611ddcdee7b0f0a0",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/XNNPACK",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/aiter",
+          "commit_sha": "971d98b8ed4003639486134a435df7e2ef9c0475",
+          "tree_sha": "194e6820a053c608dc50145744ab65481c2a79b7",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/aiter",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/aiter/3rdparty/composable_kernel",
+          "commit_sha": "af7118e342580ecd3f71edce7b1d0ba465012ecf",
+          "tree_sha": "aa96e5adbdd79a807c2721c17163b71bd25ff4c6",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/aiter/modules/3rdparty/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/benchmark",
+          "commit_sha": "299e5928955cc62af9968370293b916f5130916f",
+          "tree_sha": "c5503b9eac1c625dc2eed1b7e4e6502d5628cb95",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/benchmark",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/composable_kernel",
+          "commit_sha": "5a74dec07a894484b9489d0c0e00cd3b52652d18",
+          "tree_sha": "25cd0bfce23fded3cc1c35481caacdd63053f66c",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/cpp-httplib",
+          "commit_sha": "62d899feac3cf9215a55f2b43da250fdd98d2156",
+          "tree_sha": "6b86e79fcdf096032e5fcab1b1c293ca59507a6b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/cpp-httplib",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/cpuinfo",
+          "commit_sha": "bc3c01e230c6974283e4b89421cfb0e232435589",
+          "tree_sha": "0f9b497a3f298d624f160784844e566e7626385e",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/cpuinfo",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/cudnn_frontend",
+          "commit_sha": "35fd7b0d0e1d4952b904c79341c5e84e3af0a328",
+          "tree_sha": "bafcb465ae5ba3df95d07ebad196124ff20b969b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/cudnn_frontend",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/cutlass",
+          "commit_sha": "e05f953a5b3d38adc240df2ff928e0421c2abba3",
+          "tree_sha": "0d3dd31da2e1ccc8ab15047a2edd9ebf5d98218b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/cutlass",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm",
+          "commit_sha": "bf6dce360a4fe133bc779e2fd036277678509f95",
+          "tree_sha": "e6fbad03c7a3f4fd1ae4ec619548f4cb8786dd04",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/asmjit",
+          "commit_sha": "a3199e8857792cd10b7589ff5d58343d2c9008ea",
+          "tree_sha": "5ccd19c0eae54d7017cebe318c0183835652d295",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/asmjit",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/composable_kernel",
+          "commit_sha": "7fe50dc3da2069d6645d9deb8c017a876472a977",
+          "tree_sha": "e0381177409a899037c7d1664bb6b8f1b440ce00",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/cpuinfo",
+          "commit_sha": "161a9ec374884f4b3e85725cb22e05f9458fdc93",
+          "tree_sha": "d990ead5980dafd52612acd8fbebfb78e7725f8e",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/cpuinfo",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/cutlass",
+          "commit_sha": "571edeb2d0ac872a8392fc49285b156b07884b4e",
+          "tree_sha": "c3b7dd55442c3ea03a781fa1d21ad5bf93d811bb",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/cutlass",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/googletest",
+          "commit_sha": "52eb8108c5bdec04579160ae17225d66034bd723",
+          "tree_sha": "ad23b2ceac4a6eef2278c48545b62ffc1f0c134a",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/hipify_torch",
+          "commit_sha": "63b6a7b541fa7f08f8475ca7d74054db36ff2691",
+          "tree_sha": "13ff30b3ba59d0bbec45c96548e2f8968c6eb1dc",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/hipify_torch",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fbgemm/external/json",
+          "commit_sha": "55f93686c01528224f448c19128836e7df245f72",
+          "tree_sha": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fbgemm/modules/external/json",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flash-attention",
+          "commit_sha": "14c377950125c70b7a9dabf9c561fca53715ac7d",
+          "tree_sha": "e307abd03f4bcffa27120e1dedf6715f2ab8223e",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flash-attention",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flash-attention/csrc/composable_kernel",
+          "commit_sha": "c56c6750d0fc54ed771d532cc92c316423449614",
+          "tree_sha": "4e3b886b1f40dc3e2ebe6ce9d4198f6b714aabb0",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flash-attention/modules/csrc/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flash-attention/csrc/cutlass",
+          "commit_sha": "7127592069c2fe01b041e174ba4345ef9b279671",
+          "tree_sha": "d88924300503de08ec598fa97f977ba036e5b2ae",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flash-attention/modules/csrc/cutlass",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flash-attention/third_party/aiter",
+          "commit_sha": "9bab8388c35936814a659b4ebd245c491e1b940a",
+          "tree_sha": "f483c2a0250ed8c40ececebd5ec66c45b7d71c3f",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flash-attention/modules/third_party/aiter",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel",
+          "commit_sha": "af7118e342580ecd3f71edce7b1d0ba465012ecf",
+          "tree_sha": "aa96e5adbdd79a807c2721c17163b71bd25ff4c6",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flash-attention/modules/third_party/aiter/modules/3rdparty/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/flatbuffers",
+          "commit_sha": "a2cd1ea3b6d3fee220106b5fed3f7ce8da9eb757",
+          "tree_sha": "47abbaae5db188e692dd04ac88d948089413eae1",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/flatbuffers",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/fmt",
+          "commit_sha": "c0330b746600bfd91dbacb88837da5a16f947ba5",
+          "tree_sha": "f9159edf7179cc181071521d6a6c64d6001af717",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/fmt",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/gemmlowp/gemmlowp",
+          "commit_sha": "3fb5c176c17c765a3492cd2f0321b0dab712f350",
+          "tree_sha": "af09301c63e9145ec1d755c6a60d5a85c6fa151e",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/gemmlowp/gemmlowp",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/gloo",
+          "commit_sha": "74cc005ae13f69c11d8a41e50b42025b6730e796",
+          "tree_sha": "1f31da16cf4946fa6f4632281cf35a4472345dcf",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/gloo",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/googletest",
+          "commit_sha": "52eb8108c5bdec04579160ae17225d66034bd723",
+          "tree_sha": "ad23b2ceac4a6eef2278c48545b62ffc1f0c134a",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/ideep",
+          "commit_sha": "e087b6e4b32a7ba684db82231d1558123968ac1d",
+          "tree_sha": "95cb7a5a90022ebdff647577b61a695666365214",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/ideep",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/ideep/mkl-dnn",
+          "commit_sha": "80afa71049cd69a3df32adcccb623b12cd7baa22",
+          "tree_sha": "54e98ccd830216b33223ab2d2ce6d6c83f01c215",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/ideep/modules/mkl-dnn",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/ittapi",
+          "commit_sha": "0c57540822deb5dae43bef6c1cc9b3be4772a033",
+          "tree_sha": "184ff97b3dccd2f477ef6e2b114df69848ad897f",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/ittapi",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/kineto",
+          "commit_sha": "15f4784a3471d4db8b31720d528f2f57cd2b1f40",
+          "tree_sha": "1ad8e6ad6b5dc4d4b55da9ab5cc61c1c1e157f4f",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/kineto",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/kineto/libkineto/third_party/fmt",
+          "commit_sha": "40626af88bd7df9a5fb80be7b25ac85b122d6c21",
+          "tree_sha": "8c2c445c4fb81ad4d799193ba4bcb2de48af0ee6",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/kineto/modules/libkineto/third_party/fmt",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/kineto/libkineto/third_party/googletest",
+          "commit_sha": "52eb8108c5bdec04579160ae17225d66034bd723",
+          "tree_sha": "ad23b2ceac4a6eef2278c48545b62ffc1f0c134a",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/kineto/modules/libkineto/third_party/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/kineto/libkineto/third_party/json",
+          "commit_sha": "55f93686c01528224f448c19128836e7df245f72",
+          "tree_sha": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/kineto/modules/libkineto/third_party/json",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/kleidiai",
+          "commit_sha": "d7770c89632329a9914ef1a90289917597639cbe",
+          "tree_sha": "dfea3ecc4b5b219ff5401da4fcf8176db7454291",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/kleidiai",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mimalloc",
+          "commit_sha": "30ac9d56b8b9ea57ae84bc8ef17ef39000da08fe",
+          "tree_sha": "7e23c2c4d7c69950275492e9c33018e9ec31b975",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mimalloc",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mslk",
+          "commit_sha": "3d332d1c0c0ac7765852c97b3979c9ef913e037f",
+          "tree_sha": "7c487c741f0c3d9234068d604a9bcf008a66928b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mslk",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mslk/external/composable_kernel",
+          "commit_sha": "7fe50dc3da2069d6645d9deb8c017a876472a977",
+          "tree_sha": "e0381177409a899037c7d1664bb6b8f1b440ce00",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mslk/modules/external/composable_kernel",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mslk/external/cutlass",
+          "commit_sha": "571edeb2d0ac872a8392fc49285b156b07884b4e",
+          "tree_sha": "c3b7dd55442c3ea03a781fa1d21ad5bf93d811bb",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mslk/modules/external/cutlass",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mslk/external/googletest",
+          "commit_sha": "52eb8108c5bdec04579160ae17225d66034bd723",
+          "tree_sha": "ad23b2ceac4a6eef2278c48545b62ffc1f0c134a",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mslk/modules/external/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/mslk/external/hipify_torch",
+          "commit_sha": "63b6a7b541fa7f08f8475ca7d74054db36ff2691",
+          "tree_sha": "13ff30b3ba59d0bbec45c96548e2f8968c6eb1dc",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/mslk/modules/external/hipify_torch",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/nlohmann",
+          "commit_sha": "55f93686c01528224f448c19128836e7df245f72",
+          "tree_sha": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/nlohmann",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/onnx",
+          "commit_sha": "e709452ef2bbc1d113faf678c24e6d3467696e83",
+          "tree_sha": "56e6e728856c4ee05080da7c647510805053d569",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/onnx",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/onnx/third_party/pybind11",
+          "commit_sha": "a2e59f0e7065404b44dfe92a28aca47ba1378dc4",
+          "tree_sha": "6d7d5b73a5716237418e592498875df577475ad3",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/onnx/modules/third_party/pybind11",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/pocketfft",
+          "commit_sha": "0fa0ef591e38c2758e3184c6c23e497b9f732ffa",
+          "tree_sha": "0f2b864f2b23cef54d40f7b41f4c268f63257e9f",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/pocketfft",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/protobuf",
+          "commit_sha": "f0dc78d7e6e331b8c6bb2d5283e06aa26883ca7c",
+          "tree_sha": "279ae3a7ce3cac503885a3dceb4d9c957a265e27",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/protobuf",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/protobuf/third_party/benchmark",
+          "commit_sha": "5b7683f49e1e9223cf9927b24f6fd3d6bd82e3f8",
+          "tree_sha": "3951d685b7e2ce52bbd59751423f4809fe0b99d3",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/protobuf/modules/third_party/benchmark",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/protobuf/third_party/googletest",
+          "commit_sha": "5ec7f0c4a113e2f18ac2c6cc7df51ad6afc24081",
+          "tree_sha": "1dcea79edca2cbd2123acd4a920c4f9882b5a4f7",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/protobuf/modules/third_party/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/psimd",
+          "commit_sha": "072586a71b55b7f8c584153d223e95687148a900",
+          "tree_sha": "49ce251d2c0ff0fc666283ff56ee36e881971752",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NNPACK_deps/psimd",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/pthreadpool",
+          "commit_sha": "a56dcd79c699366e7ac6466792c3025883ff7704",
+          "tree_sha": "cd8cb9b0e8bd4cb1251304906ca48583bff5286f",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/NNPACK_deps/pthreadpool",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/pybind11",
+          "commit_sha": "97bf890db679505a14dfe547a5e77bb2bd05dc90",
+          "tree_sha": "aea838909d16836e7d2515dd1ba6e67e2b3f19ae",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/pybind11",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/python-peachpy",
+          "commit_sha": "f45429b087dd7d5bc78bb40dc7cf06425c252d67",
+          "tree_sha": "8fc2fdd6e67c8a6743c0f487fe85fe3cd14a7a4b",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/python-peachpy",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/sleef",
+          "commit_sha": "5a1d179df9cf652951b59010a2d2075372d67f68",
+          "tree_sha": "2d82d520c04b78bd03ca627c229a68d2fe11b0bb",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/sleef",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe",
+          "commit_sha": "2b4cd91092d335a697416b2a3cb398283246849d",
+          "tree_sha": "256c4b49ba9101d3bceb690eabae0312a567dd09",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe/third_party/googletest",
+          "commit_sha": "aee0f9d9b5b87796ee8a0ab26b7587ec30e8858e",
+          "tree_sha": "f19e19e4f65a0d3193c4bb9ef00498d9b170fc11",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe/modules/third_party/googletest",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe/third_party/libnop",
+          "commit_sha": "910b55815be16109f04f4180e9adee14fb4ce281",
+          "tree_sha": "12e55d6df7ace64a4a516f3bd50f4a8e77dafd4e",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe/modules/third_party/libnop",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe/third_party/libuv",
+          "commit_sha": "5152db2cbfeb5582e9c27c5ea1dba2cd9e10759b",
+          "tree_sha": "048a967ccac12c3d6b7f7fa07d8a747f9832e4a0",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe/modules/third_party/libuv",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe/third_party/pybind11",
+          "commit_sha": "a23996fce38ff6ccfbcdc09f1e63f2c4be5ea2ef",
+          "tree_sha": "c13d71283de9d7af8c910b6f8a263d800321c6bc",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe/modules/third_party/pybind11",
+          "provenance": "PIN"
+        },
+        {
+          "path": "third_party/tensorpipe/third_party/pybind11/tools/clang",
+          "commit_sha": "6a00cbc4a9b8e68b71caf7f774b3f9c753ae84d5",
+          "tree_sha": "6c524ce53259b0275306bba38c898b3e7a9350b7",
+          "pins_path": "Symoneural-Common/src/ml/.gitpins/pytorch.git/modules/third_party/tensorpipe/modules/third_party/pybind11/modules/tools/clang",
+          "provenance": "PIN"
+        }
+      ],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Common/build/devtool-workspace/appends/symoneural-safetensors_git.bbappend",
