@@ -283,7 +283,7 @@ SRCREV = "2b3ec34829036a65cd9d1398ea72a0167dc37470"
 inherit python_pep517
 
 DEPENDS += "cmake-native python3-scikit-build-core-native python3-setuptools-native \
-            python3-pyyaml-native python3-packaging-native symoneural-numpy-native"
+            python3-pyyaml-native python3-packaging-native python3-six-native symoneural-numpy-native"
 
 # `spin` is in torch's [build-system] requires and exists in NO layer
 # (meta-python ships scikit-build and scikit-build-core, not spin). spin is a
