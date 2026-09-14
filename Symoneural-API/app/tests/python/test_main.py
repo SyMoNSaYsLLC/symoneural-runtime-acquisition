@@ -74,6 +74,21 @@ class MainTest(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.json()["backed_by"], ["symoneural-llama-cpp"])
 
+    def test_apps_namespace(self):
+        r = self.c.get("/api/apps")
+        self.assertEqual(r.status_code, 200)
+        ids = [a["application_id"] for a in r.json()["applications"]]
+        self.assertIn("dispatchos", ids)
+        self.assertEqual(self.c.get("/api/apps?page=/demo/dispatchos.html").json()["applications"][0]["application_id"], "dispatchos")
+        self.assertEqual(self.c.get("/api/apps?page=/demo/nope.html").status_code, 404)
+        self.assertEqual(self.c.get("/api/apps/nosuch").status_code, 404)
+        d = self.c.get("/api/apps/dispatchos").json()           # demo -> public
+        self.assertEqual(d["api_namespace"], "/api/apps/dispatchos")
+        os.environ["SYM_OPKG_STATUS"] = os.path.join(self.tmp.name, "status")     # no such file -> unknown set
+        st = self.c.get("/api/apps/dispatchos/status").json()
+        self.assertEqual(st["readiness"], "BLOCKED")
+        self.assertTrue(any("unknown" in r for u in st["units"] for r in u["reasons"]))
+
 
 if __name__ == "__main__":
     unittest.main()
