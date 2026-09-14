@@ -1,5 +1,15 @@
 # Common runtime — closure, clean-root and consumer proof
 
+> **Status update 2026-09-14 (P7 C7).** The accelerate deferral below ended with the CUDA/
+> distributed PyTorch build: `symoneural-accelerate` is back in `packagegroup-symoneural-common`,
+> and `Accelerator.prepare()` + one SGD epoch PASS in both Common clean-root proof modes
+> (CPU without the driver; S2 on the RTX 5070 Ti). Ruling `accelerate-torch-distributed`:
+> RESOLVED BY EVIDENCE; component-state accelerate: TARGET. Evidence and the full C7 record:
+> `docs/cuda/P7-CUDA-AUTHORITY.md` §C7, `generated/evidence/common/COMMON-CLEAN-ROOT-PROOF.txt`,
+> `generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt`. The sections below are the P8
+> record and are left as written.
+
+
 Recorded 2026-09-14. Runtime: `Symoneural-Common` (Torch + Transformers foundation).
 Proof harness: `tools/clean-root-proof Common symoneural-image-common` running
 `tools/proofs/common.py`. Evidence files: `generated/evidence/common/`.

@@ -1,0 +1,542 @@
+# symoneural-pytorch 2.14.0 CUDA configure summary - accepted build (log.do_compile.1037712, compile finished 2026-09-14 14:08)
+# source pin 2b3ec34829036a65cd9d1398ea72a0167dc37470; class symoneural-cuda (cuda-toolkit-bin 13.4.1); cudnn-bin 9.25.1.1
+41:-- PyTorch: CUDA nvcc is: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/bin/nvcc
+628:-- symoneural: Gloo CUDA host prefix maps supplied before subdirectory configuration
+950:-- Using Kineto with CUPTI support
+959:-- Found CUPTI
+1173:-- symoneural: build paths removed from /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/build/caffe2/core/macros.h
+-- ******** Summary ********
+--   CMake version                     : 4.4.3
+--   CMake command                     : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/cmake
+--   System                            : Linux
+--   C++ compiler                      : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/x86_64-oe-linux/x86_64-oe-linux-g++
+--   C++ compiler version              : 16.2.0
+--   CXX flags                         : -O2 -g -fcanon-prefix-map  -ffile-prefix-map=/home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine=/usr/src/debug/symoneural-pytorch/2.14.0  -ffi
+--   Build type                        : Release
+--   Compile definitions               : ONNX_ML=1;ONNXIFI_ENABLE_EXT=1
+--   CMAKE_PREFIX_PATH                 : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr;/usr/lib/python3.14/site-packages;/home/google/SymonSaysLLC/Symoneural-Com
+--   CMAKE_INSTALL_PREFIX              : /tmp/tmpllumjmvy/wheel/platlib/torch
+--   CMAKE_MODULE_PATH                 : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Modules;/home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86
+-- 
+--   ONNX version                      : 1.18.0
+--   ONNX NAMESPACE                    : onnx_torch
+--   ONNX_USE_LITE_PROTO               : OFF
+--   USE_PROTOBUF_SHARED_LIBS          : OFF
+--   ONNX_DISABLE_EXCEPTIONS           : OFF
+--   ONNX_DISABLE_STATIC_REGISTRATION  : OFF
+--   ONNX_WERROR                       : OFF
+--   ONNX_BUILD_TESTS                  : OFF
+--   BUILD_SHARED_LIBS                 : OFF
+-- 
+--   Protobuf compiler                 : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/protobuf-native/protoc
+--   Protobuf includes                 : 
+--   Protobuf libraries                : 
+--   ONNX_BUILD_PYTHON                 : OFF
+-- Found CUDA with FP16 support, compiling with torch.cuda.HalfTensor
+-- Adding -DNDEBUG to compile flags
+-- MKL_THREADING = OMP
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl - guide - pthread - m]
+--   Library mkl: not found
+-- MKL library not found
+-- Checking for [blis]
+--   Library blis: BLAS_blis_LIBRARY-NOTFOUND
+-- Checking for [Accelerate]
+--   Library Accelerate: BLAS_Accelerate_LIBRARY-NOTFOUND
+-- Checking for [vecLib]
+--   Library vecLib: BLAS_vecLib_LIBRARY-NOTFOUND
+-- Checking for [flexiblas]
+--   Library flexiblas: BLAS_flexiblas_LIBRARY-NOTFOUND
+-- Checking for [openblas]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [openblas - pthread - m]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [openblas - pthread - m - gomp]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [goto2 - gfortran]
+--   Library goto2: BLAS_goto2_LIBRARY-NOTFOUND
+-- Checking for [goto2 - gfortran - pthread]
+--   Library goto2: BLAS_goto2_LIBRARY-NOTFOUND
+-- Checking for [acml - gfortran]
+--   Library acml: BLAS_acml_LIBRARY-NOTFOUND
+-- Checking for [blis]
+--   Library blis: BLAS_blis_LIBRARY-NOTFOUND
+-- Could NOT find Atlas (missing: Atlas_CBLAS_INCLUDE_DIR Atlas_CLAPACK_INCLUDE_DIR Atlas_CBLAS_LIBRARY Atlas_BLAS_LIBRARY Atlas_LAPACK_LIBRARY) 
+-- Checking for [ptf77blas - atlas - gfortran]
+--   Library ptf77blas: BLAS_ptf77blas_LIBRARY-NOTFOUND
+-- Checking for []
+-- Cannot find a library with BLAS API. Not using BLAS.
+-- LAPACK requires BLAS
+-- Cannot find a library with LAPACK API. Not using LAPACK.
+disabling ROCM because NOT USE_ROCM is set
+-- MIOpen not found. Compiling without MIOpen support
+-- Will build oneDNN Graph
+-- Will build oneDNN UKERNEL
+-- MKL_THREADING = OMP
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel_lp64 - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_intel - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf_lp64 - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_gnu_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_gf - mkl_intel_thread - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_sequential - mkl_core - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - gomp - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - iomp5 - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl_intel_lp64 - mkl_core - pthread - m - dl]
+--   Library mkl_intel_lp64: not found
+-- Checking for [mkl_intel - mkl_core - pthread - m - dl]
+--   Library mkl_intel: not found
+-- Checking for [mkl_gf_lp64 - mkl_core - pthread - m - dl]
+--   Library mkl_gf_lp64: not found
+-- Checking for [mkl_gf - mkl_core - pthread - m - dl]
+--   Library mkl_gf: not found
+-- Checking for [mkl - guide - pthread - m]
+--   Library mkl: not found
+-- MKL library not found
+-- Checking for [blis]
+--   Library blis: BLAS_blis_LIBRARY-NOTFOUND
+-- Checking for [Accelerate]
+--   Library Accelerate: BLAS_Accelerate_LIBRARY-NOTFOUND
+-- Checking for [vecLib]
+--   Library vecLib: BLAS_vecLib_LIBRARY-NOTFOUND
+-- Checking for [flexiblas]
+--   Library flexiblas: BLAS_flexiblas_LIBRARY-NOTFOUND
+-- Checking for [openblas]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [openblas - pthread - m]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [openblas - pthread - m - gomp]
+--   Library openblas: BLAS_openblas_LIBRARY-NOTFOUND
+-- Checking for [goto2 - gfortran]
+--   Library goto2: BLAS_goto2_LIBRARY-NOTFOUND
+-- Checking for [goto2 - gfortran - pthread]
+--   Library goto2: BLAS_goto2_LIBRARY-NOTFOUND
+-- Checking for [acml - gfortran]
+--   Library acml: BLAS_acml_LIBRARY-NOTFOUND
+-- Checking for [blis]
+--   Library blis: BLAS_blis_LIBRARY-NOTFOUND
+-- Could NOT find Atlas (missing: Atlas_CBLAS_INCLUDE_DIR Atlas_CLAPACK_INCLUDE_DIR Atlas_CBLAS_LIBRARY Atlas_BLAS_LIBRARY Atlas_LAPACK_LIBRARY) 
+-- Checking for [ptf77blas - atlas - gfortran]
+--   Library ptf77blas: BLAS_ptf77blas_LIBRARY-NOTFOUND
+-- Checking for []
+-- Cannot find a library with BLAS API. Not using BLAS.
+-- MKLDNN_CPU_RUNTIME = OMP
+CMake Warning (deprecated) at third_party/ideep/mkl-dnn/CMakeLists.txt:36 (cmake_policy):
+  The OLD behavior for policy CMP0146 will be removed from a future version
+  of CMake.
+
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- DNNL_TARGET_ARCH: X64
+-- DNNL_LIBRARY_NAME: dnnl
+CMake Warning (author) at /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:493 (message):
+  The package name passed to find_package_handle_standard_args() (OpenMP_C)
+  does not match the name of the calling package (OpenMP).  This can lead to
+  problems in calling code that expects find_package() result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  cmake/Modules/FindOpenMP.cmake:653 (find_package_handle_standard_args)
+  third_party/ideep/mkl-dnn/cmake/OpenMP.cmake:50 (find_package)
+  third_party/ideep/mkl-dnn/CMakeLists.txt:94 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Found OpenMP_C: -fopenmp
+CMake Warning (author) at /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:493 (message):
+  The package name passed to find_package_handle_standard_args() (OpenMP_CXX)
+  does not match the name of the calling package (OpenMP).  This can lead to
+  problems in calling code that expects find_package() result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  cmake/Modules/FindOpenMP.cmake:653 (find_package_handle_standard_args)
+  third_party/ideep/mkl-dnn/cmake/OpenMP.cmake:50 (find_package)
+  third_party/ideep/mkl-dnn/CMakeLists.txt:94 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Found OpenMP_CXX: -fopenmp
+-- Enabled testing coverage: CI
+-- Enabled workload: TRAINING
+-- Enabled primitives: ALL
+-- Enabled primitive CPU ISA: ALL
+-- Enabled primitive GPU ISA: ALL
+-- Enabled GeMM kernels ISA: ALL
+-- Primitive cache is enabled
+-- Experimental functionality for ukernels is enabled
+-- Graph component is enabled
+-- Found MKL-DNN: TRUE
+-- <FindZVECTOR>
+-- ZVECTOR flags were NOT set.
+-- </FindZVECTOR>
+-- {fmt} version: 12.2.1
+-- Build type: Release
+-- Using Kineto with CUPTI support
+-- Configuring Kineto dependency:
+--   KINETO_SOURCE_DIR = /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/third_party/kineto/libkineto
+--   KINETO_BUILD_TESTS = OFF
+--   KINETO_LIBRARY_TYPE = static
+--   KINETO_BACKEND = cuda
+--  ROCM_SOURCE_DIR = 
+-- KINETO_BACKEND = cuda
+-- Found CUDAToolkit: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/targets/x86_64-linux/include (found version "13.4.59")
+-- Found CUPTI
+--  Building with cupti
+--  DYNOLOG_INCLUDE_DIR = /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/third_party/kineto/libkineto/third_party/dynolog_headers/
+--  IPCFABRIC_INCLUDE_DIR = /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/third_party/kineto/libkineto/third_party/dynolog_headers//dynolog/src/ipcfabric/
+-- Configured Kineto
+-- GCC 16.2.0: Adding gcc and gcc_s libs to link line
+-- don't use NUMA
+-- headers outputs: 
+-- sources outputs: 
+-- declarations_yaml outputs: 
+CMake Warning (author) in cmake/Codegen.cmake:
+  A logical block opening on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:375 (if)
+
+  closes on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:387 (endif)
+
+  with mis-matching arguments.
+Call Stack (most recent call first):
+  caffe2/CMakeLists.txt:2 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (author) in cmake/Codegen.cmake:
+  A logical block opening on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:389 (if)
+
+  closes on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:423 (endif)
+
+  with mis-matching arguments.
+Call Stack (most recent call first):
+  caffe2/CMakeLists.txt:2 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (author) in cmake/Codegen.cmake:
+  A logical block opening on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:425 (if)
+
+  closes on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:429 (endif)
+
+  with mis-matching arguments.
+Call Stack (most recent call first):
+  caffe2/CMakeLists.txt:2 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+CMake Warning (author) in cmake/Codegen.cmake:
+  A logical block opening on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:431 (if)
+
+  closes on the line
+
+    /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/cmake/Codegen.cmake:435 (endif)
+
+  with mis-matching arguments.
+Call Stack (most recent call first):
+  caffe2/CMakeLists.txt:2 (include)
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using ATen parallel backend: OMP
+-- Support for OpenMP disabled by CMake option
+-- Configuring build for SLEEF-v3.8.0
+-- Using option `-Wall -Wno-unused-function -Wno-attributes -Wno-unused-result -Wno-psabi -ffp-contract=off -fno-math-errno -fno-trapping-math` to compile libsleef
+-- Building shared libs : OFF
+-- Building static test bins: OFF
+-- MPFR : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/lib/libmpfr.so
+-- GMP : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/lib/libgmp.so
+-- RT : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/lib/librt.so
+   Target system: Linux
+   Target processor: x86_64
+   Host system: Linux-6.12.107+deb13-amd64
+   Host processor: x86_64
+   Detected C compiler: GNU @ /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/x86_64-oe-linux/x86_64-oe-linux-gcc
+   CMake: 4.4.3
+   Make program: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/make
+   Crosscompiling SLEEF.
+   Native build dir: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/sleef-native
+-- FFTW3 : LIBFFTW3-NOTFOUND
+-- OPENSSL : 
+-- SDE : SDE_COMMAND-NOTFOUND
+-- COMPILER_SUPPORTS_OPENMP : 
+AT_INSTALL_INCLUDE_DIR include/ATen/core
+core header install: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/build/aten/src/ATen/core/TensorBody.h
+core header install: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/build/aten/src/ATen/core/aten_interned_strings.h
+-- No sufficiently-new CUPTI header; skipping CUPTI stub codegen
+-- NVSHMEM not found, not building with NVSHMEM support.
+CMake Warning at CMakeLists.txt:1372 (message):
+  Generated cmake files are only fully tested if one builds with system glog,
+  gflags, and protobuf.  Other settings may generate files that are not well
+  tested.
+
+
+-- 
+-- ******** Summary ********
+-- General:
+--   CMake version         : 4.4.3
+--   CMake command         : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/cmake
+--   System                : Linux
+--   C++ compiler          : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/x86_64-oe-linux/x86_64-oe-linux-g++
+--   C++ compiler id       : GNU
+--   C++ compiler version  : 16.2.0
+--   Using ccache if found : ON
+--   Found ccache          : /usr/bin/ccache
+--   CXX flags             : -O2 -g -fcanon-prefix-map  -ffile-prefix-map=/home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine=/usr/src/debug/symoneural-pytorch/2.14.0  -ffile-prefix-ma
+--   Shared LD flags       : -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -Wl,-z,relro,-z,now -Wl,--no-as-needed -rdynamic
+--   Static LD flags       : 
+--   Module LD flags       : -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -Wl,-z,relro,-z,now
+--   Build type            : Release
+--   Compile definitions   : ONNX_ML=1;ONNXIFI_ENABLE_EXT=1;ONNX_NAMESPACE=onnx_torch;HAVE_MMAP=1;_FILE_OFFSET_BITS=64;HAVE_SHM_OPEN=1;HAVE_SHM_UNLINK=1;HAVE_MALLOC_USABLE_SIZE=1;HAVE_POSIX_FALLOCATE=1;USE_EXTERNAL_MZCRC;MINIZ_DISABLE_ZIP_READER_CRC32_CHECKS
+--   CMAKE_PREFIX_PATH     : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr;/usr/lib/python3.14/site-packages;/home/google/SymonSaysLLC/Symoneural-Common/build/de
+--   CMAKE_INSTALL_PREFIX  : /tmp/tmpllumjmvy/wheel/platlib/torch
+--   USE_GOLD_LINKER       : OFF
+-- 
+--   TORCH_VERSION         : 2.14.0
+--   BUILD_STATIC_RUNTIME_BENCHMARK: OFF
+--   BUILD_BINARY          : OFF
+--   BUILD_CUSTOM_PROTOBUF : ON
+--     Link local protobuf : ON
+--   BUILD_PYTHON          : ON
+--     Python version      : 3.14.7
+--     Python executable   : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/bin/nativepython3
+--     Python library      : 
+--     Python includes     : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/include/python3.14
+--     Python site-package : /usr/lib/python3.14/site-packages
+--   BUILD_SHARED_LIBS     : ON
+--   CAFFE2_USE_MSVC_STATIC_RUNTIME     : OFF
+--   BUILD_TEST            : 0
+--   BUILD_JNI             : OFF
+--   BUILD_MOBILE_AUTOGRAD : OFF
+--   BUILD_LITE_INTERPRETER: OFF
+--   INTERN_BUILD_MOBILE   : 
+--   TRACING_BASED         : OFF
+--   USE_BLAS              : 0
+--   USE_LAPACK            : 0
+--   USE_ASAN              : OFF
+--   USE_LSAN              : OFF
+--   USE_TSAN              : OFF
+--   USE_CPP_CODE_COVERAGE : OFF
+--   USE_CUDA              : 1
+--     CUDA static link    : OFF
+--     USE_CUDNN           : 1
+--     USE_CUSPARSELT      : OFF
+--     USE_CUDSS           : 0
+--     USE_CUFILE          : 0
+--     CUDA version        : 13.4
+--     USE_FLASH_ATTENTION : ON
+--     USE_MEM_EFF_ATTENTION : ON
+--     cuDNN version       : 9.25.1
+--     CUDA root directory : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4
+--     CUDA library        : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/targets/x86_64-linux/lib/stubs/libcuda.so
+--     cudart library      : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/targets/x86_64-linux/lib/libcudart.so
+--     cublas library      : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4/lib64/libcublas.so
+--     cufft library       : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4/lib64/libcufft.so
+--     curand library      : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4/lib64/libcurand.so
+--     cusparse library    : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4/lib64/libcusparse.so
+--     cuDNN library       : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/lib/libcudnn.so
+--     nvrtc               : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/targets/x86_64-linux/lib/libnvrtc.so
+--     CUDA include path   : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot/usr/local/cuda-13.4/include
+--     NVCC executable     : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/bin/nvcc
+--     CUDA compiler       : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/recipe-sysroot-native/usr/local/cuda-13.4/bin/nvcc
+--     CUDA flags          : -Xcompiler=-O2 -Xcompiler=-g -Xcompiler=-fcanon-prefix-map -Xcompiler=-ffile-prefix-map=/home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine=/usr/src/debug/
+--     CUDA host compiler  : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/symoneural-cuda-host-g++
+--     CUDA --device-c     : OFF
+--   USE_XPU               : OFF
+--   USE_ROCM              : 0
+--   USE_EIGEN_FOR_BLAS    : ON
+--   USE_EIGEN_FOR_SPARSE  : OFF
+--   USE_FBGEMM            : ON
+--   USE_MSLK              : OFF
+--   USE_KINETO            : 1
+--   USE_GFLAGS            : OFF
+--   USE_GLOG              : OFF
+--   USE_LITE_PROTO        : OFF
+--   USE_PYTORCH_METAL     : OFF
+--   USE_PYTORCH_METAL_EXPORT     : OFF
+--   USE_MPS               : OFF
+--   CAN_COMPILE_METAL     : 
+--   CAN_COMPILE_METAL_40  : 
+--   USE_MKL               : OFF
+--   USE_MKLDNN            : ON
+--   USE_MKLDNN_ACL        : OFF
+--   USE_PRIORITIZED_TEXT_FOR_LD : OFF
+--   USE_UCC               : 0
+--   USE_ITT               : ON
+--   USE_XCCL              : OFF
+--   USE_NCCL              : 0
+--   Found NVSHMEM         : 
+--   USE_NNPACK            : ON
+--   USE_NUMPY             : ON
+--   USE_OPENMP            : ON
+--   USE_MIMALLOC          : OFF
+--   USE_VULKAN            : OFF
+--   USE_PYTORCH_QNNPACK   : ON
+--   USE_XNNPACK           : OFF
+--   USE_DISTRIBUTED       : 1
+--     USE_MPI               : 0
+--     USE_GLOO              : 1
+--     USE_GLOO_WITH_OPENSSL : OFF
+--     USE_GLOO_IBVERBS      : OFF
+--     USE_TENSORPIPE        : 0
+--   Public Dependencies  : 
+--   Private Dependencies : Threads::Threads;pthreadpool;pytorch_qnnpack;nnpack;fbgemm;ittnotify;fp16;caffe2::openmp;gloo;rt;fmt::fmt-header-only;kineto;gcc_s;gcc;dl
+--   Public CUDA Deps.    : 
+--   Private CUDA Deps.   : caffe2::curand;caffe2::cufft;caffe2::cublas;torch::cudnn;caffe2::nvrtc_runtime;gloo_cuda;fmt::fmt-header-only;/home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/rec
+--   USE_COREML_DELEGATE     : OFF
+--   BUILD_LAZY_TS_BACKEND   : ON
+--   USE_ROCM_KERNEL_ASSERT : OFF
+-- symoneural: build paths removed from /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/pristine/build/caffe2/core/macros.h
+-- Configuring done (7.6s)

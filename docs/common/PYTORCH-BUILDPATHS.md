@@ -294,3 +294,20 @@ recorded here as the starting point for whoever runs it.
 declares 7 runtime requirements that are not yet satisfied by the estate
 (`filelock`, `typing-extensions`, `setuptools`, `sympy`, `networkx`, `jinja2`,
 `fsspec`). Common cannot be called PASS.
+
+## Addendum 2026-09-14 (P7 C7): the CUDA build added three more build-path sources
+
+1. **nvcc host-side compiles had no prefix maps.** The class seeds `CMAKE_CUDA_FLAGS` through
+   `CUDAFLAGS`, but torch appends to the normal variable before `enable_language(CUDA)`, which
+   shadows the cache. 524 `__FILE__` strings in `libtorch_cuda.so`. Fix: export the same
+   `-Xcompiler=…` flags as `TORCH_NVCC_FLAGS`, torch's own append channel.
+2. **Gloo snapshots CUDA flags before torch appends `TORCH_NVCC_FLAGS`.** Four Gloo paths remained.
+   Fix (Codex): a recipe-generated `CMAKE_PROJECT_gloo_INCLUDE` hook appends the flags in Gloo's
+   own project scope; it fails the configure if the flags are absent.
+3. **Install RPATH `$ORIGIN:<sysroot CUDA/cuDNN dirs>`** from torch's unconditional
+   `CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE`. Fix: chrpath to `$ORIGIN` after the wheel install,
+   verified on the dynamic tags (the first re-check matched chrpath's echoed filename and always
+   failed).
+
+The paragraph above about Common closure being FAIL is the P8-era record; the direct-requirement
+audit passes since the estate providers landed (`check-python-runtime-closures.py --runtime Common`: 66 PASS).

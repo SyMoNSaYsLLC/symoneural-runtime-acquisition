@@ -118,29 +118,59 @@ Not done here, recorded: the API registry's chat row still says `symoneural-llam
 possible (packagegroup without `symoneural-ggml-cuda`, ggml `PACKAGECONFIG = ""`) but
 was not built — the P9 CPU checkpoint image remains the CPU evidence.
 
-## C7 — PyTorch CUDA / distributed feature matrix (drafted from the pinned tree; build NOT started)
+## C7 — PyTorch CUDA / distributed feature set (built and proven 2026-09-14)
 
-The pinned `symoneural-pytorch` is CPU-only by recorded decision (`USE_CUDA=0`,
-`USE_DISTRIBUTED=0`). This is the intended CUDA variant, to be built only after C5
-proves the low-level sm_120 path. Each row is a recipe decision with its evidence.
+**Result: PASS.** `symoneural-pytorch` 2.14.0 (pin `2b3ec34829036a65cd9d1398ea72a0167dc37470`) is
+built through the authority with the feature set Garrett decided, packages QA-clean, and its
+CUDA path runs on the RTX 5070 Ti from the Common image in the clean-root proof. Accelerate's
+`prepare()` path, the reason it was DEFERRED, passes on this torch in both proof modes.
 
-| Option | Setting | Why |
-| --- | --- | --- |
-| `USE_CUDA` | 1 via `symoneural-cuda` (nvcc-native, target libs, `TORCH_CUDA_ARCH_LIST=12.0`) | the authority; `cmake/public/cuda.cmake` requires ≥ 12.6; arch tables carry `12.0` |
-| `TORCH_CUDA_ARCH_LIST` | `12.0` (no `+PTX` until a second GPU generation exists) | one card, one architecture; every extra arch multiplies compile time |
-| `USE_CUDNN` | **decision pending — separate BINARY_EXTERNAL** (`libcudnn9-cuda-13` 9.25.1.1 / 9.26.0.51 in the same index; torch CI pairs 13.4 with cuDNN 9.25.0.15) | default ON when `USE_CUDA`; without it convolutions fall back to native kernels. Not part of the toolkit authority |
-| `USE_CUSPARSELT`, `USE_CUFILE` | 0 | optional libraries torch CI adds separately; no estate consumer needs them |
-| `USE_NCCL` | 0 | one GPU; NCCL is a separate binary (`libnccl2 2.31.2+cuda13.4`) with no consumer |
-| `USE_DISTRIBUTED` | **1** (gloo CPU backend; NCCL off) | the accelerate ruling: `Accelerator.prepare()` needs `torch.distributed` compiled in even single-process; this is the "final PyTorch feature-set" that ruling deferred to |
-| `USE_KINETO` / CUPTI | keep default (CUPTI is in the authority: `cuda-cupti-13-4`) | profiler support without a new binary |
-| `USE_FLASH_ATTENTION`, `USE_MEM_EFF_ATTENTION` | default ON (cutlass 4.6.1 has SM120 gating) | compile cost is the price of the feature; revisit if the build proves prohibitive |
-| Host compiler | estate cross g++ 16.2 through `CMAKE_CUDA_HOST_COMPILER` | nvcc 13.4 accepts GCC 16 (verified) |
-| `MAX_JOBS` | unchanged (12) | CUDA TUs are memory-heavy; measured, not guessed, on the first build |
+Decision (Garrett): `USE_CUDA=1` for sm_120; cuDNN as a **separate** BINARY_EXTERNAL provider;
+`USE_DISTRIBUTED=1` with Gloo; every optional NVIDIA library off unless a real consumer needs it.
 
-**accelerate** is revisited at the end of C7: with `USE_DISTRIBUTED=1` the
-`model_has_dtensor` import resolves; the ruling `accelerate-torch-distributed` moves
-from DEFERRED to re-tested, and only a re-run of `tools/clean-root-proof Common` with
-accelerate back in the packagegroup can promote it.
+| Knob | Value | Note |
+|---|---|---|
+| CUDA | `USE_CUDA=1`, `TORCH_CUDA_ARCH_LIST=12.0` (class `SYMON_CUDA_ARCH_DOTTED`) | torch emits sm_120 plus arch-specific `sm_120a`/`sm_121a` objects for a few kernels: `libtorch_cuda.so` holds 419 sm_120 + 1 sm_121a |
+| cuDNN | `USE_CUDNN=1`, `USE_STATIC_CUDNN=0`, `cudnn-bin` 9.25.1.1 | torch CI pairs CUDA 13.4 with cuDNN 9.25.0.15 (`install_cuda.sh install_134`); the index offers 9.25.1.1 and 9.26.0.51; 9.25.1.1 is the smallest on that line. Three debs (runtime 432 MB, dev, headers) by index SHA256; NVIDIA SDK licence agreement (md5 `6309a40f…`) committed as `LicenseRef-NVIDIA-cuDNN-SLA`; NEEDED only libz + toolchain, no S2 library |
+| Distributed | `USE_DISTRIBUTED=1`, `USE_GLOO=1`; `USE_TENSORPIPE=0 USE_MPI=0 USE_UCC=0` | c10d + Gloo is what accelerate imports; RPC transport is not a consumer need |
+| Optional NVIDIA libs | `USE_NCCL=0 USE_CUSPARSELT=0 USE_CUDSS=0 USE_CUFILE=0 USE_NVSHMEM=0 USE_MAGMA=0` | one-GPU estate; none acquired |
+| Profiler | `USE_KINETO=1`, `USE_CUPTI_SO=1` | CUPTI from `cuda-toolkit-bin` (`libcupti.so.13`); configure: "Using Kineto with CUPTI support" |
+| Attention | flash / mem-efficient ON (torch defaults) | torch's own kernels, not NVIDIA libraries |
+| Build type | Release, `MAX_JOBS=12` | compile 10:26→11:45 first pass; accepted build finished 14:08 |
+
+How CUDA reaches torch's PEP 517 build (`scikit_build_core.build`; no cmake class):
+`cmake/EnvVarForwarding.cmake` forwards every `USE_*`/`BUILD_*`/`CMAKE_*` environment variable
+as a forced cache variable and passes `CUDNN_ROOT/CUDNN_INCLUDE_DIR/CUDNN_LIBRARY`,
+`TORCH_CUDA_ARCH_LIST`, `CUDACXX`, `CUDAHOSTCXX` through by name, so the matrix is exports.
+The class supplies `CUDACXX`, `CUDAHOSTCXX` (the sysroot/tune/LDFLAGS wrapper, now written by a
+`do_configure` prefunc), `CUDAFLAGS`, `CUDA_HOME`, and — for torch's vendored legacy FindCUDA,
+which never derives `CUDA_TOOLKIT_TARGET_DIR` from a pre-set root when cross-compiling for
+x86_64 — its documented inputs `CUDA_PATH` and `CUDA_NVCC_EXECUTABLE`; `SYMON_CUDA_CMAKE_ARGS`
+adds the explicit compiler/host-compiler/root defines to `CMAKE_ARGS`.
+
+| Evidence | Value |
+|---|---|
+| configure | `log.do_compile.1037712`: `CUDA nvcc is: <native sysroot>/usr/local/cuda-13.4/bin/nvcc`; `Found CUDNN: <target sysroot>/usr/lib/libcudnn.so`; `Using Kineto with CUPTI support`; summary block in `generated/evidence/cuda/TORCH-CUDA-CONFIGURE.txt` |
+| package | `symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk` 208,784,028 B sha256 `8c010d753e4c4209c2962ba19c02abb0f27e5b4fe36bec3e4a47fe08d39134de`; Depends `cuda-toolkit-bin (>= 13.4.1), cudnn-bin (>= 9.25.1.1), …` (`generated/evidence/cuda/TORCH-CUDA-PACKAGE.txt`) |
+| QA | `do_package_qa` PASS (`log.do_package_qa.1409652`) with the fail-closed S2 check: "98 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1"; buildpaths and rpaths NOT skipped |
+| libraries | every `torch/lib/*.so`: RPATH `$ORIGIN`, 0 build-path strings; `libtorch_cuda.so` NEEDED `libcudart.so.13 libcusparse.so.12 libcufft.so.12 libcurand.so.10 libcublas.so.13 libcublasLt.so.13 libcudnn.so.9 libnvrtc.so.13 …` — no direct `libcuda.so.1` |
+| image | `symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz` 2,057,617,376 B sha256 `464dab39b9b19a7fc1a352cabeb041ba8d16fb25acf28bf9d2e134070e4e2266`, 131 packages incl. `cuda-toolkit-bin`, `cudnn-bin`, `symoneural-accelerate`, `symoneural-psutil` (`generated/evidence/common/COMMON-IMAGE-C7.txt`) |
+| proof, CPU mode | **PASS** — build facts (`torch.version.cuda` 13.4, cuDNN 92501, gloo available, NCCL absent), `torch.cuda.is_available()` False, `Accelerator(cpu).prepare()` + one SGD epoch changed the weights; **no file mapped from outside the root** (`generated/evidence/common/COMMON-CLEAN-ROOT-PROOF.txt`) |
+| proof, S2 mode | **PASS** — `NVIDIA GeForce RTX 5070 Ti cc 12.0: is_available True, matmul on device == CPU reference, cuDNN 92501 conv2d == CPU reference, runtime 13.4`; `Accelerator(cuda).prepare()` + one SGD epoch; host files mapped: `libcuda.so.1`, `libnvidia-ml.so.1`, `libnvidia-gpucomp`, `libnvidia-nvvm70`, `libnvidia-ptxjitcompiler` — all owned by packages at 615.71.09 (`generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt`) |
+| closure | `check-python-runtime-closures.py --runtime Common`: 66 direct requirements PASS (direct wheels only; not an image consumer proof) |
+| provenance (build side) | accepted build's CMake cache and `torch_cuda` link line: C/C++ compiler `recipe-sysroot-native/usr/bin/x86_64-oe-linux/x86_64-oe-linux-g++`, nvcc `recipe-sysroot-native/usr/local/cuda-13.4/bin/nvcc`, host compiler = the class wrapper (cross g++ `--sysroot=<recipe-sysroot> -m64 -march=x86-64-v3 …`), toolkit root/include and cudart/cublas/cufft/curand/cusparse from `recipe-sysroot/usr/local/cuda-13.4`, cuDNN from `recipe-sysroot/usr/lib/libcudnn.so`; `libcudart.so`/`libnvrtc.so`/`libcupti.so` link inputs came from the NATIVE sysroot's copy of the same debs (byte-identical to the target copies: sha256 `a77eeb711d35…`, `4eef3c9523c2…`). No `/usr/local/cuda-*`, `/usr/lib/x86_64-linux-gnu` or `/usr/include` host path appears in the cache or the 33 toolkit references of the configure log. The host does hold CUDA 13.4 and 13.3 toolkits at `/usr/local/cuda-*`; they were not inputs |
+| provenance (run side) | the proof body prints and asserts its own inputs: interpreter and `torch/__init__.py` under the root; `libpython3.14.so.1.0`, `libtorch_cuda.so`, `libtorch_cpu.so`, `libc10_cuda.so`, `libcudart.so.13.4.49`, `libcudnn.so.9.25.1`, `libcublas.so.13.7.0.27` mapped from the root (`/proc/self/maps`); `PATH` confined to the root; `shutil.which("nvidia-smi")` → not found; in S2 mode `libcuda.so.615.71.09` from the host — the declared exception. Per-process loader traces: the body process maps 104 root libraries + the 5 driver files (S2) or 0 host files (CPU); the one spawned child goes through the wrapper's host `/bin/sh` then the target loader. Host has no torch and runs Python 3.13; the image runs 3.14 |
+| negative control | CPU mode asserts `torch.cuda.is_available()` is False with the driver directory absent from the loader path (no host change of any kind); S2 mode is **estate-built userspace tested against an identified external host driver** (615.71.09, packages `libcuda1`, `libnvidia-ml1`, `libnvidia-gpucomp`, `libnvidia-nvvm704`, `libnvidia-ptxjitcompiler1` at 615.71.09-2) |
+| artifacts | `generated/evidence/cuda/CUDA-SHA256SUMS` (24 rows: C6 + C7 packages, images, manifests, transcripts) |
+| REPRODUCIBILITY | **NOT TESTED** — same build directory and shared sstate; no differing-root build |
+| INTEGRATION | **NOT TESTED** |
+
+Accelerate: `unresolved.json:accelerate-torch-distributed` RESOLVED BY EVIDENCE;
+`component-state.json` accelerate DEFERRED → TARGET; back in `packagegroup-symoneural-common`.
+Boundary note found by the proof: `accelerate.utils.environment.get_gpu_info()` shells out to
+`nvidia-smi` (driver userspace, not shipped in the image); the `Accelerator` path proven here
+does not call it. The proof harness now confines `PATH` to the root, because with `PATH`
+unset Python's `shutil.which` fell back to the host's `/usr/bin` and ran the host `nvidia-smi`.
 
 ## C8 — Crypto / Tune compatibility (confirmed from records; nothing pulled forward)
 
@@ -185,6 +215,26 @@ accelerate back in the packagegroup can promote it.
    clean-root harnesses now pass `--inhibit-cache` to the target loader in every mode,
    so the host's `ld.so.cache` can no longer quietly satisfy a NEEDED.
 
+9. torch does `string(APPEND CMAKE_CUDA_FLAGS …)` on the NORMAL variable before it enables the
+   CUDA language, which shadows the cache entry CMake seeds from `CUDAFLAGS`: the first C7 build
+   compiled every kernel without prefix maps (524 `__FILE__` strings in `libtorch_cuda.so`).
+   torch's own channel for extra nvcc flags is `TORCH_NVCC_FLAGS`; the recipe exports the class's
+   host flags through it. Control: ggml's CUDA module, built through the same class, had 0.
+10. Gloo configures before torch appends `TORCH_NVCC_FLAGS` and snapshots the flags without the
+   maps (four Gloo paths left in `libtorch_cuda.so`). A recipe-generated
+   `CMAKE_PROJECT_gloo_INCLUDE` hook appends the flags inside Gloo's project scope (Codex, 2026-09-14).
+11. torch sets `CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE` unconditionally, so every CUDA-linked
+   library is installed with RPATH `$ORIGIN:<sysroot dirs>`. The recipe rewrites it to `$ORIGIN`
+   with chrpath after the wheel install and re-checks the DYNAMIC TAGS (not chrpath's text, whose
+   echoed filename contains the build path and made the first re-check a false failure).
+12. torch's vendored legacy `FindCUDA` never derives `CUDA_TOOLKIT_TARGET_DIR` from a pre-set root
+   when cross-compiling for x86_64, and its cache-reset logic discards pre-set target vars on a
+   fresh configure; its documented inputs `CUDA_PATH` and `CUDA_NVCC_EXECUTABLE` (now exported by
+   the class) make the include/library probes deterministic and keep the fallback off host paths.
+13. `symon_cuda_qa_s2` discarded a nonzero `readelf` status and counted unique driver names
+   instead of entries; a failed inspection is now fatal and the provider-resolved count subtracts
+   every S2 entry (Codex's reproduction and tests, `tools/test-estate-operators.py::CudaBoundaryQa`).
+
 Running the proofs: the Claude Code sandbox hides `/dev/nvidia*`, so
 `tools/cuda-clean-root-proof` and `SYM_CUDA_S2=1 tools/llm-clean-root-proof` must run
 outside it (`cudaGetDeviceCount: no CUDA-capable device is detected` otherwise); the
@@ -198,7 +248,7 @@ CPU-mode LLM proof does not touch the device.
 | C4 one recipe/sysroot authority | **PASS** — `cuda-toolkit-bin` 13.4.1 (runtime 1.10 GB) + `-dev` (1.26 GB) + native variant; `do_package_qa` 0 ERROR / 0 issues (buildpaths not skipped); 33 debs fetched by the SHA256s the index publishes |
 | C5 sm_120 low-level compile + run | **PASS** — `symoneural-cuda-probe`: nvcc-native, cross g++ 16.2 host compiler, `--generate-code=arch=compute_120,code=[compute_120,sm_120]`; binary NEEDED `libcudart.so.13 libstdc++ libgcc_s libc`, no RUNPATH, GNU_HASH, 0 build-path bytes; run from packages through the target loader: **RTX 5070 Ti cc 12.0, runtime 13040 == driver 13040, saxpy n=1048576 max_abs_err 0**. Host files mapped: `libcuda.so.1` + three driver helpers, all owned by packages at 615.71.09 (S2). `generated/evidence/cuda/CUDA-CLEAN-ROOT-PROOF.txt` |
 | C6 LLM CUDA consumer | **PASS** at the backend level — ggml CUDA backend as a dlopen'ed module (`symoneural-ggml-cuda`), 143 sm_120 SASS, S2 QA clean; libsymoneural-llm 1.1.1 reports `gpu:CUDA` with the driver and `cpu` without it from the same image; GPU inference on a real model BLOCKED on external weights (see C6) |
-| C7 PyTorch CUDA/distributed matrix · accelerate | NOT STARTED |
+| C7 PyTorch CUDA/distributed matrix · accelerate | **PASS** — feature set built through the authority + `cudnn-bin`; QA clean with fail-closed S2 check; Common image proven in CPU and S2 modes; `Accelerator.prepare()` PASS on GPU and CPU → ruling RESOLVED BY EVIDENCE (see C7) |
 | C8 Crypto/Tune compatibility | recorded — cuda-python 13.4.1 and cupy compatible by release line; **kawpowminer DEFERRED by Garrett's ruling to P11 / Phase 20e** (GPL-3.0 product/distribution ruling required; `unresolved.json:kawpowminer-gpl-distribution`); nothing pulled forward |
-| C9 package / clean-install / host-leakage | PASS for the authority + probe and for the LLM consumer image (both proofs, host cache inhibited: CPU mode maps nothing from outside the root; S2 mode maps only files owned by packages at the installed driver version); PyTorch consumer pending C7 |
-| C10 records / evidence / commits | IN PROGRESS — for C0–C6: `unresolved.json:cuda-toolkit-authority` resolved by evidence (repo-deb path, index sha256, proofs), `provider-decisions.json` names `cuda-toolkit` BINARY-EXTERNAL, evidence under `generated/evidence/cuda/` and `…/llm/`, logical commits; determinism / verify-acquisition / workscope PASS. C7/C8 records pending their work |
+| C9 package / clean-install / host-leakage | PASS for the authority + probe, the LLM image and the Common image (all proofs run with the host loader cache inhibited and `PATH` confined to the root; CPU modes map nothing from outside the root; S2 modes map only files owned by packages at the installed driver version) |
+| C10 records / evidence / commits | records for C0–C7 in place (`cuda-toolkit-authority` RESOLVED, `cuda-toolkit` BINARY-EXTERNAL, `accelerate-torch-distributed` RESOLVED BY EVIDENCE, `kawpowminer-gpl-distribution` DEFERRED); `generated/evidence/cuda/CUDA-SHA256SUMS`; logical commits local — push only on Garrett's authorization |

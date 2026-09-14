@@ -3,20 +3,20 @@
 # (tools/check-python-runtime-closures.py --runtime Common must PASS for this group to
 # mean anything). The API packagegroup supplies the shared web stack that
 # huggingface-hub reaches through httpx.
-# NOT in this group (2026-09-14): symoneural-accelerate. It builds and packages, and
-# every one of its runtime edges is estate-owned, but on this torch (built
-# USE_DISTRIBUTED=0) Accelerator.prepare() fails - accelerate/utils/other.py
-# model_has_dtensor imports torch.distributed.tensor guarded only by torch VERSION,
-# never by torch.distributed.is_available(). Shipping it would be a phantom
-# completion. Evidence: docs/common/COMMON-CLOSURE.md. RULING 2026-09-14: DEFERRED
-# BY RECORDED RULING to the final PyTorch feature-set/CUDA phase
-# (unresolved.json:accelerate-torch-distributed); torch is not rebuilt now.
+# symoneural-accelerate rejoins the group for the P7 C7 proof (2026-09-14). It was
+# DEFERRED BY RECORDED RULING against the USE_DISTRIBUTED=0 torch because
+# Accelerator.prepare() imports torch.distributed.tensor (accelerate/utils/other.py
+# model_has_dtensor, guarded by torch VERSION only). The C7 torch is built
+# USE_DISTRIBUTED=1 + Gloo; the Common clean-root proof now runs prepare() plus one
+# SGD epoch (CPU mode and S2/GPU mode) and the ruling unresolved.json:accelerate-torch-
+# distributed is promoted ONLY if that path actually succeeds - not because it imports.
 SUMMARY = "SyMoNeuRaL Common runtime - Torch + Transformers foundation"
 LICENSE = "MIT"
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
     symoneural-pytorch \
+    symoneural-accelerate \
     symoneural-transformers \
     symoneural-huggingface-hub \
     symoneural-tokenizers \

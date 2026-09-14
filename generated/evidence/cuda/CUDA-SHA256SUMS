@@ -1,0 +1,26 @@
+# CUDA authority checkpoint artifacts (P7 C4-C7), recorded 2026-09-14 after their proofs passed.
+# New manifest: the P9 rows in llm/LLM-SHA256SUMS describe artifacts superseded by the C6 rebuilds and are left as recorded.
+f02597edb65137c7f4c2f0f541a874cf0e1ffa7eb7ddd31bd25eb1962c8a16d8  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/cuda-toolkit-bin_13.4.1-r0_x86-64-v3.ipk
+4abf9a033aacaf55a85d90818070dd3790a9ac723c617c527a4ebc16346b55cc  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/cuda-toolkit-bin-dev_13.4.1-r0_x86-64-v3.ipk
+b418bf556a7426f984d7344ebfb7f62bf40c3b45085235c7944234aa985c328a  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-cuda-probe_1.0-r0_x86-64-v3.ipk
+dbaa136dc087955e8ce7c99648113d5fdf7a0ab7993fd333bbae92afc1ccc4fe  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml_0.23.0-r0_x86-64-v3.ipk
+0755a11094de1a4deef11913de5abd86db82826a58a2403f594b80b83af72805  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml-cuda_0.23.0-r0_x86-64-v3.ipk
+4a2fa5549a037f67956a9feafa551b333299f866e7c9d3a6c9e33827629ad4f0  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.1.1-r0_x86-64-v3.ipk
+4524d97886c49f62d4e3977488b6371e4847886a71eb5d6d024a380329c7e23c  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.1.1-r0_x86-64-v3.ipk
+6e2e2600e4b519987e91ab58f12cd227e4d31465b58d2c746e81eb332347651c  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk
+55fd6fb3203da786483a2d3f5b70dc03385efab4a3ccf016882c85a6445d554e  Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914133906.tar.gz
+482481f8b702793dff7ff351b2e7ef1099d70025b04ad2d85660a529122b249c  Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914133906.manifest
+67319e7797965dc53052798ab5859b4aea468696aac9e89cd146386ed45304cf  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/cudnn-bin_9.25.1.1-r0_x86-64-v3.ipk
+8cdc5a2a4259f531f0c8bbb21f40edbfcb5c04a03e1c1a0a7598c508a0c1450e  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/cudnn-bin-dev_9.25.1.1-r0_x86-64-v3.ipk
+8c010d753e4c4209c2962ba19c02abb0f27e5b4fe36bec3e4a47fe08d39134de  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+e9f83152b76d2bc187f18ab12051fe66f4f4bcdca6a980ef743ed4862222d7fb  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-accelerate_1.15.0+git-r0_x86-64-v3.ipk
+464dab39b9b19a7fc1a352cabeb041ba8d16fb25acf28bf9d2e134070e4e2266  Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz
+584638afff2bafcc0d9294c034e8f92c87f23cf18284bbfbfab0cdf8b25f824d  Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914203500.manifest
+b63f9488cccea95598ec5017a272caac4e9a3dcaf2ef0a338004c3c5baade9f0  generated/evidence/cuda/CUDA-CLEAN-ROOT-PROOF.txt
+cf5b557eec0cd96d16b1392f06cf3ae74a90e2c0a1299e2d601b916139e99f92  generated/evidence/llm/LLM-CLEAN-ROOT-PROOF.txt
+562f10d4b5f1db60cef5275bf43a1406c8c49673156c4e3e9cadfaa230894781  generated/evidence/cuda/LLM-CLEAN-ROOT-PROOF-S2.txt
+896bfd7d2ce71535b6eaacc0ca3d741ae5001b9b799940b9f4f0dfd189cd6bbc  generated/evidence/common/COMMON-CLEAN-ROOT-PROOF.txt
+ee85611194f9c89ce716f42a9857dd213e9652f4cc8f5d7fbb6cf6149af5369c  generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt
+bedf1bdf643d8249fb05e1acb20c05225d5fa48222fdda4616625fe44cf44b63  generated/evidence/cuda/TORCH-CUDA-CONFIGURE.txt
+670f23a2b8d529a9a29592785b57aae086e11072e63304533dffabce6bd49e70  generated/evidence/cuda/TORCH-CUDA-PACKAGE.txt
+d8a9701c47cfc3c7ec450d89cb6edb8151d78c03f34e4b1d8be6a35652cf5bc1  generated/evidence/common/COMMON-IMAGE-C7.txt

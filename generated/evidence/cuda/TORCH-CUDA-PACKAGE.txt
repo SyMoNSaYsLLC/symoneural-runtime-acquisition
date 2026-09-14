@@ -1,0 +1,23 @@
+# symoneural-pytorch package identity - accepted C7 build
+ipk      : Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+size     : 208784028 B
+sha256   : 8c010d753e4c4209c2962ba19c02abb0f27e5b4fe36bec3e4a47fe08d39134de
+written  : 2026-09-14 14:12:03
+Depends  :  cuda-toolkit-bin (>= 13.4.1), cudnn-bin (>= 9.25.1.1), libc6 (>= 2.44+git0+5c479454d1), libgcc1 (>= 16.2.0), libgomp1 (>= 16.2.0), libstdc++6 (>= 16.2.0), python3-core, symoneural-filelock, symoneural-fsspec, symoneural-jinja2, symoneural-networkx, symoneural-setuptools, symoneural-sympy, symoneural-typing-extensions
+
+# torch/lib libraries: RPATH, build-path strings (tmp/work), sm_120 SASS objects, NEEDED
+libc10_cuda.so                    584408 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libc10.so                        1455560 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libcaffe2_nvrtc.so                 18256 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libshm.so                          43120 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libtorch_cpu.so                267148968 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libtorch_cuda_linalg.so           534664 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libtorch_cuda.so               168628680 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=419
+libtorch_global_deps.so            14016 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libtorch_python.so              26142384 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+libtorch.so                        59352 B  rpath=[$ORIGIN]  tmpdir-strings=0  sm_120=0
+
+libtorch_cuda.so NEEDED: libc10_cuda.so libcudart.so.13 libcusparse.so.12 libcufft.so.12 libcurand.so.10 libcublas.so.13 libcublasLt.so.13 libcudnn.so.9 libnvrtc.so.13 libpthread.so.0 libc10.so libtorch_cpu.so libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2 
+
+# package QA (log.do_package_qa.1409652, repaired symon_cuda_qa_s2):
+NOTE: symoneural-cuda S2 check: 98 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1

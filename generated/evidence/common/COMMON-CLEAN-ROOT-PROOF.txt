@@ -1,14 +1,16 @@
-image   : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.tar.gz
-sha256  : 08fb05df1dfc5a87f644f5e19b95c1c2ad9ab7c30ad3c52b9927701a836d671e
-manifest: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.manifest (127 packages)
-root    : /tmp/claude-1000/common-clean-root  (30736 files)
+image   : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz
+sha256  : 464dab39b9b19a7fc1a352cabeb041ba8d16fb25acf28bf9d2e134070e4e2266
+manifest: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914203500.manifest (131 packages)
+root    : /tmp/symoneural-common-proof-eebh_8_v  (30975 files)
+mode    : self-contained (no host directory on the loader path)
 --- interpreter
-python 3.14.7 prefix /tmp/claude-1000/common-clean-root/usr
+python 3.14.7 prefix /tmp/symoneural-common-proof-eebh_8_v/usr
 --- /home/google/SymonSaysLLC/tools/proofs/common.py
+W0914 16:51:10.124000 1474138 site-packages/torch/utils/cpp_extension.py:183] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
 
 
 
-  install record: deploy manifest -> 127 packages, 45 symoneural-*
+  install record: deploy manifest -> 131 packages, 47 symoneural-*
   torch                2.14.0a0+gitunknown
   transformers         5.17.0
   huggingface_hub      1.31.0
@@ -38,9 +40,24 @@ python 3.14.7 prefix /tmp/claude-1000/common-clean-root/usr
   click                8.5.0
   httpx                0.28.1
   annotated_doc        0.0.5
+  accelerate           1.15.0
+  psutil               7.2.2
   wheel resolves only via setuptools/_vendor (setuptools' private copy; no wheel distribution shipped)
-  declared closure: 34 runtime requirements evaluated against installed versions
-  meaningful ops PASS: torch matmul == numpy reference and autograd grad == 2x; torch.utils.cpp_extension imported setuptools at load (live runtime edge); torch.fx traced a module; tokenizers trained BPE in-process (Rust) and round-tripped; transformers PreTrainedTokenizerFast wrapped it and BertModel(config) ran a forward pass -> (2, 6, 32); safetensors round-tripped the state_dict; accelerate: not shipped in this image (BLOCKED on torch USE_DISTRIBUTED=0; see symoneural-accelerate recipe); huggingface_hub refused a download under HF_HUB_OFFLINE; hf_xet loaded; PyYAML via libyaml; regex \p{Greek}; filelock; fsspec local fs; tqdm; packaging; typer CliRunner exit 0; rich table; pygments; markdown-it-py rendered a link; shellingham detected; jinja2 escaped through markupsafe._speedups; networkx shortest_path
+  declared closure: 41 runtime requirements evaluated against installed versions
+  provenance: python /tmp/symoneural-common-proof-eebh_8_v/tmp/target-python | torch /tmp/symoneural-common-proof-eebh_8_v/usr/lib/python3.14/site-packages/torch/__init__.py
+  provenance: PATH=/tmp/symoneural-common-proof-eebh_8_v/usr/bin:/tmp/symoneural-common-proof-eebh_8_v/bin:/tmp/symoneural-common-proof-eebh_8_v/usr/sbin:/tmp/symoneural-common-proof-eebh_8_v/sbin; which nvidia-smi -> not found (confined PATH); which python3 -> /tmp/symoneural-common-proof-eebh_8_v/usr/bin/python3
+  mapped libpython3         /tmp/symoneural-common-proof-eebh_8_v/usr/lib/libpython3.14.so.1.0
+  mapped libtorch_cuda.so   /tmp/symoneural-common-proof-eebh_8_v/usr/lib/python3.14/site-packages/torch/lib/libtorch_cuda.so
+  mapped libtorch_cpu.so    /tmp/symoneural-common-proof-eebh_8_v/usr/lib/python3.14/site-packages/torch/lib/libtorch_cpu.so
+  mapped libcudart.so       /tmp/symoneural-common-proof-eebh_8_v/usr/lib/libcudart.so.13.4.49
+  mapped libcudnn.so        /tmp/symoneural-common-proof-eebh_8_v/usr/lib/libcudnn.so.9.25.1
+  mapped libcublas.so       /tmp/symoneural-common-proof-eebh_8_v/usr/lib/libcublas.so.13.7.0.27
+  mapped libc10_cuda.so     /tmp/symoneural-common-proof-eebh_8_v/usr/lib/python3.14/site-packages/torch/lib/libc10_cuda.so
+  meaningful ops PASS: torch matmul == numpy reference and autograd grad == 2x; torch.utils.cpp_extension imported setuptools at load (live runtime edge); torch.fx traced a module; tokenizers trained BPE in-process (Rust) and round-tripped; transformers PreTrainedTokenizerFast wrapped it and BertModel(config) ran a forward pass -> (2, 6, 32); safetensors round-tripped the state_dict; CUDA: build facts only (torch.version.cuda 13.4, cuDNN 92501, gloo available, NCCL absent); device not reachable without the host driver, as expected; accelerate: Accelerator(cpu) prepared model/optimizer/dataloader and one SGD epoch changed the weights, gather ok; psutil read this process; huggingface_hub refused a download under HF_HUB_OFFLINE; hf_xet loaded; PyYAML via libyaml; regex \p{Greek}; filelock; fsspec local fs; tqdm; packaging; typer CliRunner exit 0; rich table; pygments; markdown-it-py rendered a link; shellingham detected; jinja2 escaped through markupsafe._speedups; networkx shortest_path
   NO NETWORK: offline mode asserted before import; the one hub call made was proven to be refused; no model weights were fetched or present.
 COMMON CLEAN ROOT PROOF: PASS
+rc=0
+--- host leakage (libraries with loader initialization records, across traced processes)
+  100 distinct target-library initialization paths across 3 traced processes; 1 shell-launcher transitions
+  none: no external library initialization in captured loader traces
 rc=0

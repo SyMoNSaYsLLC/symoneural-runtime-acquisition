@@ -9,14 +9,31 @@
 #   tools/clean-root-proof Ravencalc symoneural-image-ravencalc
 set -uo pipefail
 ROOT=/home/google/SymonSaysLLC
+if [ "${1:-}" = --help ] || [ "${1:-}" = -h ]; then
+    echo 'Usage: tools/clean-root-proof <Runtime> <image-recipe> [NEW absolute destination]'
+    echo 'Default: fresh private temporary root. Existing destinations are never removed.'
+    echo 'SYM_CUDA_S2=1 permits only verified same-version NVIDIA driver libraries.'
+    exit 0
+fi
+[ "$#" -ge 2 ] && [ "$#" -le 3 ] || { echo 'FAIL: use --help for usage' >&2; exit 2; }
 RT=${1:?runtime, e.g. Ravencalc}; IMGNAME=${2:?image recipe, e.g. symoneural-image-ravencalc}
+[[ "$RT" =~ ^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$ ]] && [[ "$IMGNAME" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || { echo 'FAIL: invalid runtime or image name' >&2; exit 2; }
+S2=${SYM_CUDA_S2:-0}; HOSTDRV=/usr/lib/x86_64-linux-gnu; DRV=''
+case "$S2" in
+  0) ;;
+  1) DRV=$(cat /sys/module/nvidia/version 2>/dev/null)
+     [[ "$DRV" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo 'FAIL: S2 needs a verified loaded NVIDIA driver version' >&2; exit 1; } ;;
+  *) echo 'FAIL: SYM_CUDA_S2 must be 0 or 1' >&2; exit 2 ;;
+esac
 PROOF=$ROOT/tools/proofs/$(echo "$RT" | tr 'A-Z' 'a-z').py
 [ -f "$PROOF" ] || { echo "FAIL: no proof script $PROOF"; exit 1; }
 IMG=$(ls -t $ROOT/Symoneural-$RT/build/devtool-master/tmp/deploy/images/*/$IMGNAME-*.rootfs-*.tar.gz 2>/dev/null | head -1)
 [ -n "$IMG" ] || { echo "FAIL: no $IMGNAME rootfs tarball; run: tools/symonbake Symoneural-$RT $IMGNAME"; exit 1; }
-R=${3:-${TMPDIR:-/tmp/claude-1000}/$(echo "$RT" | tr 'A-Z' 'a-z')-clean-root}
-rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
 MANI="${IMG%.tar.gz}.manifest"
+[ -f "$MANI" ] || { echo "FAIL: image manifest missing: $MANI" >&2; exit 1; }
+R=$(python3 -B "$ROOT/tools/proof_support.py" new-root "$RT" "${@:3}") || exit 1
+# No cleanup/reuse of caller paths; failed roots remain for inspection.
+tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions || { echo "FAIL: extraction failed; preserved $R" >&2; exit 1; }
 echo "image   : $IMG"; echo "sha256  : $(sha256sum "$IMG" | cut -d' ' -f1)"
 echo "manifest: $MANI ($( [ -f "$MANI" ] && wc -l < "$MANI" || echo '?') packages)"
 echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
@@ -25,6 +42,14 @@ PY=$(ls "$R"/usr/bin/python3.1[0-9] 2>/dev/null | head -1)
 [ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
 PYV=$(basename "$PY" | sed 's/python//')
 mkdir -p "$R/tmp"
+# S2 mode (SYM_CUDA_S2=1): the host DRIVER's directory joins the loader path so a CUDA
+# consumer can reach libcuda.so.1; every file mapped from outside the root must then be
+# owned by a package at the installed driver version. Without S2 nothing outside the
+# root may be mapped at all. The loader's host ld.so.cache is inhibited in both modes:
+# only the explicit path and the loader's compiled-in /lib,/usr/lib are searched.
+LIBPATH="$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload"
+[ "$S2" = "1" ] && LIBPATH="$LIBPATH:$HOSTDRV"
+[ "$S2" = "1" ] && echo "mode    : S2 (host driver ${DRV:-?} reachable on the loader path)" || echo "mode    : self-contained (no host directory on the loader path)"
 # A re-execable target interpreter. Anything in the closure that spawns
 # sys.executable - multiprocessing's resource_tracker, joblib's loky backend, even
 # joblib's threading backend (it builds a multiprocessing Lock) - cannot work when
@@ -34,12 +59,43 @@ mkdir -p "$R/tmp"
 # spawned child is still the target interpreter against target libraries and nothing
 # from the host leaks in. A proof body passes it to multiprocessing.set_executable().
 WRAP="$R/tmp/target-python"
-{ echo '#!/bin/sh'; echo "exec \"$LD\" --library-path \"$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload\" \"$PY\" \"\$@\""; } > "$WRAP"
+python3 - "$LD" "$LIBPATH" "$PY" > "$WRAP" <<'PY'
+import shlex, sys
+loader, libraries, python = map(shlex.quote, sys.argv[1:])
+print('#!/bin/sh')
+print(f'exec {loader} --inhibit-cache --library-path {libraries} {python} "$@"')
+PY
+rc=$?; [ "$rc" -eq 0 ] || exit "$rc"
 chmod +x "$WRAP"
-run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" SYM_IMAGE_MANIFEST="$MANI" SYM_TARGET_PYTHON="$WRAP" \
-        "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload" "$PY" -I "$@"; }
+# LD_DEBUG_OUTPUT: the loader of EVERY process in the proof (children included) appends
+# what it mapped to $R/tmp/ld-debug.<pid>; the host-leak verdict below reads them all.
+# PATH is confined to the root: with PATH unset, Python's shutil.which() falls back to
+# os.defpath (/bin:/usr/bin) and target code can discover HOST executables - the S2 proof
+# of 2026-09-14 ran the host's /usr/bin/nvidia-smi from accelerate.utils.environment
+# (which("nvidia-smi")) and mapped host glibc + driver libraries through the host loader.
+run() { env -i PATH="$R/usr/bin:$R/bin:$R/usr/sbin:$R/sbin" HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" SYM_IMAGE_MANIFEST="$MANI" SYM_TARGET_PYTHON="$WRAP" SYM_CUDA_S2="$S2" \
+        LD_DEBUG=libs LD_DEBUG_OUTPUT="$R/tmp/ld-debug" \
+        "$LD" --inhibit-cache --library-path "$LIBPATH" "$PY" -I "$@"; }
 echo "--- interpreter"
 run -c 'import sys; print("python", sys.version.split()[0], "prefix", sys.prefix); assert "SymonSaysLLC/Symoneural-" not in " ".join(sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
 echo "--- $PROOF"
 run "$PROOF"; rc=$?
+echo "rc=$rc"
+echo "--- host leakage (libraries with loader initialization records, across traced processes)"
+# The re-exec wrapper above is a #!/bin/sh script: a spawned child's pid first maps the
+# HOST shell (its ld.so and libc, nothing else), then execs the target loader in the same
+# pid. No target ELF can be shebang-launched without the host loader, so that pattern is
+# the harness's launcher, classified and counted separately - never as image leakage.
+# Anything else mapped from outside the root is a leak (or, in S2 mode, must be the driver's).
+python3 -B "$ROOT/tools/proof_support.py" trace-libraries "$R" > "$R/tmp/host-mapped.txt"
+trace_rc=$?; [ "$trace_rc" -eq 0 ] || rc=1
+if [ "$S2" = "1" ]; then
+  while read -r l; do owner=$(dpkg -S "$l" 2>/dev/null | cut -d: -f1 | head -1); over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)
+    if python3 -B "$ROOT/tools/proof_support.py" driver-package "$DRV" "$owner" "$over" "$l"; then
+      echo "  HOST  $l  ($owner $over, S2)"
+    else echo "  FAIL  host leak: $l (${owner:-no package})"; rc=1; fi; done < "$R/tmp/host-mapped.txt"
+  [ -s "$R/tmp/host-mapped.txt" ] || echo "  (S2 mode, yet nothing from the host was mapped)"
+else
+  if [ -s "$R/tmp/host-mapped.txt" ]; then sed 's/^/  FAIL  host leak: /' "$R/tmp/host-mapped.txt"; rc=1; else echo "  none: no external library initialization in captured loader traces"; fi
+fi
 echo "rc=$rc"; exit $rc

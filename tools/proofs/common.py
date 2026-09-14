@@ -134,6 +134,62 @@ if not bad:
     torch.set_num_threads(2)
     torch.manual_seed(0)
 
+    # ---- provenance: WHICH artifacts this process is using (printed, not assumed) ---------
+    import shutil, ctypes.util
+    root = os.environ.get("SYM_CLEAN_ROOT", "")
+    def _under_root(path): return bool(root) and os.path.realpath(path).startswith(os.path.realpath(root) + "/")
+    prov = {"python": sys.executable, "torch": torch.__file__, "PATH": os.environ.get("PATH", "<unset>")}
+    for k, v in list(prov.items())[:2]:
+        assert _under_root(v), "%s comes from outside the root: %s" % (k, v)
+    assert all(_under_root(d) for d in prov["PATH"].split(":") if d), "PATH reaches outside the root: %s" % prov["PATH"]
+    for tool in ("nvidia-smi", "python3", "nvcc"):
+        w = shutil.which(tool)
+        assert w is None or _under_root(w), "%s resolves to the host: %s" % (tool, w)
+        prov["which(%s)" % tool] = w or "not found (confined PATH)"
+    maps = open("/proc/self/maps").read()
+    for lib in ("libpython3", "libtorch_cuda.so", "libtorch_cpu.so", "libcudart.so", "libcudnn.so", "libcublas.so", "libc10_cuda.so"):
+        hits = sorted({l.split()[-1] for l in maps.splitlines() if lib in l and "/" in l})
+        prov[lib] = hits or ["NOT MAPPED"]
+    print("  provenance: python %s | torch %s" % (prov["python"], prov["torch"]))
+    print("  provenance: PATH=%s; which nvidia-smi -> %s; which python3 -> %s" % (prov["PATH"], prov["which(nvidia-smi)"], prov["which(python3)"]))
+    for lib in ("libpython3", "libtorch_cuda.so", "libtorch_cpu.so", "libcudart.so", "libcudnn.so", "libcublas.so", "libc10_cuda.so"):
+        print("  mapped %-18s %s" % (lib, " ".join(prov[lib])))
+    for lib in ("libtorch_cuda.so", "libtorch_cpu.so", "libcudart.so", "libcudnn.so"):
+        assert all(_under_root(x) for x in prov[lib] if x != "NOT MAPPED"), "%s mapped from outside the root: %s" % (lib, prov[lib])
+
+    # ---- CUDA / cuDNN / distributed (P7 C7) --------------------------------------------
+    # Build facts hold in both modes; device facts only when the harness runs in S2 mode
+    # (SYM_CUDA_S2=1: the host driver's libcuda.so.1 reachable on the loader path).
+    S2 = os.environ.get("SYM_CUDA_S2") == "1"
+    assert torch.version.cuda and torch.version.cuda.startswith("13.4"), torch.version.cuda
+    cudnn_v = torch.backends.cudnn.version()
+    assert cudnn_v == 92501, cudnn_v                      # 9.25.1 = 9*10000 + 25*100 + 1
+    assert torch.distributed.is_available() and torch.distributed.is_gloo_available()
+    assert not torch.distributed.is_nccl_available(), "NCCL was built in; the matrix says OFF"
+    if S2:
+        assert torch.cuda.is_available(), "S2 mode but torch.cuda.is_available() is False"
+        cap = torch.cuda.get_device_capability(0)
+        assert cap == (12, 0), cap
+        gpu_name = torch.cuda.get_device_name(0)
+        ga = torch.randn(256, 128); gb = torch.randn(128, 64)
+        got = (ga.cuda() @ gb.cuda()).cpu()
+        assert torch.allclose(got, ga @ gb, atol=1e-4), "GPU matmul != CPU reference"
+        conv = torch.nn.Conv2d(3, 8, 3)
+        cx = torch.randn(2, 3, 16, 16)
+        with torch.backends.cudnn.flags(enabled=True, benchmark=False):
+            cy = conv.cuda()(cx.cuda())
+        torch.cuda.synchronize()
+        assert cy.shape == (2, 8, 14, 14) and torch.isfinite(cy).all()
+        assert torch.allclose(cy.cpu(), conv.cpu()(cx), atol=1e-3), "cuDNN conv2d != CPU reference"
+        drv = sorted({l.split()[-1] for l in open("/proc/self/maps").read().splitlines() if "libcuda.so" in l and "/" in l})
+        print("  mapped libcuda.so       %s  (host driver: the declared S2 exception)" % " ".join(drv))
+        cuda_note = ("%s cc %d.%d: is_available True, matmul on device == CPU reference, cuDNN %d conv2d == "
+                     "CPU reference, runtime %s" % (gpu_name, cap[0], cap[1], cudnn_v, torch.version.cuda))
+    else:
+        assert not torch.cuda.is_available(), "no driver on the loader path, yet CUDA is available"
+        cuda_note = ("build facts only (torch.version.cuda %s, cuDNN %d, gloo available, NCCL absent); "
+                     "device not reachable without the host driver, as expected" % (torch.version.cuda, cudnn_v))
+
     # torch: linear algebra against a numpy reference, and autograd
     a = torch.randn(64, 32); b = torch.randn(32, 16)
     assert np.allclose((a @ b).numpy(), a.numpy() @ b.numpy(), atol=1e-4)
@@ -191,17 +247,18 @@ if not bad:
     assert all(torch.equal(back[k], v) for k, v in model.state_dict().items())
     os.unlink(sf)
 
-    # accelerate: only when the image ships it. On a torch built USE_DISTRIBUTED=0 this
-    # block FAILS at Accelerator.prepare() (utils/other.py model_has_dtensor imports
-    # torch.distributed.tensor); that failure is the evidence recorded in its recipe.
-    accel_note = "not shipped in this image (BLOCKED on torch USE_DISTRIBUTED=0; see symoneural-accelerate recipe)"
+    # accelerate: only when the image ships it. Its prepare() path imports
+    # torch.distributed.tensor (guarded by torch VERSION only), which is why it was
+    # DEFERRED against the USE_DISTRIBUTED=0 torch; on the P7 C7 torch it must work. In S2
+    # mode the Accelerator picks the GPU itself and the epoch runs there.
+    accel_note = "not shipped in this image (see unresolved.json:accelerate-torch-distributed)"
     if HAS_ACCELERATE:
         import psutil
         assert psutil.Process().pid == os.getpid() and psutil.cpu_count() >= 1
         from accelerate import Accelerator
         from accelerate.utils import set_seed
         set_seed(0)
-        acc = Accelerator(cpu=True)
+        acc = Accelerator(cpu=not S2)
         net = torch.nn.Linear(4, 1); opt = torch.optim.SGD(net.parameters(), lr=0.1)
         data = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(torch.randn(16, 4), torch.randn(16, 1)), batch_size=8)
         net, opt, data = acc.prepare(net, opt, data)
@@ -211,8 +268,9 @@ if not bad:
             acc.backward(loss); opt.step(); opt.zero_grad()
         assert torch.isfinite(loss) and not torch.equal(before, net.weight.detach()), "no optimisation step took effect"
         assert acc.gather(torch.tensor([acc.process_index])).tolist() == [0]
-        assert str(acc.device) == "cpu"
-        accel_note = "Accelerator(cpu) prepared model/optimizer/dataloader and one SGD epoch changed the weights, gather ok; psutil read this process"
+        assert acc.device.type == ("cuda" if S2 else "cpu"), str(acc.device)
+        accel_note = ("Accelerator(%s) prepared model/optimizer/dataloader and one SGD epoch changed the weights, gather ok; "
+                      "psutil read this process" % acc.device.type)
 
     # huggingface_hub: offline mode REFUSES a download rather than attempting one
     import huggingface_hub
@@ -293,12 +351,12 @@ if not bad:
           "torch.utils.cpp_extension imported setuptools at load (live runtime edge); torch.fx "
           "traced a module; tokenizers trained BPE in-process (Rust) and round-tripped; "
           "transformers PreTrainedTokenizerFast wrapped it and BertModel(config) ran a forward "
-          "pass -> %s; safetensors round-tripped the state_dict; accelerate: %s; huggingface_hub refused a "
+          "pass -> %s; safetensors round-tripped the state_dict; CUDA: %s; accelerate: %s; huggingface_hub refused a "
           "download under HF_HUB_OFFLINE; hf_xet loaded; PyYAML via libyaml; regex \\p{Greek}; "
           "filelock; fsspec local fs; tqdm; packaging; typer CliRunner exit 0; rich table; "
           "pygments; markdown-it-py rendered a link; shellingham %s; jinja2 escaped through "
           "markupsafe._speedups; networkx shortest_path"
-          % (tuple(out.shape), accel_note, shell_note))
+          % (tuple(out.shape), cuda_note, accel_note, shell_note))
     print("  NO NETWORK: offline mode asserted before import; the one hub call made was "
           "proven to be refused; no model weights were fetched or present.")
 

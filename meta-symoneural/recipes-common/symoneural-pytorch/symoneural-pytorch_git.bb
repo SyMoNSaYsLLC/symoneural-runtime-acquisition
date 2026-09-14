@@ -294,18 +294,83 @@ DEPENDS += "cmake-native python3-scikit-build-core-native python3-setuptools-nat
 # becomes an acquisition.
 PEP517_BUILD_OPTS += "--skip-dependency-check"
 
-# CPU-ONLY, deliberately. nvcc exists on this HOST (/usr/local/cuda/bin/nvcc) but
-# there is no CUDA in the TARGET sysroot - no cuda recipe is staged - so a
-# cross-compiled CUDA torch is not buildable today. That is Phase 12's work.
-# Building CPU-only now produces a real ipk and unblocks Common's chain
-# (accelerate RDEPENDS on pytorch); the CUDA variant replaces it in Phase 12.
-export USE_CUDA = "0"
-export USE_CUDNN = "0"
-export USE_ROCM = "0"
-export USE_DISTRIBUTED = "0"
-export BUILD_TEST = "0"
+# P7 C7 (2026-09-14): the CUDA/distributed feature set Garrett decided from the
+# matrix in docs/cuda/P7-CUDA-AUTHORITY.md. CUDA arrives ONLY through the estate
+# authority (symoneural-cuda.bbclass -> cuda-toolkit-bin 13.4.1, sm_120); cuDNN is the
+# SEPARATE BINARY_EXTERNAL provider cudnn-bin (9.25.1.1). Nothing here names a host
+# path. torch's cmake/EnvVarForwarding.cmake turns every USE_*/BUILD_*/CMAKE_*
+# environment variable into a forced cache variable and passes CUDNN_ROOT,
+# CUDNN_INCLUDE_DIR, CUDNN_LIBRARY, TORCH_CUDA_ARCH_LIST, CUDACXX and CUDAHOSTCXX
+# through by name, so the whole matrix is exports; CMAKE_ARGS below adds the class's
+# explicit compiler/host-compiler/toolkit-root defines so torch's own
+# "CMAKE_CUDA_HOST_COMPILER defaults to CMAKE_CXX_COMPILER" never fires.
+# (The CPU-only build this replaces - USE_CUDA=0, USE_DISTRIBUTED=0 - is the accepted
+# P8 Common checkpoint; accelerate was DEFERRED against it and is re-proven after this.)
+inherit symoneural-cuda
+DEPENDS += "cudnn-bin"
+export USE_CUDA = "1"
+export USE_CUDNN = "1"
+export USE_STATIC_CUDNN = "0"
+export TORCH_CUDA_ARCH_LIST = "${SYMON_CUDA_ARCH_DOTTED}"
+export CUDNN_ROOT = "${STAGING_DIR_HOST}${prefix}"
+export CUDNN_INCLUDE_DIR = "${STAGING_INCDIR}"
+# FindCUDNN.cmake: CUDNN_LIBRARY is the DIRECTORY searched for libcudnn, not the file
+export CUDNN_LIBRARY = "${STAGING_LIBDIR}"
+# one-GPU estate: no optional NVIDIA library is enabled merely because it exists
 export USE_NCCL = "0"
+export USE_CUSPARSELT = "0"
+export USE_CUDSS = "0"
+export USE_CUFILE = "0"
+export USE_NVSHMEM = "0"
+export USE_MAGMA = "0"
+export USE_ROCM = "0"
+# distributed: c10d + Gloo (the path accelerate's prepare() imports); no RPC transport
+# (TensorPipe), no MPI, no UCC - a real consumer flips these, not their existence
+export USE_DISTRIBUTED = "1"
+export USE_GLOO = "1"
+export USE_TENSORPIPE = "0"
+export USE_MPI = "0"
+export USE_UCC = "0"
+# profiler: Kineto with CUPTI from the toolkit (libcupti.so.13 on ${libdir})
+export USE_KINETO = "1"
+export USE_CUPTI_SO = "1"
+export BUILD_TEST = "0"
 export MAX_JOBS = "12"
+# Host-side flags for every .cu (prefix maps, hardening) must reach nvcc as -Xcompiler
+# flags. The class seeds them through CUDAFLAGS, which CMake puts in the CMAKE_CUDA_FLAGS
+# CACHE entry - but torch does `string(APPEND CMAKE_CUDA_FLAGS ...)` on the NORMAL variable
+# before it enables the CUDA language, and that shadows the cache for the whole tree: the
+# first C7 build compiled 419 sm_120 kernels with no prefix map and left 524 build-path
+# strings (__FILE__ in TORCH_INTERNAL_ASSERT) in libtorch_cuda.so [buildpaths]. torch's own
+# channel for extra nvcc flags is the TORCH_NVCC_FLAGS environment variable
+# (cmake/Dependencies.cmake appends it to CMAKE_CUDA_FLAGS inside the USE_CUDA block).
+# Control: symoneural-ggml's libggml-cuda.so, built through the same class with the same
+# -Xcompiler flags, has 0 build-path strings and shows /usr/src/debug/... in its asserts.
+export TORCH_NVCC_FLAGS = "${SYMON_CUDA_HOST_FLAGS}"
+# torch sets CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE unconditionally (cmake/Dependencies.cmake,
+# torch/CMakeLists.txt), so every CUDA-linked library is installed with
+# RPATH "$ORIGIN:<sysroot CUDA/cuDNN dirs>" - a build path [rpaths][buildpaths]. The right
+# runtime RPATH for torch/lib is "$ORIGIN" alone: the libraries find each other there and
+# the CUDA/cuDNN runtimes sit on the default loader path in the image. Rewritten after the
+# wheel install; anything that still carries a build path fails the task here, not in QA.
+DEPENDS += "chrpath-native"
+do_install:append() {
+    for f in ${D}${PYTHON_SITEPACKAGES_DIR}/torch/lib/*.so; do
+        [ -f "$f" ] || continue
+        rp=$(chrpath -l "$f" 2>/dev/null | sed -n 's/.*R\(UN\)\?PATH=//p')
+        case "$rp" in
+            *${WORKDIR}*|*${TMPDIR}*)
+                chrpath -r '$ORIGIN' "$f" >/dev/null || bbfatal "chrpath could not rewrite $f"
+                bbnote "symoneural: RPATH of $(basename $f) reduced to \$ORIGIN (was: $rp)" ;;
+        esac
+        # chrpath prints the absolute filename before RPATH/RUNPATH. Checking
+        # that whole line falsely rejects even a clean $ORIGIN runpath because
+        # the installed file itself lives under TMPDIR. Inspect the value only.
+        dynamic=$(${READELF} -d "$f") || bbfatal "could not inspect dynamic tags of $f"
+        rp=$(printf '%s\n' "$dynamic" | sed -n '/(RPATH)\|(RUNPATH)/s/.*\[\(.*\)\].*/\1/p')
+        case "$rp" in *${WORKDIR}*|*${TMPDIR}*) bbfatal "build path still in RPATH of $f" ;; esac
+    done
+}
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.
@@ -926,11 +991,13 @@ export CMAKE_ARGS = "-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
                      -DNATIVE_BUILD_DIR=${WORKDIR}/sleef-native \
                      -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=${WORKDIR}/protobuf-native/protoc \
                      -DCMAKE_PROJECT_torch_INCLUDE=${SYMON_HOOKS_DIR}/caffe2-buildpaths.cmake \
+                     -DCMAKE_PROJECT_gloo_INCLUDE=${SYMON_HOOKS_DIR}/gloo-cuda-buildpaths.cmake \
                      -DSYMON_BUILDPATH_WORKDIR=${WORKDIR} \
                      -DSYMON_BUILDPATH_TMPDIR=${TMPDIR} \
                      -DSYMON_BUILDPATH_HOMEDIR=${SYMON_BUILD_HOME} \
                      -DPYTHON_EXECUTABLE=${SYMON_HOOKS_DIR}/peachpy-relative-path \
-                     -DPYTHON_SIX_SOURCE_DIR=${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
+                     -DPYTHON_SIX_SOURCE_DIR=${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages \
+                     ${SYMON_CUDA_CMAKE_ARGS}"
 
 # The build root must not enter the task signature; it is only ever used as the
 # left-hand side of a substitution that erases it.
@@ -1036,6 +1103,25 @@ cmake_language(DEFER CALL symoneural_sanitize_caffe2_macros)
     hook_path = os.path.join(hooks, "caffe2-buildpaths.cmake")
     with open(hook_path, "w") as f:
         f.write(cmake_hook)
+
+    # Dependencies.cmake adds Gloo at line 1301, BEFORE it appends
+    # TORCH_NVCC_FLAGS at line 1445. Gloo consequently snapshots CUDA flags
+    # without the prefix maps even though torch_cuda gets them. Build #4 left
+    # four absolute Gloo header/source strings in libtorch_cuda.so. Inject in
+    # Gloo's own project scope; do not duplicate flags in the parent project or
+    # modify the acquired tree. Gloo's modern CUDA path preserves these flags.
+    gloo_hook = """\
+# Generated by symoneural-pytorch_git.bb - do not edit here.
+if(USE_CUDA)
+  if("$ENV{TORCH_NVCC_FLAGS}" STREQUAL "")
+    message(FATAL_ERROR "symoneural: Gloo CUDA host flags are missing")
+  endif()
+  string(APPEND CMAKE_CUDA_FLAGS " $ENV{TORCH_NVCC_FLAGS}")
+  message(STATUS "symoneural: Gloo CUDA host prefix maps supplied before subdirectory configuration")
+endif()
+"""
+    with open(os.path.join(hooks, "gloo-cuda-buildpaths.cmake"), "w") as f:
+        f.write(gloo_hook)
 
     wrapper = """\
 #!/bin/sh
