@@ -1,0 +1,78 @@
+{
+ "artifacts": {
+  "libggml": {
+   "defines_ggml_symbols": 550,
+   "exported_symbols": 730,
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libgomp.so.1",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "path": "Symoneural-LLM/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-ggml/0.23.0/image/usr/lib/libggml-base.so.0.23.0",
+   "runpath": [],
+   "soname": "libggml-base.so.0",
+   "state": "BUILT"
+  },
+  "libllama": {
+   "exported_symbols": 2376,
+   "ggml_symbols_defined_inside": 0,
+   "ggml_symbols_imported": 243,
+   "links_shared_libggml": "PASS",
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libggml.so.0",
+    "libggml-base.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-x86-64.so.2"
+   ],
+   "path": "Symoneural-LLM/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-llama-cpp/b10809/image/usr/lib/libllama.so.0.4.0",
+   "rule_no_embedded_ggml": "PASS: imports 243 ggml symbols, defines none",
+   "runpath": [],
+   "soname": "libllama.so.0",
+   "state": "BUILT"
+  },
+  "libsymoneural-api": {
+   "exported_symbols": 27,
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libc.so.6"
+   ],
+   "path": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-api/1.0.0/image/usr/lib/libsymoneural-api.so.1.0.0",
+   "rule_libc_only": "PASS",
+   "runpath": [],
+   "soname": "libsymoneural-api.so.1",
+   "state": "BUILT"
+  },
+  "libsymoneural-llm": {
+   "reason": "no built artifact matches Symoneural-LLM/build/devtool-master/tmp/work/*/symoneural-llm*/*/image/usr/lib/libsymoneural-llm.so.*.*.*",
+   "state": "NOT STARTED"
+  },
+  "symoneural-api-util": {
+   "exported_symbols": 1,
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libsymoneural-api.so.1",
+    "libc.so.6"
+   ],
+   "path": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-api/1.0.0/image/usr/bin/symoneural-api-util",
+   "runpath": [],
+   "soname": null,
+   "state": "BUILT"
+  },
+  "symoneural-llm": {
+   "reason": "no built artifact matches Symoneural-LLM/build/devtool-master/tmp/work/*/symoneural-llm*/*/image/usr/bin/symoneural-llm*",
+   "state": "NOT STARTED"
+  }
+ },
+ "failures": [],
+ "not_started": [
+  "libsymoneural-llm",
+  "symoneural-llm"
+ ]
+}
