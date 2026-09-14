@@ -1,0 +1,352 @@
+name: "🛠️ check"
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    tags-ignore: ["**"]
+  pull_request:
+  schedule:
+    - cron: "0 8 * * *"
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  test:
+    name: "🧪 Test ${{ matrix.py }} - ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        py:
+          - "3.15t"
+          - "3.15"
+          - "3.14t"
+          - "3.14"
+          - "3.13"
+          - "3.12"
+          - "3.11"
+          - "3.10"
+          - "pypy3.11"
+          - "graalpy3.11"
+        os:
+          - ubuntu-24.04
+          - windows-2025
+          - macos-15
+        exclude:
+          - {os: windows-2025, py: pypy3.11}
+          # GraalPy validates the capability probes the suite gates on, which is a per-OS answer, not a per-arch one.
+          # One Linux job settles it; the Windows and macOS builds only repeat it at triple the runtime.
+          - {os: windows-2025, py: graalpy3.11}
+          - {os: macos-15, py: graalpy3.11}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🧪 Install tox"
+        run: uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv
+      - name: "🐍 Install Python"
+        run: uv python install --python-preference only-managed ${{ matrix.py }}
+      - name: "⚙️ Setup test suite"
+        run: tox run -vv --notest --skip-missing-interpreters false -e ${{ matrix.py }}
+        env:
+          UV_PYTHON_PREFERENCE: only-managed
+      # PyPy runs unmeasured: coverage has no JIT path there, so the suite takes 12m rather than 2m and roughly 60 of
+      # its lock, heartbeat and poll deadlines lapse under the added latency, though they pass measured in isolation.
+      # GraalPy runs unmeasured for the same reason, and neither is a coverage source: the 100% gate stays CPython's.
+      - name: "✅ Run test suite"
+        run: |
+          if [[ "${{ matrix.py }}" == pypy* || "${{ matrix.py }}" == graalpy* ]]; then
+            tox run --skip-pkg-install -e ${{ matrix.py }} --
+          else
+            tox run --skip-pkg-install -e ${{ matrix.py }}
+          fi
+        shell: bash
+        env:
+          PYTEST_ADDOPTS: "-vv --durations=20"
+          UV_PYTHON_PREFERENCE: only-managed
+          DIFF_AGAINST: HEAD
+      - name: "📝 Rename coverage report file"
+        if: ${{ !startsWith(matrix.py, 'pypy') && !startsWith(matrix.py, 'graalpy') }}
+        run: |
+          import os; import sys
+          os.rename(f".tox/.coverage.${{ matrix.py }}", f".tox/.coverage.${{ matrix.py }}-{sys.platform}")
+        shell: python
+      - name: "📦 Upload coverage data"
+        if: ${{ !startsWith(matrix.py, 'pypy') && !startsWith(matrix.py, 'graalpy') }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          include-hidden-files: true
+          name: .coverage.${{ matrix.os }}.${{ matrix.py }}
+          path: ".tox/.coverage.*"
+          retention-days: 3
+  coverage:
+    name: "📊 Combine coverage"
+    runs-on: ubuntu-24.04
+    needs: test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🧪 Install tox"
+        run: uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv
+      - name: "📦 Build package to generate version"
+        run: uv build --python 3.14 --python-preference only-managed --wheel . --out-dir dist
+      - name: "⚙️ Setup coverage tool"
+        run: tox -e coverage --notest
+        env:
+          UV_PYTHON_PREFERENCE: only-managed
+      - name: "⬇️ Download coverage data"
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: .tox
+          pattern: .coverage.*
+          merge-multiple: true
+      - name: "📊 Combine and report coverage"
+        run: tox -e coverage --skip-pkg-install
+        env:
+          UV_PYTHON_PREFERENCE: only-managed
+      - name: "📤 Upload HTML report"
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: html-report
+          path: .tox/htmlcov
+  check:
+    name: "🔎 ${{ matrix.tox_env }} - ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - windows-2025
+        tox_env:
+          - dev
+          - type
+          - docs
+          - pkg_meta
+        exclude:
+          - {os: windows-2025, tox_env: pkg_meta}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🧪 Install tox"
+        run: uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv
+      - name: "⚙️ Setup test suite"
+        run: tox run -vv --notest --skip-missing-interpreters false -e ${{ matrix.tox_env }}
+        env:
+          UV_PYTHON_PREFERENCE: only-managed
+      - name: "✅ Run test suite"
+        run: tox run --skip-pkg-install -e ${{ matrix.tox_env }}
+        env:
+          UV_PYTHON_PREFERENCE: only-managed
+  nfs:
+    name: "🗄️ NFS mutual exclusion"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🗄️ Export and mount loopback NFS shares"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nfs-kernel-server nfs-common
+          sudo mkdir -p /export/filelock
+          sudo chmod 1777 /export/filelock
+          echo "/export/filelock 127.0.0.1(rw,sync,no_subtree_check,no_root_squash,insecure)" | sudo tee /etc/exports
+          sudo exportfs -ra
+          sudo systemctl restart nfs-server
+          # NFSv3 sends flock to the server through the NLM lock manager. rpcbind must be enabled; rpc-statd is a
+          # static unit that enable cannot touch, so start it explicitly or a v3 flock blocks in the kernel forever.
+          sudo systemctl enable --now rpcbind
+          sudo systemctl start rpc-statd
+          # Mount each version twice, the second with nosharecache, so the two mounts are independent client caches
+          # over one server: contending across them is a real multi-client check, not two views of one cache. The
+          # verifier records each process's own hold intervals and never reads shared data across the caches, so the
+          # measurement needs no cache-coherence tuning here — only the two independent caches nosharecache provides.
+          for m in nfs4a nfs4b nfs3a nfs3b; do sudo mkdir -p "/mnt/$m"; done
+          sudo mount -t nfs -o vers=4.2 127.0.0.1:/export/filelock /mnt/nfs4a
+          sudo mount -t nfs -o vers=4.2,nosharecache 127.0.0.1:/export/filelock /mnt/nfs4b
+          sudo mount -t nfs -o vers=3 127.0.0.1:/export/filelock /mnt/nfs3a
+          sudo mount -t nfs -o vers=3,nosharecache 127.0.0.1:/export/filelock /mnt/nfs3b
+          for m in nfs4a nfs4b nfs3a nfs3b; do sudo chmod 1777 "/mnt/$m"; done
+          mount | grep /mnt/nfs
+      - name: "🔒 Verify NFSv4 mutual exclusion across two client caches"
+        env:
+          # StrictSoftFileLock is the lock the gate enforces on NFS: its claim queue hands off fairly, so it finishes
+          # every hold with no overlap on both versions (the strict claim retries the transient ESTALE that NFSv3's
+          # churn raises). The other two print their behavior ungated and neither is safe to gate on here: native flock
+          # does not exclude across NFS client caches (overlaps appear), and the poll-based soft lock starves out under
+          # NFS latency before finishing its holds. Prefer StrictSoftFileLock on NFS.
+          FILELOCK_VERIFY_LOCKS: StrictSoftFileLock
+        run: |
+          uv venv
+          uv pip install .
+          timeout 420 .venv/bin/python tasks/verify_filesystem.py /mnt/nfs4a /mnt/nfs4b
+      - name: "🔒 Verify NFSv3 mutual exclusion across two client caches"
+        env:
+          FILELOCK_VERIFY_LOCKS: StrictSoftFileLock
+        run: timeout 420 .venv/bin/python tasks/verify_filesystem.py /mnt/nfs3a /mnt/nfs3b
+  smb:
+    name: "🗄️ SMB mutual exclusion"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🗄️ Export and mount a loopback SMB share"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y samba cifs-utils
+          sudo mkdir -p /srv/filelock
+          sudo chmod 1777 /srv/filelock
+          sudo tee -a /etc/samba/smb.conf >/dev/null <<'CONF'
+          [filelock]
+             path = /srv/filelock
+             writable = yes
+             guest ok = yes
+             create mask = 0666
+             directory mask = 0777
+          CONF
+          sudo sed -i '/\[global\]/a \   map to guest = Bad User\n   server min protocol = SMB2' /etc/samba/smb.conf
+          sudo systemctl restart smbd
+          # Two mounts are two independent CIFS client caches over one server, for a multi-client check.
+          sudo mkdir -p /mnt/smba /mnt/smbb
+          for m in smba smbb; do
+            sudo mount -t cifs //127.0.0.1/filelock "/mnt/$m" \
+              -o "guest,uid=$(id -u),gid=$(id -g),file_mode=0777,dir_mode=0777,vers=3.0"
+          done
+          mount | grep /mnt/smb
+      - name: "🔒 Verify SMB mutual exclusion across two client caches"
+        # CIFS byte-range locks are mandatory and server-enforced, so FileLock excludes and finishes every hold: it is
+        # the lock the gate enforces here. SoftFileLock prints ungated (it excludes but its poll-acquire can starve
+        # under contention), and the strict claim needs an atomic no-replace hard link SMB does not reliably provide.
+        env:
+          FILELOCK_VERIFY_LOCKS: FileLock
+        run: |
+          uv venv
+          uv pip install .
+          timeout 240 .venv/bin/python tasks/verify_filesystem.py /mnt/smba /mnt/smbb
+  capability:
+    name: "🧩 without ${{ matrix.block }}"
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        block:
+          - fcntl
+          - sqlite3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🧩 Verify the fallback without ${{ matrix.block }}"
+        env:
+          FILELOCK_BLOCK_MODULE: ${{ matrix.block }}
+        run: |
+          uv venv
+          uv pip install .
+          export PYTHONPATH="$PWD/tasks/capability"
+          .venv/bin/python tasks/capability/assert_fallback.py
+          .venv/bin/python tasks/verify_filesystem.py
+  symlink:
+    name: "🔗 Windows symlinks ${{ matrix.developer_mode == '1' && 'granted' || 'denied' }}"
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        developer_mode: ["0", "1"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "🧪 Install tox"
+        run: uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv
+      # Windows grants symlink creation two ways, so both have to be closed to deny it: Developer Mode lets an
+      # unprivileged process create them, and SeCreateSymbolicLinkPrivilege lets any holder create them regardless.
+      # Clearing only the registry value left the runner's privilege intact and both variants probed identical.
+      - name: "🔗 Set Developer Mode to ${{ matrix.developer_mode }}"
+        run: >
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d ${{ matrix.developer_mode }}
+
+      - name: "⚙️ Setup test suite"
+        run: tox run -vv --notest --skip-missing-interpreters false -e 3.14
+      - name: "🔎 Report the probed capability"
+        if: matrix.developer_mode == '1'
+        run: |
+          $env:PYTHONPATH = "$PWD\tasks"
+          uvx --python 3.14 --with coverage python -c "import coverage_pragmas; print(coverage_pragmas.CAPABILITIES)"
+      - name: "✅ Run test suite with symlinks granted"
+        if: matrix.developer_mode == '1'
+        run: tox run --skip-pkg-install -e 3.14 --
+      # deny_symlink reports the token privilege, the Developer Mode value, and whether a symlink still succeeds in
+      # this process and in a child, so the log says which mechanism actually governs rather than assuming either.
+      - name: "🔎 Report the probed capability"
+        if: matrix.developer_mode == '0'
+        run: |
+          $env:PYTHONPATH = "$PWD\tasks"
+          python tasks\deny_symlink.py uvx --python 3.14 --with coverage python -c "import coverage_pragmas; print(coverage_pragmas.CAPABILITIES)"
+      - name: "✅ Run test suite with symlinks denied"
+        if: matrix.developer_mode == '0'
+        run: python tasks\deny_symlink.py tox run --skip-pkg-install -e 3.14 --
+  termux:
+    name: "🤖 Termux (Android)"
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "🧪 Run the suite in a real Termux userland via tox"
+        run: docker compose run --rm termux
+  changelog:
+    name: "📝 News fragment"
+    runs-on: ubuntu-24.04
+    # A PR must add a docs/changelog/<pr>.<type>.rst fragment; automated dependency and pre-commit bumps are exempt, as
+    # is anything labeled skip news, for changes no user of the library can observe.
+    if: >-
+      github.event_name == 'pull_request' && !contains(fromJSON('["dependabot[bot]", "pre-commit-ci[bot]"]'), github.event.pull_request.user.login) && !contains(github.event.pull_request.labels.*.name, 'skip news')
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "🔄 Install the latest version of uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "📝 Require a news fragment"
+        run: uvx towncrier check --compare-with "origin/${GITHUB_BASE_REF}"
