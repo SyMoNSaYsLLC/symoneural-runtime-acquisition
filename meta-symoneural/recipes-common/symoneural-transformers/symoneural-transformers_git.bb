@@ -583,4 +583,8 @@ RDEPENDS:${PN} += "python3-core"
 # Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
 # distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
 # Checked by tools/check-python-runtime-closures.py.
-RDEPENDS:${PN} += "symoneural-huggingface-hub symoneural-numpy symoneural-tokenizers symoneural-safetensors"
+# transformers 5.17.0 wheel Requires-Dist without an extra marker: huggingface-hub,
+# numpy, packaging, pyyaml, regex, tokenizers, typer, safetensors, tqdm
+RDEPENDS:${PN} += "symoneural-huggingface-hub symoneural-numpy symoneural-tokenizers \
+    symoneural-safetensors symoneural-packaging symoneural-pyyaml symoneural-regex \
+    symoneural-typer symoneural-tqdm"

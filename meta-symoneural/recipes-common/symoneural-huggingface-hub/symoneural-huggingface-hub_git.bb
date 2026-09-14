@@ -199,4 +199,8 @@ RDEPENDS:${PN} += "python3-core"
 # Runtime edges read from this wheel's dist-info METADATA Requires-Dist (estate-provided
 # distributions). OE does not derive RDEPENDS from wheel metadata; the recipe must.
 # Checked by tools/check-python-runtime-closures.py.
-RDEPENDS:${PN} += "symoneural-httpx"
+# huggingface-hub 1.31.0 wheel Requires-Dist, evaluated for the target:
+# filelock, fsspec, hf-xet (x86_64), httpx, packaging, pyyaml, tqdm, typing-extensions, click
+RDEPENDS:${PN} += "symoneural-httpx symoneural-click symoneural-typing-extensions \
+    symoneural-filelock symoneural-fsspec symoneural-hf-xet symoneural-packaging \
+    symoneural-pyyaml symoneural-tqdm"
