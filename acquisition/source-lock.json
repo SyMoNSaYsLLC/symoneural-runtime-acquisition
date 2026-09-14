@@ -226,7 +226,11 @@
       "submodule_count": 0,
       "upstream_url": "https://git.savannah.gnu.org/git/automake.git",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "f844d5497a153b21908891c5651e09da3730ed67",
+      "pins_path": "Symoneural-Build/src/autotools/.gitpins/automake.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-libtool_git.bbappend",
