@@ -1,0 +1,53 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: Integration Tests
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.88
+
+      - name: Install capnp dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y capnproto libcapnp-dev
+
+      - name: Install capnp dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: brew install capnp
+
+      # Install cargo-binstall so tool installs below use prebuilt binaries.
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.20.0
+        with:
+          version: "1.20.0"
+
+      # Install cargo-nextest via cargo-binstall (no source build).
+      # Keep quick-install disabled to only use upstream release artifacts.
+      - name: Install cargo-nextest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: cargo binstall --no-confirm --disable-telemetry --disable-strategies quick-install --locked cargo-nextest@0.9.100
+
+      - name: Integration Tests
+        run: |
+         RUST_BACKTRACE=1 RUST_LOG=debug cargo nextest run --manifest-path=integration-tests/Cargo.toml --nocapture

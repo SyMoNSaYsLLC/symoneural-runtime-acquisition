@@ -1,0 +1,95 @@
+[package]
+name = "stratum-apps"
+version = "0.7.0"
+authors = ["The Stratum V2 Developers"]
+edition = "2021"
+readme = "README.md"
+description = "Complete Stratum V2 application development kit - all utilities in one crate"
+documentation = "https://docs.rs/stratum-apps"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/stratum-mining/stratum"
+homepage = "https://stratumprotocol.org"
+keywords = ["stratum", "mining", "bitcoin", "protocol", "sv2"]
+
+[dependencies]
+# Core protocol layer
+# fetching from github enables synchronizing development workflows across sv2-apps and stratum repos
+# it MUST be changed before stratum-apps is published to crates.io
+# with the proper version of stratum-core being fetched from crates.io as well
+stratum-core = { version = "0.5.1", optional = true }
+bitcoin-core-sv2 = { package = "bitcoin_core_sv2", version = "0.5.0", path = "../bitcoin-core-sv2", optional = true }
+
+# External dependencies needed by the modules
+# Network helpers dependencies
+async-channel = { version = "1.8.0" }
+tokio = { version = "1.44.1", features = ["full"] }
+futures = { version = "0.3.28" }
+tokio-util = { version = "0.7.10", default-features = false, features = ["codec"], optional = true }
+
+# Config helpers dependencies
+serde = { version = "1.0.89", features = ["derive", "alloc"], default-features = false }
+miniscript = { version = "13.0.0", default-features = false }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing = { version = "0.1" }
+
+# Key utils dependencies
+bs58 = { version = "0.4.0", default-features = false, features = ["check", "alloc"] }
+dirs = "6.0"
+secp256k1 = { version = "0.28.2", default-features = false, features = ["alloc", "rand"] }
+rand = { version = "0.8.5", default-features = false }
+rustversion = "1.0"
+
+# Shared optional dependencies
+# Used by both `sv1` networking helpers and `monitoring` HTTP JSON APIs.
+serde_json = { version = "1.0", default-features = false, features = ["alloc", "raw_value"], optional = true }
+
+# Monitoring optional dependencies
+asic-rs = { version = "0.6.2", optional = true }
+axum = { version = "0.8.7", optional = true }
+prometheus = { version = "0.13", optional = true }
+utoipa = { version = "5.4.0", features = ["axum_extras"], optional = true }
+utoipa-swagger-ui = { version = "9.0.2", features = ["axum", "vendored"], optional = true }
+
+# Common external dependencies that roles always need
+ext-config = { version = "0.14.0", features = ["toml"], package = "config" }
+shellexpand = "3.1.1"
+dashmap = "6.1.0"
+
+[features]
+default = ["network", "fallback-coordinator", "config", "std"]
+
+# Core module features
+network = ["tokio-util", "core"]
+fallback-coordinator = ["tokio-util"]
+config = []
+payout = ["config", "core"]
+monitoring = ["serde_json", "axum", "prometheus", "utoipa", "utoipa-swagger-ui"]
+asic-rs-telemetry = ["monitoring", "dep:asic-rs"]
+std = ["bs58/std", "secp256k1/rand-std", "rand/std", "rand/std_rng"]
+core = ["stratum-core"]
+
+# Protocol features passed through to stratum-core
+sv1 = ["stratum-core/sv1", "stratum-core/translation", "tokio-util", "serde_json"]
+with_buffer_pool = ["stratum-core/with_buffer_pool"]
+
+# Convenience feature bundles for different role types
+pool = ["network", "config", "with_buffer_pool", "core", "payout", "bitcoin-core-sv2"]
+jd_client = ["network", "fallback-coordinator", "config", "with_buffer_pool", "core", "bitcoin-core-sv2"]
+# Note: jd_server intentionally excludes 'core' and 'network'
+jd_server = ["config", "bitcoin-core-sv2"]
+translator = ["network", "fallback-coordinator", "config", "sv1", "with_buffer_pool", "core", "payout"]
+# Note: mining_device intentionally excludes 'core' and 'network' - it uses crates.io crates directly
+mining_device = ["config"]
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
+hyper = "1.1.0"
+
+[[bin]]
+name = "generate-openapi"
+path = "src/bin/generate-openapi.rs"
+required-features = ["monitoring"]
+
+[package.metadata.docs.rs]
+features = ["pool", "jd_client", "jd_server", "translator", "sv1", "monitoring", "asic-rs-telemetry"]

@@ -1,0 +1,149 @@
+use crate::{
+    downstream::Downstream,
+    error::{self, JDCError, JDCErrorKind},
+};
+use std::{convert::TryInto, sync::atomic::Ordering};
+#[cfg(feature = "monitoring")]
+use stratum_apps::monitoring::client::Sv2ClientKind;
+use stratum_apps::{
+    stratum_core::{
+        common_messages_sv2::{
+            has_requires_std_job, has_work_selection, Protocol, SetupConnection,
+            SetupConnectionError, SetupConnectionSuccess,
+            ERROR_CODE_SETUP_CONNECTION_UNSUPPORTED_FEATURE_FLAGS,
+            ERROR_CODE_SETUP_CONNECTION_UNSUPPORTED_PROTOCOL,
+        },
+        handlers_sv2::HandleCommonMessagesFromClientAsync,
+        parsers_sv2::{AnyMessage, Tlv},
+    },
+    utils::types::Sv2Frame,
+};
+use tracing::{error, info};
+
+#[cfg_attr(not(test), hotpath::measure_all)]
+impl HandleCommonMessagesFromClientAsync for Downstream {
+    type Error = JDCError<error::Downstream>;
+
+    fn get_negotiated_extensions_with_client(
+        &self,
+        _client_id: Option<usize>,
+    ) -> Result<Vec<u16>, Self::Error> {
+        self.negotiated_extensions.get().map_err(JDCError::shutdown)
+    }
+    // Handles the initial [`SetupConnection`] message from a downstream client.
+    //
+    // This method validates that the connection request is compatible with the
+    // supported mining protocol and feature set. The flow is:
+    //
+    // 1. Protocol validation
+    //    - Only the `MiningProtocol` is supported.
+    //    - If the client requests another protocol, the connection is rejected with a
+    //      [`SetupConnectionError`] (`unsupported-protocol`).
+    //
+    // 2. Feature flag validation
+    //    - Work selection (`work_selection`) is not allowed.
+    //    - If requested, the connection is rejected with a [`SetupConnectionError`]
+    //      (`unsupported-feature-flags`).
+    //
+    // 3. Standard job requirement
+    //    - If the downstream sets the `requires_standard_job` flag, it is recorded in
+    //      [`Downstream::require_std_job`].
+    //
+    // 4. Successful setup
+    //    - If all validations pass, a [`SetupConnectionSuccess`] message is
+    async fn handle_setup_connection(
+        &mut self,
+        _client_id: Option<usize>,
+        msg: SetupConnection<'_>,
+        _tlv_fields: Option<&[Tlv]>,
+    ) -> Result<(), Self::Error> {
+        info!("Received: {}", msg);
+
+        if msg.protocol != Protocol::MiningProtocol {
+            info!("Rejecting connection: SetupConnection asking for other protocols than mining protocol.");
+            let response = SetupConnectionError {
+                flags: 0,
+                error_code: ERROR_CODE_SETUP_CONNECTION_UNSUPPORTED_PROTOCOL
+                    .to_string()
+                    .try_into()
+                    .map_err(JDCError::shutdown)?,
+            };
+            let frame: Sv2Frame = AnyMessage::Common(response.into_static().into())
+                .try_into()
+                .map_err(JDCError::shutdown)?;
+            if let Err(e) = self.downstream_io.downstream_sender.send(frame).await {
+                error!(
+                    "Failed to send SetupConnectionError to downstream {}: {e}",
+                    self.downstream_id
+                );
+            }
+
+            return Err(JDCError::disconnect(
+                JDCErrorKind::SetupConnectionError,
+                self.downstream_id,
+            ));
+        }
+
+        if has_work_selection(msg.flags) {
+            info!("Rejecting: work selection not allowed.");
+            let response = SetupConnectionError {
+                flags: 0b0000_0000_0000_0010,
+                error_code: ERROR_CODE_SETUP_CONNECTION_UNSUPPORTED_FEATURE_FLAGS
+                    .to_string()
+                    .try_into()
+                    .map_err(JDCError::shutdown)?,
+            };
+            let frame: Sv2Frame = AnyMessage::Common(response.into_static().into())
+                .try_into()
+                .map_err(JDCError::shutdown)?;
+            if let Err(e) = self.downstream_io.downstream_sender.send(frame).await {
+                error!(
+                    "Failed to send SetupConnectionError to downstream {}: {e}",
+                    self.downstream_id
+                );
+            }
+
+            return Err(JDCError::disconnect(
+                JDCErrorKind::SetupConnectionError,
+                self.downstream_id,
+            ));
+        }
+
+        if has_requires_std_job(msg.flags) {
+            self.require_std_job.store(true, Ordering::Relaxed);
+        }
+
+        #[cfg(feature = "monitoring")]
+        {
+            let vendor = msg.vendor.as_utf8_or_hex();
+            let hardware_version = msg.hardware_version.as_utf8_or_hex();
+            self.client_kind
+                .set(Sv2ClientKind::from_setup_connection(
+                    &vendor,
+                    &hardware_version,
+                ))
+                .map_err(JDCError::shutdown)?;
+        }
+
+        let response = SetupConnectionSuccess {
+            used_version: 2,
+            flags: 0, // !REQUIRES_FIXED_VERSION, !REQUIRES_EXTENDED_CHANNELS
+        };
+        let frame: Sv2Frame = AnyMessage::Common(response.into_static().into())
+            .try_into()
+            .map_err(JDCError::shutdown)?;
+
+        if let Err(e) = self.downstream_io.downstream_sender.send(frame).await {
+            error!(
+                "Failed to send SetupConnectionSuccess to downstream {}: {e}",
+                self.downstream_id
+            );
+            return Err(JDCError::disconnect(
+                JDCErrorKind::ChannelErrorSender,
+                self.downstream_id,
+            ));
+        }
+
+        Ok(())
+    }
+}
