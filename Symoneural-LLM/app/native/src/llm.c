@@ -65,28 +65,6 @@ struct sym_llm_session {
  * directory, then the current directory) never runs while the packages are intact.
  * A module whose own dependencies are missing - libggml-cuda without the driver's
  * libcuda.so.1 - fails to dlopen and that backend is simply absent. */
-static pthread_once_t g_backends_once = PTHREAD_ONCE_INIT;
-
-static void backends_load(void)
-{
-    Dl_info info;
-    char lib[PATH_MAX], dir[PATH_MAX];
-    if (dladdr((void *)(uintptr_t)sym_llm_capabilities, &info) == 0 || info.dli_fname == NULL) return;
-    if (realpath(info.dli_fname, lib) == NULL) return;
-    char *slash = strrchr(lib, '/');
-    if (slash == NULL) return;
-    *slash = '\0';
-    if (snprintf(dir, sizeof dir, "%s/ggml", lib) >= (int)sizeof dir) return;
-    ggml_backend_load_all_from_path(dir);
-}
-
-static void backends_ensure(void) { pthread_once(&g_backends_once, backends_load); }
-
-/* ---- backend lifetime: one llama_backend_init per process ------------------ */
-
-static pthread_mutex_t g_backend_lock = PTHREAD_MUTEX_INITIALIZER;
-static int             g_backend_refs = 0;
-
 /* libllama logs everything at INFO by default, including the model path it is
  * opening. Errors go to stderr; the rest only when SYM_LLM_LOG is set. */
 static void quiet_log(enum ggml_log_level level, const char *text, void *user)
@@ -104,6 +82,31 @@ static void quiet_log(enum ggml_log_level level, const char *text, void *user)
     last_shown = (verbose || level == GGML_LOG_LEVEL_ERROR);
     if (last_shown) fputs(text, stderr);
 }
+
+static pthread_once_t g_backends_once = PTHREAD_ONCE_INIT;
+
+static void backends_load(void)
+{
+    /* ggml reports each module it loads at INFO; route it through the same filter
+     * as everything else before the first dlopen */
+    llama_log_set(quiet_log, NULL);
+    Dl_info info;
+    char lib[PATH_MAX], dir[PATH_MAX];
+    if (dladdr((void *)(uintptr_t)sym_llm_capabilities, &info) == 0 || info.dli_fname == NULL) return;
+    if (realpath(info.dli_fname, lib) == NULL) return;
+    char *slash = strrchr(lib, '/');
+    if (slash == NULL) return;
+    *slash = '\0';
+    if (snprintf(dir, sizeof dir, "%s/ggml", lib) >= (int)sizeof dir) return;
+    ggml_backend_load_all_from_path(dir);
+}
+
+static void backends_ensure(void) { pthread_once(&g_backends_once, backends_load); }
+
+/* ---- backend lifetime: one llama_backend_init per process ------------------ */
+
+static pthread_mutex_t g_backend_lock = PTHREAD_MUTEX_INITIALIZER;
+static int             g_backend_refs = 0;
 
 static void backend_acquire(void)
 {
