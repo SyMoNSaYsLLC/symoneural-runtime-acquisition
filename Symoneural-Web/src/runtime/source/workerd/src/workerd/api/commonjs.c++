@@ -1,0 +1,174 @@
+#include "commonjs.h"
+
+#include <workerd/io/features.h>
+#include <workerd/jsg/jsg.h>
+#include <workerd/jsg/modules-new.h>
+#include <workerd/jsg/resource.h>
+
+namespace workerd::api {
+
+namespace {
+// Renders a URL's pathname as a relative path suitable for kj::Path::parse(), which rejects
+// absolute paths. Not every pathname has a leading "/" to drop: a URL with an opaque path has
+// its opaque path as the pathname, so "opaque:foo" gives "foo" and "opaque:" gives "". Slicing
+// unconditionally would drop a meaningful character in the first case and, in the second,
+// underflow the length to SIZE_MAX
+//
+// TODO(soon): kj::Path::parse() requires a kj::StringPtr but the pathname is a
+// kj::ArrayPtr<const char>. We can avoid this copy by updating kj::Path::parse to also accept
+// a kj::ArrayPtr<const char>.
+kj::String pathnameAsRelativePath(const jsg::Url& url) {
+  auto pathname = url.getPathname();
+  if (pathname.size() > 0 && pathname.front() == '/') {
+    pathname = pathname.slice(1);
+  }
+  return kj::str(pathname);
+}
+}  // namespace
+
+CommonJsModuleContext::CommonJsModuleContext(jsg::Lock& js, kj::Path path)
+    : module(js.alloc<CommonJsModuleObject>(js, path.toString(true))),
+      pathOrSpecifier(kj::mv(path)),
+      exports(js, module->getExports(js)) {}
+
+CommonJsModuleContext::CommonJsModuleContext(jsg::Lock& js, const jsg::Url& specifier)
+    : module(js.alloc<CommonJsModuleObject>(js, kj::str(specifier.getHref()))),
+      pathOrSpecifier(specifier.clone()),
+      exports(js, module->getExports(js)) {}
+
+jsg::JsValue CommonJsModuleContext::require(jsg::Lock& js, kj::String specifier) {
+  if (isNodeJsCompatEnabled(js)) {
+    KJ_IF_SOME(nodeSpec, jsg::checkNodeSpecifier(specifier)) {
+      specifier = kj::mv(nodeSpec);
+    }
+  }
+
+  if (isNewModuleRegistryEnabled(FeatureFlags::get(js))) {
+    auto& referrer = KJ_ASSERT_NONNULL(pathOrSpecifier.tryGet<jsg::Url>());
+    KJ_IF_SOME(ns,
+        jsg::modules::ModuleRegistry::tryResolveModuleNamespace(js, specifier,
+            jsg::modules::ResolveContext::Type::BUNDLE,
+            jsg::modules::ResolveContext::Source::REQUIRE, referrer,
+            jsg::modules::UnwrapDefault::YES)) {
+      return ns;
+    }
+    JSG_FAIL_REQUIRE(Error, kj::str("Module not found: ", specifier));
+  }
+
+  auto& path = KJ_ASSERT_NONNULL(pathOrSpecifier.tryGet<kj::Path>());
+
+  auto modulesForResolveCallback = jsg::getModulesForResolveCallback(js.v8Isolate);
+  KJ_REQUIRE(modulesForResolveCallback != nullptr, "didn't expect resolveCallback() now");
+
+  kj::Path targetPath = ([&] {
+    KJ_TRY {
+      // If the specifier begins with one of our known prefixes, let's not resolve
+      // it against the referrer.
+      if (specifier.startsWith("node:") || specifier.startsWith("cloudflare:") ||
+          specifier.startsWith("workerd:")) {
+        return kj::Path::parse(specifier);
+      }
+      return path.parent().eval(specifier);
+    }
+    KJ_CATCH(_) {
+      JSG_FAIL_REQUIRE(TypeError, "Invalid module specifier \"", specifier, "\".");
+    }
+  })();
+
+  // require() is only exposed to worker bundle modules so the resolve here is only
+  // permitted to require worker bundle or built-in modules. Internal modules are
+  // excluded.
+  auto& info =
+      JSG_REQUIRE_NONNULL(modulesForResolveCallback->resolve(js, targetPath, path,
+                              jsg::ModuleRegistry::ResolveOption::DEFAULT,
+                              jsg::ModuleRegistry::ResolveMethod::REQUIRE, specifier.asPtr()),
+          Error, "No such module \"", targetPath.toString(), "\".");
+  // Adding imported from suffix here not necessary like it is for resolveCallback, since we have a
+  // js stack that will include the parent module's name and location of the failed require().
+
+  auto options = jsg::ModuleRegistry::RequireImplOptions::DEFAULT;
+  if (FeatureFlags::get(js).getExportCommonJsDefaultNamespace()) {
+    options = jsg::ModuleRegistry::RequireImplOptions::EXPORT_DEFAULT;
+  }
+
+  return jsg::ModuleRegistry::requireImpl(js, info, options);
+}
+
+void CommonJsModuleContext::visitForMemoryInfo(jsg::MemoryTracker& tracker) const {
+  tracker.trackField("exports", exports);
+  KJ_SWITCH_ONEOF(pathOrSpecifier) {
+    KJ_CASE_ONEOF(path, kj::Path) {
+      tracker.trackFieldWithSize("path", path.size());
+    }
+    KJ_CASE_ONEOF(specifier, jsg::Url) {
+      tracker.trackField("specifier", specifier);
+    }
+  }
+}
+
+kj::String CommonJsModuleContext::getFilename() const {
+  KJ_SWITCH_ONEOF(pathOrSpecifier) {
+    KJ_CASE_ONEOF(path, kj::Path) {
+      return path.toString(true);
+    }
+    KJ_CASE_ONEOF(specifier, jsg::Url) {
+      // Node's __filename is the absolute path of the module file, so render
+      // the URL's full pathname in absolute form: path.dirname(__filename)
+      // must equal __dirname. An opaque specifier with an empty path (e.g.
+      // "opaque:") has no filename; that throws, matching getDirname().
+      auto path = pathnameAsRelativePath(specifier);
+      auto pathObj = kj::Path::parse(path);
+      JSG_REQUIRE(pathObj.size() > 0, Error, "Module specifier has no filename");
+      return pathObj.toString(true);
+    }
+  }
+  KJ_UNREACHABLE;
+}
+
+kj::String CommonJsModuleContext::getDirname() const {
+  KJ_SWITCH_ONEOF(pathOrSpecifier) {
+    KJ_CASE_ONEOF(path, kj::Path) {
+      return path.parent().toString(true);
+    }
+    KJ_CASE_ONEOF(specifier, jsg::Url) {
+      // The specifier is a URL. We want to parse it as a path and
+      // return just the directory portion.
+      auto path = pathnameAsRelativePath(specifier);
+      auto pathObj = kj::Path::parse(path);
+      return pathObj.parent().toString(true);
+    }
+  }
+  KJ_UNREACHABLE;
+}
+
+jsg::Ref<CommonJsModuleObject> CommonJsModuleContext::getModule(jsg::Lock& js) {
+  return module.addRef();
+}
+
+jsg::JsValue CommonJsModuleContext::getExports(jsg::Lock& js) const {
+  return exports.getHandle(js);
+}
+void CommonJsModuleContext::setExports(jsg::Lock& js, jsg::JsValue value) {
+  exports = jsg::JsRef(js, value);
+}
+
+CommonJsModuleObject::CommonJsModuleObject(jsg::Lock& js, kj::String path)
+    : exports(js, js.obj()),
+      path(kj::mv(path)) {}
+
+jsg::JsValue CommonJsModuleObject::getExports(jsg::Lock& js) const {
+  return exports.getHandle(js);
+}
+void CommonJsModuleObject::setExports(jsg::Lock& js, jsg::JsValue value) {
+  exports = jsg::JsRef(js, value);
+}
+
+kj::StringPtr CommonJsModuleObject::getPath() const {
+  return path;
+}
+
+void CommonJsModuleObject::visitForMemoryInfo(jsg::MemoryTracker& tracker) const {
+  tracker.trackField("exports", exports);
+  tracker.trackField("path", path);
+}
+}  // namespace workerd::api

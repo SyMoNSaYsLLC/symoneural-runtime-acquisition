@@ -1,0 +1,391 @@
+// Copyright (c) 2024 Cloudflare, Inc.
+// Licensed under the Apache 2.0 license found in the LICENSE file or at:
+//     https://opensource.org/licenses/Apache-2.0
+
+/*****************************
+ *
+ * !!! WARNING !!!
+ * Changes should be made in `types/defines/images.d.ts`
+ * and then synced back here.
+ *
+ * This file is copy & pasted from the types/ folder
+ * because when bazel runs it doesn't have access to that directly (and thusly is sad).
+ * TODO: come up with a better system for this.
+ *
+ ******************************/
+
+type ImageInfoResponse =
+  | { format: 'image/svg+xml' }
+  | {
+      format: string;
+      fileSize: number;
+      width: number;
+      height: number;
+    };
+
+/**
+ * Parameters for rasterizing text into an image.
+ */
+type TextRasterize = {
+  /** The text content to render */
+  content: string;
+  /** rasterization options for the text **/
+  options: TextOptions;
+};
+
+type TextOptions = {
+  /** Font configuration */
+  font: {
+    /** URL to a font file in TrueType (.ttf), OpenType (.otf), WOFF (.woff), or WOFF2 (.woff2) format */
+    url: string;
+  };
+  /** Font size in points (pt) */
+  size?: number;
+  /** Text color in CSS format: hex (#RRGGBB or #RRGGBBAA), rgb(r,g,b), rgba(r,g,b,a), or named colors */
+  color?: string;
+};
+
+type ImageSource = ReadableStream<Uint8Array> | TextRasterize;
+
+type ImageTransform = {
+  width?: number;
+  height?: number;
+  background?: string;
+  blur?: number;
+  border?:
+    | {
+        color?: string;
+        width?: number;
+      }
+    | {
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+      };
+  brightness?: number;
+  contrast?: number;
+  fit?: 'scale-down' | 'contain' | 'pad' | 'squeeze' | 'cover' | 'crop';
+  flip?: 'h' | 'v' | 'hv';
+  gamma?: number;
+  segment?: 'foreground';
+  gravity?:
+    | 'face'
+    | 'left'
+    | 'right'
+    | 'top'
+    | 'bottom'
+    | 'center'
+    | 'auto'
+    | 'entropy'
+    | {
+        x?: number;
+        y?: number;
+        mode: 'remainder' | 'box-center';
+      };
+  rotate?: 0 | 90 | 180 | 270;
+  saturation?: number;
+  sharpen?: number;
+  trim?:
+    | 'border'
+    | {
+        top?: number;
+        bottom?: number;
+        left?: number;
+        right?: number;
+        width?: number;
+        height?: number;
+        border?:
+          | boolean
+          | {
+              color?: string;
+              tolerance?: number;
+              keep?: number;
+            };
+      };
+};
+
+type ImageDrawOptions = {
+  opacity?: number;
+  repeat?: boolean | string;
+  composite?: ImageCompositeMode;
+  top?: number;
+  left?: number;
+  bottom?: number;
+  right?: number;
+};
+
+type ImageCompositeMode =
+  /** Foreground drawn on top of backdrop (default) */
+  | 'over'
+  /** Foreground shown only where backdrop is opaque */
+  | 'in'
+  /** Foreground drawn on top, but clipped to the backdrop's shape */
+  | 'atop'
+  /** Foreground shown only where backdrop is transparent */
+  | 'out'
+  /** Foreground and backdrop visible only where the other is not */
+  | 'xor'
+  /** Foreground and backdrop channels added (brightening) */
+  | 'lighter';
+
+type ImageInputOptions = {
+  encoding?: 'base64';
+};
+
+type ImageOutputOptions = {
+  format:
+    | 'image/jpeg'
+    | 'image/png'
+    | 'image/gif'
+    | 'image/webp'
+    | 'image/avif'
+    | 'rgb'
+    | 'rgba';
+  quality?: number;
+  background?: string;
+  anim?: boolean;
+};
+
+interface ImageMetadata {
+  id: string;
+  filename?: string;
+  uploaded?: string;
+  requireSignedURLs: boolean;
+  meta?: Record<string, unknown>;
+  variants: string[];
+  draft?: boolean;
+  creator?: string;
+}
+
+interface ImageUploadOptions {
+  id?: string;
+  filename?: string;
+  requireSignedURLs?: boolean;
+  metadata?: Record<string, unknown>;
+  creator?: string;
+  /**
+   * If 'base64', the input data will be decoded from base64 before processing
+   */
+  encoding?: 'base64';
+}
+
+interface ImageUpdateOptions {
+  requireSignedURLs?: boolean;
+  metadata?: Record<string, unknown>;
+  creator?: string;
+}
+
+type ImageMetadataFilterOperators = {
+  eq?: string | number | boolean;
+  in?: string[] | number[];
+  gt?: number;
+  gte?: number;
+  lt?: number;
+  lte?: number;
+};
+
+type ImageMetadataFilterValue =
+  string | number | boolean | ImageMetadataFilterOperators;
+
+interface ImageListFilter {
+  metadata?: Record<string, ImageMetadataFilterValue>;
+}
+
+interface ImageListOptions {
+  limit?: number;
+  cursor?: string;
+  sortOrder?: 'asc' | 'desc';
+  creator?: string;
+  filter?: ImageListFilter;
+}
+
+interface ImageSignedUrlOptions {
+  variant: string;
+  expiresIn?: number;
+  keyName?: string;
+}
+
+interface ImageDirectUploadOptions {
+  id?: string;
+  requireSignedURLs?: boolean;
+  metadata?: Record<string, unknown>;
+  creator?: string;
+  expiresIn?: number;
+}
+
+interface ImageDirectUploadResult {
+  id: string;
+  uploadURL: string;
+}
+
+interface ImageList {
+  images: ImageMetadata[];
+  cursor?: string;
+  listComplete: boolean;
+}
+
+interface ImageHandle {
+  /**
+   * Get metadata for a hosted image
+   * @returns Image metadata, or null if not found
+   */
+  details(): Promise<ImageMetadata | null>;
+
+  /**
+   * Get the raw image data for a hosted image
+   * @returns ReadableStream of image bytes, or null if not found
+   */
+  bytes(): Promise<ReadableStream<Uint8Array> | null>;
+
+  /**
+   * Generate a signed delivery URL for this hosted image.
+   * @param options Signing configuration
+   * @returns A signed image delivery URL
+   * @throws {@link ImagesError} if signing fails
+   */
+  signedUrl(options: ImageSignedUrlOptions): Promise<string>;
+
+  /**
+   * Update hosted image metadata
+   * @param options Properties to update
+   * @returns Updated image metadata
+   * @throws {@link ImagesError} if update fails
+   */
+  update(options: ImageUpdateOptions): Promise<ImageMetadata>;
+
+  /**
+   * Delete a hosted image
+   * @returns True if deleted, false if not found
+   */
+  delete(): Promise<boolean>;
+}
+
+interface HostedImagesBinding {
+  /**
+   * Get a handle for a hosted image
+   * @param imageId The ID of the image (UUID or custom ID)
+   * @returns A handle for per-image operations
+   */
+  image(imageId: string): ImageHandle;
+
+  /**
+   * Upload a new hosted image
+   * @param image The image file to upload
+   * @param options Upload configuration
+   * @returns Metadata for the uploaded image
+   * @throws {@link ImagesError} if upload fails
+   */
+  upload(
+    image: ReadableStream<Uint8Array> | ArrayBuffer,
+    options?: ImageUploadOptions
+  ): Promise<ImageMetadata>;
+
+  /**
+   * List hosted images with pagination
+   * @param options List configuration
+   * @returns List of images with pagination info
+   * @throws {@link ImagesError} if list fails
+   */
+  list(options?: ImageListOptions): Promise<ImageList>;
+
+  /**
+   * Create a Direct Creator Upload link, letting an end user upload an
+   * image straight to Cloudflare without exposing an API token
+   * @param options Upload link configuration
+   * @returns The new image ID and the upload URL to hand to the end user
+   * @throws {@link ImagesError} if creation fails
+   */
+  createDirectUpload(
+    options?: ImageDirectUploadOptions
+  ): Promise<ImageDirectUploadResult>;
+}
+
+interface ImagesBinding {
+  /**
+   * Get image metadata (type, width and height)
+   * @throws {@link ImagesError} with code 9412 if input is not an image
+   * @param stream The image bytes
+   */
+  info(
+    stream: ReadableStream<Uint8Array>,
+    options?: ImageInputOptions
+  ): Promise<ImageInfoResponse>;
+  /**
+   * Begin applying a series of transformations to an image
+   * @param stream The image bytes
+   * @returns A transform handle
+   */
+  input(
+    stream: ReadableStream<Uint8Array>,
+    options?: ImageInputOptions
+  ): ImageTransformer;
+  /**
+   * Begin applying a series of transformations to text
+   * @param content string to be rendered
+   * @param options font, optional color and size to use in rendering text
+   * @returns A transform handle
+   */
+  text(content: string, options: TextOptions): ImageTransformer;
+  /**
+   * Access hosted images CRUD operations
+   */
+  readonly hosted: HostedImagesBinding;
+}
+
+interface ImageTransformer {
+  /**
+   * Apply transform next, returning a transform handle.
+   * You can then apply more transformations, draw, or retrieve the output.
+   * @param transform
+   */
+  transform(transform: ImageTransform): ImageTransformer;
+
+  /**
+   * Draw an image on this transformer, returning a transform handle.
+   * You can then apply more transformations, draw, or retrieve the output.
+   * @param image The image (or transformer that will give the image) to draw
+   * @param options The options configuring how to draw the image
+   */
+  draw(
+    image: ReadableStream<Uint8Array> | ImageTransformer,
+    options?: ImageDrawOptions
+  ): ImageTransformer;
+
+  /**
+   * Retrieve the image that results from applying the transforms to the
+   * provided input
+   * @param options Options that apply to the output e.g. output format
+   */
+  output(options: ImageOutputOptions): Promise<ImageTransformationResult>;
+}
+
+type ImageTransformationOutputOptions = {
+  encoding?: 'base64';
+};
+
+type ImageTransformationResponseOptions = {
+  headers?: HeadersInit;
+};
+
+interface ImageTransformationResult {
+  /**
+   * The image as a response, ready to store in cache or return to users
+   * @param options Options that apply to the returned response, e.g. additional headers
+   */
+  response(options?: ImageTransformationResponseOptions): Response;
+  /**
+   * The content type of the returned image
+   */
+  contentType(): string;
+  /**
+   * The bytes of the response
+   */
+  image(options?: ImageTransformationOutputOptions): ReadableStream<Uint8Array>;
+}
+
+interface ImagesError extends Error {
+  readonly code: number;
+  readonly message: string;
+  readonly stack?: string;
+}

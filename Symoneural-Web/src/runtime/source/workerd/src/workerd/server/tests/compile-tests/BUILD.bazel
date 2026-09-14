@@ -1,0 +1,23 @@
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+sh_test(
+    name = "helloworld_compile_test",
+    size = "medium",
+    srcs = ["compile-test.sh"],
+    args = [
+        "$(location //src/workerd/server:workerd)",
+        "$(location //samples:helloworld/config.capnp)",
+        "$(location compile-helloworld-test.ok)",
+    ],
+    data = [
+        "compile-helloworld-test.ok",
+        "//samples:helloworld/config.capnp",
+        "//samples:helloworld/worker.js",
+        "//src/workerd/server:workerd",
+    ],
+    # Requires curl, which may not be available under remote execution
+    tags = [
+        "no-qemu",
+        "no-remote-exec",
+    ],
+)

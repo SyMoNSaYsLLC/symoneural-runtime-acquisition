@@ -1,0 +1,32 @@
+{
+  "name": "@cloudflare/workerd-root",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "prettier": "^3.9.6",
+    "typescript": "6.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.9.5",
+    "capnp-es": "0.0.16",
+    "chrome-remote-interface": "^0.34.0",
+    "esbuild": "^0.27.7",
+    "eslint": "^10.8.1",
+    "expect-type": "^1.4.0",
+    "typescript-eslint": "^8.66.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "packageExtensions": {
+      "@opennextjs/cloudflare": {
+        "dependencies": {
+          "esbuild": "^0.27.7"
+        }
+      }
+    }
+  },
+  "packageManager": "pnpm@10.32.1"
+}

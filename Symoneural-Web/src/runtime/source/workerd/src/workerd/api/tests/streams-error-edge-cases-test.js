@@ -1,0 +1,160 @@
+// Copyright (c) 2026 Cloudflare, Inc.
+// Licensed under the Apache 2.0 license found in the LICENSE file or at:
+//     https://opensource.org/licenses/Apache-2.0
+
+// Tests for complex error scenarios in streams.
+// These tests focus on error type preservation, error propagation through
+// pipe chains, and race conditions between error and close operations.
+//
+// Test inspirations:
+// - Deno: tests/unit/streams_test.ts (cancel propagation, error type tests)
+// - Bun: test/js/web/streams/streams.test.js (pull rejection, error handling)
+// - Bun: test/js/web/fetch/fetch.stream.test.ts (corrupted data, socket close handling)
+// - Bun: test/js/bun/spawn/spawn-stdin-readable-stream-edge-cases.test.ts (exception in pull)
+
+import { strictEqual, ok, rejects, deepStrictEqual } from 'node:assert';
+
+// Test error thrown after partial consumption of stream
+// Inspired by: Bun test/js/bun/spawn/spawn-stdin-readable-stream-edge-cases.test.ts (exception in pull)
+export const errorDuringPartialConsumption = {
+  async test() {
+    let chunkCount = 0;
+
+    const rs = new ReadableStream({
+      pull(controller) {
+        chunkCount++;
+        if (chunkCount <= 3) {
+          controller.enqueue(chunkCount);
+        } else {
+          controller.error(new Error('Error after 3 chunks'));
+        }
+      },
+    });
+
+    const reader = rs.getReader();
+    const chunks = [];
+
+    for (let i = 0; i < 3; i++) {
+      const { value, done } = await reader.read();
+      ok(!done);
+      chunks.push(value);
+    }
+
+    deepStrictEqual(chunks, [1, 2, 3]);
+
+    await rejects(reader.read(), { message: 'Error after 3 chunks' });
+
+    await rejects(reader.read(), { message: 'Error after 3 chunks' });
+  },
+};
+
+// Test race between controller.error() and controller.close() on ReadableStream
+// Inspired by: Bun test/js/web/streams/streams.test.js (error handling edge cases)
+export const errorRaceWithCloseReadable = {
+  async test() {
+    let controller;
+
+    const rs = new ReadableStream({
+      start(c) {
+        controller = c;
+      },
+    });
+
+    const reader = rs.getReader();
+    const readPromise = reader.read();
+
+    controller.error(new Error('Error wins'));
+    try {
+      controller.close();
+    } catch (_e) {
+      // May throw since stream is already errored
+    }
+
+    await rejects(readPromise, { message: 'Error wins' });
+  },
+};
+
+// Test error propagation through nested tee branches
+// Inspired by: Bun test/js/web/streams/streams.test.js (tee error handling)
+export const errorPropagationTeeMultiBranch = {
+  async test() {
+    let controller;
+
+    const rs = new ReadableStream({
+      start(c) {
+        controller = c;
+      },
+    });
+
+    // Create nested tees: original -> [branch1, temp] -> [branch2, branch3]
+    const [branch1, temp] = rs.tee();
+    const [branch2, branch3] = temp.tee();
+
+    const reader1 = branch1.getReader();
+    const reader2 = branch2.getReader();
+    const reader3 = branch3.getReader();
+
+    // Start reads on all branches
+    const read1 = reader1.read();
+    const read2 = reader2.read();
+    const read3 = reader3.read();
+
+    // Error the source
+    controller.error(new Error('Source error'));
+
+    // All branches should receive the error
+    const results = await Promise.allSettled([read1, read2, read3]);
+
+    for (const result of results) {
+      strictEqual(result.status, 'rejected');
+      strictEqual(result.reason.message, 'Source error');
+    }
+  },
+};
+
+// Test AbortSignal cancellation during active pipeTo
+// Inspired by: Deno tests/unit/streams_test.ts (abort tests), Bun test/js/web/streams/streams.test.js
+export const abortSignalDuringPipe = {
+  async test() {
+    const chunks = [];
+    let pullCount = 0;
+
+    const rs = new ReadableStream({
+      async pull(controller) {
+        pullCount++;
+        await scheduler.wait(10);
+        if (pullCount <= 10) {
+          controller.enqueue(pullCount);
+        } else {
+          controller.close();
+        }
+      },
+    });
+
+    const ws = new WritableStream({
+      write(chunk) {
+        chunks.push(chunk);
+      },
+    });
+
+    const abortController = new AbortController();
+
+    // Start piping
+    const pipePromise = rs.pipeTo(ws, { signal: abortController.signal });
+
+    // Wait for some chunks to flow
+    await scheduler.wait(50);
+
+    // Abort mid-pipe
+    abortController.abort(new Error('User cancelled'));
+
+    // Pipe should reject with an error (type may vary by implementation)
+    await rejects(async () => {
+      await pipePromise;
+    }, Error);
+
+    // Some chunks should have been written
+    ok(chunks.length > 0, 'Some chunks written before abort');
+    ok(chunks.length < 10, 'Not all chunks written due to abort');
+  },
+};

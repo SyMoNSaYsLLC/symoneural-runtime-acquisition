@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: James M Snell <jsnell@cloudflare.com>
+Date: Tue, 1 Jul 2025 17:33:43 -0700
+Subject: Implement additional Exception construction methods
+
+Signed-off-by: James M Snell <jsnell@cloudflare.com>
+
+diff --git a/include/v8-exception.h b/include/v8-exception.h
+index 74f57311a5257e8fdba3a060e9f6844a26a6dd69..88ba0737664800d8bcc1e091d9648ca75c1a63bc 100644
+--- a/include/v8-exception.h
++++ b/include/v8-exception.h
+@@ -48,6 +48,14 @@ class V8_EXPORT Exception {
+   static Local<Value> WasmSuspendError(Local<String> message,
+                                        Local<Value> options = {});
+   static Local<Value> Error(Local<String> message, Local<Value> options = {});
++  static Local<Value> URIError(Local<String> message,
++                               Local<Value> options = {});
++  static Local<Value> EvalError(Local<String> message,
++                               Local<Value> options = {});
++  static Local<Value> AggregateError(Local<String> message,
++                                     Local<Value> options = {});
++  static Local<Value> SuppressedError(Local<String> message,
++                                      Local<Value> options = {});
+ 
+   /**
+    * Creates an error message for the given exception.
+diff --git a/src/api/api.cc b/src/api/api.cc
+index 578765eca26b3432cee1ea36f5b2bead9cf24dbe..5c8016ba4b1be43f1075a12b457935305625b174 100644
+--- a/src/api/api.cc
++++ b/src/api/api.cc
+@@ -11542,6 +11542,10 @@ DEFINE_ERROR(WasmCompileError, wasm_compile_error)
+ DEFINE_ERROR(WasmLinkError, wasm_link_error)
+ DEFINE_ERROR(WasmRuntimeError, wasm_runtime_error)
+ DEFINE_ERROR(WasmSuspendError, wasm_suspend_error)
++DEFINE_ERROR(EvalError, eval_error)
++DEFINE_ERROR(URIError, uri_error)
++DEFINE_ERROR(AggregateError, aggregate_error)
++DEFINE_ERROR(SuppressedError, suppressed_error)
+ DEFINE_ERROR(Error, error)
+ 
+ #undef DEFINE_ERROR
+diff --git a/src/logging/runtime-call-stats.h b/src/logging/runtime-call-stats.h
+index 9197dd2752037c9bfeea7ea2b6c4da96c3b6b6ed..b5a6d4fe07549f84a1bae1d4ba8fb25cbd0231e8 100644
+--- a/src/logging/runtime-call-stats.h
++++ b/src/logging/runtime-call-stats.h
+@@ -219,7 +219,11 @@ namespace v8::internal {
+   V(WeakMap_Delete)                                        \
+   V(WeakMap_Get)                                           \
+   V(WeakMap_New)                                           \
+-  V(WeakMap_Set)
++  V(WeakMap_Set)                                           \
++  V(EvalError_New)                                         \
++  V(URIError_New)                                          \
++  V(AggregateError_New)                                    \
++  V(SuppressedError_New)
+ 
+ #define ADD_THREAD_SPECIFIC_COUNTER(V, Prefix, Suffix) \
+   V(Prefix##Suffix)                                    \

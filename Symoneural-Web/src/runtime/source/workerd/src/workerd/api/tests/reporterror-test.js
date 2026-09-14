@@ -1,0 +1,53 @@
+// Copyright (c) 2024 Cloudflare, Inc.
+// Licensed under the Apache 2.0 license found in the LICENSE file or at:
+//     https://opensource.org/licenses/Apache-2.0
+import { mock } from 'node:test';
+import { strictEqual, throws } from 'node:assert';
+
+const boom = new Error('boom');
+
+// ErrorEvent.filename reflects the script origin, which the two module
+// registries name differently: the bare module name under the original
+// registry, the module's canonical URL under the new one.
+const expectedFilename = Cloudflare.compatibilityFlags.new_module_registry
+  ? 'file:///bundle/worker'
+  : 'worker';
+
+const handler = mock.fn((event) => {
+  strictEqual(event.isTrusted, true);
+  if (event.error instanceof Error) {
+    strictEqual(event.message, 'Uncaught Error: boom');
+    strictEqual(event.colno, 13);
+    strictEqual(event.lineno, 7);
+    strictEqual(event.filename, expectedFilename);
+    strictEqual(event.error, boom);
+  } else {
+    strictEqual(event.message, 'Uncaught boom');
+    strictEqual(event.colno, 0);
+    strictEqual(event.lineno, 36);
+    strictEqual(event.filename, expectedFilename);
+    strictEqual(event.error, 'boom');
+  }
+  return true;
+});
+
+addEventListener('error', handler);
+
+reportError('boom');
+
+throws(() => reportError(), {
+  message:
+    "Failed to execute 'reportError' on 'ServiceWorkerGlobalScope': " +
+    "parameter 1 is not of type 'Value'.",
+});
+
+export const reportErrorTest = {
+  test() {
+    // TODO(soon): We are limited in what we can test here because we cannot
+    // inspect the log output and workerd does not implement that WorkerTracer
+    // used for collecting data for tail workers. The best we can currently do
+    // is make sure the basic API is working and that the mock fn was called.
+    reportError(boom);
+    strictEqual(handler.mock.calls.length, 2);
+  },
+};

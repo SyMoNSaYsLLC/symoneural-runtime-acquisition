@@ -1,0 +1,245 @@
+// Copyright (c) 2017-2025 Cloudflare, Inc.
+// Licensed under the Apache 2.0 license found in the LICENSE file or at:
+//     https://opensource.org/licenses/Apache-2.0
+
+#pragma once
+
+#include <workerd/io/io-context.h>
+#include <workerd/io/trace.h>
+#include <workerd/jsg/jsg.h>
+
+namespace workerd::api {
+class Tracing;  // Forward decl; defined further down after user_tracing::Span.
+}  // namespace workerd::api
+
+// The `Span` class exposed to user JavaScript lives in this sub-namespace purely to avoid
+// a name collision with the workerd::Span struct that is used internally by the runtime
+// tracing implementation. Callers outside this file generally don't need to reference this
+// namespace directly - the Tracing class (which is what gets wired into JS) lives in
+// the surrounding workerd::api namespace.
+namespace workerd::api::user_tracing {
+
+// Max length of a user-supplied operation name in `ctx.tracing.enterSpan(name, ...)`.
+// Longer names are truncated at the API surface so the limit holds for every downstream
+// SpanSubmitter. Span names identify operations, not carry data; the bound is tight on
+// purpose.
+constexpr size_t MAX_USER_OPERATION_NAME_BYTES = 64;
+
+// The types allowed for tag and log values from JavaScript.
+using TagValue = kj::OneOf<bool, double, kj::String>;
+
+struct ExceptionData {
+  // JSG dictionaries cannot express "at least one field is required". recordException()
+  // validates the OpenTelemetry Exception union after conversion.
+  jsg::Optional<kj::OneOf<kj::String, double>> code;
+  jsg::Optional<kj::String> name;
+  jsg::Optional<kj::String> message;
+  jsg::Optional<kj::String> stack;
+
+  JSG_STRUCT(code, name, message, stack);
+};
+
+// Polymorphic state behind the JS Span wrapper. Concrete states represent recording user spans and
+// no-op spans, while sharing JS-side attribute byte-limit enforcement.
+class SpanState: public kj::Refcounted {
+ public:
+  virtual ~SpanState() noexcept(false) = default;
+  KJ_DISALLOW_COPY_AND_MOVE(SpanState);
+
+  // Submits the span and marks it as no longer traced. Idempotent; the destructor calls
+  // end() as well.
+  virtual void end() = 0;
+
+  virtual bool getIsTraced() = 0;
+
+  // Returns a SpanParent wrapping this span's observer, or a null SpanParent if the span has
+  // ended or has no observer. Used by Tracing methods to push onto the AsyncContextFrame.
+  virtual workerd::SpanParent makeSpanParent() = 0;
+
+  // Sets a single attribute on the span. If value is kj::none, the attribute is not set.
+  void setAttribute(kj::String key, kj::Maybe<TagValue> maybeValue);
+
+  void recordException(kj::Maybe<tracing::Exception::Code> code,
+      kj::String name,
+      kj::String message,
+      kj::Maybe<kj::String> stack);
+
+ protected:
+  SpanState() = default;
+  virtual bool canRecordAttributes() = 0;
+  virtual void recordAttribute(kj::String key, TagValue value) = 0;
+  virtual void recordExceptionImpl(kj::Maybe<tracing::Exception::Code> code,
+      kj::String name,
+      kj::String message,
+      kj::Maybe<kj::String> stack) = 0;
+  virtual void recordSpanDataLimitError(
+      kj::StringPtr itemKind, kj::StringPtr name, size_t valueSize) {}
+
+ private:
+  size_t bytesUsed = 0;
+};
+
+// JavaScript-accessible tracing span (exposed as `Span`). From the user's perspective this
+// is the only kind of span there is; internal C++ plumbing lives on SpanState. Kept in the
+// workerd::api::user_tracing namespace (not workerd::api) to avoid collision with the
+// runtime's own workerd::Span type.
+//
+// The state is wrapped in IoOwn when an IoContext exists, so that destruction is funneled
+// through the IoContext's delete queue and cannot cross threads. When no IoContext is
+// available (unusual for user tracing - typically startup paths), a plain kj::Own is used.
+class Span: public jsg::Object {
+ public:
+  explicit Span(kj::OneOf<kj::Own<SpanState>, IoOwn<SpanState>> state);
+
+  // Returns true if this span will be recorded. False when the current async context is not
+  // being traced, or when the span has already been submitted (which happens automatically
+  // when the enterSpan callback returns). Callers can gate expensive attribute-computation
+  // code on this.
+  bool getIsTraced();
+
+  // Sets a single attribute. If `value` is undefined, the attribute is not set.
+  jsg::Ref<Span> setAttribute(jsg::Lock& js, kj::String key, jsg::Optional<TagValue> value);
+
+  // Sets each attribute in `attributes` as if by calling setAttribute().
+  jsg::Ref<Span> setAttributes(jsg::Lock& js, jsg::Dict<jsg::Optional<TagValue>> attributes);
+
+  void recordException(
+      jsg::Lock& js, jsg::Value exception, const jsg::TypeHandler<ExceptionData>& exceptionHandler);
+
+  // Ends the span and submits its content to the tracing system. Idempotent.
+  void end();
+
+  JSG_RESOURCE_TYPE(Span) {
+    JSG_READONLY_PROTOTYPE_PROPERTY(isTraced, getIsTraced);
+
+    JSG_METHOD(setAttribute);
+    JSG_METHOD(setAttributes);
+    JSG_METHOD(recordException);
+    JSG_METHOD(end);
+
+    JSG_TS_OVERRIDE({
+      setAttribute(key: string, value: boolean | number | string): this;
+      setAttributes(
+        attributes: Record<string, boolean | number | string | undefined>
+      ): this;
+      recordException(exception: string
+        | { code: string | number; name?: string; message?: string; stack?: string }
+        | { code?: string | number; name: string; message?: string; stack?: string }
+        | { code?: string | number; name?: string; message: string; stack?: string }): void;
+    });
+  }
+
+ private:
+  kj::OneOf<kj::Own<SpanState>, IoOwn<SpanState>> state;
+
+  friend class ::workerd::api::Tracing;
+};
+
+}  // namespace workerd::api::user_tracing
+
+namespace workerd::api {
+
+// User-tracing module. Exposed to JS as the `Tracing` class, reachable both via
+// `import { tracing } from 'cloudflare:workers'` and as `ctx.tracing`, and registered as
+// the builtin module `cloudflare-internal:tracing`. The class name (not "TracingModule")
+// is what shows up in `.d.ts` output and in `typeof ctx.tracing` — historically this was
+// called `TracingModule` back when the API was only reachable via an ES module import;
+// that suffix is vestigial now that it's also a property on `ctx`.
+class Tracing: public jsg::Object {
+ public:
+  Tracing() = default;
+  Tracing(jsg::Lock&, const jsg::Url&) {}
+
+  // Creates a new child span of the current user trace span, pushes it onto the
+  // AsyncContextFrame as the active user span, invokes callback(span, ...args), and
+  // automatically ends the span on completion. If the callback returns a Promise, the
+  // span is ended when the promise settles (whether fulfilled or rejected). If the
+  // callback returns synchronously (or throws synchronously), the span is ended
+  // before the return (or rethrow).
+  //
+  // The span is constructed as a child of whatever span is currently active on the
+  // AsyncContextFrame (or, if none, the root user request span on the current
+  // IncomingRequest, via IoContext::getCurrentUserTraceSpan()).
+  //
+  // If no IoContext is available (e.g., during worker startup), the callback runs with
+  // a no-op span and no AsyncContextFrame push.
+  v8::Local<v8::Value> enterSpan(jsg::Lock& js,
+      kj::String operationName,
+      v8::Local<v8::Function> callback,
+      jsg::Arguments<jsg::Value> args,
+      const jsg::TypeHandler<jsg::Ref<user_tracing::Span>>& spanHandler,
+      const jsg::TypeHandler<jsg::Promise<jsg::Value>>& valuePromiseHandler);
+
+  // Creates a new child span, pushes it onto the AsyncContextFrame while invoking
+  // callback(span, ...args), and returns the callback result without ending the span.
+  // The caller must call span.end() explicitly; forgotten spans are still ended by
+  // SpanState's destructor when the request-owned span object is destroyed.
+  v8::Local<v8::Value> startActiveSpan(jsg::Lock& js,
+      kj::String operationName,
+      v8::Local<v8::Function> callback,
+      jsg::Arguments<jsg::Value> args,
+      const jsg::TypeHandler<jsg::Ref<user_tracing::Span>>& spanHandler);
+
+  // Creates a child span of the current user tracing span without making it active. The caller
+  // must call span.end() explicitly. If no IoContext is available, returns a no-op span.
+  jsg::Ref<user_tracing::Span> startSpan(jsg::Lock& js, kj::String operationName);
+
+  // Returns the span associated with the current async context, or the invocation span when no
+  // user-created span is active. Returns undefined outside an invocation or when execution is
+  // detached into the root async context.
+  jsg::Optional<jsg::Ref<user_tracing::Span>> getActiveSpan(
+      jsg::Lock& js, const jsg::TypeHandler<jsg::Ref<user_tracing::Span>>& spanHandler);
+
+  JSG_RESOURCE_TYPE(Tracing) {
+    JSG_METHOD(enterSpan);
+    JSG_METHOD(startActiveSpan);
+    JSG_METHOD(startSpan);
+    JSG_METHOD(getActiveSpan);
+
+    // Use the _NAMED variant so the property ends up as `tracing.Span` rather than
+    // `tracing["user_tracing::Span"]`.
+    JSG_NESTED_TYPE_NAMED(user_tracing::Span, Span);
+
+    // Override the auto-generated `enterSpan(name: string, callback: Function, ...args:
+    // any[]): any` with a properly-typed generic form: the callback's first argument is
+    // typed as `Span`, the callback's trailing args flow through to the varargs, and the
+    // return value is preserved. Matches the shape documented in the user-tracing RFC.
+    JSG_TS_OVERRIDE({
+      enterSpan<T, A extends unknown[]>(
+        name: string,
+        callback: (span: Span, ...args: A) => T,
+        ...args: A
+      ): T;
+      startActiveSpan<T, A extends unknown[]>(
+        name: string,
+        callback: (span: Span, ...args: A) => T,
+        ...args: A
+      ): T;
+      startSpan(name: string): Span;
+      getActiveSpan(): Span | undefined;
+    });
+  }
+};
+
+// Registers `cloudflare-internal:tracing` as a builtin module. The `Module` suffix on the
+// helper is describing what it registers (a JS module), not the name of the class — the
+// class itself is `Tracing` because that's what users see.
+template <class Registry>
+void registerTracingModule(Registry& registry, CompatibilityFlags::Reader flags) {
+  registry.template addBuiltinModule<Tracing>(
+      "cloudflare-internal:tracing", workerd::jsg::ModuleRegistry::Type::INTERNAL);
+}
+
+template <typename TypeWrapper>
+kj::Own<jsg::modules::ModuleBundle> getInternalTracingModuleBundle(auto featureFlags) {
+  jsg::modules::ModuleBundle::BuiltinBuilder builder(
+      jsg::modules::ModuleBundle::BuiltinBuilder::Type::BUILTIN_ONLY);
+  static const auto kSpecifier = "cloudflare-internal:tracing"_url;
+  builder.addObject<Tracing, TypeWrapper>(kSpecifier);
+  return builder.finish();
+}
+
+}  // namespace workerd::api
+
+#define EW_TRACING_ISOLATE_TYPES                                                                   \
+  api::Tracing, api::user_tracing::Span, api::user_tracing::ExceptionData

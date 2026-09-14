@@ -1,0 +1,48 @@
+name: Bonk
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bonk:
+    if: github.event.sender.type != 'Bot' && (contains(github.event.comment.body, '/bonk') || contains(github.event.comment.body, '@ask-bonk'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      id-token: write
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Bonk
+        uses: ask-bonk/ask-bonk/github@d00cbcf581a5463f7adc2d81e470234b1727f8dd # main
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_AI_GATEWAY_ACCOUNT_ID }}
+          CLOUDFLARE_GATEWAY_ID: ${{ secrets.CF_AI_GATEWAY_NAME }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_AI_GATEWAY_TOKEN }}
+          OPENCODE_CONFIG_CONTENT: '{"permission":{"external_directory":{"/home/runner/work/**":"allow"},"question":"deny","doom_loop":"deny"}}'
+        with:
+          oidc_base_url: https://ask-bonk.cloudflare-exponent.workers.dev/auth
+          model: 'cloudflare-ai-gateway/openai/gpt-5.6-terra'
+          mentions: '/bonk,@ask-bonk'
+          variant: 'high'
+          permissions: write
+          opencode_dev: true
+          opencode_version: "1.18.29"
+          # token_permissions defaults to WRITE (i.e. Bonk can push commits).
+          # We intentionally leave it that way here because users may ask Bonk
+          # to update their PR via /bonk.

@@ -1544,7 +1544,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/cloudflare/workerd",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "54c0ea20dcdd738143ee59ea3f8477a46c4dd586",
+      "pins_path": "Symoneural-Web/src/runtime/.gitpins/workerd.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "NOT-APPLICABLE",

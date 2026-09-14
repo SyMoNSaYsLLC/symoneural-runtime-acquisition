@@ -1,0 +1,323 @@
+// Copyright (c) 2017-2023 Cloudflare, Inc.
+// Licensed under the Apache 2.0 license found in the LICENSE file or at:
+//     https://opensource.org/licenses/Apache-2.0
+
+#pragma once
+
+#include <workerd/api/actor-state.h>
+#include <workerd/api/hibernatable-web-socket.h>
+#include <workerd/api/web-socket.h>
+#include <workerd/io/trace.h>
+#include <workerd/jsg/jsg.h>
+
+#include <kj/exception.h>
+#include <kj/list.h>
+
+#include <list>
+
+namespace workerd {
+
+struct LegacyHibernationManagerTestAccess;
+
+// Implements the HibernationManager class.
+class LegacyHibernationManagerImpl final: public Worker::Actor::HibernationManager {
+ public:
+  LegacyHibernationManagerImpl(
+      kj::Own<Worker::Actor::Loopback> loopback, uint16_t hibernationEventType);
+  ~LegacyHibernationManagerImpl() noexcept(false);
+
+  // Tells the HibernationManager to create a new HibernatableWebSocket with the associated tags
+  // and to initiate the `readLoop()` for this websocket. The `tags` array *must* contain only
+  // unique elements.
+  void acceptWebSocket(jsg::Ref<api::WebSocket> ws, kj::ArrayPtr<kj::String> tags) override;
+
+  // Gets a collection of websockets associated with the given tag. Any hibernating websockets will
+  // be woken up. If no tag is provided, we return all accepted websockets.
+  kj::Vector<jsg::Ref<api::WebSocket>> getWebSockets(
+      jsg::Lock& js, kj::Maybe<kj::StringPtr> tag) override;
+
+  // Hibernates all the websockets held by the HibernationManager.
+  // This converts our activeOrPackage from an api::WebSocket to a HibernationPackage.
+  void hibernateWebSockets(Worker::Lock& lock) override;
+
+  void setWebSocketAutoResponse(
+      kj::Maybe<kj::StringPtr> request, kj::Maybe<kj::StringPtr> response) override;
+  kj::Maybe<jsg::Ref<api::WebSocketRequestResponsePair>> getWebSocketAutoResponse(
+      jsg::Lock& js) override;
+  kj::Own<void> beginLoopbackHandoff() override KJ_WARN_UNUSED_RESULT;
+  void setLoopback(kj::Own<Worker::Actor::Loopback> loopback) override;
+  void setTimerChannel(TimerChannel& timerChannel) override;
+  void setOwningActor(Worker::Actor& actor) override;
+  kj::Maybe<Worker::Actor&> getOwningActor() override;
+  kj::Maybe<const Worker::Actor::Id&> getOwningActorId() override;
+  kj::Maybe<uint64_t> getOwningHolderToken() override;
+  void forgetOwningHolder() override;
+
+  kj::Own<HibernationManager> addRef() override;
+
+  friend class api::HibernatableWebSocketEvent;
+  friend class api::HibernatableWebSocketCustomEvent;
+  friend struct LegacyHibernationManagerTestAccess;
+
+  // Sets/Unset the maximum time in milliseconds that an hibernatable websocket event can run for.
+  // If the timeout is reached, event is canceled.
+  void setEventTimeout(kj::Maybe<uint32_t> timeoutMs) override;
+
+  // Gets the event timeout if set.
+  kj::Maybe<uint32_t> getEventTimeout() override;
+
+  // Returns the manager that registered `websocketId`, or kj::none if no manager on this event loop
+  // registered that ID.
+  //
+  // The result is a bare reference on purpose: an owning one would keep the manager alive until the
+  // event settles, and since the manager owns the task delivering the event, an event that never
+  // settles would keep both alive forever.
+  static kj::Maybe<Worker::Actor::HibernationManager&> findManagerForEvent(
+      kj::StringPtr websocketId);
+
+ private:
+  class HibernatableWebSocket;
+
+  // Ends the handoff identified by `generation`, putting the parked loopback back if no replacement
+  // supplied one. Does nothing if that handoff already ended, so a handle dropped afterwards cannot
+  // disturb a later one. Reachable only by dropping the handle that began the handoff.
+  void cancelLoopbackHandoff(uint64_t generation);
+  friend class LoopbackHandoff;
+
+  kj::Promise<void> handleReadLoop(HibernatableWebSocket& refToHibernatable);
+
+  // Each HibernatableWebSocket can have multiple tags, so we want to store a reference
+  // in our kj::List.
+  struct TagListItem {
+    kj::Maybe<HibernatableWebSocket&> hibWS;
+    kj::ListLink<TagListItem> link;
+    kj::StringPtr tag;
+    // The List that refers to this TagListItem.
+    // If `list` is null, we've already removed this item from the list.
+    kj::Maybe<kj::List<TagListItem, &TagListItem::link>&> list;
+  };
+
+  // api::WebSockets cannot survive hibernation, but kj::WebSockets do. This class helps us
+  // manage the transition of an api::WebSocket from its active state to a hibernated state
+  // and vice versa.
+  //
+  // Some properties of the JS websocket object need to be retained throughout hibernation,
+  // such as `attachment`, `url`, `extensions`, etc. These properties are only read/modified
+  // when initiating, or waking from hibernation.
+  class HibernatableWebSocket {
+   public:
+    HibernatableWebSocket(jsg::Ref<api::WebSocket> websocket,
+        kj::ArrayPtr<kj::String> tags,
+        LegacyHibernationManagerImpl& manager);
+    ~HibernatableWebSocket() noexcept(false);
+    KJ_DISALLOW_COPY_AND_MOVE(HibernatableWebSocket);
+
+    // Returns an owned copy of the tags associated with this HibernatableWebSocket.
+    kj::Array<kj::String> getTags();
+
+    // Returns a branch of the latest write barrier, or an already-completed promise if none exists.
+    kj::Promise<void> branchWriteBarrier();
+
+    // Returns a reference to the active websocket. If the websocket is currently hibernating,
+    // we have to unhibernate it first. The process moves values from the HibernatableWebSocket
+    // to the api::WebSocket.
+    jsg::Ref<api::WebSocket> getActiveOrUnhibernate(jsg::Lock& js);
+
+    kj::ListLink<HibernatableWebSocket> link;
+
+    // An array of all the items/nodes that refer to this HibernatableWebSocket.
+    // Keeping track of these items allows us to quickly remove every reference from `tagToWs`
+    // once the websocket disconnects -- rather than iterating through each relevant tag in the
+    // hashmap and removing it from each kj::List.
+    kj::Array<TagListItem> tagItems;
+
+    // If active, we have an api::WebSocket reference, otherwise, we're hibernating, so we retain
+    // the websocket's properties in a HibernationPackage until it's time to wake up.
+    kj::OneOf<jsg::Ref<api::WebSocket>, api::WebSocket::HibernationPackage> activeOrPackage;
+
+    // This is the manager's strong reference to the websocket shared with api::WebSocket after
+    // accepting as hibernatable.
+    kj::Maybe<kj::Rc<kj::WebSocket>> ws;
+
+    LegacyHibernationManagerImpl& manager;
+    // TODO(someday): We (currently) only use the LegacyHibernationManagerImpl reference to refer to
+    // `tagToWs` when running the dtor for `HibernatableWebSocket`. This feels a bit excessive,
+    // I would rather have the HibernationManager deal with its collections than have the
+    // HibernatableWebSocket do so. Maybe come back to this at some point?
+
+    // Reference to the Node in `allWs` that allows us to do fast deletion on disconnect.
+    kj::Maybe<std::list<kj::Own<HibernatableWebSocket>>::iterator> node;
+
+    // True once we have dispatched the close event.
+    // This prevents us from dispatching it if we have already done so.
+    bool hasDispatchedClose = false;
+
+    // Trace context captured at acceptWebSocket() time, restored when the DO is woken up
+    // so that hibernation events are linked to the original trace.
+    kj::Maybe<tracing::SpanContext> userSpanContext;
+
+    // Stores the last received autoResponseRequest timestamp.
+    kj::Maybe<kj::Date> autoResponseTimestamp;
+
+    // Serializes writes against the previous adapter's pump or the latest auto-response send.
+    // A revived api::WebSocket receives a branch while the manager retains the barrier. We keep
+    // the latest barrier after it settles because a completion callback could otherwise clear a
+    // newer replacement; retention is bounded to one barrier per WebSocket.
+    kj::Maybe<kj::ForkedPromise<void>> maybeWriteBarrier;
+
+    // Cancels promises that borrow `ws`. Declared after `ws` so it is destroyed first.
+    kj::Canceler writeCanceler;
+
+    friend LegacyHibernationManagerImpl;
+  };
+
+  // Removes a HibernatableWebSocket from the HibernationManager's various collections.
+  void dropHibernatableWebSocket(HibernatableWebSocket& hib);
+
+  // Removes the HibernatableWebSocket from `allWs`.
+  inline void removeFromAllWs(HibernatableWebSocket& hib);
+
+  struct RegisteredEvent {
+    // Neither pointer is owning: a registration lives only as long as the task delivering the
+    // event, and ~LegacyHibernationManagerImpl drops any that remain, so an entry always names a
+    // live manager and WebSocket. The manager also carries the event's identity, naming the owning
+    // actor.
+    //
+    // Pointers rather than references because erasing a kj::HashMap row move-assigns the last row
+    // over it, which requires an assignable type; see KJ's style guide.
+    LegacyHibernationManagerImpl* manager;
+    HibernatableWebSocket* webSocket;
+  };
+
+  // Maps each event ID currently being delivered to the manager and socket it belongs to. Delivery
+  // can take an RPC round trip that cannot carry a C++ reference, and can arrive at an actor whose
+  // manager is not the one holding the socket, so the ID is the only dependable route back.
+  //
+  // Per-event-loop: a manager, its WebSockets and its JavaScript state all belong to one event
+  // loop, and delivery always returns to it. An event loop is not an OS thread, so a thread local
+  // would not be sound.
+  using EventRegistry = kj::HashMap<kj::String, RegisteredEvent>;
+  static EventRegistry& getEventRegistry();
+
+  // Removes and returns the WebSocket for the event currently being delivered. Fails if no manager
+  // on this event loop holds that event ID.
+  static HibernatableWebSocket& takeWebSocketForEvent(kj::StringPtr websocketId);
+
+  // Records `hib` against an event ID, so that the handler that runs next can claim the WebSocket
+  // and so that delivery can find this manager again. The registry owns its copy of the ID.
+  void registerEventWebSocket(kj::String websocketId, HibernatableWebSocket& hib);
+
+  // Removes an event registration. Safe to call after the receiver already claimed the event.
+  void cancelEvent(kj::StringPtr websocketId);
+
+  // Returns a worker to dispatch an event for `hib` on, carrying the trace context captured when
+  // the WebSocket was accepted. Asks for pipeline re-resolution when no live actor owns this
+  // manager, since the pipeline the loopback holds may name a version that is no longer current.
+  kj::Own<WorkerInterface> getWorkerForEvent(HibernatableWebSocket& hib);
+
+  // Handles the termination of the websocket. If termination was not clean, we might try to
+  // dispatch a close event (if we haven't already), or an error event.
+  // We will also remove the HibernatableWebSocket from the HibernationManager's collections.
+  kj::Promise<void> handleSocketTermination(
+      HibernatableWebSocket& hib, kj::Maybe<kj::Exception>& maybeError) KJ_WARN_UNUSED_RESULT;
+
+  // Like the api::WebSocket readLoop(), but we dispatch different types of events.
+  kj::Promise<void> readLoop(HibernatableWebSocket& hib);
+
+  // This struct is held by the `tagToWs` hashmap. The key is a StringPtr to tag, and the value
+  // is this struct itself.
+  struct TagCollection {
+    kj::String tag;
+    kj::Own<kj::List<TagListItem, &TagListItem::link>> list;
+
+    TagCollection(kj::String tag, decltype(list) list): tag(kj::mv(tag)), list(kj::mv(list)) {}
+    TagCollection(TagCollection&& other) = default;
+  };
+
+  // This structure will hold the request and corresponding response for hibernatable websockets
+  // auto-response feature. Although we store 2 kj::Maybe strings, if we don't have a request set
+  // we can't have a response, and vice versa.
+  // TODO(cleanup): Remove kj::Maybe from request and response strings.
+  struct AutoRequestResponsePair {
+    kj::Maybe<kj::String> request = kj::none;
+    kj::Maybe<kj::String> response = kj::none;
+  };
+
+  // A hashmap of tags to HibernatableWebSockets associated with the tag.
+  // We use a kj::List so we can quickly remove websockets that have disconnected.
+  // Also note that we box the keys and values such that in the event of a hashmap resizing we don't
+  // move the underlying data (thereby keeping any references intact).
+  kj::HashMap<kj::String, kj::Own<TagCollection>> tagToWs;
+
+  // We store all of our HibernatableWebSockets in a doubly linked-list.
+  std::list<kj::Own<HibernatableWebSocket>> allWs;
+
+  struct LoopbackWaiter {
+    kj::PromiseFulfiller<kj::Own<WorkerInterface>>& fulfiller;
+    IoChannelFactory::SubrequestMetadata metadata;
+    kj::ListLink<LoopbackWaiter> link;
+  };
+  using LoopbackWaiterList = kj::List<LoopbackWaiter, &LoopbackWaiter::link>;
+  class LoopbackWaiterAdapter;
+
+  // The loopback events are delivered through. Null only while this manager is moving between actor
+  // generations; events arriving in that window wait for the replacement actor's loopback.
+  kj::Maybe<kj::Own<Worker::Actor::Loopback>> loopback;
+
+  // The outgoing generation's loopback, parked here by beginLoopbackHandoff() so that dropping the
+  // handle it returned can put it back if no replacement arrives.
+  kj::Maybe<kj::Own<Worker::Actor::Loopback>> handoffLoopback;
+
+  // Identifies the handoff in progress, or zero when there is none. Values are never reused, so a
+  // handle that outlives its own handoff can tell it no longer owns the one in progress.
+  uint64_t loopbackHandoffGeneration = 0;
+
+  // Source of the next value for `loopbackHandoffGeneration`.
+  uint64_t nextLoopbackHandoffGeneration = 1;
+
+  // Events waiting out a handoff, served in order once a loopback is available again.
+  LoopbackWaiterList loopbackWaiters;
+
+  // The actor that owns this manager, invalid once that actor is destroyed. Not inferrable from
+  // `loopback`, which outlives the actor that supplied it.
+  kj::Maybe<kj::Own<Worker::Actor::WeakRef>> owningActor;
+
+  // The ID of the actor named by `owningActor`, copied so that it outlives that actor. A code
+  // update destroys the owner before its replacement adopts the manager, leaving this the only
+  // identity still available to check.
+  kj::Maybe<Worker::Actor::Id> owningActorId;
+
+  // The holder token of the actor named by `owningActor`, held as a copy for the same reason as
+  // `owningActorId`.
+  kj::Maybe<uint64_t> owningHolderToken;
+
+  // Passed to HibernatableWebSocket custom event as the typeId.
+  uint16_t hibernationEventType;
+
+  // How many of this manager's events are registered in the event loop's registry. Lets the
+  // destructor skip the registry when nothing is registered, which is the only case reachable
+  // without a current event loop.
+  size_t registeredEventCount = 0;
+
+  // The maximum number of Hibernatable WebSocket connections a single LegacyHibernationManagerImpl
+  // instance can manage.
+  const size_t ACTIVE_CONNECTION_LIMIT = 1024 * 32;
+
+  // How long an event waits for a replacement loopback before giving up. A handoff ends when the
+  // replacement supplies its loopback or when the handle is dropped, so this bound is reached only
+  // if some path does neither. Deliberately far longer than a handoff needs, so that such a bug
+  // costs one failed event rather than a read loop parked forever.
+  static constexpr kj::Duration LOOPBACK_HANDOFF_TIMEOUT = 30 * kj::SECONDS;
+
+  class DisconnectHandler: public kj::TaskSet::ErrorHandler {
+   public:
+    // We don't need to do anything here; we already handle disconnects in the callee of readLoop().
+    void taskFailed(kj::Exception&& exception) override {};
+  };
+  DisconnectHandler onDisconnect;
+  kj::TaskSet readLoopTasks;
+  kj::Own<AutoRequestResponsePair> autoResponsePair = kj::heap<AutoRequestResponsePair>();
+  kj::Maybe<TimerChannel&> timer;
+  kj::Maybe<uint32_t> eventTimeoutMs;
+};
+};  // namespace workerd
