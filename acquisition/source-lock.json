@@ -2028,7 +2028,7 @@
    "declared_version_PV": "UNKNOWN",
    "excluded": [],
    "lock_state": "UNRESOLVED",
-   "pins_path": "IN-TREE",
+   "pins_path": "Symoneural-Common/src/text/.gitpins/mdurl.git",
    "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
    "recipe_LICENSE": "NOT-APPLICABLE",
    "recipe_SRCREV": "NOT-APPLICABLE",
