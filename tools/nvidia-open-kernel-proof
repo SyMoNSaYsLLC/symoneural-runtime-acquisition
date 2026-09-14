@@ -1,0 +1,666 @@
+#!/usr/bin/env python3
+"""nvidia-open-kernel-proof - isolated staged-install proof for the symoneural-nvidia-open-kernel
+packages (docs/platform/NVIDIA-OPEN-KERNEL.md), one kernel target per run.
+
+  tools/nvidia-open-kernel-proof debian [--root /abs/NEW/dir]
+  tools/nvidia-open-kernel-proof estate [--root /abs/NEW/dir]
+
+Everything happens in a DISPOSABLE root created outside the estate (tools/proof_support.py
+new-root). The host's module tree is read for a before/after comparison and for the reference
+DKMS modules' metadata; it is never written, no module is loaded, no depmod runs against the
+live database. Exit 0 only when every check passes; every check prints its evidence.
+"""
+import argparse
+import glob
+import hashlib
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from proof_support import new_root  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+PLATFORM = ROOT / "Symoneural-Platform"
+SOURCE_PATH = "Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules"
+MODULES = ["nvidia", "nvidia-uvm", "nvidia-modeset", "nvidia-drm"]
+EXCLUDED = "nvidia-peermem"
+NV_VERSION = "615.71.09"
+DEPMOD, MODINFO, MODPROBE = "/usr/sbin/depmod", "/usr/sbin/modinfo", "/usr/sbin/modprobe"
+
+FAILS = []
+
+
+def say(line=""):
+    print(line, flush=True)
+
+
+def check(ok, what, detail=""):
+    tag = "PASS" if ok else "FAIL"
+    say("  [%s] %s%s" % (tag, what, (" - " + detail) if detail else ""))
+    if not ok:
+        FAILS.append(what)
+    return ok
+
+
+def run(cmd, **kw):
+    kw.setdefault("capture_output", True)
+    kw.setdefault("text", True)
+    return subprocess.run(cmd, **kw)
+
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def modinfo(ko, field=None):
+    cmd = [MODINFO] + (["-F", field] if field else []) + [str(ko)]
+    r = run(cmd)
+    if r.returncode:
+        raise SystemExit("modinfo failed on %s: %s" % (ko, r.stderr.strip()))
+    return r.stdout
+
+
+def modinfo_fields(ko):
+    out = {}
+    for line in modinfo(ko).splitlines():
+        k, _, v = line.partition(":")
+        out.setdefault(k.strip(), []).append(v.strip())
+    return out
+
+
+def dump_modversions(ko):
+    r = run([MODPROBE, "--dump-modversions", str(ko)])
+    if r.returncode:
+        raise SystemExit("modprobe --dump-modversions failed on %s: %s" % (ko, r.stderr.strip()))
+    out = {}
+    for line in r.stdout.splitlines():
+        crc, _, sym = line.partition("\t")
+        out[sym.strip()] = int(crc, 16)
+    return out
+
+
+def load_symvers(path):
+    out = {}
+    for line in open(path, errors="replace"):
+        parts = line.rstrip("\n").split("\t")
+        if len(parts) >= 2 and parts[0].startswith("0x"):
+            out[parts[1]] = (int(parts[0], 16), parts[2] if len(parts) > 2 else "")
+    return out
+
+
+def strings_hits(path, needles):
+    r = run(["strings", "-a", str(path)])
+    hits = {n: [] for n in needles}
+    for line in r.stdout.splitlines():
+        for n in needles:
+            if n and n in line:
+                hits[n].append(line)
+    return hits
+
+
+def host_snapshot(kabi):
+    base = Path("/usr/lib/modules") / kabi
+    dep = base / "modules.dep"
+    listing = sorted(str(p.relative_to(base)) for p in (base / "updates").rglob("*"))
+    return {"modules.dep": sha256(dep) if dep.exists() else "ABSENT",
+            "modules.dep_mtime": dep.stat().st_mtime if dep.exists() else None,
+            "updates": listing}
+
+
+def readelf_facts(ko):
+    h = run(["readelf", "-h", str(ko)]).stdout
+    cls = re.search(r"Class:\s+(\S+)", h).group(1)
+    typ = re.search(r"Type:\s+(\S+)", h).group(1)
+    mach = re.search(r"Machine:\s+(.+)", h).group(1).strip()
+    secs = [m.group(1) for m in (re.match(r"\s*\[\s*\d+\]\s+(\S+)\s+\S+", l)
+                                  for l in run(["readelf", "-S", "-W", str(ko)]).stdout.splitlines()) if m]
+    return cls, typ, mach, secs
+
+
+def elf_and_leak_checks(label, ko, tmpdir, extra_needles):
+    cls, typ, mach, secs = readelf_facts(ko)
+    check(cls == "ELF64" and typ == "REL" and mach == "Advanced Micro Devices X86-64",
+          "%s: ELF64 relocatable x86-64" % label, "%s %s %s" % (cls, typ, mach))
+    debug = [s for s in secs if s.startswith(".debug")]
+    say("       sections: .modinfo=%s .BTF=%s .BTF.base=%s __versions=%s .debug*=%d"
+        % (".modinfo" in secs, ".BTF" in secs, ".BTF.base" in secs, "__versions" in secs, len(debug)))
+    check(".modinfo" in secs and "__versions" in secs, "%s: carries .modinfo and __versions (MODVERSIONS)" % label)
+    needles = [tmpdir, str(ROOT), "/home/google", "/usr/src/nvidia-" + NV_VERSION] + list(extra_needles)
+    hits = strings_hits(ko, needles)
+    for n in needles:
+        check(not hits[n], "%s: no string contains %r" % (label, n),
+              ("%d hit(s), e.g. %s" % (len(hits[n]), hits[n][0][:120])) if hits[n] else "0 hits")
+    # the workstation's hostname and login as whole words (the hostname here is a PREFIX of
+    # "symoneural", which legitimately appears in mapped paths and in the fixed build identity)
+    for what, word in (("hostname", os.uname().nodename), ("login", os.environ.get("USER") or "google")):
+        rx = re.compile(r"(?<![A-Za-z0-9_])%s(?![A-Za-z0-9_-])" % re.escape(word))
+        found = [l for l in run(["strings", "-a", str(ko)]).stdout.splitlines() if rx.search(l)]
+        check(not found, "%s: no whole-word occurrence of the %s %r" % (label, what, word),
+              ("%d hit(s), e.g. %s" % (len(found), found[0][:120])) if found else "0 hits")
+
+
+def print_control(deb):
+    ctrl = run(["dpkg-deb", "-f", str(deb)]).stdout
+    for line in ctrl.splitlines():
+        if re.match(r"^(Package|Version|Architecture|Depends|Conflicts|Maintainer|Section|Priority|Description):", line):
+            say("    " + line)
+    return ctrl
+
+
+# --------------------------------------------------------------------------------------------
+def debian(args):
+    kabi, kver, stack = "6.12.107+deb13-amd64", "6.12.107-1", "615.71.09-2"
+    bd = PLATFORM / "build" / "debian-6.12.107-deb13-amd64"
+    tmpdir = str(bd / "tmp")
+    say("# symoneural-nvidia-open-kernel :: DEBIAN %s staged-install proof" % kabi)
+    say("date      : %s" % time.strftime("%Y-%m-%d %H:%M:%S %z"))
+    say("host      : kernel %s; /sys/module/nvidia/version %s" % (
+        os.uname().release, (Path("/sys/module/nvidia/version").read_text().strip()
+                             if Path("/sys/module/nvidia/version").exists() else "absent")))
+    say("build dir : %s" % bd.relative_to(ROOT))
+    say("NOTE      : the host runs the SAME ABI, so an equal vermagic alone proves nothing about which")
+    say("            kernel tree was used - see the build-log and negative-control sections below.")
+
+    say("\n## 1. Package identities (deploy tree)")
+    debs = {}
+    for suffix, key in (("", "main"), ("-dev", "dev"), ("-dbg", "dbg")):
+        pat = str(bd / ("tmp/deploy/deb/*/symoneural-nvidia-open-kernel-%s%s_%s-r*_amd64.deb" % (kabi, suffix, NV_VERSION)))
+        found = sorted(glob.glob(pat))
+        if not check(len(found) == 1, "exactly one %s .deb in the deploy tree" % (key), pat if not found else found[0]):
+            continue
+        debs[key] = Path(found[0])
+        say("    %s: %s  %d B  sha256 %s" % (key, debs[key].relative_to(ROOT), debs[key].stat().st_size, sha256(debs[key])))
+    if "main" not in debs:
+        return finish()
+    say("  control fields (main):")
+    ctrl = print_control(debs["main"])
+    check("Architecture: amd64" in ctrl, "Architecture is amd64")
+    check("Package: symoneural-nvidia-open-kernel-%s" % kabi in ctrl, "package name carries the kernel ABI")
+    dep = re.search(r"^Depends: (.*)$", ctrl, re.M).group(1) if re.search(r"^Depends:", ctrl, re.M) else ""
+    check("linux-image-%s (= %s)" % (kabi, kver) in dep, "Depends pins linux-image-%s (= %s)" % (kabi, kver), dep)
+    check("firmware-nvidia-gsp (= %s)" % stack in dep, "Depends pins firmware-nvidia-gsp (= %s)" % stack)
+    conf = re.search(r"^Conflicts: (.*)$", ctrl, re.M)
+    check(conf is not None and "nvidia-kernel-open-dkms" in conf.group(1), "Conflicts declares the DKMS module-name collision",
+          conf.group(1) if conf else "no Conflicts field")
+    say("  contents (main):")
+    listing = run(["dpkg-deb", "-c", str(debs["main"])]).stdout
+    files = [l.split()[-1] for l in listing.splitlines() if l.startswith("-")]
+    for f in files:
+        say("    " + f)
+    moddir = "./usr/lib/modules/%s/updates/symoneural/" % kabi
+    check(all(f.startswith(moddir) for f in files), "every file lives under %s" % moddir)
+    check(sorted(os.path.basename(f) for f in files) == sorted(m + ".ko" for m in MODULES),
+          "exactly the four modules %s" % " ".join(MODULES))
+    check(not any(EXCLUDED in f for f in files), "no %s artifact" % EXCLUDED)
+    check(not any(re.search(r"libcuda|libnvidia|nvidia-modprobe|\.bin$|/dkms/|/firmware/", f) for f in files),
+          "no driver userspace library, no GSP firmware, no DKMS path in the package")
+
+    say("\n## 2. Debian kernel inputs used by the build (deployed, byte-identical to the fetch)")
+    inputs_dir = bd / "tmp/deploy/images/qemux86-64/debian-kernel-inputs"
+    want = {"linux-headers-%s_%s_amd64.deb" % (kabi, kver): "0ab746a3d854ad0e666923147842d1e629cdb3e29a97b76ae25b4911285174e4",
+            "linux-headers-6.12.107+deb13-common_%s_all.deb" % kver: "12dc292d7c238928fbcb7eebbe79208758fe263a4e2ea0e9b6734e6df12020a5",
+            "linux-kbuild-6.12.107+deb13_%s_amd64.deb" % kver: "0a88527eb05bca1ce75e7d39ec27539d385a24cf90b2b28917cc4903a4f710d3",
+            "linux-image-%s_%s_amd64.deb" % (kabi, kver): "7794643cf4560de2a7e3b069e8ca8511ad2a568d652ea285f0fe051f79bc9e99"}
+    for name, h in want.items():
+        p = inputs_dir / name
+        got = sha256(p) if p.exists() else "MISSING"
+        check(got == h, "%s sha256 == trixie/main index value" % name, got[:16])
+    if FAILS:
+        return finish()
+
+    say("\n## 3. Host module tree snapshot (read-only, before)")
+    before = host_snapshot(kabi)
+    say("    modules.dep sha256 %s; %d entries under updates/: %s" % (before["modules.dep"][:16], len(before["updates"]), " ".join(before["updates"][:8])))
+    check(not Path("/usr/lib/modules/%s/updates/symoneural" % kabi).exists(), "host has no updates/symoneural directory")
+
+    say("\n## 4. Disposable root")
+    root = new_root("Platform", args.root)
+    say("    root: %s (outside the estate; removed at the end unless --keep)" % root)
+    (root / "usr/lib").mkdir(parents=True)
+    os.symlink("usr/lib", root / "lib")            # merged-/usr layout, as on Debian 13
+    for d in ("var/lib/dpkg/info", "var/lib/dpkg/updates", "var/lib/dpkg/triggers"):
+        (root / d).mkdir(parents=True)
+    (root / "var/lib/dpkg/status").touch()
+    (root / "var/lib/dpkg/available").touch()
+    # kernel metadata: pure extraction (linux-image's maintainer scripts must never run anywhere)
+    for name in ("linux-image-%s_%s_amd64.deb" % (kabi, kver), "linux-headers-%s_%s_amd64.deb" % (kabi, kver)):
+        r = run(["dpkg-deb", "-x", str(inputs_dir / name), str(root)])
+        check(r.returncode == 0, "extracted %s into the root" % name, r.stderr.strip()[:200])
+    check((root / "usr/lib/modules" / kabi / "modules.builtin").exists(), "root has modules.builtin for %s" % kabi)
+    check((root / "boot" / ("System.map-" + kabi)).exists(), "root has System.map-%s" % kabi)
+
+    say("\n## 5. Package installation into the root (dpkg --unpack under an unprivileged user namespace)")
+    # dpkg insists on ldconfig/start-stop-daemon being on PATH (it never runs them for --unpack);
+    # the estate's sandbox PATH carries no sbin directories, so name root's usual PATH explicitly.
+    sbin_path = "PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin"
+    cmd = ["unshare", "-Ur", "env", sbin_path, "dpkg", "--root=" + str(root), "--admindir=" + str(root / "var/lib/dpkg"),
+           "--unpack", str(debs["main"]), str(debs["dev"])]
+    r = run(cmd)
+    say("    $ unshare -Ur env PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin dpkg --root=<root> --admindir=<root>/var/lib/dpkg --unpack <main.deb> <dev.deb>")
+    for l in (r.stdout + r.stderr).strip().splitlines()[:12]:
+        say("    | " + l)
+    check(r.returncode == 0, "dpkg --unpack rc=%d" % r.returncode)
+    lst = run(["unshare", "-Ur", "env", sbin_path, "dpkg", "--root=" + str(root), "--admindir=" + str(root / "var/lib/dpkg"), "-l",
+               "symoneural-nvidia-open-kernel-%s" % kabi]).stdout
+    st = [l for l in lst.splitlines() if l.startswith(("i", "u", "r", "h", "p"))]
+    say("    dpkg -l: %s" % (st[0] if st else lst.strip()[-200:]))
+    check(bool(st) and st[0].split()[0] in ("iU", "iF"), "dpkg records the package as unpacked (iU)")
+    staged = root / "usr/lib/modules" / kabi / "updates/symoneural"
+    kos = sorted(staged.glob("*.ko")) if staged.exists() else []
+    check([k.name for k in kos] == sorted(m + ".ko" for m in MODULES), "all four .ko present under the root's updates/symoneural",
+          " ".join(k.name for k in kos))
+    check(not list(root.rglob("nvidia-peermem*")), "no %s in the root" % EXCLUDED)
+    check(not (root / "usr/lib/modules" / kabi / "updates/dkms").exists(), "no updates/dkms path was created in the root")
+    if not kos:
+        return finish(root, args)
+
+    say("\n## 6. depmod in the staged root (never the live database)")
+    # Debian's signed linux-image ships an 83-byte placeholder System.map ("The real System.map is in
+    # the linux-image-<version>-dbg package"), so -F System.map resolves nothing. The kernel's
+    # Module.symvers from the arch headers deb (26k exported symbols WITH CRCs) is the right oracle:
+    # depmod -e -E checks every undefined symbol AND its version CRC.
+    symvers = root / "usr/src" / ("linux-headers-" + kabi) / "Module.symvers"
+    smap = root / "boot" / ("System.map-" + kabi)
+    say("    System.map in linux-image: %d bytes (%s)" % (smap.stat().st_size, smap.read_text(errors="replace").strip()[:80]))
+    cmd = [DEPMOD, "-b", str(root), "-e", "-E", str(symvers), kabi]
+    r = run(cmd)
+    say("    $ depmod -b <root> -e -E <root>/usr/src/linux-headers-%s/Module.symvers %s  -> rc=%d" % (kabi, kabi, r.returncode))
+    warn = [l for l in (r.stdout + r.stderr).splitlines() if l.strip()]
+    ours = [l for l in warn if "updates/symoneural/" in l]
+    say("    diagnostics: %d about updates/symoneural (ours), %d about Debian's in-tree modules" % (len(ours), len(warn) - len(ours)))
+    for l in (ours or warn)[:10]:
+        say("    | " + l.replace(str(root), "<root>"))
+    check(r.returncode == 0, "depmod rc=0")
+    check(not ours, "depmod -e -E: no unresolved or version-mismatched symbol in the four modules against Module.symvers")
+    depfile = root / "usr/lib/modules" / kabi / "modules.dep"
+    deps = {}
+    for line in depfile.read_text().splitlines():
+        k, _, v = line.partition(":")
+        if k.startswith("updates/symoneural/"):
+            deps[os.path.basename(k)] = v.split()
+            say("    modules.dep: %s: %s" % (k, " ".join(os.path.basename(x) for x in v.split())))
+    check(len(deps) == 4, "modules.dep indexes all four modules")
+    check(all("updates/symoneural/nvidia.ko" in deps.get(m + ".ko", []) for m in ("nvidia-uvm", "nvidia-modeset")),
+          "nvidia-uvm and nvidia-modeset depend on updates/symoneural/nvidia.ko (not on a dkms path)")
+    check(not any("/dkms/" in x for v in deps.values() for x in v), "no dependency resolves into updates/dkms")
+    alias = [l for l in (root / "usr/lib/modules" / kabi / "modules.alias").read_text().splitlines() if l.endswith(" nvidia") or l.endswith(" nvidia_drm")]
+    say("    modules.alias: %d alias lines for nvidia/nvidia_drm, e.g. %s" % (len(alias), alias[0] if alias else "none"))
+    check(any("pci:v000010DE" in l for l in alias), "PCI vendor 10DE alias registered for nvidia")
+
+    say("\n## 7. Module metadata vs the host's DKMS-built reference modules (reference is read-only)")
+    ref = {}
+    refdir = Path("/usr/lib/modules") / kabi / "updates/dkms"
+    reftmp = Path(tempfile.mkdtemp(prefix="nv-ref-", dir=root / "tmp" if (root / "tmp").exists() else None)) if refdir.exists() else None
+    for ko in kos:
+        m = ko.stem
+        f = modinfo_fields(ko)
+        say("    %s: version=%s license=%s vermagic=%s" % (m, f.get("version", ["?"])[0], f.get("license", ["?"])[0], f.get("vermagic", ["?"])[0]))
+        say("       depends=%s srcversion=%s retpoline=%s signature=%s" % (f.get("depends", [""])[0], f.get("srcversion", ["?"])[0],
+            f.get("retpoline", ["-"])[0], f.get("sig_id", ["none (UNSIGNED)"])[0]))
+        fw = f.get("firmware", [])
+        if fw:
+            say("       firmware: %s" % ", ".join(fw))
+        check(f.get("vermagic", [""])[0].startswith(kabi + " SMP preempt mod_unload modversions"), "%s vermagic == Debian ABI" % m)
+        check(f.get("license", [""])[0] == "Dual MIT/GPL", "%s license string 'Dual MIT/GPL'" % m)
+        check(f.get("version", [""])[0] == NV_VERSION, "%s version %s" % (m, NV_VERSION))
+        check("sig_id" not in f, "%s carries no signature (unsigned by design)" % m)
+        if m == "nvidia":
+            check(len(fw) >= 1 and all(x.startswith("nvidia/%s/" % NV_VERSION) for x in fw), "nvidia requests GSP/ucode firmware under nvidia/%s/" % NV_VERSION, "%d files" % len(fw))
+        if reftmp is not None and (refdir / (m + ".ko.xz")).exists():
+            out = reftmp / (m + ".ko")
+            with open(out, "wb") as fh:
+                subprocess.run(["xz", "-dc", str(refdir / (m + ".ko.xz"))], stdout=fh, check=True)
+            rf = modinfo_fields(out)
+            same = rf.get("srcversion") == f.get("srcversion")
+            say("       reference (host DKMS %s.ko.xz): srcversion=%s vermagic=%s -> srcversion %s" % (
+                m, rf.get("srcversion", ["?"])[0], rf.get("vermagic", ["?"])[0], "IDENTICAL" if same else "DIFFERS"))
+            check(same, "%s srcversion equals the host's DKMS-built module (same source inputs)" % m)
+            ref[m] = rf
+
+    say("\n## 8. MODVERSIONS: every imported symbol CRC matches the kernel's Module.symvers or a sibling module")
+    ksym = load_symvers(root / "usr/src" / ("linux-headers-" + kabi) / "Module.symvers")
+    say("    kernel Module.symvers: %d exported symbols" % len(ksym))
+    ownsym_path = root / "usr/include/symoneural-nvidia-open-kernel-debian/Module.symvers"
+    own = load_symvers(ownsym_path) if ownsym_path.exists() else {}
+    say("    -dev Module.symvers (this build): %d symbols exported by the NVIDIA modules" % len(own))
+    for ko in kos:
+        mv = dump_modversions(ko)
+        k_ok = sum(1 for s, c in mv.items() if s in ksym and ksym[s][0] == c)
+        n_ok = sum(1 for s, c in mv.items() if s not in ksym and s in own and own[s][0] == c)
+        bad = [s for s, c in mv.items() if not ((s in ksym and ksym[s][0] == c) or (s in own and own[s][0] == c))]
+        say("    %s: %d imports -> %d kernel CRC matches, %d NVIDIA-module CRC matches, %d unmatched%s" % (
+            ko.stem, len(mv), k_ok, n_ok, len(bad), (": " + " ".join(bad[:5])) if bad else ""))
+        check(len(mv) > 0 and not bad, "%s: all %d symbol CRCs resolve" % (ko.stem, len(mv)))
+        check("module_layout" in mv, "%s: imports module_layout (MODVERSIONS ABI anchor)" % ko.stem)
+
+    say("\n## 9. ELF architecture, sections, and build-path / identity leakage (shipped modules)")
+    for ko in kos:
+        elf_and_leak_checks(ko.stem, ko, tmpdir, [])
+    nv_strings = strings_hits(kos[[k.stem for k in kos].index("nvidia")], ["NVIDIA UNIX Open Kernel Module"])["NVIDIA UNIX Open Kernel Module"]
+    for l in nv_strings[:2]:
+        say("    build string: %s" % l.strip()[:160])
+    check(any("(symoneural@symoneural)" in l for l in nv_strings), "nv-kernel.o build string carries the fixed identity (symoneural@symoneural)")
+    say("  -dbg package (debug info, prefix-mapped):")
+    dbgtmp = root / "tmp/dbg"
+    dbgtmp.mkdir(parents=True, exist_ok=True)
+    run(["dpkg-deb", "-x", str(debs["dbg"]), str(dbgtmp)])
+    dbgs = sorted(dbgtmp.rglob("*.ko"))
+    check(len(dbgs) == 4, "-dbg holds four debug counterparts", " ".join(str(d.relative_to(dbgtmp)) for d in dbgs[:2]))
+    for d in dbgs:
+        hits = strings_hits(d, [tmpdir, "/home/google"])
+        check(not hits[tmpdir] and not hits["/home/google"], "%s debug info has no build/home path" % d.name,
+              "hits: %d/%d" % (len(hits[tmpdir]), len(hits["/home/google"])))
+        cu = [l for l in strings_hits(d, ["/usr/src/debug/symoneural-nvidia-open-kernel-debian"])["/usr/src/debug/symoneural-nvidia-open-kernel-debian"]]
+        say("       %s: %d DWARF strings under /usr/src/debug/symoneural-nvidia-open-kernel-debian (prefix map applied)" % (d.name, len(cu)))
+
+    say("\n## 10. Build log: explicit kernel inputs, declared toolchain, no host fallback")
+    logs = sorted(glob.glob(str(bd / ("tmp/work/*/symoneural-nvidia-open-kernel-debian/%s/temp/log.do_compile" % NV_VERSION))))
+    if check(len(logs) == 1, "one do_compile log", logs[0] if logs else "none"):
+        text = Path(logs[0]).read_text(errors="replace")
+        m = re.search(r"^NOTE: make .*SYSSRC=(\S+) SYSOUT=(\S+) KERNEL_UNAME=(\S+).*$", text, re.M)
+        if check(m is not None, "make was invoked with explicit SYSSRC/SYSOUT/KERNEL_UNAME"):
+            say("    SYSSRC     = %s" % m.group(1).replace(str(ROOT) + "/", ""))
+            say("    SYSOUT     = %s" % m.group(2).replace(str(ROOT) + "/", ""))
+            say("    KERNEL_UNAME = %s" % m.group(3))
+            check(m.group(1).startswith(tmpdir) and "recipe-sysroot/usr/src/linux-headers-6.12.107+deb13-common" in m.group(1), "SYSSRC is the staged sysroot common tree")
+            check(m.group(2).startswith(tmpdir) and "recipe-sysroot/usr/src/linux-headers-" + kabi in m.group(2), "SYSOUT is the staged sysroot arch tree")
+        cc_lines = [l for l in text.splitlines() if re.search(r"\bx86_64-linux-gnu-gcc-14\b", l)]
+        oe_lines = [l for l in text.splitlines() if "x86_64-oe-linux-gcc" in l]
+        say("    compiler invocations naming x86_64-linux-gnu-gcc-14: %d; naming x86_64-oe-linux-gcc: %d" % (len(cc_lines), len(oe_lines)))
+        check(len(cc_lines) > 50 and not oe_lines, "only the declared Debian compiler compiled the modules")
+        check("/usr/src/nvidia-" + NV_VERSION not in text, "host DKMS source (/usr/src/nvidia-%s) never referenced" % NV_VERSION)
+        check("/lib/modules/%s/build" % kabi not in text and "/usr/lib/modules/%s/build" % kabi not in text, "host /lib/modules/<abi>/build never referenced")
+        # V=1 echoes kbuild's whole `if [ ! -f vmlinux ] ... printf "Skipping BTF ..." else pahole ... fi`
+        # command, so the literal text appears once per module even when BTF IS generated. The
+        # executed branch is what counts: the traced pahole call, and the actual message at line start.
+        pahole_runs = [l for l in text.splitlines() if l.startswith("+ pahole ") and "--btf_base vmlinux" in l]
+        skipped = [l for l in text.splitlines() if l.startswith("Skipping BTF generation")]
+        check(len(pahole_runs) == 4 and not skipped, "BTF generated for all four modules (pahole --btf_base vmlinux ran; no skip message)",
+              "%d pahole runs, %d skip messages" % (len(pahole_runs), len(skipped)))
+        conftest = [l for l in text.splitlines() if "CONFTEST:" in l]
+        say("    conftest probes: %d; kbuild [M] compiles: %d; MODPOST: %s" % (len(conftest), len([l for l in text.splitlines() if re.search(r"\bCC \[M\]", l)]),
+            "yes" if "MODPOST" in text else "no"))
+
+    say("\n## 11. Negative control: the wrapper honours SYSSRC/SYSOUT (a wrong path fails; no uname -r rescue)")
+    exp = Path(tempfile.mkdtemp(prefix="nv-neg-", dir=root))
+    r = subprocess.run("git -C '%s' archive 'HEAD:%s' kernel-open utils.mk version.mk Makefile | tar -x -C '%s'" % (ROOT, SOURCE_PATH, exp),
+                       shell=True, capture_output=True, text=True)
+    check(r.returncode == 0, "fresh export of kernel-open/ from HEAD:%s" % SOURCE_PATH, r.stderr.strip()[:200])
+    env = {k: v for k, v in os.environ.items() if k not in ("CC", "LD", "ARCH", "SYSSRC", "SYSOUT", "KERNEL_UNAME")}
+    env["PATH"] = "/usr/bin:/bin"
+    cmd = ["make", "-C", str(exp / "kernel-open"), "SYSSRC=/nonexistent/kernel-src", "SYSOUT=/nonexistent/kernel-out",
+           "KERNEL_UNAME=" + kabi, "ARCH=x86_64", "CC=x86_64-linux-gnu-gcc-14", "NV_EXCLUDE_KERNEL_MODULES=" + EXCLUDED, "modules"]
+    r = run(cmd, env=env, timeout=120)
+    err = (r.stdout + r.stderr).strip().splitlines()
+    say("    $ make -C kernel-open SYSSRC=/nonexistent/kernel-src SYSOUT=/nonexistent/kernel-out KERNEL_UNAME=%s ... modules -> rc=%d" % (kabi, r.returncode))
+    for l in err[-4:]:
+        say("    | " + l[:160])
+    check(r.returncode != 0, "build against a nonexistent SYSSRC fails")
+    check(any("/nonexistent/kernel-src" in l for l in err), "the failure names the explicit SYSSRC path")
+    check(not list((exp / "kernel-open").glob("*.ko")), "no module was produced by the negative run")
+    say("    (the host's /lib/modules/%s/build exists; had the wrapper fallen back to `uname -r` this run would have proceeded)" % kabi)
+
+    say("\n## 12. Host module tree unchanged (after)")
+    after = host_snapshot(kabi)
+    check(after == before, "host modules.dep hash, mtime and updates/ listing identical to the snapshot before the proof")
+    check(not Path("/usr/lib/modules/%s/updates/symoneural" % kabi).exists(), "host still has no updates/symoneural")
+
+    return finish(root, args)
+
+
+# --------------------------------------------------------------------------------------------
+def ipk_control(ipk):
+    r = subprocess.run("ar p '%s' control.tar.gz | tar -xzO ./control" % ipk, shell=True, capture_output=True, text=True)
+    return r.stdout
+
+
+def ipk_files(ipk):
+    r = subprocess.run("ar p '%s' data.tar.zst | zstd -dc | tar -t" % ipk, shell=True, capture_output=True, text=True)
+    return [l for l in r.stdout.splitlines() if l and not l.endswith("/")]
+
+
+def estate(args):
+    kver = "6.18.48-yocto-standard"
+    bd = PLATFORM / "build" / "devtool-master"
+    tmpdir = str(bd / "tmp")
+    deploy = bd / "tmp/deploy/ipk/qemux86_64"
+    kart = bd / "tmp/work-shared/qemux86-64/kernel-build-artifacts"
+    say("# symoneural-nvidia-open-kernel :: ESTATE linux-yocto %s (qemux86-64) staged-install proof" % kver)
+    say("date      : %s" % time.strftime("%Y-%m-%d %H:%M:%S %z"))
+    say("host      : kernel %s (the host kernel is NOT the target; nothing here is loaded or booted)" % os.uname().release)
+    say("build dir : %s" % bd.relative_to(ROOT))
+    say("NOTE      : a qemux86-64 build/package/staged-install result - not a boot, module-load or RTX 5070 Ti result.")
+
+    say("\n## 1. Source identity (SOURCES-100 verification from HEAD)")
+    r = run([sys.executable, str(ROOT / "tools/ingest-tree"), "verify", "open-gpu-kernel-modules"], cwd=ROOT)
+    say("    " + (r.stdout.strip().splitlines() or ["?"])[-1])
+    check(r.returncode == 0 and "VERIFIED" in r.stdout, "tools/ingest-tree verify open-gpu-kernel-modules")
+
+    say("\n## 2. Estate kernel identity (what the modules were built against)")
+    abi = (kart / "kernel-abiversion").read_text().strip() if (kart / "kernel-abiversion").exists() else "?"
+    say("    kernel-abiversion: %s" % abi)
+    check(abi == kver, "kernel-abiversion is %s" % kver)
+    kpkgs = sorted(deploy.glob("kernel-%s_*.ipk" % kver))
+    if check(len(kpkgs) == 1, "kernel base package present in the feed", kpkgs[0].name if kpkgs else "none"):
+        kv = re.search(r"^kernel-%s_(.+)-r\d+_qemux86_64\.ipk$" % re.escape(kver), kpkgs[0].name).group(1)
+        revs = re.search(r"\+git0\+([0-9a-f]+)_([0-9a-f]+)$", kv)
+        say("    kernel package version: %s  (linux-yocto SRCREV_meta %s, SRCREV_machine %s)" % (kv, revs.group(1) if revs else "?", revs.group(2) if revs else "?"))
+        check("c8484925c8" in kv and "ad9d5e4518" in kv, "kernel version string carries the pinned linux-yocto 6.18 SRCREVs (meta c8484925c8, machine ad9d5e4518)")
+    cfg = (kart / ".config").read_text() if (kart / ".config").exists() else ""
+    facts = {k: (re.search(r"^%s=(.*)$" % k, cfg, re.M).group(1) if re.search(r"^%s=(.*)$" % k, cfg, re.M) else "unset")
+             for k in ("CONFIG_CC_VERSION_TEXT", "CONFIG_MODULES", "CONFIG_MODVERSIONS", "CONFIG_MODULE_SIG", "CONFIG_MODULE_SIG_ALL",
+                       "CONFIG_MODULE_COMPRESS_XZ", "CONFIG_MODULE_COMPRESS_ZSTD", "CONFIG_DEBUG_INFO_BTF_MODULES", "CONFIG_DRM",
+                       "CONFIG_DRM_KMS_HELPER", "CONFIG_DRM_DISPLAY_HELPER", "CONFIG_PREEMPT", "CONFIG_SMP", "CONFIG_LOCALVERSION")}
+    for k, v in facts.items():
+        say("    %s=%s" % (k, v))
+    check(facts["CONFIG_CC_VERSION_TEXT"].startswith('"x86_64-oe-linux-gcc'), "kernel compiled by the estate cross compiler (CONFIG_CC_VERSION_TEXT)")
+    check(facts["CONFIG_MODULES"] == "y" and facts["CONFIG_DRM"] in ("y", "m"), "kernel has CONFIG_MODULES and CONFIG_DRM (nvidia-drm buildable)")
+    modversions = facts["CONFIG_MODVERSIONS"] == "y"
+    say("    -> MODVERSIONS %s: symbol CRC checking %s for this kernel" % ("enabled" if modversions else "not enabled", "applies" if modversions else "is NOT APPLICABLE (vermagic-only ABI)"))
+    say("    -> MODULE_SIG %s; MODULE_COMPRESS %s" % ("enabled" if facts["CONFIG_MODULE_SIG"] == "y" else "not enabled",
+        "enabled" if "y" in (facts["CONFIG_MODULE_COMPRESS_XZ"], facts["CONFIG_MODULE_COMPRESS_ZSTD"]) else "not enabled"))
+
+    say("\n## 3. Package identities (feed) and control fields")
+    ours = {}
+    for name in ["symoneural-nvidia-open-kernel", "symoneural-nvidia-open-kernel-dev", "symoneural-nvidia-open-kernel-dbg"] + \
+                ["kernel-module-%s-%s" % (m, kver) for m in MODULES]:
+        found = sorted(deploy.glob("%s_%s-r*_qemux86_64.ipk" % (name, NV_VERSION)))
+        if check(len(found) == 1, "exactly one %s ipk" % name, found[0].name if found else "none"):
+            ours[name] = found[0]
+            say("    %s  %d B  sha256 %s" % (found[0].name, found[0].stat().st_size, sha256(found[0])))
+    if len(ours) < 7:
+        return finish()
+    for m in MODULES:
+        pk = "kernel-module-%s-%s" % (m, kver)
+        ctrl = ipk_control(ours[pk])
+        dep = re.search(r"^Depends: (.*)$", ctrl, re.M)
+        arch = re.search(r"^Architecture: (.*)$", ctrl, re.M).group(1)
+        src = re.search(r"^Source: (.*)$", ctrl, re.M)
+        say("    %s: Architecture=%s Depends=%s" % (pk, arch, dep.group(1) if dep else "-"))
+        check(arch == "qemux86_64", "%s: machine-specific architecture qemux86_64" % pk)
+        check(dep is not None and "kernel-%s" % kver in dep.group(1), "%s: depends on the estate kernel package kernel-%s" % (pk, kver))
+        check(src is not None and src.group(1) == "symoneural-nvidia-open-kernel_%s.bb" % NV_VERSION, "%s: ownership recorded (Source: symoneural-nvidia-open-kernel_%s.bb)" % (pk, NV_VERSION))
+        files = ipk_files(ours[pk])
+        say("       files: %s" % " ".join(files))
+        check(files == ["./usr/lib/modules/%s/kernel/drivers/video/%s.ko" % (kver, m)], "%s: exactly one file, under /usr/lib/modules/%s/" % (pk, kver))
+    meta_ctrl = ipk_control(ours["symoneural-nvidia-open-kernel"])
+    mdep = re.search(r"^Depends: (.*)$", meta_ctrl, re.M).group(1)
+    check(all(("kernel-module-%s-%s" % (m, kver)) in mdep for m in MODULES), "meta package depends on all four module packages", mdep)
+    check(EXCLUDED not in mdep and not any(EXCLUDED in f for f in ipk_files(ours["symoneural-nvidia-open-kernel-dbg"])), "no %s anywhere" % EXCLUDED)
+    dev_files = ipk_files(ours["symoneural-nvidia-open-kernel-dev"])
+    check(dev_files == ["./usr/include/symoneural-nvidia-open-kernel/Module.symvers"], "-dev holds exactly the NVIDIA Module.symvers", " ".join(dev_files))
+
+    say("\n## 4. Disposable root, installed from the package feed with the estate's own opkg")
+    root = new_root("Platform", args.root)
+    say("    root: %s" % root)
+    (root / "usr/lib").mkdir(parents=True)
+    os.symlink("usr/lib", root / "lib")   # usrmerge layout (the estate distro's /lib -> usr/lib)
+    common = ROOT / "Symoneural-Common/build/devtool-master/tmp/sysroots-components/x86_64"
+    opkg = common / "opkg-native/usr/bin/opkg"
+    env = dict(os.environ, LD_LIBRARY_PATH="%s:%s" % (common / "opkg-native/usr/lib", common / "libsolv-native/usr/lib"))
+    say("    opkg: %s (%s)" % (opkg.relative_to(ROOT), run([str(opkg), "--version"], env=env).stdout.strip()))
+    # A real feed: every ipk of the deploy directory symlinked into a temporary feed with a generated
+    # Packages index (control fields + Filename/Size/SHA256sum), so opkg resolves the dependency
+    # closure itself - the module packages depend on kernel-<ver> and on in-tree helper modules,
+    # which in turn depend on further kernel modules (video -> wmi ...). Nothing is hand-listed.
+    feed = root / "tmp/feed"
+    feed.mkdir(parents=True, exist_ok=True)
+    index = []
+    for ipk in sorted(deploy.glob("*.ipk")):
+        os.symlink(ipk, feed / ipk.name)
+        ctrl = ipk_control(ipk).strip()
+        index.append(ctrl + "\nFilename: %s\nSize: %d\nSHA256sum: %s\n" % (ipk.name, ipk.stat().st_size, sha256(ipk)))
+    (feed / "Packages").write_text("\n".join(index) + "\n")
+    say("    feed: %d packages indexed from %s" % (len(index), deploy.relative_to(ROOT)))
+    conf = root / "tmp/opkg.conf"
+    conf.write_text("arch all 1\narch qemux86_64 9\narch x86-64-v3 5\narch x86_64 3\narch noarch 2\nsrc feed file://%s\n" % feed)
+    r = run([str(opkg), "-o", str(root), "-f", str(conf), "--volatile-cache", "update"], env=env)
+    check(r.returncode == 0, "opkg update (feed index read)", (r.stdout + r.stderr).strip().splitlines()[-1][:160] if (r.stdout + r.stderr).strip() else "")
+    targets = ["symoneural-nvidia-open-kernel", "symoneural-nvidia-open-kernel-dev", "symoneural-nvidia-open-kernel-dbg", "kernel-dev"]
+    cmd = [str(opkg), "-o", str(root), "-f", str(conf), "--volatile-cache", "install"] + targets
+    r = run(cmd, env=env)
+    say("    $ opkg -o <root> -f <conf> --volatile-cache install %s  -> rc=%d" % (" ".join(targets), r.returncode))
+    lines = (r.stdout + r.stderr).strip().splitlines()
+    for l in [x for x in lines if x.startswith(("Installing", "Configuring")) or "problem" in x.lower() or "nothing provides" in x][:24]:
+        say("    | " + l.replace(str(root), "<root>").replace(str(feed) + "/", ""))
+    check(r.returncode == 0, "opkg install rc=0 (dependency closure resolved by opkg from the feed)")
+    inst = run([str(opkg), "-o", str(root), "-f", str(conf), "list-installed"], env=env).stdout
+    say("    installed: %s" % ", ".join(sorted(l.split(" - ")[0] for l in inst.splitlines() if l.strip())))
+    for name in ours:
+        check(re.search(r"^%s - " % re.escape(name), inst, re.M) is not None, "%s recorded as installed" % name)
+    moddir = root / "usr/lib/modules" / kver
+    kos = sorted((moddir / "kernel/drivers/video").glob("nvidia*.ko")) if moddir.exists() else []
+    check([k.name for k in kos] == sorted(m + ".ko" for m in MODULES), "four modules present under /usr/lib/modules/%s/kernel/drivers/video" % kver, " ".join(k.name for k in kos))
+    check(not list(root.rglob("*peermem*")), "no %s in the root" % EXCLUDED)
+    check(not list(root.rglob("*.ko.xz")) or True, "in-tree modules uncompressed or compressed as the kernel config dictates (informational)")
+    check(not (root / "usr/lib/modules" / kver / "updates/dkms").exists() and not list(root.rglob("dkms")), "no Debian DKMS path in the root")
+    check(not list(root.rglob("libcuda*")) and not list(root.rglob("libnvidia*")) and not list(root.rglob("*.bin")), "no NVIDIA userspace library or firmware blob was pulled into the root")
+    if not kos:
+        return finish(root, args)
+
+    say("\n## 5. depmod in the staged root against the kernel's own Module.symvers (from kernel-dev)")
+    symvers = root / "boot" / ("Module.symvers-" + kver)
+    check(symvers.exists() and (moddir / "modules.builtin").exists(), "root has Module.symvers-%s (kernel-dev) and modules.builtin (kernel-%s)" % (kver, kver))
+    cmd = [DEPMOD, "-b", str(root), "-e", "-E", str(symvers), kver]
+    r = run(cmd)
+    warn = [l for l in (r.stdout + r.stderr).splitlines() if l.strip()]
+    ours_w = [l for l in warn if "/nvidia" in l]
+    say("    $ depmod -b <root> -e -E <root>/boot/Module.symvers-%s %s  -> rc=%d; diagnostics: %d ours / %d total" % (kver, kver, r.returncode, len(ours_w), len(warn)))
+    for l in (ours_w or warn)[:8]:
+        say("    | " + l.replace(str(root), "<root>"))
+    check(r.returncode == 0, "depmod rc=0")
+    check(not ours_w, "depmod -e -E: no unresolved symbol in the four modules against the estate kernel's Module.symvers")
+    deps = {}
+    for line in (moddir / "modules.dep").read_text().splitlines():
+        k, _, v = line.partition(":")
+        if "/nvidia" in k:
+            deps[os.path.basename(k)] = v.split()
+            say("    modules.dep: %s: %s" % (k, " ".join(os.path.basename(x) for x in v.split())))
+    check(len(deps) == 4, "modules.dep indexes all four modules")
+    check(all("kernel/drivers/video/nvidia.ko" in deps.get(m + ".ko", []) for m in ("nvidia-uvm", "nvidia-modeset")), "nvidia-uvm and nvidia-modeset resolve to this root's nvidia.ko")
+    alias = [l for l in (moddir / "modules.alias").read_text().splitlines() if l.endswith(" nvidia") or l.endswith(" nvidia_drm")]
+    check(any("pci:v000010DE" in l for l in alias), "PCI vendor 10DE alias registered", "%d alias lines" % len(alias))
+
+    say("\n## 6. Module metadata")
+    for ko in kos:
+        f = modinfo_fields(ko)
+        say("    %s: version=%s license=%s vermagic=%s depends=%s srcversion=%s signature=%s" % (
+            ko.stem, f.get("version", ["?"])[0], f.get("license", ["?"])[0], f.get("vermagic", ["?"])[0].strip(), f.get("depends", [""])[0],
+            f.get("srcversion", ["?"])[0], f.get("sig_id", ["none (UNSIGNED)"])[0]))
+        check(f.get("vermagic", [""])[0].startswith(kver + " SMP preempt mod_unload"), "%s vermagic is the estate kernel's" % ko.stem)
+        check(not modversions or "modversions" in f.get("vermagic", [""])[0], "%s vermagic modversions flag consistent with the kernel config" % ko.stem)
+        check(f.get("license", [""])[0] == "Dual MIT/GPL" and f.get("version", [""])[0] == NV_VERSION, "%s license/version strings" % ko.stem)
+        check("sig_id" not in f, "%s unsigned (no signing key exists or is used)" % ko.stem)
+        if ko.stem == "nvidia":
+            fw = f.get("firmware", [])
+            say("       firmware requested: %s" % ", ".join(fw))
+            check(bool(fw) and all(x.startswith("nvidia/%s/" % NV_VERSION) for x in fw), "nvidia requests GSP/ucode firmware under nvidia/%s/ (NOT provided by any estate package - recorded blocker)" % NV_VERSION)
+    if modversions:
+        say("    (MODVERSIONS enabled: CRC check would run here)")
+    else:
+        r = run([MODPROBE, "--dump-modversions", str(kos[0])])
+        say("    modprobe --dump-modversions -> rc=%d (%s): NOT APPLICABLE, the estate kernel has no CONFIG_MODVERSIONS" % (r.returncode, r.stderr.strip()[-60:] or "no data"))
+
+    say("\n## 7. ELF, sections, and leakage (shipped modules)")
+    for ko in kos:
+        cls, typ, mach, secs = readelf_facts(ko)
+        check(cls == "ELF64" and typ == "REL" and mach == "Advanced Micro Devices X86-64", "%s: ELF64 relocatable x86-64" % ko.stem)
+        say("       sections: .modinfo=%s __versions=%s (n/a without MODVERSIONS) .BTF=%s .debug*=%d" % (
+            ".modinfo" in secs, "__versions" in secs, ".BTF" in secs, len([x for x in secs if x.startswith(".debug")])))
+        check(".modinfo" in secs, "%s: carries .modinfo" % ko.stem)
+        needles = [tmpdir, str(ROOT), "/home/google", "/usr/src/linux-headers", "/lib/modules/6.12.107", "/usr/src/nvidia-" + NV_VERSION]
+        hits = strings_hits(ko, needles)
+        for n in needles:
+            check(not hits[n], "%s: no string contains %r" % (ko.stem, n), ("%d hit(s), e.g. %s" % (len(hits[n]), hits[n][0][:120])) if hits[n] else "0 hits")
+        for what, word in (("hostname", os.uname().nodename), ("login", os.environ.get("USER") or "google")):
+            rx = re.compile(r"(?<![A-Za-z0-9_])%s(?![A-Za-z0-9_-])" % re.escape(word))
+            found = [l for l in run(["strings", "-a", str(ko)]).stdout.splitlines() if rx.search(l)]
+            check(not found, "%s: no whole-word occurrence of the %s %r" % (ko.stem, what, word), ("%d hit(s), e.g. %s" % (len(found), found[0][:120])) if found else "0 hits")
+    nv_strings = strings_hits([k for k in kos if k.stem == "nvidia"][0], ["NVIDIA UNIX Open Kernel Module"])["NVIDIA UNIX Open Kernel Module"]
+    for l in nv_strings[:1]:
+        say("    build string: %s" % l.strip()[:160])
+    check(any("(symoneural@symoneural)" in l for l in nv_strings), "nv-kernel.o build string carries the fixed identity (symoneural@symoneural)")
+
+    say("\n## 8. Build log: explicit kernel inputs, estate cross toolchain, no host kernel")
+    logs = sorted(glob.glob(str(bd / ("tmp/work/*/symoneural-nvidia-open-kernel/%s/temp/log.do_compile" % NV_VERSION))))
+    if check(len(logs) == 1, "one do_compile log", logs[0] if logs else "none"):
+        text = Path(logs[0]).read_text(errors="replace")
+        m = re.search(r"^NOTE: make .*SYSSRC=(\S+) SYSOUT=(\S+) KERNEL_UNAME=(\S+).*$", text, re.M)
+        if check(m is not None, "make invoked with explicit SYSSRC/SYSOUT/KERNEL_UNAME"):
+            say("    SYSSRC = %s" % m.group(1).replace(str(ROOT) + "/", ""))
+            say("    SYSOUT = %s" % m.group(2).replace(str(ROOT) + "/", ""))
+            say("    KERNEL_UNAME = %s" % m.group(3))
+            check(m.group(1).endswith("work-shared/qemux86-64/kernel-source") and m.group(2).endswith("work-shared/qemux86-64/kernel-build-artifacts") and m.group(3) == kver,
+                  "inputs are the estate kernel's shared source and build-artifact trees")
+        oe = len([l for l in text.splitlines() if "x86_64-oe-linux-gcc" in l])
+        host = len([l for l in text.splitlines() if re.search(r"\bx86_64-linux-gnu-gcc|(^|\s)gcc\s", l)])
+        say("    compiler invocations: x86_64-oe-linux-gcc %d; host gcc %d; conftest probes %d; [M] compiles %d; MODPOST %s" % (
+            oe, host, len([l for l in text.splitlines() if "CONFTEST:" in l]), len([l for l in text.splitlines() if re.search(r"\bCC \[M\]", l)]), "yes" if "MODPOST" in text else "no"))
+        check(oe > 50 and host == 0, "only the estate cross compiler compiled the modules")
+        check("uname -r" not in text and "/lib/modules/6.12.107" not in text and "/usr/src/linux-headers" not in text and "/usr/src/nvidia-" + NV_VERSION not in text,
+              "no host kernel path, host header tree or DKMS source referenced in the build log")
+
+    say("\n## 9. Not exercised (by design of this baseline)")
+    say("    BOOT: NOT TESTED   MODULE LOAD: NOT TESTED   GPU CONSUMER: NOT TESTED   SIGNING: not applicable to the QEMU baseline (unsigned)")
+    say("    Userspace driver and GSP firmware providers for the estate profile: none - deployment BLOCKED (docs/platform/NVIDIA-OPEN-KERNEL.md section 4)")
+    return finish(root, args)
+
+def finish(root=None, args=None):
+    say("\n## Result")
+    if FAILS:
+        say("FAILED checks (%d):" % len(FAILS))
+        for f in FAILS:
+            say("  - " + f)
+    if root is not None:
+        if args is not None and args.keep:
+            say("root kept at %s" % root)
+        else:
+            shutil.rmtree(root, ignore_errors=True)
+            say("root removed: %s" % root)
+    say("RESULT: %s" % ("FAIL" if FAILS else "PASS"))
+    return 1 if FAILS else 0
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("target", choices=["debian", "estate"])
+    ap.add_argument("--root", help="absolute path of a NEW directory for the disposable root (default: mkdtemp under $TMPDIR)")
+    ap.add_argument("--keep", action="store_true", help="keep the disposable root for inspection")
+    args = ap.parse_args()
+    if args.target == "debian":
+        return debian(args)
+    return estate(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

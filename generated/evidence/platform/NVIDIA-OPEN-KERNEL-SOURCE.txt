@@ -1,0 +1,20 @@
+# NVIDIA open GPU kernel modules 615.71.09 - SOURCE identity (Platform runtime)
+generated : 2026-09-14 18:12 EDT
+upstream  : https://github.com/NVIDIA/open-gpu-kernel-modules
+tag       : 615.71.09 (annotated tag object d2a24f90e843359450ab313a286f43a88d95c6ce, SSH-signed by NVIDIA's tagger)
+commit    : 61dcc93722ecb418bb5f2e00923f05b4b8051dd1
+tree      : 9199a9f620b76343c35c207354ffcb3d1570053d
+ls-remote : 61dcc93722ecb418bb5f2e00923f05b4b8051dd1 = refs/tags/615.71.09^{} (re-checked at generation time)
+source    : Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules (4005 files committed)
+pin store : Symoneural-Platform/src/kernel/.gitpins/open-gpu-kernel-modules.git (local; HEAD 61dcc93722ecb418bb5f2e00923f05b4b8051dd1)
+verify    : open-gpu-kernel-modules    Platform         61dcc93722ec ·    4005 files · VERIFIED
+acquired  : commit 1e385bf66 (tools/ingest-and-commit); records commit 670d01c81
+COPYING   : md5 1d5fa2a493e937d5a4b96e5e03b90f7c - MIT except where noted; linked kernel module dual MIT/GPLv2
+SPDX census (committed tree):
+     2946 SPDX-License-Identifier: MIT
+        1 SPDX-License-Identifier: Linux-OpenIB
+        1 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+version.mk: NVIDIA_VERSION = 615.71.09
+GPU table : 983:| NVIDIA GeForce RTX 5070 Ti                              | 2C05           | (README.md; host GPU 10de:2c05; a table row is not functional proof)
+reference : /home/google/Desktop/open-gpu-kernel-modules-main.zip sha256 d92c0aa2b8645bca2becf76551a832b58988e412658a3d37d438ed6ba3406445 (supporting evidence only)
+Debian DKMS copy: /usr/src/nvidia-615.71.09/kernel-open differs from the committed kernel-open/ only by dkms.conf (diff -rq; evidence only, never a build input)

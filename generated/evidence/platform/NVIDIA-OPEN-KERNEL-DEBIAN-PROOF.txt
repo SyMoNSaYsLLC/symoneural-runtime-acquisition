@@ -1,0 +1,226 @@
+# symoneural-nvidia-open-kernel :: DEBIAN 6.12.107+deb13-amd64 staged-install proof
+date      : 2026-09-14 18:05:10 -0400
+host      : kernel 6.12.107+deb13-amd64; /sys/module/nvidia/version 615.71.09
+build dir : Symoneural-Platform/build/debian-6.12.107-deb13-amd64
+NOTE      : the host runs the SAME ABI, so an equal vermagic alone proves nothing about which
+            kernel tree was used - see the build-log and negative-control sections below.
+
+## 1. Package identities (deploy tree)
+  [PASS] exactly one main .deb in the deploy tree - /home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64_615.71.09-r0_amd64.deb
+    main: Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64_615.71.09-r0_amd64.deb  9388388 B  sha256 c1f6abc07885ebfb9a20abed3ed0bb49a36be6eddcf3761b2e7e6d9a1d62ffec
+  [PASS] exactly one dev .deb in the deploy tree - /home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev_615.71.09-r0_amd64.deb
+    dev: Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev_615.71.09-r0_amd64.deb  2888 B  sha256 9c1f2adc55549acabae2c869aa7e7b738499425a0fa8588714ece9896c236ad6
+  [PASS] exactly one dbg .deb in the deploy tree - /home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dbg_615.71.09-r0_amd64.deb
+    dbg: Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/deploy/deb/x86-64-v3/symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dbg_615.71.09-r0_amd64.deb  13027068 B  sha256 257d32e086151de89a3c7dbd62f816546f1b3e37d3a6f619b3457f4c114e1dcb
+  control fields (main):
+    Package: symoneural-nvidia-open-kernel-6.12.107+deb13-amd64
+    Version: 615.71.09-r0
+    Description: NVIDIA open GPU kernel modules 615.71.09 for Debian 6.12.107+deb13-amd64 (source-built, unsigned, HOST-CONDITIONED)
+    Section: kernel
+    Priority: optional
+    Maintainer: SyMoNeuRaL <gmcdonald@symoneural.com>
+    Architecture: amd64
+    Depends: linux-image-6.12.107+deb13-amd64 (= 6.12.107-1), firmware-nvidia-gsp (= 615.71.09-2)
+    Conflicts: nvidia-kernel-615.71.09, nvidia-kernel-dkms, nvidia-kernel-open-dkms
+  [PASS] Architecture is amd64
+  [PASS] package name carries the kernel ABI
+  [PASS] Depends pins linux-image-6.12.107+deb13-amd64 (= 6.12.107-1) - linux-image-6.12.107+deb13-amd64 (= 6.12.107-1), firmware-nvidia-gsp (= 615.71.09-2)
+  [PASS] Depends pins firmware-nvidia-gsp (= 615.71.09-2)
+  [PASS] Conflicts declares the DKMS module-name collision - nvidia-kernel-615.71.09, nvidia-kernel-dkms, nvidia-kernel-open-dkms
+  contents (main):
+    ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-drm.ko
+    ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-modeset.ko
+    ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-uvm.ko
+    ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia.ko
+  [PASS] every file lives under ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/
+  [PASS] exactly the four modules nvidia nvidia-uvm nvidia-modeset nvidia-drm
+  [PASS] no nvidia-peermem artifact
+  [PASS] no driver userspace library, no GSP firmware, no DKMS path in the package
+
+## 2. Debian kernel inputs used by the build (deployed, byte-identical to the fetch)
+  [PASS] linux-headers-6.12.107+deb13-amd64_6.12.107-1_amd64.deb sha256 == trixie/main index value - 0ab746a3d854ad0e
+  [PASS] linux-headers-6.12.107+deb13-common_6.12.107-1_all.deb sha256 == trixie/main index value - 12dc292d7c238928
+  [PASS] linux-kbuild-6.12.107+deb13_6.12.107-1_amd64.deb sha256 == trixie/main index value - 0a88527eb05bca1c
+  [PASS] linux-image-6.12.107+deb13-amd64_6.12.107-1_amd64.deb sha256 == trixie/main index value - 7794643cf4560de2
+
+## 3. Host module tree snapshot (read-only, before)
+    modules.dep sha256 f7034645a909450a; 6 entries under updates/: updates/dkms updates/dkms/nvidia-drm.ko.xz updates/dkms/nvidia-modeset.ko.xz updates/dkms/nvidia-peermem.ko.xz updates/dkms/nvidia-uvm.ko.xz updates/dkms/nvidia.ko.xz
+  [PASS] host has no updates/symoneural directory
+
+## 4. Disposable root
+    root: /tmp/claude-1000/symoneural-platform-proof-rapn3ed1 (outside the estate; removed at the end unless --keep)
+  [PASS] extracted linux-image-6.12.107+deb13-amd64_6.12.107-1_amd64.deb into the root
+  [PASS] extracted linux-headers-6.12.107+deb13-amd64_6.12.107-1_amd64.deb into the root
+  [PASS] root has modules.builtin for 6.12.107+deb13-amd64
+  [PASS] root has System.map-6.12.107+deb13-amd64
+
+## 5. Package installation into the root (dpkg --unpack under an unprivileged user namespace)
+    $ unshare -Ur env PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin dpkg --root=<root> --admindir=<root>/var/lib/dpkg --unpack <main.deb> <dev.deb>
+    | Selecting previously unselected package symoneural-nvidia-open-kernel-6.12.107+deb13-amd64.
+    | (Reading database ... 0 files and directories currently installed.)
+    | Preparing to unpack .../symoneural-nvidia-open-kernel-6.12.107+deb13-amd64_615.71.09-r0_amd64.deb ...
+    | Unpacking symoneural-nvidia-open-kernel-6.12.107+deb13-amd64 (615.71.09-r0) ...
+    | Selecting previously unselected package symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev.
+    | Preparing to unpack .../symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev_615.71.09-r0_amd64.deb ...
+    | Unpacking symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev (615.71.09-r0) ...
+    | dpkg: could not open log '/var/log/dpkg.log': Permission denied
+    | touch: cannot touch '/run/needrestart/unpacked': Read-only file system
+  [PASS] dpkg --unpack rc=0
+    dpkg -l: iU  symoneural-nvidia-open-kernel-6.12.107+deb13-amd64 615.71.09-r0 amd64        NVIDIA open GPU kernel modules 615.71.09 for Debian 6.12.107+deb13-amd64 (source-built, unsigned, HOST-CONDITIONED)
+  [PASS] dpkg records the package as unpacked (iU)
+  [PASS] all four .ko present under the root's updates/symoneural - nvidia-drm.ko nvidia-modeset.ko nvidia-uvm.ko nvidia.ko
+  [PASS] no nvidia-peermem in the root
+  [PASS] no updates/dkms path was created in the root
+
+## 6. depmod in the staged root (never the live database)
+    System.map in linux-image: 83 bytes (ffffffffffffffff B The real System.map is in the linux-image-<version>-dbg packa)
+    $ depmod -b <root> -e -E <root>/usr/src/linux-headers-6.12.107+deb13-amd64/Module.symvers 6.12.107+deb13-amd64  -> rc=0
+    diagnostics: 0 about updates/symoneural (ours), 0 about Debian's in-tree modules
+  [PASS] depmod rc=0
+  [PASS] depmod -e -E: no unresolved or version-mismatched symbol in the four modules against Module.symvers
+    modules.dep: updates/symoneural/nvidia-modeset.ko: nvidia.ko drm.ko.xz video.ko.xz wmi.ko.xz
+    modules.dep: updates/symoneural/nvidia-drm.ko: nvidia-modeset.ko nvidia.ko drm_display_helper.ko.xz cec.ko.xz rc-core.ko.xz drm_ttm_helper.ko.xz ttm.ko.xz drm_kms_helper.ko.xz drm.ko.xz video.ko.xz wmi.ko.xz
+    modules.dep: updates/symoneural/nvidia-uvm.ko: nvidia.ko drm.ko.xz
+    modules.dep: updates/symoneural/nvidia.ko: drm.ko.xz
+  [PASS] modules.dep indexes all four modules
+  [PASS] nvidia-uvm and nvidia-modeset depend on updates/symoneural/nvidia.ko (not on a dkms path)
+  [PASS] no dependency resolves into updates/dkms
+    modules.alias: 11 alias lines for nvidia/nvidia_drm, e.g. alias pci:v000010DEd*sv*sd*bc06sc80i00* nvidia_drm
+  [PASS] PCI vendor 10DE alias registered for nvidia
+
+## 7. Module metadata vs the host's DKMS-built reference modules (reference is read-only)
+    nvidia-drm: version=615.71.09 license=Dual MIT/GPL vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions
+       depends=drm_kms_helper,drm,drm_display_helper,nvidia-modeset,drm_ttm_helper srcversion=9DA117AD1DFAE8171257C3B retpoline=Y signature=none (UNSIGNED)
+  [PASS] nvidia-drm vermagic == Debian ABI
+  [PASS] nvidia-drm license string 'Dual MIT/GPL'
+  [PASS] nvidia-drm version 615.71.09
+  [PASS] nvidia-drm carries no signature (unsigned by design)
+       reference (host DKMS nvidia-drm.ko.xz): srcversion=9DA117AD1DFAE8171257C3B vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions -> srcversion IDENTICAL
+  [PASS] nvidia-drm srcversion equals the host's DKMS-built module (same source inputs)
+    nvidia-modeset: version=615.71.09 license=Dual MIT/GPL vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions
+       depends=video,nvidia srcversion=CCBAFC541F2389A746AE374 retpoline=Y signature=none (UNSIGNED)
+  [PASS] nvidia-modeset vermagic == Debian ABI
+  [PASS] nvidia-modeset license string 'Dual MIT/GPL'
+  [PASS] nvidia-modeset version 615.71.09
+  [PASS] nvidia-modeset carries no signature (unsigned by design)
+       reference (host DKMS nvidia-modeset.ko.xz): srcversion=CCBAFC541F2389A746AE374 vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions -> srcversion IDENTICAL
+  [PASS] nvidia-modeset srcversion equals the host's DKMS-built module (same source inputs)
+    nvidia-uvm: version=615.71.09 license=Dual MIT/GPL vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions
+       depends=nvidia srcversion=6202FC58DF27C2234648613 retpoline=Y signature=none (UNSIGNED)
+  [PASS] nvidia-uvm vermagic == Debian ABI
+  [PASS] nvidia-uvm license string 'Dual MIT/GPL'
+  [PASS] nvidia-uvm version 615.71.09
+  [PASS] nvidia-uvm carries no signature (unsigned by design)
+       reference (host DKMS nvidia-uvm.ko.xz): srcversion=6202FC58DF27C2234648613 vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions -> srcversion IDENTICAL
+  [PASS] nvidia-uvm srcversion equals the host's DKMS-built module (same source inputs)
+    nvidia: version=615.71.09 license=Dual MIT/GPL vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions
+       depends=drm srcversion=21362C9DF5C1F6DCBE23F50 retpoline=Y signature=none (UNSIGNED)
+       firmware: nvidia/615.71.09/ucodes_tu10x.bin, nvidia/615.71.09/ucodes_ga10x.bin, nvidia/615.71.09/gsp_tu10x.bin, nvidia/615.71.09/gsp_ga10x.bin
+  [PASS] nvidia vermagic == Debian ABI
+  [PASS] nvidia license string 'Dual MIT/GPL'
+  [PASS] nvidia version 615.71.09
+  [PASS] nvidia carries no signature (unsigned by design)
+  [PASS] nvidia requests GSP/ucode firmware under nvidia/615.71.09/ - 4 files
+       reference (host DKMS nvidia.ko.xz): srcversion=21362C9DF5C1F6DCBE23F50 vermagic=6.12.107+deb13-amd64 SMP preempt mod_unload modversions -> srcversion IDENTICAL
+  [PASS] nvidia srcversion equals the host's DKMS-built module (same source inputs)
+
+## 8. MODVERSIONS: every imported symbol CRC matches the kernel's Module.symvers or a sibling module
+    kernel Module.symvers: 26734 exported symbols
+    -dev Module.symvers (this build): 104 symbols exported by the NVIDIA modules
+    nvidia-drm: 272 imports -> 264 kernel CRC matches, 8 NVIDIA-module CRC matches, 0 unmatched
+  [PASS] nvidia-drm: all 272 symbol CRCs resolve
+  [PASS] nvidia-drm: imports module_layout (MODVERSIONS ABI anchor)
+    nvidia-modeset: 103 imports -> 102 kernel CRC matches, 1 NVIDIA-module CRC matches, 0 unmatched
+  [PASS] nvidia-modeset: all 103 symbol CRCs resolve
+  [PASS] nvidia-modeset: imports module_layout (MODVERSIONS ABI anchor)
+    nvidia-uvm: 327 imports -> 248 kernel CRC matches, 79 NVIDIA-module CRC matches, 0 unmatched
+  [PASS] nvidia-uvm: all 327 symbol CRCs resolve
+  [PASS] nvidia-uvm: imports module_layout (MODVERSIONS ABI anchor)
+    nvidia: 459 imports -> 459 kernel CRC matches, 0 NVIDIA-module CRC matches, 0 unmatched
+  [PASS] nvidia: all 459 symbol CRCs resolve
+  [PASS] nvidia: imports module_layout (MODVERSIONS ABI anchor)
+
+## 9. ELF architecture, sections, and build-path / identity leakage (shipped modules)
+  [PASS] nvidia-drm: ELF64 relocatable x86-64 - ELF64 REL Advanced Micro Devices X86-64
+       sections: .modinfo=True .BTF=True .BTF.base=True __versions=True .debug*=0
+  [PASS] nvidia-drm: carries .modinfo and __versions (MODVERSIONS)
+  [PASS] nvidia-drm: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp' - 0 hits
+  [PASS] nvidia-drm: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-drm: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-drm: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-drm: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-drm: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia-modeset: ELF64 relocatable x86-64 - ELF64 REL Advanced Micro Devices X86-64
+       sections: .modinfo=True .BTF=True .BTF.base=True __versions=True .debug*=0
+  [PASS] nvidia-modeset: carries .modinfo and __versions (MODVERSIONS)
+  [PASS] nvidia-modeset: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-modeset: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-modeset: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia-uvm: ELF64 relocatable x86-64 - ELF64 REL Advanced Micro Devices X86-64
+       sections: .modinfo=True .BTF=True .BTF.base=True __versions=True .debug*=0
+  [PASS] nvidia-uvm: carries .modinfo and __versions (MODVERSIONS)
+  [PASS] nvidia-uvm: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-uvm: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-uvm: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia: ELF64 relocatable x86-64 - ELF64 REL Advanced Micro Devices X86-64
+       sections: .modinfo=True .BTF=True .BTF.base=True __versions=True .debug*=0
+  [PASS] nvidia: carries .modinfo and __versions (MODVERSIONS)
+  [PASS] nvidia: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp' - 0 hits
+  [PASS] nvidia: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia: no string contains '/home/google' - 0 hits
+  [PASS] nvidia: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia: no whole-word occurrence of the login 'google' - 0 hits
+    build string: nvidia id: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (symoneural@symoneural)  Mon Sep 14 09:54:23 PM UTC 2026
+  [PASS] nv-kernel.o build string carries the fixed identity (symoneural@symoneural)
+  -dbg package (debug info, prefix-mapped):
+  [PASS] -dbg holds four debug counterparts - usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/.debug/nvidia-drm.ko usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/.debug/nvidia-modeset.ko
+  [PASS] nvidia-drm.ko debug info has no build/home path - hits: 0/0
+       nvidia-drm.ko: 59 DWARF strings under /usr/src/debug/symoneural-nvidia-open-kernel-debian (prefix map applied)
+  [PASS] nvidia-modeset.ko debug info has no build/home path - hits: 0/0
+       nvidia-modeset.ko: 8 DWARF strings under /usr/src/debug/symoneural-nvidia-open-kernel-debian (prefix map applied)
+  [PASS] nvidia-uvm.ko debug info has no build/home path - hits: 0/0
+       nvidia-uvm.ko: 352 DWARF strings under /usr/src/debug/symoneural-nvidia-open-kernel-debian (prefix map applied)
+  [PASS] nvidia.ko debug info has no build/home path - hits: 0/0
+       nvidia.ko: 170 DWARF strings under /usr/src/debug/symoneural-nvidia-open-kernel-debian (prefix map applied)
+
+## 10. Build log: explicit kernel inputs, declared toolchain, no host fallback
+  [PASS] one do_compile log - /home/google/SymonSaysLLC/Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/temp/log.do_compile
+  [PASS] make was invoked with explicit SYSSRC/SYSOUT/KERNEL_UNAME
+    SYSSRC     = Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/recipe-sysroot/usr/src/linux-headers-6.12.107+deb13-common
+    SYSOUT     = Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/recipe-sysroot/usr/src/linux-headers-6.12.107+deb13-amd64
+    KERNEL_UNAME = 6.12.107+deb13-amd64
+  [PASS] SYSSRC is the staged sysroot common tree
+  [PASS] SYSOUT is the staged sysroot arch tree
+    compiler invocations naming x86_64-linux-gnu-gcc-14: 1685; naming x86_64-oe-linux-gcc: 0
+  [PASS] only the declared Debian compiler compiled the modules
+  [PASS] host DKMS source (/usr/src/nvidia-615.71.09) never referenced
+  [PASS] host /lib/modules/<abi>/build never referenced
+  [PASS] BTF generated for all four modules (pahole --btf_base vmlinux ran; no skip message) - 4 pahole runs, 0 skip messages
+    conftest probes: 248; kbuild [M] compiles: 202; MODPOST: yes
+
+## 11. Negative control: the wrapper honours SYSSRC/SYSOUT (a wrong path fails; no uname -r rescue)
+  [PASS] fresh export of kernel-open/ from HEAD:Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules
+    $ make -C kernel-open SYSSRC=/nonexistent/kernel-src SYSOUT=/nonexistent/kernel-out KERNEL_UNAME=6.12.107+deb13-amd64 ... modules -> rc=2
+    | make[1]: Leaving directory '/tmp/claude-1000/symoneural-platform-proof-rapn3ed1/nv-neg-ziykq8na/kernel-open'
+    | make: Leaving directory '/tmp/claude-1000/symoneural-platform-proof-rapn3ed1/nv-neg-ziykq8na/kernel-open'
+    | make[1]: *** /nonexistent/kernel-src: No such file or directory.  Stop.
+    | make: *** [Makefile:115: modules] Error 2
+  [PASS] build against a nonexistent SYSSRC fails
+  [PASS] the failure names the explicit SYSSRC path
+  [PASS] no module was produced by the negative run
+    (the host's /lib/modules/6.12.107+deb13-amd64/build exists; had the wrapper fallen back to `uname -r` this run would have proceeded)
+
+## 12. Host module tree unchanged (after)
+  [PASS] host modules.dep hash, mtime and updates/ listing identical to the snapshot before the proof
+  [PASS] host still has no updates/symoneural
+
+## Result
+root removed: /tmp/claude-1000/symoneural-platform-proof-rapn3ed1
+RESULT: PASS

@@ -1,0 +1,76 @@
+# NVIDIA open GPU kernel modules 615.71.09 - TARGET A: Debian 6.12.107+deb13-amd64 build (HOST-CONDITIONED)
+generated : 2026-09-14 18:12 EDT
+build dir : Symoneural-Platform/build/debian-6.12.107-deb13-amd64 (template meta-symoneural/conf/templates/platform-debian-6.12.107-deb13-amd64)
+recipes   : debian-kernel-inputs-6.12.107+deb13-amd64_6.12.107.bb ; symoneural-nvidia-open-kernel-debian_615.71.09.bb (require symoneural-nvidia-open-kernel.inc)
+bitbake   : rc=0, Attempted 830 tasks of which 775 didn't need to be rerun and all succeeded
+
+## Kernel inputs (fetched by SHA256; trixie/main index sha256 4f2c68d67001d595fbd343f6dbad44468953a51c4d9dec3a4803249f6e295940, Debian 13.7, InRelease 12 Sep 2026)
+  0ab746a3d854ad0e666923147842d1e629cdb3e29a97b76ae25b4911285174e4  linux-headers-6.12.107+deb13-amd64_6.12.107-1_amd64.deb
+  12dc292d7c238928fbcb7eebbe79208758fe263a4e2ea0e9b6734e6df12020a5  linux-headers-6.12.107+deb13-common_6.12.107-1_all.deb
+  7794643cf4560de2a7e3b069e8ca8511ad2a568d652ea285f0fe051f79bc9e99  linux-image-6.12.107+deb13-amd64_6.12.107-1_amd64.deb
+  0a88527eb05bca1ce75e7d39ec27539d385a24cf90b2b28917cc4903a4f710d3  linux-kbuild-6.12.107+deb13_6.12.107-1_amd64.deb
+  .config: CONFIG_CC_VERSION_TEXT="x86_64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0"; MODVERSIONS=y MODULE_SIG=y MODULE_SIG_ALL=y DEBUG_INFO_BTF_MODULES=y DRM=m (asserted by the inputs recipe)
+  .kernelvariables: override KERNELRELEASE = 6.12.107+deb13-amd64
+
+## Host toolchain declared through HOSTTOOLS (identities as installed; index versions gcc-14 14.2.0-19, binutils 2.44-3, dwarves 1.30-1)
+  binutils 2.44-3
+  binutils-x86-64-linux-gnu 2.44-3
+  dwarves 
+  gcc-14 14.2.0-19
+  gcc-14-x86-64-linux-gnu 14.2.0-19
+  libelf1t64 0.192-4
+  libelf1t64 0.192-4
+  make 4.4.1-2
+  pahole 1.30-1
+  x86_64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0; GNU ld (GNU Binutils for Debian) 2.44; pahole v1.30
+  kbuild helpers (fixdep, modpost, genksyms, objtool, resolve_btfids) from linux-kbuild-6.12.107+deb13 (Debian-built host executables)
+
+## make invocation (log.do_compile line 2)
+  NOTE: make -j 12 -C Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/pristine SYSSRC=Symoneural-Platform/build/debian-6.
+  12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/recipe-sysroot/usr/src/linux-headers-6.12.107+deb13-common SYSOUT=Symoneural-Platform/build/debian-6.12.10
+  7-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/recipe-sysroot/usr/src/linux-headers-6.12.107+deb13-amd64 KERNEL_UNAME=6.12.107+deb13-amd64 ARCH=x86_64 TARGET_
+  ARCH=x86_64 TARGET_OS=Linux CC=x86_64-linux-gnu-gcc-14 HOSTCC=x86_64-linux-gnu-gcc-14 CROSS_COMPILE=x86_64-linux-gnu- LD=x86_64-linux-gnu-ld AR=x86_64-linux-gnu-ar NM=x86_64-linux-gnu-nm OBJCOPY=x86_6
+  4-linux-gnu-objcopy OBJDUMP=x86_64-linux-gnu-objdump STRIP=x86_64-linux-gnu-strip READELF=x86_64-linux-gnu-readelf NV_EXCLUDE_KERNEL_MODULES=nvidia-peermem NV_BUILD_USER=symoneural NV_BUILD_HOST=symon
+  eural NV_VERBOSE=1 KCFLAGS=-fcanon-prefix-map  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/pristi
+  ne=/usr/src/debug/symoneural-nvidia-open-kernel-debian/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debi
+  an/615.71.09/pristine=/usr/src/debug/symoneural-nvidia-open-kernel-debian/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvid
+  ia-open-kernel-debian/615.71.09/recipe-sysroot=  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/reci
+  pe-sysroot-native=  EXTRA_CFLAGS=-fcanon-prefix-map  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/
+  pristine=/usr/src/debug/symoneural-nvidia-open-kernel-debian/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kerne
+  l-debian/615.71.09/pristine=/usr/src/debug/symoneural-nvidia-open-kernel-debian/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneura
+  l-nvidia-open-kernel-debian/615.71.09/recipe-sysroot=  -ffile-prefix-map=Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.0
+  9/recipe-sysroot-native=  modules
+  compiler invocations: x86_64-linux-gnu-gcc-14 1685; x86_64-oe-linux-gcc 0; conftest probes 248; [M] compiles 202; MODPOST 1; pahole --btf_base vmlinux runs 4; objtool warnings on nvidia.o: 11670 (informational; NVIDIA's binary nv-kernel.o, as with DKMS builds)
+
+## Package QA
+  do_package_qa: 0 issues (log Symoneural-Platform/build/debian-6.12.107-deb13-amd64/tmp/work/x86-64-v3-oe-linux/symoneural-nvidia-open-kernel-debian/615.71.09/temp/log.do_package_qa)
+
+## Packages (.deb, package_deb; DPKG_ARCH amd64)
+  symoneural-nvidia-open-kernel-6.12.107+deb13-amd64_615.71.09-r0_amd64.deb  9388388 B  sha256 c1f6abc07885ebfb9a20abed3ed0bb49a36be6eddcf3761b2e7e6d9a1d62ffec
+  symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dbg_615.71.09-r0_amd64.deb  13027068 B  sha256 257d32e086151de89a3c7dbd62f816546f1b3e37d3a6f619b3457f4c114e1dcb
+  symoneural-nvidia-open-kernel-6.12.107+deb13-amd64-dev_615.71.09-r0_amd64.deb  2888 B  sha256 9c1f2adc55549acabae2c869aa7e7b738499425a0fa8588714ece9896c236ad6
+  control (main):
+    Package: symoneural-nvidia-open-kernel-6.12.107+deb13-amd64
+    Version: 615.71.09-r0
+    Architecture: amd64
+    Depends: linux-image-6.12.107+deb13-amd64 (= 6.12.107-1), firmware-nvidia-gsp (= 615.71.09-2)
+    Conflicts: nvidia-kernel-615.71.09, nvidia-kernel-dkms, nvidia-kernel-open-dkms
+    Maintainer: SyMoNeuRaL <gmcdonald@symoneural.com>
+    Section: kernel
+  contents (main):
+    432120 ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-drm.ko
+    3920256 ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-modeset.ko
+    4120520 ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia-uvm.ko
+    28303560 ./usr/lib/modules/6.12.107+deb13-amd64/updates/symoneural/nvidia.ko
+
+## Module facts (packaged .ko) vs the host's DKMS-built reference (read-only)
+  nvidia: 6.12.107+deb13-amd64 SMP preempt mod_unload modversions | license=Dual MIT/GPL | depends=drm | srcversion=21362C9DF5C1F6DCBE23F50 (host DKMS: 21362C9DF5C1F6DCBE23F50) | imports=459 | unsigned
+  nvidia-uvm: 6.12.107+deb13-amd64 SMP preempt mod_unload modversions | license=Dual MIT/GPL | depends=nvidia | srcversion=6202FC58DF27C2234648613 (host DKMS: 6202FC58DF27C2234648613) | imports=327 | unsigned
+  nvidia-modeset: 6.12.107+deb13-amd64 SMP preempt mod_unload modversions | license=Dual MIT/GPL | depends=video,nvidia | srcversion=CCBAFC541F2389A746AE374 (host DKMS: CCBAFC541F2389A746AE374) | imports=103 | unsigned
+  nvidia-drm: 6.12.107+deb13-amd64 SMP preempt mod_unload modversions | license=Dual MIT/GPL | depends=drm_kms_helper,drm,drm_display_helper,nvidia-modeset,drm_ttm_helper | srcversion=9DA117AD1DFAE8171257C3B (host DKMS: 9DA117AD1DFAE8171257C3B) | imports=272 | unsigned
+  nvidia firmware: nvidia/615.71.09/ucodes_tu10x.bin nvidia/615.71.09/ucodes_ga10x.bin nvidia/615.71.09/gsp_tu10x.bin nvidia/615.71.09/gsp_ga10x.bin 
+
+## Statuses
+  BUILD PASS (HOST-CONDITIONED on Debian gcc-14 14.2.0-19 / binutils 2.44-3 / pahole 1.30 and Debian's prebuilt kbuild helpers)
+  PACKAGE/QA PASS ; STAGED INSTALL + depmod + ABI/modversions PASS (NVIDIA-OPEN-KERNEL-DEBIAN-PROOF.txt) ; REPRODUCIBILITY NOT TESTED
+  SIGNING BLOCKED for live use (Secure Boot on, MOK-signed policy; artifacts UNSIGNED) ; LIVE MODULE LOAD NOT TESTED ; GPU CONSUMER against these modules NOT TESTED
