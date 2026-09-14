@@ -38,6 +38,11 @@ PV = "3.2.5"
 # conflict as an opaque "Unmet dependencies" failure with no lever to pull.
 
 inherit setuptools3
+# oe-core's cython class strips the "Cython Metadata" JSON block that cythonize writes into every
+# generated .c (it lists the ABSOLUTE .py/.pxd source paths, so the -src debug package failed
+# buildpaths QA on 16 files, 2026-09-14). The strip runs on the disposable pristine export, as it
+# already does for symoneural-numpy and symoneural-scipy; the acquired tree is untouched.
+inherit cython
 
 # OE-Core carries 0001-Replace-not-predictable-build-path-prefix-with-hardc.patch
 # to stop Cython writing absolute build paths into the .c it generates. We do NOT

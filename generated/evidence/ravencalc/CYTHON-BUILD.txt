@@ -1,0 +1,26 @@
+# symoneural-cython 3.2.5 - first target build (Ravencalc), 2026-09-14
+generated : 2026-09-14 19:36 EDT
+source    : cython                     Ravencalc        ec152091ca7c ·    2635 files · VERIFIED
+recipe    : meta-symoneural/recipes-devtools/symoneural-cython/symoneural-cython_git.bb (symoneural-pristine + setuptools3 + cython)
+bitbake   : first launch FAILED at do_package_qa - 16 cythonize-generated .c files in the -src package carried the absolute .py/.pxd source paths inside their 'Cython Metadata' JSON block (buildpaths). Fix: inherit oe-core's cython class, whose do_compile postfunc strips that block from the disposable export (the same mechanism symoneural-numpy and symoneural-scipy already use). Second launch: Attempted 1821 tasks of which 1810 didn't need to be rerun and all succeeded
+QA        : do_package_qa 0 issues; no INSANE_SKIP
+metadata blocks left in generated C: 0
+
+## Packages
+  symoneural-cython_3.2.5-r0_x86-64-v3.ipk  4923874 B  sha256 481600fd9eedd54fe6f4ec161d84dda1e5b26533f32b54c158da6d1bf2d1b8b1
+  symoneural-cython-dbg_3.2.5-r0_x86-64-v3.ipk  9675676 B  sha256 559d30bb324ed9169d718e8294d9bd05c82fb2c438a68ce4e7dd5c47622dc345
+  symoneural-cython-dev_3.2.5-r0_x86-64-v3.ipk  784 B  sha256 435bbc6e7483cda41019ed0c48bf3532001c5d5546aa238ed951b87ef2ba3962
+  symoneural-cython-src_3.2.5-r0_x86-64-v3.ipk  2442050 B  sha256 4f5d11f7a69439d04b40d5df1af990426eb2bfedb7129c30eb799cc7433afd47
+  control:
+    Package: symoneural-cython
+    Version: 3.2.5-r0
+    License: Apache-2.0
+    Architecture: x86-64-v3
+    Depends: libc6 (>= 2.44+git0+5c479454d1), python3-core, python3-misc, python3-netserver, python3-pkgutil, python3-pyparsing, python3-setuptools, python3-shell, python3-xml
+    Provides: python3-cython
+    Source: symoneural-cython_git.bb
+  executables: ./usr/bin/ ./usr/bin/cygdb3 ./usr/bin/cython3 ./usr/bin/cythonize3 
+  compiled extensions: 16
+
+## Status
+  BUILD PASS ; PACKAGE/QA PASS ; runtime/consumer proof NOT TESTED (no Ravencalc image rebuilt tonight); REPRODUCIBILITY NOT TESTED
