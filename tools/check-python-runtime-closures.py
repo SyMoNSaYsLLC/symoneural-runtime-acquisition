@@ -215,6 +215,30 @@ def main():
             cands.append(("LAYER:" + layers[lk][0], lk, layers[lk][1]))
         return cands
 
+    # extras a CONSUMER asks of a dependency (mcp -> pyjwt[crypto]) become selected
+    # extras when that dependency's own wheel is evaluated, so its extra-gated
+    # requirements (cryptography) surface as RUNTIME REQUIRED instead of hiding.
+    # Only requirement lines that APPLY on the target count: an extra-gated line
+    # such as fastapi's `uvicorn[standard]; extra == "standard"` must not select
+    # uvicorn[standard] unless some consumer actually asked fastapi[standard].
+    # (Consumer extras of the consumer itself are honoured through selected_extras.)
+    requested_extras = {}
+    for (rt0, pn0), md0 in all_wheels.items():
+        own_extras = selected_extras.get(norm(md0.get("Name") or pn0), set())
+        for req_s in md0["Requires-Dist"]:
+            try:
+                r0 = Requirement(req_s)
+            except InvalidRequirement:
+                continue
+            if not r0.extras:
+                continue
+            if r0.marker is not None and not any(
+                    r0.marker.evaluate(dict(env, extra=x)) for x in (own_extras or {""})):
+                continue
+            requested_extras.setdefault(norm(r0.name), set()).update(r0.extras)
+    for d, xs in requested_extras.items():
+        selected_extras.setdefault(d, set()).update(xs)
+
     rows, edges, fatal = [], [], []
     per_rt_closure = {}
     for rt in rts:
@@ -336,6 +360,8 @@ def main():
             {True: "ok", False: "BAD", None: "?"}[r.get("version_satisfied")], r["status"]))
     not_req = [r for r in rows if r["status"] == "NOT REQUIRED"]
     print()
+    if requested_extras:
+        print("extras selected by consumers (evaluated as RUNTIME REQUIRED): " + ", ".join("%s[%s]" % (d, ",".join(sorted(x))) for d, x in sorted(requested_extras.items())))
     print("not required for the target (extras not selected / marker false): %d" % len(not_req))
     import collections
     c = collections.Counter(r["status"] for r in rows if r["status"] != "NOT REQUIRED")
