@@ -95,16 +95,21 @@
   "check-api-closure.py": "5a2293957828bce10871c2f82d5f505f72c1c7b9644329257195ed6c233ba1e9",
   "check-api-python-closure.py": "5a2293957828bce10871c2f82d5f505f72c1c7b9644329257195ed6c233ba1e9",
   "check-determinism.py": "7f8f84a28799a0e352cc96105765183f4d9c8b0ec954925384b8034c5b9da8ab",
-  "check-native-linkage.py": "2ded03af3bdc971d8be063efda625198652d0fb4860c5b019d75fba5588bfd0a",
-  "check-python-runtime-closures.py": "97540cb4649c7a335f9c7e1b8ede1c662f41c5edccf25beaa39ddfb51ff8bfbe",
+  "check-evidence-hashes.py": "de07576908fcafa8292849e3fa30aaf017308db340266a2fb8899c928857470d",
+  "check-native-linkage.py": "186846eea29ecc9294fff8eb4a4708572c21db1ea09341a5c7be004744d63a1f",
+  "check-python-runtime-closures.py": "6a5707bb1e71804ecf9db943a5be762fd7ded40f1facfecd36ea56a2053e2c85",
+  "estate_processes.py": "bc98a96b2052922befed6c689b00aabec6e079ccbc24fd4b00d42aca429367fe",
   "generate-runtime-acquisition.py": "0ebc3c2858c713e81c3821c39422d7d320b2930b4f58fc0f0af350b00835d9da",
-  "lib_acq.py": "2c818a79a676f0a18434e33ebf5af0a178af1b0c01262ea80322b098c2a6b700",
+  "git_tree_identity.py": "90d33d04140fe98c2dbf0ac1c5f5151a39db3a229a0216a295072609142db964",
+  "lib_acq.py": "d6b297150d6b1017b53ae62de6660d57125e7d3481f92082c10bc226943c8971",
   "map-api-runtime.py": "5b556cac8712b11a01260685f54135a7a9047ea163607228ab9c9e195a5c98c2",
   "map-llama-upstreams.py": "89958c119a0bef473c6e8c6629b5c0d2cd9efe971afccf61b94e0df3e1a4c492",
+  "proof_support.py": "697725a15fa2db9033fffa2592af628f73b0b898c11904272314d8182a3c793c",
   "scan-acquisition.py": "8fc51a4917247b27c00f8fc2f81c46f62f95a8d29ae8adb2af629e13113a9e50",
   "scan-dependencies.py": "163f137408fec52d11214e206362ec90c0a9a8fa79c9a91fc37a159b190061be",
   "scan-oe-providers.py": "fcf8d107e0b22fbe458721b5a87fa34cbc032beca098da04af0c200ced52e043",
   "scan-source-collisions.py": "690d939d3950c74804d0d7e3b9452839d0f1805630c5bbc7ed8ceb3ca4606565",
-  "verify-acquisition.py": "4e03de4411ee44356bb4397007166b7a60b3668051690cb4f1d71b5b3f3348a8"
+  "test-estate-operators.py": "a56c07d7e90ff8e27cbabdce49c3411dcea216495d9fef8c09fec514665c506a",
+  "verify-acquisition.py": "bd4fc8d923672083ef306bf0f63e683c8ca788d39510616e3bacfdf4277fefb0"
  }
 }
