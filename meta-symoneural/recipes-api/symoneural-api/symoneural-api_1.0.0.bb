@@ -21,6 +21,16 @@ do_install:append() {
     install -m 0644 ${S}/SOURCE-TREE ${D}${datadir}/symoneural-api/SOURCE-TREE
 }
 
+# debian.bbclass would rename ${PN} to libsymoneural-api1 because it holds only a
+# shared library; an allarch packagegroup cannot depend on a dynamically renamed
+# package (do_package_write_ipk ERROR). Names are fixed here, and the library's
+# identity is its SONAME, not the package name.
+DEBIAN_NOAUTONAME:${PN} = "1"
+DEBIAN_NOAUTONAME:${PN}-util = "1"
+DEBIAN_NOAUTONAME:${PN}-dev = "1"
+DEBIAN_NOAUTONAME:${PN}-dbg = "1"
+DEBIAN_NOAUTONAME:${PN}-staticdev = "1"
+DEBIAN_NOAUTONAME:${PN}-src = "1"
 PACKAGES =+ "${PN}-util"
 FILES:${PN} = "${libdir}/libsymoneural-api.so.* ${datadir}/symoneural-api/SOURCE-TREE"
 FILES:${PN}-util = "${bindir}/symoneural-api-util"

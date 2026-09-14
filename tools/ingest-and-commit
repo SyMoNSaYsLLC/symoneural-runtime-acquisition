@@ -19,10 +19,22 @@ if [ $rc -ne 0 ]; then
 fi
 line=$(printf '%s\n' "$out" | tail -1)               # "<comp> · <sha12> · N files · STATUS"
 excl=$(python3 -c "import json,sys; e=[c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]; print(' · '.join('EXCLUDED '+x['path'] for x in e.get('excluded',[])))" "$comp")
-git add acquisition/source-lock.json acquisition/submodule-lock.json || exit 1
+# .git/index.lock is taken briefly by any concurrent index refresh (an editor's or
+# the agent harness's `git status`); two of seven CLI ingests died on it with the
+# tree already staged, so the next commit swept their files in. Retry, do not fail.
+gitretry() {
+    local n=0 out
+    while :; do
+        out=$(git "$@" 2>&1); rc=$?
+        [ $rc -eq 0 ] && { [ -n "$out" ] && printf '%s\n' "$out"; return 0; }
+        case "$out" in *index.lock*) n=$((n+1)); [ $n -le 10 ] && { sleep 1; continue; } ;; esac
+        printf '%s\n' "$out"; return $rc
+    done
+}
+gitretry add acquisition/source-lock.json acquisition/submodule-lock.json || exit 1
 msg="acquired source: $line"
 [ -n "$excl" ] && msg="$msg · $excl"
-git commit -q -m "$msg
+gitretry commit -q -m "$msg
 
 Ingested from the pin's tree object (tools/ingest-tree), not git add. Verifiable
 from a clone: tools/ingest-tree verify $comp.
