@@ -25,7 +25,14 @@ LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/lib64/ld-linux-x86-64.so.2 "$R"/usr/l
 PY=$(ls "$R"/usr/bin/python3.1[0-9] 2>/dev/null | head -1)
 [ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
 PYV=$(basename "$PY" | sed 's/python//')
+# S2 mode (SYM_CUDA_S2=1): the host DRIVER's directory joins the loader path so a
+# CUDA-enabled libggml can reach libcuda.so.1; every host-mapped file must then be
+# owned by a package at the installed driver version (the S2 boundary), and the
+# native capabilities must name a GPU backend. Without S2 the same image must still
+# work on the CPU and report "cpu".
+S2=${SYM_CUDA_S2:-0}; HOSTDRV=/usr/lib/x86_64-linux-gnu; DRV=$(cat /sys/module/nvidia/version 2>/dev/null)
 LIBPATH="$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload"
+[ "$S2" = "1" ] && LIBPATH="$LIBPATH:$HOSTDRV"
 LIB="$R/usr/lib/libsymoneural-llm.so.1"; UTIL="$R/usr/bin/symoneural-llm-util"; CLI="$R/usr/bin/symoneural-llm"
 REG="$R/var/lib/symoneural/models/llm"; mkdir -p "$REG" "$R/tmp"
 fail=0
@@ -57,8 +64,17 @@ grep -c -F "$ROOT" "$LIB" >/dev/null 2>&1 && { echo "  FAIL: build path bytes in
 echo "--- symoneural-llm-util through the target loader"
 v=$(util version); a=$(util abi); c=$(util capabilities); rc=$?
 echo "  version=$v abi=$a capabilities=[$c] (rc=$rc)"
-[ "$v" = "1.0.0" ] && [ "$a" = "65536" ] && [ $rc -eq 0 ] && [[ "$c" == *tokenize* ]] && [[ "$c" == *streaming* ]] || { echo "  FAIL: util version/abi/capabilities"; fail=1; }
-[[ "$c" == *" cpu"* ]] && echo "  backend: cpu (no GPU offload compiled in - CUDA variant is P7's)" || echo "  backend: $c"
+[ "$v" = "1.1.0" ] && [ "$a" = "65792" ] && [ $rc -eq 0 ] && [[ "$c" == *tokenize* ]] && [[ "$c" == *streaming* ]] || { echo "  FAIL: util version/abi/capabilities"; fail=1; }
+if [ "$S2" = "1" ]; then
+  [[ "$c" == *" gpu:"* ]] && echo "  backend (S2, driver $DRV): ${c##* }" || { echo "  FAIL: S2 mode but no GPU backend enumerable: $c"; fail=1; }
+  # every host-mapped library must belong to the installed driver release
+  env -i LD_DEBUG=libs "$LD" --library-path "$LIBPATH" "$UTIL" capabilities >/dev/null 2>"$R/tmp/ld-debug.txt"
+  grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | sort -u | grep -v "^$R/" > "$R/tmp/host-mapped.txt" || true
+  while read -r l; do owner=$(dpkg -S "$l" 2>/dev/null | cut -d: -f1 | head -1); over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)
+    case "$over" in "$DRV"*) echo "  HOST  $l  ($owner $over, S2)" ;; *) echo "  FAIL  host leak: $l (${owner:-none})"; fail=1 ;; esac; done < "$R/tmp/host-mapped.txt"
+else
+  [[ "$c" == *" cpu"* ]] && echo "  backend: cpu (no GPU device enumerable without the host driver on the loader path)" || { echo "  FAIL: expected cpu without S2: $c"; fail=1; }
+fi
 n=$(util models "$REG" | wc -l); [ "$n" -eq 0 ] && echo "  empty registry -> 0 models, rc ok" || { echo "  FAIL: empty registry listed $n"; fail=1; }
 
 echo "--- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)"

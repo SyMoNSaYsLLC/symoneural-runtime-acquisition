@@ -5,7 +5,7 @@
 # reaches a build tree or a host toolkit. Built by the recipe symoneural-llm
 # (symoneural-firstparty) from the committed tree.
 cmake_minimum_required(VERSION 3.20)
-project(symoneural-llm VERSION 1.0.0 LANGUAGES C)
+project(symoneural-llm VERSION 1.1.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)

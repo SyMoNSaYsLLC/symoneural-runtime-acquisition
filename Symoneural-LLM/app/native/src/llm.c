@@ -17,6 +17,7 @@
 
 #include <llama.h>
 #include <gguf.h>
+#include <ggml-backend.h>
 
 #include <limits.h>
 #include <pthread.h>
@@ -129,12 +130,25 @@ static int put(char *buf, size_t cap, const char *s)
     return SYM_LLM_OK;
 }
 
+/* "gpu:<backend>" names the ggml backend of the first GPU device the registry can
+ * see at call time - which needs the driver's libcuda.so.1 to be loadable - and
+ * "cpu" is reported when no GPU device is enumerable, whether or not a GPU backend
+ * was compiled in. So the token is a statement about this process on this machine,
+ * not about the build. ABI 1.1.0: the token set grew; nothing was removed. */
 int sym_llm_capabilities(char *buf, size_t cap)
 {
-    /* space-separated, stable order; a new capability is appended and bumps MINOR */
-    return put(buf, cap, llama_supports_gpu_offload()
-               ? "text streaming cancellation tokenize gpu:offload"
-               : "text streaming cancellation tokenize cpu");
+    const char *gpu = NULL;
+    for (size_t i = 0; i < ggml_backend_dev_count(); i++) {
+        ggml_backend_dev_t dev = ggml_backend_dev_get(i);
+        if (ggml_backend_dev_type(dev) == GGML_BACKEND_DEVICE_TYPE_GPU) {
+            gpu = ggml_backend_reg_name(ggml_backend_dev_backend_reg(dev));
+            break;
+        }
+    }
+    char s[256];
+    snprintf(s, sizeof s, "text streaming cancellation tokenize %s%s",
+             gpu ? "gpu:" : "cpu", gpu ? gpu : "");
+    return put(buf, cap, s);
 }
 
 /* ---- runtime -------------------------------------------------------------------- */
