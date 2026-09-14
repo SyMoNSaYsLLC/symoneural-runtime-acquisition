@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://pydantic-core/LICENSE;md5=ab599c188b4a314d2856b3a5503
 
 SRC_URI = "git://github.com/pydantic/pydantic;protocol=https;nobranch=1;branch=main"
 PV = "2.46.5"
-SRCREV = "7bba8aca54751b629fa2a93b69ab181a28a98484"
+SRCREV = "001dea020e0809844e5b17666432c9135a976f46"
 
 # the wheel lives in a subdirectory of the export; cargo's lockfile is upstream's
 PEP517_SOURCE_PATH = "${S}/pydantic-core"
