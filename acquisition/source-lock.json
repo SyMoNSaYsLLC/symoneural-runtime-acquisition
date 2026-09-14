@@ -352,7 +352,11 @@
       "submodule_count": 0,
       "upstream_url": "https://git.openembedded.org/openembedded-core",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "6d56d4a4b9f9bcae807a378cf747bd584f2d5358",
+      "pins_path": "Symoneural-Build/src/devtools/.gitpins/openembedded-core.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-ninja_git.bbappend",

@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-2.0-only
+
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib'))
+
+from pseudo_rootfs_utils import PseudoRootfsError, extract_sdk_rootfs, pseudo_native_environment
+
+
+def main():
+    argv = sys.argv[1:]
+    if len(argv) != 2:
+        print('Usage: %s <image-tarball> <extract-dir>' % sys.argv[0])
+        return 1
+    try:
+        environment = pseudo_native_environment()
+        pseudo_cmd = [environment['PSEUDO'], '-P',
+                      os.path.join(environment['OECORE_NATIVE_SYSROOT'], 'usr')]
+        extract_sdk_rootfs(*argv, pseudo_cmd, environment)
+    except PseudoRootfsError as exc:
+        print('Error: %s' % exc)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

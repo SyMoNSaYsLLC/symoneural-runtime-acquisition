@@ -1,0 +1,31 @@
+From 651310691a8a41ab3a766545c53b69e6e0c4f88d Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 27 Feb 2017 09:43:30 +0200
+Subject: [PATCH] Do not hardcode "lib/rpm" as the installation path for
+ default configuration and macros.
+
+Upstream-Status: Denied [https://github.com/rpm-software-management/rpm/pull/263]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+Updated for rpm 6.0.2:
+Remove the changes for macros.in since it doesn't work for rpmbuild, rpmbuild
+is like cross build, will define the values in package_rpm.bbclass.
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
+---
+ CMakeLists.txt | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de0b578a6..9a3aba071 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,7 @@ option(WITH_LIBELF "Build with libelf support" ON)
+ option(WITH_LIBLZMA "Build with liblzma support" ON)
+ option(WITH_DOXYGEN "Build API docs with doxygen" OFF)
+ 
+-set(RPM_CONFIGDIR "${CMAKE_INSTALL_PREFIX}/lib/rpm" CACHE PATH "rpm home")
++set(RPM_CONFIGDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/rpm" CACHE PATH "rpm home")
+ set(RPM_MACROSDIR "${RPM_CONFIGDIR}/macros.d")
+ set(RPM_VENDOR "vendor" CACHE STRING "rpm vendor string")

@@ -1,0 +1,28 @@
+From 60d32f2a547c28d7cf7ccb3842664ee8135f2eca Mon Sep 17 00:00:00 2001
+From: Constantin Musca <constantinx.musca@intel.com>
+Date: Sun, 8 Feb 2026 21:03:30 -0800
+Subject: [PATCH] busybox-1.19.4 tar utility doesn't support
+ --warning=no-timestamp
+
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+
+Upstream-Status: Inappropriate [configuration]
+
+Rebase to 1.23.5
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ src/deb/extract.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/deb/extract.c b/src/deb/extract.c
+index 16d559f8303a..0cc390ce9767 100644
+--- a/src/deb/extract.c
++++ b/src/deb/extract.c
+@@ -371,7 +371,6 @@ extracthalf(const char *debar, const char *dir,
+ 
+ 			command_add_arg(&cmd, "-f");
+ 			command_add_arg(&cmd, "-");
+-			command_add_arg(&cmd, "--warning=no-timestamp");
+ 
+ 			m_dup2(p2[0], 0);
+ 			close(p2[0]);

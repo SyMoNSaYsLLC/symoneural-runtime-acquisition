@@ -1,0 +1,34 @@
+From dc40261464de1a1799704967906f5bd113b53793 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 9 Jan 2017 18:52:11 +0200
+Subject: [PATCH] Do not add an unsatisfiable dependency when building rpms in
+ a short-circuited way.
+
+Upstream permits short-circuiting only for local testing; Yocto on the other
+hand produces rpms that way by design.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+Rebased to 6.0.2
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
+---
+ build/pack.cc | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/build/pack.cc b/build/pack.cc
+index 49c9d0a58..b1cda6d75 100644
+--- a/build/pack.cc
++++ b/build/pack.cc
+@@ -805,10 +805,6 @@ static rpmRC packageBinary(rpmSpec spec, Package pkg, const char *cookie, int ch
+	headerPutBin(pkg->header, RPMTAG_SOURCESIGMD5, spec->sourcePkgId,16);
+     }
+ 
+-    if (cheating) {
+-	(void) rpmlibNeedsFeature(pkg, "ShortCircuited", "4.9.0-1");
+-    }
+-
+     if ((rc = getPkgFilename(pkg->header, filename)))
+ 	return rc;
+ 
