@@ -1,0 +1,17 @@
+.specify
+specs
+.workmux.yaml
+thoughts
+report.xml
+coverage.xml
+dist/
+tags
+.idea/
+*.pyc
+.coverage
+.pytest_cache/
+.ty/
+*.egg-info/
+__pycache__/
+venv
+.envrc
