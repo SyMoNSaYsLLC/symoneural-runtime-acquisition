@@ -975,7 +975,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/huggingface/safetensors",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "41aded21c0642f3f51eb98a7b75be10c3008b973",
+      "pins_path": "Symoneural-Common/src/ml/.gitpins/safetensors.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Common/build/devtool-workspace/appends/symoneural-tokenizers_git.bbappend",
