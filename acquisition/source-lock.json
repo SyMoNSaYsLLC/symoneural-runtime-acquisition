@@ -16,7 +16,7 @@
       "declared_version_PV": "4.15.1",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/http/.gitpins/anyio.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "MIT",
       "recipe_SRCREV": "ffcd1542cd6d127980205f90a0100078849dd703",
