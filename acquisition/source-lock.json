@@ -1,7 +1,7 @@
 {
  "census": {
-  "method_a_count": 92,
-  "method_b_count": 92,
+  "method_a_count": 93,
+  "method_b_count": 93,
   "only_in_a": [],
   "only_in_b": [],
   "sets_identical": true
@@ -2624,6 +2624,32 @@
    ],
    "tree_sha": "6175bff47954ee4cef1d4894f79ffa4d55e72f6e",
    "upstream_url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
+   "worktree": "clean",
+   "worktree_detail": []
+  },
+  {
+   "bbappend_path": "NOT-APPLICABLE",
+   "branch_context": "HEAD",
+   "category": "kernel",
+   "commit_sha": "61dcc93722ecb418bb5f2e00923f05b4b8051dd1",
+   "component": "open-gpu-kernel-modules",
+   "declared_version_PV": "UNKNOWN",
+   "excluded": [],
+   "lock_state": "UNRESOLVED",
+   "pins_path": "Symoneural-Platform/src/kernel/.gitpins/open-gpu-kernel-modules.git",
+   "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
+   "recipe_LICENSE": "NOT-APPLICABLE",
+   "recipe_SRCREV": "NOT-APPLICABLE",
+   "recipe_name": "NOT-APPLICABLE",
+   "recipe_path": "NOT-APPLICABLE",
+   "recipe_retired": false,
+   "requested_tag": "UNKNOWN",
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/kernel/source/open-gpu-kernel-modules",
+   "submodule_count": 0,
+   "submodules": [],
+   "tree_sha": "9199a9f620b76343c35c207354ffcb3d1570053d",
+   "upstream_url": "https://github.com/NVIDIA/open-gpu-kernel-modules",
    "worktree": "clean",
    "worktree_detail": []
   },
