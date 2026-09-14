@@ -1000,7 +1000,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/huggingface/tokenizers",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "3d35250cb175c0ec733a7f6f092f543976ffe849",
+      "pins_path": "Symoneural-Common/src/ml/.gitpins/tokenizers.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Common/build/devtool-workspace/appends/symoneural-transformers_git.bbappend",
