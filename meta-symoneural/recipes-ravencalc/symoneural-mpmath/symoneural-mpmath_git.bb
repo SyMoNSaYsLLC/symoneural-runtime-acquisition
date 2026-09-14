@@ -4,16 +4,19 @@
 # Built by symoneural-pristine: a DISPOSABLE `git archive` export of the
 # acquired tree. ${S} is throwaway; the acquired tree is never written to.
 # do_unpack asserts the tree HEAD equals SRCREV and refuses to build otherwise.
+# Pinned to 1.3.0, not the newest release: sympy 1.14.0 declares mpmath<1.4,>=1.1.0 and the
+# shipped pair must satisfy the DECLARED closure (acquisition/unresolved.json:sympy-mpmath-constraint,
+# RESOLVED-A 2026-09-14). Move forward again when a sympy release lifts the bound.
 inherit symoneural-pristine
 SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Ravencalc/src/symbolic/source/mpmath"
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=a6607bd72611b702183473dfb4e6198b"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=bde3c575382996b75d85702949512751"
 SRC_URI = "git://github.com/mpmath/mpmath;protocol=https;branch=mpmath-1.4.x"
 
 # Modify these as desired
-PV = "1.4.1"
-SRCREV = "c1131e2d64abcbb57728ca8a499c920c0c69e67f"
+PV = "1.3.0"
+SRCREV = "b5c04506ef0cd4a1f1213f8389ee21c9c3551582"
 
 # recipetool emitted empty do_configure/do_compile/do_install stubs ALONGSIDE
 # a real build-class inherit. A recipe-level function OVERRIDES the inherited

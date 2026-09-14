@@ -1,7 +1,7 @@
 # contributed to mpmath by Kristopher L. Kuhlman, February 2017
 # contributed to mpmath by Guillermo Navas-Palencia, February 2022
 
-class InverseLaplaceTransform:
+class InverseLaplaceTransform(object):
     r"""
     Inverse Laplace transform methods are implemented using this
     class, in order to simplify the code and provide a common
@@ -172,9 +172,13 @@ class FixedTalbot(InverseLaplaceTransform):
 
         **References**
 
-        1. [Abate]_
-        2. [Talbot]_
-
+        1. Abate, J., P. Valko (2004). Multi-precision Laplace
+           transform inversion. *International Journal for Numerical
+           Methods in Engineering* 60:979-993,
+           http://dx.doi.org/10.1002/nme.995
+        2. Talbot, A. (1979). The accurate numerical inversion of
+           Laplace transforms. *IMA Journal of Applied Mathematics*
+           23(1):97, http://dx.doi.org/10.1093/imamat/23.1.97
         """
 
         # required
@@ -321,8 +325,10 @@ class Stehfest(InverseLaplaceTransform):
 
         **References**
 
-        1. [Widder]_
-        2. [Stehfest]_
+        1. Widder, D. (1941). *The Laplace Transform*. Princeton.
+        2. Stehfest, H. (1970). Algorithm 368: numerical inversion of
+           Laplace transforms. *Communications of the ACM* 13(1):47-49,
+           http://dx.doi.org/10.1145/361953.361969
 
         """
 
@@ -450,8 +456,12 @@ class deHoog(InverseLaplaceTransform):
 
         **References**
 
-        1. [Davies]_
-        2. [Hoog]_
+        1. Davies, B. (2005). *Integral Transforms and their
+           Applications*, Third Edition. Springer.
+        2. de Hoog, F., J. Knight, A. Stokes (1982). An improved
+           method for numerical inversion of Laplace transforms. *SIAM
+           Journal of Scientific and Statistical Computing* 3:357-366,
+           http://dx.doi.org/10.1137/0903022
 
         """
 
@@ -567,7 +577,9 @@ class Cohen(InverseLaplaceTransform):
 
         **References**
 
-        1. [Glasserman]_
+        1. P. Glasserman, J. Ruiz-Mata (2006). Computing the credit loss
+        distribution in the Gaussian copula model: a comparison of methods.
+        *Journal of Credit Risk* 2(4):33-66, 10.21314/JCR.2006.057
 
         """
         self.t = self.ctx.convert(t)
@@ -652,7 +664,7 @@ class Cohen(InverseLaplaceTransform):
 
 # ****************************************
 
-class LaplaceTransformInversionMethods:
+class LaplaceTransformInversionMethods(object):
     def __init__(ctx, *args, **kwargs):
         ctx._fixed_talbot = FixedTalbot(ctx)
         ctx._stehfest = Stehfest(ctx)
@@ -687,9 +699,8 @@ class LaplaceTransformInversionMethods:
 
             f(t) = t e^{-t}
 
-        >>> from mpmath import (besselj, euler, exp, invertlaplace, log,
-        ...                     mp, nstr, sinh, sqrt)
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 15; mp.pretty = True
         >>> tt = [0.001, 0.01, 0.1, 1, 10]
         >>> fp = lambda p: 1/(p+1)**2
         >>> ft = lambda t: t*exp(-t)
@@ -706,8 +717,7 @@ class LaplaceTransformInversionMethods:
 
         The methods also work for higher precision:
 
-        >>> mp.dps = 100
-        >>> mp.pretty = True
+        >>> mp.dps = 100; mp.pretty = True
         >>> nstr(ft(tt[0]),15),nstr(ft(tt[0])-invertlaplace(fp,tt[0],method='talbot'),15)
         ('0.000999000499833375', '-4.96868310693356e-105')
         >>> nstr(ft(tt[1]),15),nstr(ft(tt[1])-invertlaplace(fp,tt[1],method='talbot'),15)
@@ -721,8 +731,7 @@ class LaplaceTransformInversionMethods:
 
             f(t) = \mathrm{J}_0(t)
 
-        >>> mp.dps = 15
-        >>> mp.pretty = True
+        >>> mp.dps = 15; mp.pretty = True
         >>> fp = lambda p: 1/sqrt(p*p + 1)
         >>> ft = lambda t: besselj(0,t)
         >>> ft(tt[0]),ft(tt[0])-invertlaplace(fp,tt[0],method='dehoog')
@@ -738,8 +747,7 @@ class LaplaceTransformInversionMethods:
 
             f(t) = -\gamma -\log t
 
-        >>> mp.dps = 15
-        >>> mp.pretty = True
+        >>> mp.dps = 15; mp.pretty = True
         >>> fp = lambda p: log(p)/p
         >>> ft = lambda t: -euler-log(t)
         >>> ft(tt[0]),ft(tt[0])-invertlaplace(fp,tt[0],method='stehfest')
@@ -766,8 +774,8 @@ class LaplaceTransformInversionMethods:
         *method='talbot'*, *method='stehfest'*, *method='dehoog'* or
         *method='cohen'* or by passing the classes *method=FixedTalbot*,
         *method=Stehfest*, *method=deHoog*, or *method=Cohen*. The functions
-        ``invlaptalbot()``, ``invlapstehfest()``,
-        ``invlapdehoog()``, and ``invlapcohen()``
+        :func:`~mpmath.invlaptalbot`, :func:`~mpmath.invlapstehfest`,
+        :func:`~mpmath.invlapdehoog`, and :func:`~mpmath.invlapcohen`
         are also available as shortcuts.
 
         All four algorithms implement a heuristic balance between the
@@ -872,8 +880,7 @@ class LaplaceTransformInversionMethods:
 
             f(t)=\frac{1}{3}\sinh 3t
 
-        >>> mp.dps = 15
-        >>> mp.pretty = True
+        >>> mp.dps = 15; mp.pretty = True
         >>> fp = lambda p: 1/(p*p-9)
         >>> ft = lambda t: sinh(3*t)/3
         >>> tt = [0.01,0.1,1.0,10.0]
@@ -889,15 +896,27 @@ class LaplaceTransformInversionMethods:
         **References**
 
         1. [DLMF]_ section 1.14 (http://dlmf.nist.gov/1.14T4)
-        2. [Cohen]_
-        3. [Duffy98]_
+        2. Cohen, A.M. (2007). Numerical Methods for Laplace Transform
+           Inversion, Springer.
+        3. Duffy, D.G. (1998). Advanced Engineering Mathematics, CRC Press.
 
         **Numerical Inverse Laplace Transform Reviews**
 
-        1. [Bellman]_
-        2. [Davies79]_
-        3. [Duffy93]_
-        4. [Kuhlman]_
+        1. Bellman, R., R.E. Kalaba, J.A. Lockett (1966). *Numerical
+           inversion of the Laplace transform: Applications to Biology,
+           Economics, Engineering, and Physics*. Elsevier.
+        2. Davies, B., B. Martin (1979). Numerical inversion of the
+           Laplace transform: a survey and comparison of methods. *Journal
+           of Computational Physics* 33:1-32,
+           http://dx.doi.org/10.1016/0021-9991(79)90025-1
+        3. Duffy, D.G. (1993). On the numerical inversion of Laplace
+           transforms: Comparison of three new methods on characteristic
+           problems from applications. *ACM Transactions on Mathematical
+           Software* 19(3):333-359, http://dx.doi.org/10.1145/155743.155788
+        4. Kuhlman, K.L., (2013). Review of Inverse Laplace Transform
+           Algorithms for Laplace-Space Numerical Approaches, *Numerical
+           Algorithms*, 63(2):339-355.
+           http://dx.doi.org/10.1007/s11075-012-9625-3
 
         """
 
@@ -945,3 +964,10 @@ class LaplaceTransformInversionMethods:
     def invlapcohen(ctx, *args, **kwargs):
         kwargs['method'] = 'cohen'
         return ctx.invertlaplace(*args, **kwargs)
+
+
+# ****************************************
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

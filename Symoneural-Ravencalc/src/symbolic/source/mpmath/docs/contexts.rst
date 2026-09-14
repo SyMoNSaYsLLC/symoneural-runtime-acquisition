@@ -4,29 +4,26 @@ Contexts
 High-level code in mpmath is implemented as methods on a "context object". The context implements arithmetic, type conversions and other fundamental operations. The context also holds settings such as precision, and stores cache data. A few different contexts (with a mostly compatible interface) are provided so that the high-level algorithms can be used with different implementations of the underlying arithmetic, allowing different features and speed-accuracy tradeoffs. Currently, mpmath provides the following contexts:
 
   * Arbitrary-precision arithmetic (``mp``)
+  * A faster Cython-based version of ``mp`` (used by default in Sage, and currently only available there)
   * Arbitrary-precision interval arithmetic (``iv``)
   * Double-precision arithmetic using Python's builtin ``float`` and ``complex`` types (``fp``)
-
-.. note::
-
-   Using global context is not thread-safe, create instead
-   local contexts with e.g. :class:`~mpmath.MPContext`.
 
 Most global functions in the global mpmath namespace are actually methods of the ``mp``
 context. This fact is usually transparent to the user, but sometimes shows up in the
 form of an initial parameter called "ctx" visible in the help for the function::
 
     >>> import mpmath
-    >>> help(mpmath.fsum)
+    >>> help(mpmath.fsum)   # doctest:+SKIP
     Help on method fsum in module mpmath.ctx_mp_python:
-    <BLANKLINE>
-    fsum(terms, absolute=False, squared=False) method of mpmath.ctx_mp.MPContext instance
+    
+    fsum(ctx, terms, absolute=False, squared=False) method of mpmath.ctx_mp.MPContext instance
         Calculates a sum containing a finite number of terms (for infinite
         series, see :func:`~mpmath.nsum`). The terms will be converted to
     ...
 
 The following operations are equivalent::
 
+    >>> mpmath.mp.dps = 15; mpmath.mp.pretty = False
     >>> mpmath.fsum([1,2,3])
     mpf('6.0')
     >>> mpmath.mp.fsum([1,2,3])
@@ -103,6 +100,7 @@ Common interface
     [1.0  0.0]
     [0.0  1.0]
     >>> fp.pretty = False
+    >>> mp.pretty = False
 
 
 Arbitrary-precision floating-point (``mp``)
@@ -111,18 +109,6 @@ Arbitrary-precision floating-point (``mp``)
 The ``mp`` context is what most users probably want to use most of the time, as it supports the most functions, is most well-tested, and is implemented with a high level of optimization. Nearly all examples in this documentation use ``mp`` functions.
 
 See :doc:`basics` for a description of basic usage.
-
-.. autoclass:: mpmath.MPContext
-
-Local contexts, created on demand, could be used just as the global ``mp``:
-
-    >>> from mpmath import MPContext
-    >>> ctx = MPContext()
-    >>> ctx.sin(1)
-    mpf('0.8414709848078965')
-    >>> ctx.prec = 113
-    >>> ctx.sin(1)
-    mpf('0.841470984807896506652502321630298954')
 
 Arbitrary-precision interval arithmetic (``iv``)
 ------------------------------------------------
@@ -139,6 +125,7 @@ Interval arithmetic provides rigorous error tracking. If `f` is a mathematical f
 Intervals can be created from single numbers (treated as zero-width intervals) or pairs of endpoint numbers. Strings are treated as exact decimal numbers. Note that a Python float like ``0.1`` generally does not represent the same number as its literal; use ``'0.1'`` instead::
 
     >>> from mpmath import iv
+    >>> iv.dps = 15; iv.pretty = False
     >>> iv.mpf(3)
     mpi('3.0', '3.0')
     >>> print(iv.mpf(3))
@@ -160,11 +147,7 @@ Intervals may be infinite or half-infinite::
     >>> print(1 / iv.mpf([2, 'inf']))
     [0.0, 0.5]
 
-The equality testing operators ``==`` and ``!=`` check whether their operands
-are identical as intervals; that is, have the same endpoints. The ordering
-operators ``< <= > >=`` permit inequality testing using triple-valued logic: a
-guaranteed inequality returns ``True`` or ``False`` while an indeterminate
-inequality raises :exc:`ValueError`::
+The equality testing operators ``==`` and ``!=`` check whether their operands are identical as intervals; that is, have the same endpoints. The ordering operators ``< <= > >=`` permit inequality testing using triple-valued logic: a guaranteed inequality returns ``True`` or ``False`` while an indeterminate inequality returns ``None``::
 
     >>> iv.mpf([1,2]) == iv.mpf([1,2])
     True
@@ -176,18 +159,12 @@ inequality raises :exc:`ValueError`::
     True
     >>> iv.mpf([1,2]) < 1
     False
-    >>> iv.mpf([1,2]) < 2
-    Traceback (most recent call last):
-      ...
-    ValueError
+    >>> iv.mpf([1,2]) < 2    # returns None
     >>> iv.mpf([2,2]) < 2
     False
     >>> iv.mpf([1,2]) <= iv.mpf([2,3])
     True
-    >>> iv.mpf([1,2]) < iv.mpf([2,3])
-    Traceback (most recent call last):
-      ...
-    ValueError
+    >>> iv.mpf([1,2]) < iv.mpf([2,3])  # returns None
     >>> iv.mpf([1,2]) < iv.mpf([-1,0])
     False
 
@@ -219,12 +196,12 @@ Some transcendental functions are supported::
     >>> iv.exp(0)
     [1.0, 1.0]
     >>> iv.exp(['-inf','inf'])
-    [0.0, inf]
+    [0.0, +inf]
     >>>
     >>> iv.exp(['-inf',0])
     [0.0, 1.0]
     >>> iv.exp([0,'inf'])
-    [1.0, inf]
+    [1.0, +inf]
     >>> iv.exp([0,1])
     [1.0, 2.7182818284590455349]
     >>>
@@ -233,7 +210,7 @@ Some transcendental functions are supported::
     >>> iv.log([0,1])
     [-inf, 0.0]
     >>> iv.log([0,'inf'])
-    [-inf, inf]
+    [-inf, +inf]
     >>> iv.log(2)
     [0.69314718055994528623, 0.69314718055994539725]
     >>>
@@ -262,19 +239,13 @@ seen by increasing the precision::
     >>> print(mp.exp(mp.pi*mp.sqrt(163)))
     262537412640768743.99999999999925007259719818568888
 
-With interval arithmetic, the comparison raises :exc:`ValueError` until the
-precision is large enough for `x-y` to have a definite sign::
+With interval arithmetic, the comparison returns ``None`` until the precision
+is large enough for `x-y` to have a definite sign::
 
     >>> iv.dps = 15
     >>> iv.exp(iv.pi*iv.sqrt(163)) > (640320**3+744)
-    Traceback (most recent call last):
-      ...
-    ValueError
     >>> iv.dps = 30
     >>> iv.exp(iv.pi*iv.sqrt(163)) > (640320**3+744)
-    Traceback (most recent call last):
-      ...
-    ValueError
     >>> iv.dps = 60
     >>> iv.exp(iv.pi*iv.sqrt(163)) > (640320**3+744)
     False
@@ -287,36 +258,38 @@ Although mpmath is generally designed for arbitrary-precision arithmetic, many o
 
 To take advantage of this feature, simply use the ``fp`` prefix, i.e. write ``fp.func`` instead of ``func`` or ``mp.func``::
 
-    >>> u = fp.erfc(0.5)
-    >>> print(u)
-    0.4795001221869535
-    >>> type(u)
-    <class 'float'>
-    >>> mp.dps = 16
-    >>> print(mp.erfc(0.5))
-    0.4795001221869535
+    >>> u = fp.erfc(2.5)
+    >>> print(u)  # doctest:+SKIP
+    0.000406952017445
+    >>> type(u)  # doctest:+SKIP
+    <type 'float'>
+    >>> mp.dps = 15
+    >>> print(mp.erfc(2.5))
+    0.000406952017444959
     >>> fp.matrix([[1,2],[3,4]]) ** 2
     matrix(
     [['7.0', '10.0'],
      ['15.0', '22.0']])
-    >>>
-    >>> type(_[0,0])
-    <class 'float'>
+    >>> 
+    >>> type(_[0,0])  # doctest:+SKIP
+    <type 'float'>
     >>> print(fp.quad(fp.sin, [0, fp.pi]))    # numerical integration
     2.0
 
 The ``fp`` context wraps Python's ``math`` and ``cmath`` modules for elementary functions. It supports both real and complex numbers and automatically generates complex results for real inputs (``math`` raises an exception)::
 
-    >>> fp.sqrt(5)
+    >>> fp.sqrt(5)  # doctest:+SKIP
     2.23606797749979
-    >>> fp.sqrt(-5)
+    >>> fp.sqrt(-5)  # doctest:+SKIP
     2.23606797749979j
-    >>> fp.sin(10)
+    >>> fp.sin(10)  # doctest:+SKIP
     -0.5440211108893698
-    >>> fp.power(-1, 0.25)
+    >>> fp.power(-1, 0.25)  # doctest:+SKIP
     (0.7071067811865476+0.7071067811865475j)
-    >>> (-1) ** 0.25
-    (0.7071067811865476+0.7071067811865475j)
+    >>> (-1) ** 0.25  # doctest:+SKIP
+    Traceback (most recent call last):
+      ...
+    ValueError: negative number cannot be raised to a fractional power
 
 The ``prec`` and ``dps`` attributes can be changed (for interface compatibility with the ``mp`` context) but this has no effect::
 
@@ -331,40 +304,3 @@ The ``prec`` and ``dps`` attributes can be changed (for interface compatibility 
     15
 
 Due to intermediate rounding and cancellation errors, results computed with ``fp`` arithmetic may be much less accurate than those computed with ``mp`` using an equivalent precision (``mp.prec = 53``), since the latter often uses increased internal precision. The accuracy is highly problem-dependent: for some functions, ``fp`` almost always gives 14-15 correct digits; for others, results can be accurate to only 2-3 digits or even completely wrong. The recommended use for ``fp`` is therefore to speed up large-scale computations where accuracy can be verified in advance on a subset of the input set, or where results can be verified afterwards.
-
-Beware that the ``fp`` context has signed zero, that can be used to distinguish
-different sides of branch cuts.  For example, ``fp.mpc(-1, -0.0)`` is treated
-as though it lies *below* the branch cut for :func:`~mpmath.sqrt()`::
-
-    >>> fp.sqrt(fp.mpc(-1, -0.0))
-    -1j
-    >>> fp.sqrt(fp.mpc(-1, -1e-10))
-    (5e-11-1j)
-
-But an argument of ``fp.mpc(-1, 0.0)`` is treated as though it lies *above* the
-branch cut::
-
-    >>> fp.sqrt(fp.mpc(-1, +0.0))
-    1j
-    >>> fp.sqrt(fp.mpc(-1, +1e-10))
-    (5e-11+1j)
-
-
-While near the branch cut, for small but nonzero deviations in components
-results agreed with the ``mp`` contexts::
-
-    >>> fp.mpc(mp.sqrt(mp.mpc(-1, -1e-10)))
-    (5e-11-1j)
-    >>> fp.mpc(mp.sqrt(mp.mpc(-1, +1e-10)))
-    (5e-11+1j)
-
-one has no signed zeros and allows to specify result *on the branch cut*
-(nonpositive part of the real axis in this example)::
-
-    >>> fp.mpc(mp.sqrt(mp.mpc(-1, 0)))
-    1j
-    >>> fp.mpc(mp.sqrt(-1))
-    1j
-
-Here it's continuous from the above of the :func:`~mpmath.sqrt()` branch
-cut (from ``0`` along the negative real axis to the negative infinity).

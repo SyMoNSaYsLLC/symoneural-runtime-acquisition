@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 ##################################################################################################
 #     module for the symmetric eigenvalue problem
 #       Copyright 2013 Timo Hartmann (thartmann15 at gmail.com)
@@ -34,6 +37,7 @@ low level routines:
   svd_c_raw : raw singular value decomposition for complex matrices
 """
 
+from ..libmp.backend import xrange
 from .eigen import defun
 
 
@@ -74,18 +78,18 @@ def r_sy_tridiag(ctx, A, D, E, calc_ev = True):
     #        whereas v/<v,v> is stored in a[i,(i+1):]
 
     n = A.rows
-    for i in range(n - 1, 0, -1):
+    for i in xrange(n - 1, 0, -1):
         # scale the vector
 
         scale = 0
-        for k in range(i):
+        for k in xrange(0, i):
             scale += abs(A[k,i])
 
         scale_inv = 0
         if scale != 0:
             scale_inv = 1/scale
 
-        # sadly there are floating-point numbers not equal to zero whose reciprocal is infinity
+        # sadly there are floating point numbers not equal to zero whose reciprocal is infinity
 
         if i == 1 or scale == 0 or ctx.isinf(scale_inv):
             E[i] = A[i-1,i]        # nothing to do
@@ -95,7 +99,7 @@ def r_sy_tridiag(ctx, A, D, E, calc_ev = True):
         # calculate parameters for housholder transformation
 
         H = 0
-        for k in range(i):
+        for k in xrange(0, i):
             A[k,i] *= scale_inv
             H += A[k,i] * A[k,i]
 
@@ -110,14 +114,14 @@ def r_sy_tridiag(ctx, A, D, E, calc_ev = True):
 
         # apply housholder transformation
 
-        for j in range(i):
+        for j in xrange(0, i):
             if calc_ev:
                 A[i,j] = A[j,i] / H
 
             G = 0                  # calculate A*U
-            for k in range(j + 1):
+            for k in xrange(0, j + 1):
                 G += A[k,j] * A[k,i]
-            for k in range(j + 1, i):
+            for k in xrange(j + 1, i):
                 G += A[j,k] * A[k,i]
 
             E[j] = G / H           # calculate P
@@ -125,38 +129,38 @@ def r_sy_tridiag(ctx, A, D, E, calc_ev = True):
 
         HH = F / (2 * H)
 
-        for j in range(i):     # calculate reduced A
+        for j in xrange(0, i):     # calculate reduced A
             F = A[j,i]
             G = E[j] - HH * F      # calculate Q
             E[j] = G
 
-            for k in range(j + 1):
+            for k in xrange(0, j + 1):
                 A[k,j] -= F * E[k] + G * A[k,i]
 
         D[i] = H
 
-    for i in range(1, n):         # better for compatibility
+    for i in xrange(1, n):         # better for compatibility
         E[i-1] = E[i]
     E[n-1] = 0
 
     if calc_ev:
         D[0] = 0
-        for i in range(n):
+        for i in xrange(0, n):
             if D[i] != 0:
-                for j in range(i):     # accumulate transformation matrices
+                for j in xrange(0, i):     # accumulate transformation matrices
                     G = 0
-                    for k in range(i):
+                    for k in xrange(0, i):
                         G += A[i,k] * A[k,j]
-                    for k in range(i):
+                    for k in xrange(0, i):
                         A[k,j] -= G * A[k,i]
 
             D[i] = A[i,i]
             A[i,i] = 1
 
-            for j in range(i):
+            for j in xrange(0, i):
                 A[j,i] = A[i,j] = 0
     else:
-        for i in range(n):
+        for i in xrange(0, n):
             D[i] = A[i,i]
 
 
@@ -199,19 +203,19 @@ def c_he_tridiag_0(ctx, A, D, E, T):
 
     n = A.rows
     T[n-1] = 1
-    for i in range(n - 1, 0, -1):
+    for i in xrange(n - 1, 0, -1):
 
         # scale the vector
 
         scale = 0
-        for k in range(i):
+        for k in xrange(0, i):
             scale += abs(ctx.re(A[k,i])) + abs(ctx.im(A[k,i]))
 
         scale_inv = 0
         if scale != 0:
             scale_inv = 1 / scale
 
-        # sadly there are floating-point numbers not equal to zero whose reciprocal is infinity
+        # sadly there are floating point numbers not equal to zero whose reciprocal is infinity
 
         if scale == 0 or ctx.isinf(scale_inv):
             E[i] = 0
@@ -233,7 +237,7 @@ def c_he_tridiag_0(ctx, A, D, E, T):
         # calculate parameters for housholder transformation
 
         H = 0
-        for k in range(i):
+        for k in xrange(0, i):
             A[k,i] *= scale_inv
             rr = ctx.re(A[k,i])
             ii = ctx.im(A[k,i])
@@ -255,13 +259,13 @@ def c_he_tridiag_0(ctx, A, D, E, T):
 
         # apply housholder transformation
 
-        for j in range(i):
+        for j in xrange(0, i):
             A[i,j] = A[j,i] / H
 
             G = 0                        # calculate A*U
-            for k in range(j + 1):
+            for k in xrange(0, j + 1):
                 G += ctx.conj(A[k,j]) * A[k,i]
-            for k in range(j + 1, i):
+            for k in xrange(j + 1, i):
                 G += A[j,k] * A[k,i]
 
             T[j] = G / H                 # calculate P
@@ -269,12 +273,12 @@ def c_he_tridiag_0(ctx, A, D, E, T):
 
         HH = F / (2 * H)
 
-        for j in range(i):           # calculate reduced A
+        for j in xrange(0, i):           # calculate reduced A
             F = A[j,i]
             G = T[j] - HH * F            # calculate Q
             T[j] = G
 
-            for k in range(j + 1):
+            for k in xrange(0, j + 1):
                 A[k,j] -= ctx.conj(F) * T[k] + ctx.conj(G) * A[k,i]
                 # as we use the lower left part for storage
                 # we have to use the transpose of the normal formula
@@ -282,12 +286,12 @@ def c_he_tridiag_0(ctx, A, D, E, T):
         T[i-1] = TZ
         D[i] = H
 
-    for i in range(1, n):                # better for compatibility
+    for i in xrange(1, n):                # better for compatibility
         E[i-1] = E[i]
     E[n-1] = 0
 
     D[0] = 0
-    for i in range(n):
+    for i in xrange(0, n):
         zw = D[i]
         D[i] = ctx.re(A[i,i])
         A[i,i] = zw
@@ -312,22 +316,22 @@ def c_he_tridiag_1(ctx, A, T):
 
     n = A.rows
 
-    for i in range(n):
+    for i in xrange(0, n):
         if A[i,i] != 0:
-            for j in range(i):
+            for j in xrange(0, i):
                 G = 0
-                for k in range(i):
+                for k in xrange(0, i):
                     G += ctx.conj(A[i,k]) * A[k,j]
-                for k in range(i):
+                for k in xrange(0, i):
                     A[k,j] -= G * A[k,i]
 
         A[i,i] = 1
 
-        for j in range(i):
+        for j in xrange(0, i):
             A[j,i] = A[i,j] = 0
 
-    for i in range(n):
-        for k in range(n):
+    for i in xrange(0, n):
+        for k in xrange(0, n):
             A[i,k] *= T[k]
 
 
@@ -353,17 +357,17 @@ def c_he_tridiag_2(ctx, A, T, B):
 
     n = A.rows
 
-    for i in range(n):
-        for k in range(n):
+    for i in xrange(0, n):
+        for k in xrange(0, n):
             B[k,i] *= T[k]
 
-    for i in range(n):
+    for i in xrange(0, n):
         if A[i,i] != 0:
-            for j in range(n):
+            for j in xrange(0, n):
                 G = 0
-                for k in range(i):
+                for k in xrange(0, i):
                     G += ctx.conj(A[i,k]) * B[k,j]
-                for k in range(i):
+                for k in xrange(0, i):
                     B[k,j] -= G * A[k,i]
 
 
@@ -408,7 +412,7 @@ def tridiag_eigen(ctx, d, e, z = False):
     e[n-1] = 0
     iterlim = 2 * ctx.dps
 
-    for l in range(n):
+    for l in xrange(n):
         j = 0
         while 1:
             m = l
@@ -442,7 +446,7 @@ def tridiag_eigen(ctx, d, e, z = False):
 
             s, c, p = 1, 1, 0
 
-            for i in range(m - 1, l - 1, -1):
+            for i in xrange(m - 1, l - 1, -1):
                 f = s * e[i]
                 b = c * e[i]
                 if abs(f) > abs(g):             # this here is a slight improvement also used in gaussq.f or acm algorithm 726.
@@ -465,7 +469,7 @@ def tridiag_eigen(ctx, d, e, z = False):
 
                 if not isinstance(z, bool):
                     # calculate eigenvectors
-                    for w in range(z.rows):
+                    for w in xrange(z.rows):
                         f = z[w,i+1]
                         z[w,i+1] = s * z[w,i] + c * f
                         z[w,i  ] = c * z[w,i] - s * f
@@ -474,12 +478,12 @@ def tridiag_eigen(ctx, d, e, z = False):
             e[l] = g
             e[m] = 0
 
-    for ii in range(1, n):
+    for ii in xrange(1, n):
         # sort eigenvalues and eigenvectors (bubble-sort)
         i = ii - 1
         k = i
         p = d[i]
-        for j in range(ii, n):
+        for j in xrange(ii, n):
             if d[j] >= p:
                 continue
             k = j
@@ -490,7 +494,7 @@ def tridiag_eigen(ctx, d, e, z = False):
         d[i] = p
 
         if not isinstance(z, bool):
-            for w in range(z.rows):
+            for w in xrange(z.rows):
                 p = z[w,i]
                 z[w,i] = z[w,k]
                 z[w,k] = p
@@ -798,9 +802,10 @@ def gauss_quadrature(ctx, n, qtype = "legendre", alpha = 0, beta = 0):
       0.0
 
     references:
-      - [GolubWelsch]_
-      - [Golub]_
-      - [Stroud]_
+      - golub and welsch, "calculations of gaussian quadrature rules", mathematics of
+        computation 23, p. 221-230 (1969)
+      - golub, "some modified matrix eigenvalue problems", siam review 15, p. 318-334 (1973)
+      - stroud and secrest, "gaussian quadrature formulas", prentice-hall (1966)
 
     See also the routine gaussq.f in netlog.org or ACM Transactions on
     Mathematical Software algorithm 726.
@@ -815,44 +820,44 @@ def gauss_quadrature(ctx, n, qtype = "legendre", alpha = 0, beta = 0):
     if qtype == "legendre":
         # legendre on the range -1 +1 , abramowitz, table 25.4, p.916
         w = 2
-        for i in range(n):
+        for i in xrange(n):
             j = i + 1
             e[i] = ctx.sqrt(j * j / (4 * j * j - ctx.mpf(1)))
     elif qtype == "legendre01":
         # legendre shifted to 0 1        , abramowitz, table 25.8, p.921
         w = 1
-        for i in range(n):
+        for i in xrange(n):
             d[i] = 1 / ctx.mpf(2)
             j = i + 1
             e[i] = ctx.sqrt(j * j / (16 * j * j - ctx.mpf(4)))
     elif qtype == "hermite":
         # hermite on the range -inf +inf , abramowitz, table 25.10,p.924
         w = ctx.sqrt(ctx.pi)
-        for i in range(n):
+        for i in xrange(n):
             j = i + 1
             e[i] = ctx.sqrt(j / ctx.mpf(2))
     elif qtype == "laguerre":
         # laguerre on the range 0 +inf , abramowitz, table 25.9, p. 923
         w = 1
-        for i in range(n):
+        for i in xrange(n):
             j = i + 1
             d[i] = 2 * j - 1
             e[i] = j
     elif qtype=="chebyshev1":
         # chebyshev polynimials of the first kind
         w = ctx.pi
-        for i in range(n):
+        for i in xrange(n):
             e[i] = 1 / ctx.mpf(2)
         e[0] = ctx.sqrt(1 / ctx.mpf(2))
     elif qtype == "chebyshev2":
         # chebyshev polynimials of the second kind
         w = ctx.pi / 2
-        for i in range(n):
+        for i in xrange(n):
             e[i] = 1 / ctx.mpf(2)
     elif qtype == "glaguerre":
         # generalized laguerre on the range 0 +inf
         w = ctx.gamma(1 + alpha)
-        for i in range(n):
+        for i in xrange(n):
             j = i + 1
             d[i] = 2 * j - 1 + alpha
             e[i] = ctx.sqrt(j * (j + alpha))
@@ -866,7 +871,7 @@ def gauss_quadrature(ctx, n, qtype = "legendre", alpha = 0, beta = 0):
         d[0] = (beta - alpha) / abi
         e[0] = ctx.sqrt(4 * (1 + alpha) * (1 + beta) / ((abi + 1) * (abi * abi)))
         a2b2 = beta * beta - alpha * alpha
-        for i in range(1, n):
+        for i in xrange(1, n):
             j = i + 1
             abi = 2 * j + ab
             d[i] = a2b2 / ((abi - 2) * abi)
@@ -880,7 +885,7 @@ def gauss_quadrature(ctx, n, qtype = "legendre", alpha = 0, beta = 0):
 
     tridiag_eigen(ctx, d, e, z)
 
-    for i in range(len(z)):
+    for i in xrange(len(z)):
         z[i] *= z[i]
 
     z = z.transpose()
@@ -946,14 +951,14 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
     g = scale = anorm = 0
     maxits = 3 * ctx.dps
 
-    for i in range(n):     # householder reduction to bidiagonal form
+    for i in xrange(n):     # householder reduction to bidiagonal form
         work[i] = scale*g
         g = s = scale = 0
         if i < m:
-            for k in range(i, m):
+            for k in xrange(i, m):
                 scale += ctx.fabs(A[k,i])
             if scale != 0:
-                for k in range(i, m):
+                for k in xrange(i, m):
                     A[k,i] /= scale
                     s += A[k,i] * A[k,i]
                 f = A[i,i]
@@ -962,24 +967,24 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                     g = -g
                 h = f * g - s
                 A[i,i] = f - g
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         s += A[k,i] * A[k,j]
                     f = s / h
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         A[k,j] += f * A[k,i]
-                for k in range(i,m):
+                for k in xrange(i,m):
                     A[k,i] *= scale
 
         S[i] = scale * g
         g = s = scale = 0
 
         if i < m and i != n - 1:
-            for k in range(i+1, n):
+            for k in xrange(i+1, n):
                 scale += ctx.fabs(A[i,k])
             if scale:
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     A[i,k] /= scale
                     s += A[i,k] * A[i,k]
                 f = A[i,i+1]
@@ -989,36 +994,36 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                 h = f * g - s
                 A[i,i+1] = f - g
 
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     work[k] = A[i,k] / h
 
-                for j in range(i+1, m):
+                for j in xrange(i+1, m):
                     s = 0
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         s += A[j,k] * A[i,k]
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         A[j,k] += s * work[k]
 
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     A[i,k] *= scale
 
         anorm = max(anorm, ctx.fabs(S[i]) + ctx.fabs(work[i]))
 
     if not isinstance(V, bool):
-        for i in range(n-2, -1, -1):     # accumulation of right hand transformations
+        for i in xrange(n-2, -1, -1):     # accumulation of right hand transformations
             V[i+1,i+1] = 1
 
             if work[i+1] != 0:
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     V[i,j] = (A[i,j] / A[i,i+1]) / work[i+1]
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         s += A[i,k] * V[j,k]
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         V[j,k] += s * V[i,k]
 
-            for j in range(i+1, n):
+            for j in xrange(i+1, n):
                 V[j,i] = V[i,j] = 0
 
         V[0,0] = 1
@@ -1027,27 +1032,27 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
     else   : minnm = n
 
     if calc_u:
-        for i in range(minnm-1, -1, -1): # accumulation of left hand transformations
+        for i in xrange(minnm-1, -1, -1): # accumulation of left hand transformations
             g = S[i]
-            for j in range(i+1, n):
+            for j in xrange(i+1, n):
                 A[i,j] = 0
             if g != 0:
                 g = 1 / g
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i+1, m):
+                    for k in xrange(i+1, m):
                         s += A[k,i] * A[k,j]
                     f = (s / A[i,i]) * g
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         A[k,j] += f * A[k,i]
-                for j in range(i, m):
+                for j in xrange(i, m):
                     A[j,i] *= g
             else:
-                for j in range(i, m):
+                for j in xrange(i, m):
                     A[j,i] = 0
             A[i,i] += 1
 
-    for k in range(n - 1, -1, -1):
+    for k in xrange(n - 1, -1, -1):
         # diagonalization of the bidiagonal form:
         #   loop over singular values, and over allowed itations
 
@@ -1056,7 +1061,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
             its += 1
             flag = True
 
-            for l in range(k, -1, -1):
+            for l in xrange(k, -1, -1):
                 nm = l-1
 
                 if ctx.fabs(work[l]) + anorm == anorm:
@@ -1069,7 +1074,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
             if flag:
                 c = 0
                 s = 1
-                for i in range(l, k + 1):
+                for i in xrange(l, k + 1):
                     f = s * work[i]
                     work[i] *= c
                     if ctx.fabs(f) + anorm == anorm:
@@ -1082,7 +1087,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                     s = - f * h
 
                     if calc_u:
-                        for j in range(m):
+                        for j in xrange(m):
                             y = A[j,nm]
                             z = A[j,i]
                             A[j,nm] = y * c + z * s
@@ -1094,7 +1099,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                 if z < 0:            # singular value is made nonnegative
                     S[k] = -z
                     if not isinstance(V, bool):
-                        for j in range(n):
+                        for j in xrange(n):
                             V[k,j] = -V[k,j]
                 break
 
@@ -1113,7 +1118,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
 
             c = s = 1         # next qt transformation
 
-            for j in range(l, nm + 1):
+            for j in xrange(l, nm + 1):
                 g = work[j+1]
                 y = S[j+1]
                 h = s * g
@@ -1127,7 +1132,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                 h = y * s
                 y *= c
                 if not isinstance(V, bool):
-                    for jj in range(n):
+                    for jj in xrange(n):
                         x = V[j  ,jj]
                         z = V[j+1,jj]
                         V[j    ,jj]= x * c + z * s
@@ -1142,7 +1147,7 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
                 x = c * y - s * g
 
                 if calc_u:
-                    for jj in range(m):
+                    for jj in xrange(m):
                         y = A[jj,j  ]
                         z = A[jj,j+1]
                         A[jj,j    ] = y * c + z * s
@@ -1156,11 +1161,11 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
 
     # Sort singular values into decreasing order (bubble-sort)
 
-    for i in range(n):
+    for i in xrange(n):
         imax = i
         s = ctx.fabs(S[i])         # s is the current maximal element
 
-        for j in range(i + 1, n):
+        for j in xrange(i + 1, n):
             c = ctx.fabs(S[j])
             if c > s:
                 s = c
@@ -1174,13 +1179,13 @@ def svd_r_raw(ctx, A, V = False, calc_u = False):
             S[imax] = z
 
             if calc_u:
-                for j in range(m):
+                for j in xrange(m):
                     z = A[j,i]
                     A[j,i] = A[j,imax]
                     A[j,imax] = z
 
             if not isinstance(V, bool):
-                for j in range(n):
+                for j in xrange(n):
                     z = V[i,j]
                     V[i,j] = V[imax,j]
                     V[imax,j] = z
@@ -1249,14 +1254,14 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
     g = scale = anorm = 0
     maxits = 3 * ctx.dps
 
-    for i in range(n):         # householder reduction to bidiagonal form
+    for i in xrange(n):         # householder reduction to bidiagonal form
         dwork[i] = scale * g    # dwork are the side-diagonal elements
         g = s = scale = 0
         if i < m:
-            for k in range(i, m):
+            for k in xrange(i, m):
                 scale += ctx.fabs(ctx.re(A[k,i])) + ctx.fabs(ctx.im(A[k,i]))
             if scale != 0:
-                for k in range(i, m):
+                for k in xrange(i, m):
                     A[k,i] /= scale
                     ar = ctx.re(A[k,i])
                     ai = ctx.im(A[k,i])
@@ -1274,24 +1279,24 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                 A[i,i] = f - g
                 beta /= h
                 lbeta[i] = (beta / scale) / scale
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         s += ctx.conj(A[k,i]) * A[k,j]
                     f = beta * s
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         A[k,j] += f * A[k,i]
-                for k in range(i, m):
+                for k in xrange(i, m):
                     A[k,i] *= scale
 
         S[i] = scale * g     # S are the diagonal elements
         g = s = scale = 0
 
         if i < m and i != n - 1:
-            for k in range(i+1, n):
+            for k in xrange(i+1, n):
                 scale += ctx.fabs(ctx.re(A[i,k])) + ctx.fabs(ctx.im(A[i,k]))
             if scale:
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     A[i,k] /= scale
                     ar = ctx.re(A[i,k])
                     ai = ctx.im(A[i,k])
@@ -1313,38 +1318,38 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                 beta /= h
                 rbeta[i] = (beta / scale) / scale
 
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     work[k] = A[i, k]
 
-                for j in range(i+1, m):
+                for j in xrange(i+1, m):
                     s = 0
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         s += ctx.conj(A[i,k]) * A[j,k]
                     f = s * beta
-                    for k in range(i+1,n):
+                    for k in xrange(i+1,n):
                         A[j,k] += f * work[k]
 
-                for k in range(i+1, n):
+                for k in xrange(i+1, n):
                     A[i,k] *= scale
 
         anorm = max(anorm,ctx.fabs(S[i]) + ctx.fabs(dwork[i]))
 
     if not isinstance(V, bool):
-        for i in range(n-2, -1, -1):     # accumulation of right hand transformations
+        for i in xrange(n-2, -1, -1):     # accumulation of right hand transformations
             V[i+1,i+1] = 1
 
             if dwork[i+1] != 0:
                 f = ctx.conj(rbeta[i])
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     V[i,j] = A[i,j] * f
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         s += ctx.conj(A[i,k]) * V[j,k]
-                    for k in range(i+1, n):
+                    for k in xrange(i+1, n):
                         V[j,k] += s * V[i,k]
 
-            for j in range(i+1,n):
+            for j in xrange(i+1,n):
                 V[j,i] = V[i,j] = 0
 
         V[0,0] = 1
@@ -1353,27 +1358,27 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
     else     : minnm = n
 
     if calc_u:
-        for i in range(minnm-1, -1, -1): # accumulation of left hand transformations
+        for i in xrange(minnm-1, -1, -1): # accumulation of left hand transformations
             g = S[i]
-            for j in range(i+1, n):
+            for j in xrange(i+1, n):
                 A[i,j] = 0
             if g != 0:
                 g = 1 / g
-                for j in range(i+1, n):
+                for j in xrange(i+1, n):
                     s = 0
-                    for k in range(i+1, m):
+                    for k in xrange(i+1, m):
                         s += ctx.conj(A[k,i]) * A[k,j]
                     f = s * ctx.conj(lbeta[i])
-                    for k in range(i, m):
+                    for k in xrange(i, m):
                         A[k,j] += f * A[k,i]
-                for j in range(i, m):
+                for j in xrange(i, m):
                     A[j,i] *= g
             else:
-                for j in range(i, m):
+                for j in xrange(i, m):
                     A[j,i] = 0
             A[i,i] += 1
 
-    for k in range(n-1, -1, -1):
+    for k in xrange(n-1, -1, -1):
         # diagonalization of the bidiagonal form:
         #   loop over singular values, and over allowed itations
 
@@ -1382,7 +1387,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
             its += 1
             flag = True
 
-            for l in range(k, -1, -1):
+            for l in xrange(k, -1, -1):
                 nm = l - 1
 
                 if ctx.fabs(dwork[l]) + anorm == anorm:
@@ -1395,7 +1400,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
             if flag:
                 c = 0
                 s = 1
-                for i in range(l, k+1):
+                for i in xrange(l, k+1):
                     f = s * dwork[i]
                     dwork[i] *= c
                     if ctx.fabs(f) + anorm == anorm:
@@ -1408,7 +1413,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                     s = -f * h
 
                     if calc_u:
-                        for j in range(m):
+                        for j in xrange(m):
                             y = A[j,nm]
                             z = A[j,i]
                             A[j,nm]= y * c + z * s
@@ -1420,7 +1425,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                 if z < 0:    # singular value is made nonnegative
                     S[k] = -z
                     if not isinstance(V, bool):
-                        for j in range(n):
+                        for j in xrange(n):
                             V[k,j] = -V[k,j]
                 break
 
@@ -1439,7 +1444,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
 
             c = s = 1         # next qt transformation
 
-            for j in range(l, nm + 1):
+            for j in xrange(l, nm + 1):
                 g = dwork[j+1]
                 y = S[j+1]
                 h = s * g
@@ -1453,7 +1458,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                 h = y * s
                 y *= c
                 if not isinstance(V, bool):
-                    for jj in range(n):
+                    for jj in xrange(n):
                         x = V[j  ,jj]
                         z = V[j+1,jj]
                         V[j    ,jj]= x * c + z * s
@@ -1467,7 +1472,7 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
                 f = c * g + s * y
                 x = c * y - s * g
                 if calc_u:
-                    for jj in range(m):
+                    for jj in xrange(m):
                         y = A[jj,j  ]
                         z = A[jj,j+1]
                         A[jj,j    ]= y * c + z * s
@@ -1481,11 +1486,11 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
 
     # Sort singular values into decreasing order (bubble-sort)
 
-    for i in range(n):
+    for i in xrange(n):
         imax = i
         s = ctx.fabs(S[i])         # s is the current maximal element
 
-        for j in range(i + 1, n):
+        for j in xrange(i + 1, n):
             c = ctx.fabs(S[j])
             if c > s:
                 s = c
@@ -1499,13 +1504,13 @@ def svd_c_raw(ctx, A, V = False, calc_u = False):
             S[imax] = z
 
             if calc_u:
-                for j in range(m):
+                for j in xrange(m):
                     z = A[j,i]
                     A[j,i] = A[j,imax]
                     A[j,imax] = z
 
             if not isinstance(V, bool):
-                for j in range(n):
+                for j in xrange(n):
                     z = V[i,j]
                     V[i,j] = V[imax,j]
                     V[imax,j] = z
@@ -1609,7 +1614,7 @@ def svd_r(ctx, A, full_matrices = False, compute_uv = True, overwrite_a = False)
         S = svd_r_raw(ctx, A, V, calc_u = True)
 
         if n > m:
-            if full_matrices is False:
+            if full_matrices == False:
                 V = V[:m,:]
 
             S = S[:m]
@@ -1713,7 +1718,7 @@ def svd_c(ctx, A, full_matrices = False, compute_uv = True, overwrite_a = False)
         S = svd_c_raw(ctx, A, V, calc_u = True)
 
         if n > m:
-            if full_matrices is False:
+            if full_matrices == False:
                 V = V[:m,:]
 
             S = S[:m]

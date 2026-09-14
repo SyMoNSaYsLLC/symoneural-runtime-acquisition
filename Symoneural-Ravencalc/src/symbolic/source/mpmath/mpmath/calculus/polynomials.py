@@ -1,7 +1,5 @@
-import warnings
-
+from ..libmp.backend import xrange
 from .calculus import defun
-
 
 #----------------------------------------------------------------------------#
 #                                Polynomials                                 #
@@ -9,45 +7,34 @@ from .calculus import defun
 
 # XXX: extra precision
 @defun
-def polyval(ctx, coeffs, x, derivative=False, asc=None):
+def polyval(ctx, coeffs, x, derivative=False):
     r"""
-    Given coefficients `[c_0, c_1, c_2, \ldots, c_n]` and a number `x`,
+    Given coefficients `[c_n, \ldots, c_2, c_1, c_0]` and a number `x`,
     :func:`~mpmath.polyval` evaluates the polynomial
 
     .. math ::
 
-        P(x) = c_0 + c_1 x + c_2 x^2 \ldots c_n x^n
+        P(x) = c_n x^n + \ldots + c_2 x^2 + c_1 x + c_0.
 
     If *derivative=True* is set, :func:`~mpmath.polyval` simultaneously
     evaluates `P(x)` with the derivative, `P'(x)`, and returns the
     tuple `(P(x), P'(x))`.
 
-        >>> from mpmath import mp, polyval
+        >>> from mpmath import *
         >>> mp.pretty = True
-        >>> polyval([2, 0, 3], 0.5, asc=True)
+        >>> polyval([3, 0, 2], 0.5)
         2.75
-        >>> polyval([2, 0, 3], 0.5, derivative=True, asc=True)
+        >>> polyval([3, 0, 2], 0.5, derivative=True)
         (2.75, 3.0)
-
-    If *asc=False*, descending order of coefficients is used (the term
-    of largest degree - first).
 
     The coefficients and the evaluation point may be any combination
     of real or complex numbers.
     """
     if not coeffs:
         return ctx.zero
-    if asc is None:
-        warnings.warn("Descending (wrt powers) order of polynomial "
-                      "coefficients is deprecated, please adapt your "
-                      "code to use ascending order, asc=True.",
-                      DeprecationWarning)
-        asc = False
-    if not asc:
-        coeffs = coeffs[::-1]
-    p = ctx.convert(coeffs[-1])
+    p = ctx.convert(coeffs[0])
     q = ctx.zero
-    for c in reversed(coeffs[:-1]):
+    for c in coeffs[1:]:
         if derivative:
             q = p + x*q
         p = c + x*p
@@ -58,7 +45,7 @@ def polyval(ctx, coeffs, x, derivative=False, asc=None):
 
 @defun
 def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
-              error=False, roots_init=None, asc=None):
+        error=False, roots_init=None):
     """
     Computes all roots (real or complex) of a given polynomial.
 
@@ -70,22 +57,19 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
     With *error=True*, :func:`~mpmath.polyroots` returns a tuple *(roots, err)*
     where *err* is an estimate of the maximum error among the computed roots.
 
-    If *asc=False*, descending order of coefficients is used (the term
-    of largest degree - first).
-
     **Examples**
 
     Finding the three real roots of `x^3 - x^2 - 14x + 24`::
 
-        >>> from mpmath import mp, polyroots, nprint, sqrt, polyval
-        >>> mp.pretty = True
-        >>> nprint(polyroots([24,-14,-1,1],asc=True), 4)
+        >>> from mpmath import *
+        >>> mp.dps = 15; mp.pretty = True
+        >>> nprint(polyroots([1,-1,-14,24]), 4)
         [-4.0, 2.0, 3.0]
 
     Finding the two complex conjugate roots of `4x^2 + 3x + 2`, with an
     error estimate::
 
-        >>> roots, err = polyroots([2,3,4], error=True, asc=True)
+        >>> roots, err = polyroots([4,3,2], error=True)
         >>> for r in roots:
         ...     print(r)
         ...
@@ -95,16 +79,16 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
         >>> err
         2.22044604925031e-16
         >>>
-        >>> polyval([2,3,4], roots[0], asc=True)
+        >>> polyval([4,3,2], roots[0])
         (2.22044604925031e-16 + 0.0j)
-        >>> polyval([2,3,4], roots[1], asc=True)
+        >>> polyval([4,3,2], roots[1])
         (2.22044604925031e-16 + 0.0j)
 
     The following example computes all the 5th roots of unity; that is,
     the roots of `x^5 - 1`::
 
         >>> mp.dps = 20
-        >>> for r in polyroots([-1, 0, 0, 0, 0, 1], asc=True):
+        >>> for r in polyroots([1, 0, 0, 0, 0, -1]):
         ...     print(r)
         ...
         1.0
@@ -133,7 +117,7 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
     typically compute all roots of an arbitrary polynomial to high precision::
 
         >>> mp.dps = 60
-        >>> for r in polyroots([1, 0, -10, 0, 1], asc=True):
+        >>> for r in polyroots([1, 0, -10, 0, 1]):
         ...     print(r)
         ...
         -3.14626436994197234232913506571557044551247712918732870123249
@@ -164,7 +148,7 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
 
     **References**
 
-    1. [Wikipedia]_ https://en.wikipedia.org/wiki/Durand-Kerner_method
+    1. http://en.wikipedia.org/wiki/Durand-Kerner_method
 
     """
     if len(coeffs) <= 1:
@@ -173,40 +157,31 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
         # Constant polynomial with no roots
         return []
 
-    if asc is None:
-        warnings.warn("Descending (wrt powers) order of polynomial "
-                      "coefficients is deprecated, please adapt you "
-                      "code to use ascending order, asc=True.",
-                      DeprecationWarning)
-        asc = False
-    if not asc:
-        coeffs = coeffs[::-1]
-
     orig = ctx.prec
     tol = +ctx.eps
     with ctx.extraprec(extraprec):
         deg = len(coeffs) - 1
         # Must be monic
-        lead = ctx.convert(coeffs[-1])
+        lead = ctx.convert(coeffs[0])
         if lead == 1:
             coeffs = [ctx.convert(c) for c in coeffs]
         else:
             coeffs = [c/lead for c in coeffs]
-        f = lambda x: ctx.polyval(coeffs, x, asc=True)
+        f = lambda x: ctx.polyval(coeffs, x)
         if roots_init is None:
-            roots = [ctx.mpc((0.4+0.9j)**n) for n in range(deg)]
+            roots = [ctx.mpc((0.4+0.9j)**n) for n in xrange(deg)]
         else:
-            roots = [None]*deg
+            roots = [None]*deg;
             deg_init = min(deg, len(roots_init))
             roots[:deg_init] = list(roots_init[:deg_init])
             roots[deg_init:] = [ctx.mpc((0.4+0.9j)**n) for n
-                                in range(deg_init,deg)]
-        err = [ctx.one for n in range(deg)]
+                                in xrange(deg_init,deg)]
+        err = [ctx.one for n in xrange(deg)]
         # Durand-Kerner iteration until convergence
-        for step in range(maxsteps):
+        for step in xrange(maxsteps):
             if abs(max(err)) < tol:
                 break
-            for i in range(deg):
+            for i in xrange(deg):
                 p = roots[i]
                 x = f(p)
                 for j in range(deg):
@@ -222,7 +197,7 @@ def polyroots(ctx, coeffs, maxsteps=50, cleanup=True, extraprec=10,
                     % maxsteps)
         # Remove small real or imaginary parts
         if cleanup:
-            for i in range(deg):
+            for i in xrange(deg):
                 if abs(roots[i]) < tol:
                     roots[i] = ctx.zero
                 elif abs(ctx._im(roots[i])) < tol:

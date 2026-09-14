@@ -4,12 +4,8 @@ sure that passing custom Axes works.
 
 """
 
-import pytest
+from mpmath import mp, fp
 
-from mpmath import fp, mp
-
-
-@pytest.mark.filterwarnings("ignore:.*:DeprecationWarning")
 def test_axes():
     try:
         import matplotlib
@@ -19,7 +15,8 @@ def test_axes():
             raise ImportError
         import pylab
     except ImportError:
-        pytest.skip("\nSkipping test (pylab not available or too old version)\n")
+        print("\nSkipping test (pylab not available or too old version)\n")
+        return
     fig = pylab.figure()
     axes = fig.add_subplot(111)
     for ctx in [mp, fp]:

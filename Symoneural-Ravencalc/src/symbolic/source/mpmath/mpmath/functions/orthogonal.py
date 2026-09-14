@@ -1,4 +1,3 @@
-from ..libmp.backend import MPQ
 from .functions import defun, defun_wrapped
 
 def _hermite_param(ctx, n, z, parabolic_cylinder):
@@ -9,7 +8,7 @@ def _hermite_param(ctx, n, z, parabolic_cylinder):
     """
     n, ntyp = ctx._convert_param(n)
     z = ctx.convert(z)
-    q = -MPQ(1,2)
+    q = -ctx.mpq_1_2
     # For re(z) > 0, 2F0 -- http://functions.wolfram.com/
     #     HypergeometricFunctions/HermiteHGeneral/06/02/0009/
     # Otherwise, there is a reflection formula
@@ -87,20 +86,15 @@ def pcfd(ctx, n, z, **kwargs):
 
     **Examples**
 
-        >>> from mpmath import mp, pcfd, mpf, chop, diff, taylor
-        >>> mp.dps = 25
-        >>> mp.pretty = True
-        >>> pcfd(0,0)
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
+        >>> pcfd(0,0); pcfd(1,0); pcfd(2,0); pcfd(3,0)
         1.0
-        >>> pcfd(1,0)
         0.0
-        >>> pcfd(2,0)
         -1.0
-        >>> pcfd(3,0)
         0.0
-        >>> pcfd(4,0)
+        >>> pcfd(4,0); pcfd(-3,0)
         3.0
-        >>> pcfd(-3,0)
         0.6266570686577501256039413
         >>> pcfd('1/2', 2+3j)
         (-5.363331161232920734849056 - 3.858877821790010714163487j)
@@ -150,9 +144,8 @@ def pcfu(ctx, a, z, **kwargs):
 
     Connection to other functions::
 
-        >>> from mpmath import mp, mpf, pcfu, sqrt, pi, exp, erfc
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> z = mpf(3)
         >>> pcfu(0.5,z)
         0.03210358129311151450551963
@@ -169,7 +162,7 @@ def pcfu(ctx, a, z, **kwargs):
 
     """
     n, _ = ctx._convert_param(a)
-    return ctx.pcfd(-n-MPQ(1,2), z)
+    return ctx.pcfd(-n-ctx.mpq_1_2, z)
 
 @defun
 def pcfv(ctx, a, z, **kwargs):
@@ -185,9 +178,8 @@ def pcfv(ctx, a, z, **kwargs):
 
     Wronskian relation between `U` and `V`::
 
-        >>> from mpmath import mp, pcfu, diff, pcfv, sqrt, pi, chop
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> a, z = 2, 3
         >>> pcfu(a,z)*diff(pcfv,(a,z),(0,1))-diff(pcfu,(a,z),(0,1))*pcfv(a,z)
         0.7978845608028653558798921
@@ -206,8 +198,8 @@ def pcfv(ctx, a, z, **kwargs):
     """
     n, ntype = ctx._convert_param(a)
     z = ctx.convert(z)
-    q = MPQ(1,2)
-    r = MPQ(1,4)
+    q = ctx.mpq_1_2
+    r = ctx.mpq_1_4
     if ntype == 'Q' and ctx.isint(n*2):
         # Faster for half-integers
         def h():
@@ -254,9 +246,8 @@ def pcfw(ctx, a, z, **kwargs):
 
     Value at the origin::
 
-        >>> from mpmath import mp, mpf, pcfw, power, gamma, sqrt, diff
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> a = mpf(0.25)
         >>> pcfw(a,0)
         0.9722833245718180765617104
@@ -296,7 +287,7 @@ def pcfy1(ctx, a, z, **kwargs):
         w1 = ctx.fmul(w, -0.25, exact=True)
         w2 = ctx.fmul(w, 0.5, exact=True)
         e = ctx.exp(w1)
-        return [e], [1], [], [], [MPQ(1,2)*a+MPQ(1,4)], [MPQ(1,2)], w2
+        return [e], [1], [], [], [ctx.mpq_1_2*a+ctx.mpq_1_4], [ctx.mpq_1_2], w2
     return ctx.hypercomb(h, [], **kwargs)
 
 @defun
@@ -308,8 +299,8 @@ def pcfy2(ctx, a, z, **kwargs):
         w1 = ctx.fmul(w, -0.25, exact=True)
         w2 = ctx.fmul(w, 0.5, exact=True)
         e = ctx.exp(w1)
-        return [e, z], [1, 1], [], [], [MPQ(1,2)*a+MPQ(3,4)], \
-            [MPQ(3,2)], w2
+        return [e, z], [1, 1], [], [], [ctx.mpq_1_2*a+ctx.mpq_3_4], \
+            [ctx.mpq_3_2], w2
     return ctx.hypercomb(h, [], **kwargs)
 """
 
@@ -452,16 +443,12 @@ def legenq(ctx, n, m, z, type=2, **kwargs):
 def chebyt(ctx, n, x, **kwargs):
     if (not x) and ctx.isint(n) and int(ctx._re(n)) % 2 == 1:
         return x * 0
-    if kwargs.get('force_series') is None:
-        kwargs['force_series'] = True
     return ctx.hyp2f1(-n,n,(1,2),(1-x)/2, **kwargs)
 
 @defun_wrapped
 def chebyu(ctx, n, x, **kwargs):
     if (not x) and ctx.isint(n) and int(ctx._re(n)) % 2 == 1:
         return x * 0
-    if kwargs.get('force_series') is None:
-        kwargs['force_series'] = True
     return (n+1) * ctx.hyp2f1(-n, n+2, (3,2), (1-x)/2, **kwargs)
 
 @defun

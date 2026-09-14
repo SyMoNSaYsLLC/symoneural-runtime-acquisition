@@ -25,10 +25,8 @@ def qp(ctx, a, q=None, n=None, **kwargs):
 
     If `n` is a positive integer, the function amounts to a finite product::
 
-        >>> from mpmath import (mp, qp, fprod, limit, rf, taylor, findroot,
-        ...                     diffun, mpf, jtheta, pi, root)
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> qp(2,3,5)
         -725305.0
         >>> fprod(1-2*3**k for k in range(5))
@@ -144,9 +142,8 @@ def qgamma(ctx, z, q, **kwargs):
 
     Evaluation for real and complex arguments::
 
-        >>> from mpmath import mp, qgamma, mpf
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> qgamma(4,0.75)
         4.046875
         >>> qgamma(6,6)
@@ -187,9 +184,8 @@ def qfac(ctx, z, q, **kwargs):
 
     **Examples**
 
-        >>> from mpmath import mp, qfac
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> qfac(0,0)
         1.0
         >>> qfac(4,3)
@@ -228,9 +224,8 @@ def qhyper(ctx, a_s, b_s, q, z, **kwargs):
 
     Evaluation works for real and complex arguments::
 
-        >>> from mpmath import qhyper, mp, nsum, qp, inf, j
-        >>> mp.dps = 25
-        >>> mp.pretty = True
+        >>> from mpmath import *
+        >>> mp.dps = 25; mp.pretty = True
         >>> qhyper([0.5], [2.25], 0.25, 4)
         -0.1975849091263356009534385
         >>> qhyper([0.5], [2.25], 0.25-0.25j, 4)

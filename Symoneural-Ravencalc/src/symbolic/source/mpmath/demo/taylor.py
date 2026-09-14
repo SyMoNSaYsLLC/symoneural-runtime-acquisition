@@ -6,7 +6,9 @@ This module can be run interactively with
     python taylor.py
 
 """
-from mpmath import mpi, exp, factorial, mpf
+from __future__ import print_function
+
+from mpmath import *
 
 def taylor(x, n):
     print("-"*75)
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     print("This script sums the Taylor series for exp(x) using interval arithmetic,")
     print("and then compares the numerical errors due to rounding and truncation.")
     print()
-    x = mpf(input("Enter the value of x (e.g. 3.5): "))
-    n = int(input("Enter the number of terms n (e.g. 10): "))
+    x = mpf(raw_input("Enter the value of x (e.g. 3.5): "))
+    n = int(raw_input("Enter the number of terms n (e.g. 10): "))
     print()
     exponential(x, n)

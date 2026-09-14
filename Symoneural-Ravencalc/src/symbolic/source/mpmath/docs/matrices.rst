@@ -13,8 +13,8 @@ stored, so it is cheap to represent sparse matrices.
 The most basic way to create one is to use the ``matrix`` class directly. You
 can create an empty matrix specifying the dimensions::
 
-    >>> from mpmath import (matrix, ones, zeros, randmatrix, nprint, chop, iv,
-    ...                     lu_solve, residual, fp, lu, diag, eye, eps, qr)
+    >>> from mpmath import *
+    >>> mp.dps = 15; mp.pretty = False
     >>> matrix(2)
     matrix(
     [['0.0', '0.0'],
@@ -179,7 +179,7 @@ You can add and subtract matrices of compatible dimensions::
     matrix(
     [['3.0', '-2.0'],
      ['-2.0', '-5.0']])
-    >>> A + ones(3)
+    >>> A + ones(3) # doctest:+ELLIPSIS
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "...", line 238, in __add__
@@ -260,14 +260,6 @@ so called norms.
 Linear algebra
 --------------
 
-Determinant and Rank
-....................
-
-.. autofunction :: mpmath.det
-
-.. autofunction :: mpmath.rank
-
-
 Decompositions
 ..............
 
@@ -293,8 +285,7 @@ using ``lu_solve``::
     [['30.0'],
      ['-20.0']])
 
-If you don't trust the result, use ``residual`` to calculate
-the residual `||A x-b||`::
+If you don't trust the result, use ``residual`` to calculate the residual ||A*x-b||::
 
     >>> residual(A, x, b)
     matrix(
@@ -304,7 +295,7 @@ the residual `||A x-b||`::
     '2.22044604925031e-16'
 
 As you can see, the solution is quite accurate. The error is caused by the
-inaccuracy of the internal floating-point arithmetic. Though, it's even smaller
+inaccuracy of the internal floating point arithmetic. Though, it's even smaller
 than the current machine epsilon, which basically means you can trust the
 result.
 
@@ -313,10 +304,10 @@ and methods::
 
     >>> A = fp.matrix([[1, 2], [3, 4]])
     >>> b = fp.matrix([-10, 10])
-    >>> fp.lu_solve(A, b)
+    >>> fp.lu_solve(A, b)  # doctest:+SKIP
     matrix(
-    [['29.999999999999996'],
-     ['-19.999999999999996']])
+    [['30.0'],
+     ['-20.0']])
 
 ``lu_solve`` accepts overdetermined systems. It is usually not possible to solve
 such systems, so the residual is minimized instead. Internally this is done
@@ -325,7 +316,6 @@ that that ``lu_solve`` will square the errors. If you can't afford this, use
 ``qr_solve`` instead. It is twice as slow but more accurate, and it calculates
 the residual automatically.
 
-.. autofunction:: mpmath.lu_solve
 
 Matrix factorization
 ....................
@@ -425,7 +415,7 @@ Examples::
     >>> from mpmath import mp
     >>> A = mp.matrix([[3, -1, 2], [2, 5, -5], [-2, -3, 7]])
     >>> Q, R = mp.schur(A)
-    >>> mp.nprint(R, 3)
+    >>> mp.nprint(R, 3) # doctest:+SKIP
     [2.0  0.417  -2.53]
     [0.0    4.0  -4.74]
     [0.0    0.0    9.0]
@@ -471,9 +461,6 @@ Examples::
     [0.0  0.0  0.0]
 
 
-See also [Stoer]_ and [Kresser]_.
-
-
 The symmetric eigenvalue problem
 ................................
 
@@ -517,9 +504,6 @@ Examples::
     >>> print(mp.chop(A * Q[:,0] - E[0] * Q[:,0]))
     [0.0]
     [0.0]
-
-
-See also [Golub]_, [GolubWelsch]_, [Stoer]_ and [Stroud]_.
 
 
 Determinant

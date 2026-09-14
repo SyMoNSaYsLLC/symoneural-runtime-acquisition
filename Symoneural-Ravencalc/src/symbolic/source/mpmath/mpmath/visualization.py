@@ -4,12 +4,13 @@ Plotting (requires matplotlib)
 
 from colorsys import hsv_to_rgb, hls_to_rgb
 from .libmp import NoConvergence
+from .libmp.backend import xrange
 
-class VisualizationMethods:
+class VisualizationMethods(object):
     plot_ignore = (ValueError, ArithmeticError, ZeroDivisionError, NoConvergence)
 
 def plot(ctx, f, xlim=[-5,5], ylim=None, points=200, file=None, dpi=None,
-    singularities=[], axes=None, plot_kwargs={}):
+    singularities=[], axes=None):
     r"""
     Shows a simple 2D plot of a function `f(x)` or list of functions
     `[f_0(x), f_1(x), \ldots, f_n(x)]` over a given interval
@@ -52,7 +53,7 @@ def plot(ctx, f, xlim=[-5,5], ylim=None, points=200, file=None, dpi=None,
         segments = []
         segment = []
         in_complex = False
-        for i in range(len(x)):
+        for i in xrange(len(x)):
             try:
                 if i != 0:
                     for sing in singularities:
@@ -91,10 +92,10 @@ def plot(ctx, f, xlim=[-5,5], ylim=None, points=200, file=None, dpi=None,
             c = colors[n % len(colors)]
             if len(segment[0]) == 3:
                 z = [s[2] for s in segment]
-                axes.plot(x, y, '--'+c, linewidth=3, **plot_kwargs)
-                axes.plot(x, z, ':'+c, linewidth=3, **plot_kwargs)
+                axes.plot(x, y, '--'+c, linewidth=3)
+                axes.plot(x, z, ':'+c, linewidth=3)
             else:
-                axes.plot(x, y, c, linewidth=3, **plot_kwargs)
+                axes.plot(x, y, c, linewidth=3)
     axes.set_xlim([float(_) for _ in xlim])
     if ylim:
         axes.set_ylim([float(_) for _ in ylim])
@@ -147,7 +148,7 @@ def phase_color_function(ctx, z):
             return ra+(rb-ra)*s, ga+(gb-ga)*s, ba+(bb-ba)*s
 
 def cplot(ctx, f, re=[-5,5], im=[-5,5], points=2000, color=None,
-    verbose=False, file=None, dpi=None, axes=None, imshow_kwargs={}):
+    verbose=False, file=None, dpi=None, axes=None):
     """
     Plots the given complex-valued function *f* over a rectangular part
     of the complex plane specified by the pairs of intervals *re* and *im*.
@@ -202,8 +203,8 @@ def cplot(ctx, f, re=[-5,5], im=[-5,5], points=2000, color=None,
     #   cplot(lambda z: z if z.real < 0 else 0)
     #   cplot(lambda z: z if z.imag < 0 else 0)
     w = pylab.zeros((N, M, 3))
-    for n in range(N):
-        for m in range(M):
+    for n in xrange(N):
+        for m in xrange(M):
             z = ctx.mpc(x[m], y[n])
             try:
                 v = color(f(z))
@@ -213,7 +214,7 @@ def cplot(ctx, f, re=[-5,5], im=[-5,5], points=2000, color=None,
         if verbose:
             print(str(n) + ' of ' + str(N))
     rea, reb, ima, imb = [float(_) for _ in [rea, reb, ima, imb]]
-    axes.imshow(w, extent=(rea, reb, ima, imb), origin='lower', **imshow_kwargs)
+    axes.imshow(w, extent=(rea, reb, ima, imb), origin='lower')
     axes.set_xlabel('Re(z)')
     axes.set_ylabel('Im(z)')
     if fig:
@@ -222,8 +223,8 @@ def cplot(ctx, f, re=[-5,5], im=[-5,5], points=2000, color=None,
         else:
             pylab.show()
 
-def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True,
-          wireframe=False, file=None, dpi=None, axes=None, plot3d_kwargs={}):
+def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True, \
+          wireframe=False, file=None, dpi=None, axes=None):
     """
     Plots the surface defined by `f`.
 
@@ -236,7 +237,7 @@ def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True,
 
     For example, to plot a simple function::
 
-        >>> from mpmath import sin, cos, pi, splot
+        >>> from mpmath import *
         >>> f = lambda x, y: sin(x+y)*cos(y)
         >>> splot(f, [-pi,pi], [-pi,pi])    # doctest: +SKIP
 
@@ -248,26 +249,27 @@ def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True,
 
     .. note :: This function requires matplotlib (pylab) 0.98.5.3 or higher.
     """
-    import matplotlib.pyplot as plt
-    import numpy as np
+    import pylab
+    import mpl_toolkits.mplot3d as mplot3d
     if file:
         axes = None
     fig = None
     if not axes:
-        fig, axes = plt.subplots(subplot_kw={'projection': '3d'})
-    ua, ub = map(float, u)
-    va, vb = map(float, v)
+        fig = pylab.figure()
+        axes = mplot3d.axes3d.Axes3D(fig)
+    ua, ub = u
+    va, vb = v
     du = ub - ua
     dv = vb - va
     if not isinstance(points, (list, tuple)):
         points = [points, points]
     M, N = points
-    u = np.linspace(ua, ub, M)
-    v = np.linspace(va, vb, N)
-    x, y, z = [np.zeros((M, N)) for i in range(3)]
-    xab, yab, zab = [[0, 0] for i in range(3)]
-    for n in range(N):
-        for m in range(M):
+    u = pylab.linspace(ua, ub, M)
+    v = pylab.linspace(va, vb, N)
+    x, y, z = [pylab.zeros((M, N)) for i in xrange(3)]
+    xab, yab, zab = [[0, 0] for i in xrange(3)]
+    for n in xrange(N):
+        for m in xrange(M):
             fdata = f(ctx.convert(u[m]), ctx.convert(v[n]))
             try:
                 x[m,n], y[m,n], z[m,n] = fdata
@@ -279,9 +281,9 @@ def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True,
                 if c > cab[1]:
                     cab[1] = c
     if wireframe:
-        axes.plot_wireframe(x, y, z, rstride=4, cstride=4, **plot3d_kwargs)
+        axes.plot_wireframe(x, y, z, rstride=4, cstride=4)
     else:
-        axes.plot_surface(x, y, z, rstride=4, cstride=4, **plot3d_kwargs)
+        axes.plot_surface(x, y, z, rstride=4, cstride=4)
     axes.set_xlabel('x')
     axes.set_ylabel('y')
     axes.set_zlabel('z')
@@ -299,9 +301,9 @@ def splot(ctx, f, u=[-5,5], v=[-5,5], points=100, keep_aspect=True,
             axes.set_zlim3d(zab[0] - delta / 2.0, zab[1] + delta / 2.0)
     if fig:
         if file:
-            plt.savefig(file, dpi=dpi)
+            pylab.savefig(file, dpi=dpi)
         else:
-            plt.show()
+            pylab.show()
 
 
 VisualizationMethods.plot = plot

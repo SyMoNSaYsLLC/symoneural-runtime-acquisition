@@ -1,34 +1,45 @@
 Signal functions
 ----------------
 
-The functions in this section describe non-sinusoidal waveforms, which are
-often used in signal processing and electronics.
+The functions in this section describe non-sinusoidal waveforms, which are often used in signal processing and electronics.
 
 Square wave signal
-..................
+...................................................
 
-.. autofunction:: mpmath.squarew
+:func:`squarew`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: mpmath.squarew(t, amplitude=1, period=1)
 
 Triangle wave signal
-....................
+...............................
 
-.. autofunction:: mpmath.trianglew
+:func:`trianglew`
+^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: mpmath.trianglew(t, amplitude=1, period=1)
 
 Sawtooth wave signal
-....................
+......................
 
-.. autofunction:: mpmath.sawtoothw
+:func:`sawtoothw`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: mpmath.sawtoothw(t, amplitude=1, period=1)
 
 Unit triangle signal
-....................
+.....................
 
-.. autofunction:: mpmath.unit_triangle
+:func:`unit_triangle`
+^^^^^^^^^^^^^^^^^^^^^^^
 
+.. autofunction:: mpmath.unit_triangle(t, amplitude=1)
 
 Sigmoid wave signal
 .....................
 
-.. autofunction:: mpmath.sigmoid
+:func:`sigmoid`
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: mpmath.sigmoid(t, amplitude=1)
+    

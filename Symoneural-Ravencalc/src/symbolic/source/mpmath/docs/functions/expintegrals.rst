@@ -1,70 +1,104 @@
 Exponential integrals and error functions
 -----------------------------------------
 
-Exponential integrals give closed-form solutions to a large class of commonly
-occurring transcendental integrals that cannot be evaluated using elementary
-functions.  Integrals of this type include those with an integrand of the form
-`t^a e^{t}` or `e^{-x^2}`, the latter giving rise to the Gaussian (or normal)
-probability distribution.
+Exponential integrals give closed-form solutions to a large class of commonly occurring transcendental integrals that cannot be evaluated using elementary functions. Integrals of this type include those with an integrand of the form `t^a e^{t}` or `e^{-x^2}`, the latter giving rise to the Gaussian (or normal) probability distribution.
 
-The most general function in this section is the incomplete gamma function, to
-which all others can be reduced.  The incomplete gamma function, in turn, can
-be expressed using hypergeometric functions (see :doc:`hypergeometric`).
+The most general function in this section is the incomplete gamma function, to which all others can be reduced. The incomplete gamma function, in turn, can be expressed using hypergeometric functions (see :doc:`hypergeometric`).
 
 Incomplete gamma functions
 ..........................
 
-.. autofunction:: mpmath.gammainc
-.. autofunction:: mpmath.lower_gamma
-.. autofunction:: mpmath.upper_gamma
+:func:`~mpmath.gammainc`
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.gammainc(z, a=0, b=inf, regularized=False)
 
 
 Exponential integrals
 .....................
 
-.. autofunction:: mpmath.ei
-.. autofunction:: mpmath.e1
-.. autofunction:: mpmath.expint
+:func:`~mpmath.ei`
+^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.ei(x, **kwargs)
+
+:func:`~mpmath.e1`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.e1(x, **kwargs)
+
+:func:`~mpmath.expint`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.expint(*args)
 
 
 Logarithmic integral
 ....................
 
-.. autofunction:: mpmath.li
+:func:`~mpmath.li`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.li(x, **kwargs)
 
 
 Trigonometric integrals
 .......................
 
-.. autofunction:: mpmath.ci
-.. autofunction:: mpmath.si
+:func:`~mpmath.ci`
+^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.ci(x, **kwargs)
+
+:func:`~mpmath.si`
+^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.si(x, **kwargs)
 
 
 Hyperbolic integrals
 ....................
 
-.. autofunction:: mpmath.chi
-.. autofunction:: mpmath.shi
+:func:`~mpmath.chi`
+^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.chi(x, **kwargs)
+
+:func:`~mpmath.shi`
+^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.shi(x, **kwargs)
 
 
 Error functions
 ...............
 
-.. autofunction:: mpmath.erf
-.. autofunction:: mpmath.erfc
-.. autofunction:: mpmath.erfi
-.. autofunction:: mpmath.erfinv
+:func:`~mpmath.erf`
+^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.erf(x, **kwargs)
 
+:func:`~mpmath.erfc`
+^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.erfc(x, **kwargs)
+
+:func:`~mpmath.erfi`
+^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.erfi(x)
+
+:func:`~mpmath.erfinv`
+^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.erfinv(x)
 
 The normal distribution
-.......................
+....................................................
 
-.. autofunction:: mpmath.npdf
-.. autofunction:: mpmath.ncdf
+:func:`~mpmath.npdf`
+^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.npdf(x, mu=0, sigma=1)
+
+:func:`~mpmath.ncdf`
+^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.ncdf(x, mu=0, sigma=1)
 
 
 Fresnel integrals
-.................
+......................................................
 
-.. autofunction:: mpmath.fresnels
-.. autofunction:: mpmath.fresnelc
+:func:`~mpmath.fresnels`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.fresnels(x)
+
+:func:`~mpmath.fresnelc`
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.fresnelc(x)

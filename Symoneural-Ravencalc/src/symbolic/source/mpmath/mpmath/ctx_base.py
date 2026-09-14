@@ -1,23 +1,24 @@
 from operator import gt, lt
-import random
 
-from . import libmp
-from .calculus.calculus import CalculusMethods
-from .calculus.inverselaplace import LaplaceTransformInversionMethods
-from .calculus.odes import ODEMethods
-from .calculus.optimization import OptimizationMethods
-from .calculus.quadrature import QuadratureMethods
+from .libmp.backend import xrange
+
 from .functions.functions import SpecialFunctions
 from .functions.rszeta import RSCache
-from .identification import IdentificationMethods
-from .matrices.calculus import MatrixCalculusMethods
-from .matrices.eigen import Eigen
-from .matrices.linalg import LinearAlgebraMethods
+from .calculus.quadrature import QuadratureMethods
+from .calculus.inverselaplace import LaplaceTransformInversionMethods
+from .calculus.calculus import CalculusMethods
+from .calculus.optimization import OptimizationMethods
+from .calculus.odes import ODEMethods
 from .matrices.matrices import MatrixMethods
+from .matrices.calculus import MatrixCalculusMethods
+from .matrices.linalg import LinearAlgebraMethods
+from .matrices.eigen import Eigen
+from .identification import IdentificationMethods
 from .visualization import VisualizationMethods
 
+from . import libmp
 
-class Context:
+class Context(object):
     pass
 
 class StandardBaseContext(Context,
@@ -130,7 +131,8 @@ class StandardBaseContext(Context,
         numbers close to zero to exact zeros. The input can be a
         single number or an iterable::
 
-            >>> from mpmath import chop, nprint
+            >>> from mpmath import *
+            >>> mp.dps = 15; mp.pretty = False
             >>> chop(5+1e-10j, tol=1e-9)
             mpf('5.0')
             >>> nprint(chop([1.0, 1e-20, 3+1e-18j, -4, 2]))
@@ -178,7 +180,8 @@ class StandardBaseContext(Context,
 
         **Examples**
 
-            >>> from mpmath import almosteq
+            >>> from mpmath import *
+            >>> mp.dps = 15
             >>> almosteq(3.141592653589793, 3.141592653589790)
             True
             >>> almosteq(3.141592653589793, 3.141592653589700)
@@ -191,10 +194,7 @@ class StandardBaseContext(Context,
             False
 
         """
-        s = ctx.convert(s)
         t = ctx.convert(t)
-        if any(ctx.isinf(_) or ctx.isnan(_) for _ in [s, t]):
-            return s == t
         if abs_eps is None and rel_eps is None:
             rel_eps = abs_eps = ctx.ldexp(1, -ctx.prec+4)
         if abs_eps is None:
@@ -214,9 +214,9 @@ class StandardBaseContext(Context,
 
     def arange(ctx, *args):
         r"""
-        This is a generalized version of Python's :class:`range` function
+        This is a generalized version of Python's :func:`~mpmath.range` function
         that accepts fractional endpoints and step sizes and
-        returns a list of ``mpf`` instances. Like :class:`range`,
+        returns a list of ``mpf`` instances. Like :func:`~mpmath.range`,
         :func:`~mpmath.arange` can be called with 1, 2 or 3 arguments:
 
         ``arange(b)``
@@ -228,13 +228,14 @@ class StandardBaseContext(Context,
 
         where `b-1 \le x < b` (in the third case, `b-h \le x < b`).
 
-        Like Python's :class:`range`, the endpoint is not included. To
+        Like Python's :func:`~mpmath.range`, the endpoint is not included. To
         produce ranges where the endpoint is included, :func:`~mpmath.linspace`
         is more convenient.
 
         **Examples**
 
-            >>> from mpmath import arange
+            >>> from mpmath import *
+            >>> mp.dps = 15; mp.pretty = False
             >>> arange(4)
             [mpf('0.0'), mpf('1.0'), mpf('2.0'), mpf('3.0')]
             >>> arange(1, 2, 0.25)
@@ -294,7 +295,8 @@ class StandardBaseContext(Context,
         for partitioning an interval into subintervals, since
         the endpoint is included::
 
-            >>> from mpmath import linspace
+            >>> from mpmath import *
+            >>> mp.dps = 15; mp.pretty = False
             >>> linspace(1, 4, 4)
             [mpf('1.0'), mpf('2.0'), mpf('3.0'), mpf('4.0')]
 
@@ -318,15 +320,15 @@ class StandardBaseContext(Context,
                             % len(args))
         if n < 1:
             raise ValueError('n must be greater than 0')
-        if 'endpoint' not in kwargs or kwargs['endpoint']:
+        if not 'endpoint' in kwargs or kwargs['endpoint']:
             if n == 1:
                 return [ctx.mpf(a)]
             step = (b - a) / ctx.mpf(n - 1)
-            y = [i*step + a for i in range(n)]
+            y = [i*step + a for i in xrange(n)]
             y[-1] = b
         else:
             step = (b - a) / ctx.mpf(n)
-            y = [i*step + a for i in range(n)]
+            y = [i*step + a for i in xrange(n)]
         return y
 
     def cos_sin(ctx, z, **kwargs):
@@ -355,7 +357,6 @@ class StandardBaseContext(Context,
             while 1:
                 ctx.prec = prec + extraprec + 5
                 max_mag = ctx.ninf
-                sum_mag = ctx.zero
                 s = ctx.zero
                 k = 0
                 for term in terms():
@@ -411,11 +412,10 @@ class StandardBaseContext(Context,
 
     def power(ctx, x, y):
         r"""Converts `x` and `y` to mpmath numbers and evaluates
-        the principal value of `\exp(y \log(x))`::
+        `x^y = \exp(y \log(x))`::
 
-            >>> from mpmath import mp, power
-            >>> mp.dps = 30
-            >>> mp.pretty = True
+            >>> from mpmath import *
+            >>> mp.dps = 30; mp.pretty = True
             >>> power(2, 0.5)
             1.41421356237309504880168872421
 
@@ -425,10 +425,6 @@ class StandardBaseContext(Context,
 
             >>> power(2, 43112609)-1
             3.16470269330255923143453723949e+12978188
-
-        **See Also**
-
-        :func:`~mpmath.root`
         """
         return ctx.convert(x) ** ctx.convert(y)
 
@@ -440,11 +436,12 @@ class StandardBaseContext(Context,
         Return a wrapped copy of *f* that raises ``NoConvergence`` when *f*
         has been called more than *N* times::
 
-            >>> from mpmath import maxcalls, sin
+            >>> from mpmath import *
+            >>> mp.dps = 15
             >>> f = maxcalls(sin, 10)
             >>> print(sum(f(n) for n in range(10)))
             1.95520948210738
-            >>> f(10)
+            >>> f(10) # doctest: +IGNORE_EXCEPTION_DETAIL
             Traceback (most recent call last):
               ...
             NoConvergence: maxcalls: function evaluated 10 times
@@ -458,41 +455,21 @@ class StandardBaseContext(Context,
             return f(*args, **kwargs)
         return f_maxcalls_wrapped
 
-    def rand(ctx):
-        """
-        Get a random number in the range ``[0.0, 1.0)`` with (almost) uniform distribution.
-
-        This method is a replacement for ``random.random()``. It is roughly equal
-        to ``random.randint(0, 2 ** prec - 1) / (2 ** prec)``, where ``prec``
-        is the current resolution in bits.
-
-        Just like ``random.random()`` and most other floating-point random number
-        generators, the distribution is not perfect:
-
-        Some float values within ``[0,1)`` will never be returned, for example,
-        ``2 ** -(prec + 1)`` is impossible. See
-        http://mumble.net/~campbell/2014/04/28/uniform-random-float
-        for a lengthy discussion.
-        """
-        # slow default implementation of rand() that works for arbitrary precision.
-        return ctx.convert(random.getrandbits(ctx.prec)) * (ctx.convert(2) ** (-ctx.prec))
-
-
     def memoize(ctx, f):
         """
         Return a wrapped copy of *f* that caches computed values, i.e.
         a memoized copy of *f*. Values are only reused if the cached precision
         is equal to or higher than the working precision::
 
-            >>> from mpmath import memoize, maxcalls, mp, sin
-            >>> mp.pretty = True
+            >>> from mpmath import *
+            >>> mp.dps = 15; mp.pretty = True
             >>> f = memoize(maxcalls(sin, 1))
             >>> f(2)
             0.909297426825682
             >>> f(2)
             0.909297426825682
             >>> mp.dps = 25
-            >>> f(2)
+            >>> f(2) # doctest: +IGNORE_EXCEPTION_DETAIL
             Traceback (most recent call last):
               ...
             NoConvergence: maxcalls: function evaluated 1 times

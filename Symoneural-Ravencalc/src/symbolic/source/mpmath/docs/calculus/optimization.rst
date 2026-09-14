@@ -21,3 +21,9 @@ Solvers
 .. autoclass:: mpmath.calculus.optimization.Ridder
 .. autoclass:: mpmath.calculus.optimization.ANewton
 .. autoclass:: mpmath.calculus.optimization.MDNewton
+
+
+.. Minimization and maximization (``findmin``, ``findmax``)
+.. ........................................................
+
+.. (To be added.)

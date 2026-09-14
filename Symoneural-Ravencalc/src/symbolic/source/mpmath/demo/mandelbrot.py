@@ -5,6 +5,7 @@ to improve accuracy at extremely high zoom levels.
 """
 
 import mpmath
+import cmath
 
 ctx = mpmath.fp
 # ctx = mpmath.mp
@@ -23,7 +24,7 @@ IM = [-1.5, 1.5]
 
 def mandelbrot(z):
     c = z
-    for i in range(ITERATIONS):
+    for i in xrange(ITERATIONS):
         zprev = z
         z = z*z + c
         if abs(z) > ESCAPE_RADIUS:

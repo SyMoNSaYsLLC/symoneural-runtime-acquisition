@@ -2,30 +2,22 @@ from .functions import defun, defun_wrapped
 
 @defun_wrapped
 def _erf_complex(ctx, z):
-    re_z = ctx.re(z)
-    if re_z > 2:
-        nz = ctx.fneg(z, exact=True)
-        v = ctx._erf_complex(nz)
-        return ctx.fneg(v, exact=True)
-    elif re_z < -2:
-        v = ctx._erfc_complex(ctx.fneg(z, exact=True)) - 1
-    else:
-        z2 = ctx.square_exp_arg(z, -1)
-        v = (2/ctx.sqrt(ctx.pi))*z * ctx.hyp1f1((1,2),(3,2), z2)
-    if not re_z:
+    z2 = ctx.square_exp_arg(z, -1)
+    #z2 = -z**2
+    v = (2/ctx.sqrt(ctx.pi))*z * ctx.hyp1f1((1,2),(3,2), z2)
+    if not ctx._re(z):
         v = ctx._im(v)*ctx.j
     return v
 
 @defun_wrapped
 def _erfc_complex(ctx, z):
-    re_z = ctx.re(z)
-    if re_z > 2:
+    if ctx.re(z) > 2:
         z2 = ctx.square_exp_arg(z)
         nz2 = ctx.fneg(z2, exact=True)
         v = ctx.exp(nz2)/ctx.sqrt(ctx.pi) * ctx.hyperu((1,2),(1,2), z2)
     else:
         v = 1 - ctx._erf_complex(z)
-    if not re_z:
+    if not ctx._re(z):
         v = 1+ctx._im(v)*ctx.j
     return v
 
@@ -39,7 +31,7 @@ def erf(ctx, z):
             pass
     if ctx._is_complex_type(z) and not z.imag:
         try:
-            return ctx.mpc(ctx._erf(z.real))
+            return type(z)(ctx._erf(z.real))
         except NotImplementedError:
             pass
     return ctx._erf_complex(z)
@@ -54,7 +46,7 @@ def erfc(ctx, z):
             pass
     if ctx._is_complex_type(z) and not z.imag:
         try:
-            return ctx.mpc(ctx._erfc(z.real))
+            return type(z)(ctx._erfc(z.real))
         except NotImplementedError:
             pass
     return ctx._erfc_complex(z)
@@ -116,7 +108,7 @@ def ncdf(ctx, x, mu=0, sigma=1):
 @defun_wrapped
 def betainc(ctx, a, b, x1=0, x2=1, regularized=False):
     if x1 == x2:
-        v = ctx.zero
+        v = 0
     elif not x1:
         if x1 == 0 and x2 == 1:
             v = ctx.beta(a, b)
@@ -174,18 +166,16 @@ def gammainc(ctx, z, a=0, b=None, regularized=False):
         return +ctx._gamma3(z, a, b, regularized)
     # Upper gamma
     elif lower_modified:
-        return ctx.upper_gamma(z, a, regularized)
+        return ctx._upper_gamma(z, a, regularized)
     # Lower gamma
     elif upper_modified:
-        return ctx.lower_gamma(z, b, regularized)
+        return ctx._lower_gamma(z, b, regularized)
 
 @defun
-def lower_gamma(ctx, z, b, regularized=False):
-    z = ctx.convert(z)
-    b = ctx.convert(b)
+def _lower_gamma(ctx, z, b, regularized=False):
     # Pole
     if ctx.isnpint(z):
-        return ctx.inf
+        return type(z)(ctx.inf)
     G = [z] * regularized
     negb = ctx.fneg(b, exact=True)
     def h(z):
@@ -194,16 +184,14 @@ def lower_gamma(ctx, z, b, regularized=False):
     return ctx.hypercomb(h, [z])
 
 @defun
-def upper_gamma(ctx, z, a, regularized=False):
-    z = ctx.convert(z)
-    a = ctx.convert(a)
+def _upper_gamma(ctx, z, a, regularized=False):
     # Fast integer case, when available
     if ctx.isint(z):
         try:
             if regularized:
                 # Gamma pole
                 if ctx.isnpint(z):
-                    return ctx.zero
+                    return type(z)(ctx.zero)
                 orig = ctx.prec
                 try:
                     ctx.prec += 10
@@ -275,14 +263,14 @@ def expint(ctx, n, z):
         # integral from 1 to infinity of t^n
         if ctx.re(n) <= 1:
             # TODO: reasonable sign of infinity
-            return ctx.inf
+            return type(z)(ctx.inf)
         else:
             return ctx.one/(n-1)
     if n == 0:
         return ctx.exp(-z)/z
     if n == -1:
         return ctx.exp(-z)*(z+1)/z**2
-    return z**(n-1) * ctx.upper_gamma(1-n, z)
+    return z**(n-1) * ctx.gammainc(1-n, z)
 
 @defun_wrapped
 def li(ctx, z, offset=False):

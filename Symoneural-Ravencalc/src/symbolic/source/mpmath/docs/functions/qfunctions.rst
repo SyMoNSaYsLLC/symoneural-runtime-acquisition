@@ -1,20 +1,29 @@
 q-functions
------------
+-------------------------------------------
 
 q-Pochhammer symbol
-...................
+..................................................
 
-.. autofunction:: mpmath.qp
+:func:`~mpmath.qp`
+^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.qp(a, q=None, n=None, **kwargs)
 
 
 q-gamma and factorial
-.....................
+..................................................
 
-.. autofunction:: mpmath.qgamma
-.. autofunction:: mpmath.qfac
+:func:`~mpmath.qgamma`
+^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.qgamma(z, q, **kwargs)
 
+:func:`~mpmath.qfac`
+^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.qfac(z, q, **kwargs)
 
 Hypergeometric q-series
-.......................
+..................................................
 
-.. autofunction:: mpmath.qhyper
+:func:`~mpmath.qhyper`
+^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: mpmath.qhyper(a_s, b_s, q, z, **kwargs)
+

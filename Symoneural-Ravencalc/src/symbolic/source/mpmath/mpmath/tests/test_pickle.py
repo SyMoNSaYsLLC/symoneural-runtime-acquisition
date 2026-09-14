@@ -1,12 +1,27 @@
+import os
+import tempfile
 import pickle
 
-import pytest
+from mpmath import *
 
-from mpmath import matrix, mpc, mpf, mpi, sin
+def pickler(obj):
+    fn = tempfile.mktemp()
 
+    f = open(fn, 'wb')
+    pickle.dump(obj, f)
+    f.close()
 
-@pytest.mark.parametrize('protocol', range(pickle.HIGHEST_PROTOCOL + 1))
-@pytest.mark.parametrize('obj', [mpf('0.5'), mpc('0.5','0.2'), mpi(10, 30),
-                                 matrix([1, sin(1)]), matrix([[1, 2], [3, 4]])])
-def test_pickle(obj, protocol):
-    assert obj == pickle.loads(pickle.dumps(obj, protocol))
+    f = open(fn, 'rb')
+    obj2 = pickle.load(f)
+    f.close()
+    os.remove(fn)
+
+    return obj2
+
+def test_pickle():
+
+    obj = mpf('0.5')
+    assert obj == pickler(obj)
+
+    obj = mpc('0.5','0.2')
+    assert obj == pickler(obj)

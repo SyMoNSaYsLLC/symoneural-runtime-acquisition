@@ -1,4 +1,4 @@
-class CalculusMethods:
+class CalculusMethods(object):
     pass
 
 def defun(f):
