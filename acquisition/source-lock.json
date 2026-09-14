@@ -1,7 +1,7 @@
 {
  "census": {
-  "method_a_count": 91,
-  "method_b_count": 91,
+  "method_a_count": 92,
+  "method_b_count": 92,
   "only_in_a": [],
   "only_in_b": [],
   "sets_identical": true
@@ -2276,6 +2276,32 @@
    "submodules": [],
    "tree_sha": "8f42c06d439e9dad27445e8004695930eb99cca7",
    "upstream_url": "https://github.com/pypa/packaging",
+   "worktree": "clean",
+   "worktree_detail": []
+  },
+  {
+   "bbappend_path": "NOT-APPLICABLE",
+   "branch_context": "HEAD",
+   "category": "util",
+   "commit_sha": "9eea97dd6f1d16ea33f5144c8925f1ce7a0688e1",
+   "component": "psutil",
+   "declared_version_PV": "7.2.2",
+   "excluded": [],
+   "lock_state": "VERIFIED",
+   "pins_path": "Symoneural-Common/src/util/.gitpins/psutil.git",
+   "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
+   "recipe_LICENSE": "BSD-3-Clause",
+   "recipe_SRCREV": "9eea97dd6f1d16ea33f5144c8925f1ce7a0688e1",
+   "recipe_name": "symoneural-psutil",
+   "recipe_path": "meta-symoneural/recipes-common/symoneural-psutil/symoneural-psutil_git.bb",
+   "recipe_retired": false,
+   "requested_tag": "UNKNOWN",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/psutil",
+   "submodule_count": 0,
+   "submodules": [],
+   "tree_sha": "3b55a7c104144a23c99bf75cd6763589a597b7fa",
+   "upstream_url": "https://github.com/giampaolo/psutil",
    "worktree": "clean",
    "worktree_detail": []
   },
