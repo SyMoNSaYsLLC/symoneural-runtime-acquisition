@@ -1,0 +1,375 @@
+import { VERSION } from '@anthropic-ai/sdk/version';
+import { AnthropicBedrockMantle } from '../src';
+import { getAuthHeaders } from '../src/core/aws-auth';
+import * as fs from 'fs';
+import * as path from 'path';
+import { tmpdir } from 'os';
+
+jest.mock('../src/core/aws-auth', () => ({
+  getAuthHeaders: jest.fn().mockResolvedValue({
+    authorization: 'AWS4-HMAC-SHA256 Credential=mock',
+    'x-amz-date': '20260312T000000Z',
+  }),
+}));
+
+const mockGetAuthHeaders = getAuthHeaders as jest.MockedFunction<typeof getAuthHeaders>;
+
+const mockFetch = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    statusText: 'OK',
+    headers: new Headers({ 'content-type': 'application/json' }),
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve('{}'),
+  });
+});
+const originalFetch = global.fetch;
+
+const makeRequest = async (client: AnthropicBedrockMantle) => {
+  await client.messages.create({
+    model: 'claude-opus-4-8',
+    max_tokens: 1024,
+    messages: [{ content: 'Test message', role: 'user' }],
+  });
+};
+
+const getRequestUrl = (): string => {
+  return mockFetch.mock.calls[0]![0];
+};
+
+const getRequestHeaders = (call = 0): Headers => {
+  const requestInit = mockFetch.mock.calls[call]![1] as RequestInit;
+  return new Headers(requestInit.headers as HeadersInit);
+};
+
+describe('AnthropicBedrockMantle', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    global.fetch = mockFetch;
+    mockFetch.mockClear();
+    mockGetAuthHeaders.mockClear();
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    process.env = originalEnv;
+  });
+
+  describe('base URL', () => {
+    test('derives base URL from region', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        awsRegion: 'us-east-1',
+      });
+
+      expect(client.baseURL).toBe('https://bedrock-mantle.us-east-1.api.aws/anthropic');
+    });
+
+    test('request URL includes /anthropic base path', async () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        awsRegion: 'us-west-2',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      expect(getRequestUrl()).toBe('https://bedrock-mantle.us-west-2.api.aws/anthropic/v1/messages');
+    });
+
+    test('uses ANTHROPIC_BEDROCK_MANTLE_BASE_URL env var', () => {
+      process.env['ANTHROPIC_BEDROCK_MANTLE_BASE_URL'] = 'https://custom.mantle.example.com';
+
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+      });
+
+      expect(client.baseURL).toBe('https://custom.mantle.example.com');
+    });
+
+    test('baseURL arg takes precedence over env var', () => {
+      process.env['ANTHROPIC_BEDROCK_MANTLE_BASE_URL'] = 'https://from-env.example.com';
+
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://from-arg.example.com',
+      });
+
+      expect(client.baseURL).toBe('https://from-arg.example.com');
+    });
+  });
+
+  describe('SigV4 service name', () => {
+    test('uses bedrock-mantle as the SigV4 service name', async () => {
+      const client = new AnthropicBedrockMantle({
+        awsAccessKey: 'my-access-key',
+        awsSecretAccessKey: 'my-secret-key',
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      expect(mockGetAuthHeaders).toHaveBeenCalledTimes(1);
+      const props = mockGetAuthHeaders.mock.calls[0]![1];
+      expect(props.serviceName).toBe('bedrock-mantle');
+    });
+
+    test('signs after user middleware, covering the mutated request and hiding the signature from middleware', async () => {
+      let middlewareSawSignature: string | null = null;
+      const client = new AnthropicBedrockMantle({
+        awsAccessKey: 'my-access-key',
+        awsSecretAccessKey: 'my-secret-key',
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+        middleware: [
+          async (request, next) => {
+            middlewareSawSignature = request.headers.get('authorization');
+            const body = JSON.parse(request.body as string);
+            body.metadata = { user_id: 'user-123' };
+            return next({ ...request, body: JSON.stringify(body) });
+          },
+        ],
+      });
+
+      await makeRequest(client);
+
+      expect(middlewareSawSignature).toBeNull();
+      const signedRequest = mockGetAuthHeaders.mock.calls[0]![0] as { body?: unknown };
+      expect(JSON.parse(signedRequest.body as string).metadata).toEqual({ user_id: 'user-123' });
+    });
+  });
+
+  describe('environment variables', () => {
+    test('uses AWS_BEARER_TOKEN_BEDROCK env var', () => {
+      process.env['AWS_BEARER_TOKEN_BEDROCK'] = 'mantle-api-key';
+
+      const client = new AnthropicBedrockMantle({ baseURL: 'https://example.com' });
+
+      expect(client.apiKey).toBe('mantle-api-key');
+    });
+  });
+
+  describe('bearer token auth', () => {
+    test('sends Authorization: Bearer header when using apiKey', async () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-bearer-token',
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      const requestInit = mockFetch.mock.calls[0]![1] as RequestInit;
+      const headers = new Headers(requestInit.headers as HeadersInit);
+      expect(headers.get('authorization')).toBe('Bearer test-bearer-token');
+      expect(headers.get('x-api-key')).toBeNull();
+    });
+
+    test('sends Authorization: Bearer header when using AWS_BEARER_TOKEN_BEDROCK env var', async () => {
+      process.env['AWS_BEARER_TOKEN_BEDROCK'] = 'env-bearer-token';
+
+      const client = new AnthropicBedrockMantle({
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      const requestInit = mockFetch.mock.calls[0]![1] as RequestInit;
+      const headers = new Headers(requestInit.headers as HeadersInit);
+      expect(headers.get('authorization')).toBe('Bearer env-bearer-token');
+      expect(headers.get('x-api-key')).toBeNull();
+    });
+
+    test('does not send Authorization: Bearer header when using SigV4', async () => {
+      const client = new AnthropicBedrockMantle({
+        awsAccessKey: 'my-access-key',
+        awsSecretAccessKey: 'my-secret-key',
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      expect(mockGetAuthHeaders).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('endpoint restrictions', () => {
+    test('completions resource is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client as any).completions).toBeUndefined();
+    });
+
+    test('models resource is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client as any).models).toBeUndefined();
+    });
+
+    test('files resource is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client as any).files).toBeUndefined();
+    });
+
+    test('messages resource is available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect(client.messages).toBeDefined();
+    });
+
+    test('beta.messages resource is available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect(client.beta.messages).toBeDefined();
+    });
+
+    test('beta.models is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client.beta as any).models).toBeUndefined();
+    });
+
+    test('beta.files is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client.beta as any).files).toBeUndefined();
+    });
+
+    test('beta.skills is not available', () => {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        baseURL: 'https://example.com',
+      });
+
+      expect((client.beta as any).skills).toBeUndefined();
+    });
+  });
+
+  describe('ambient first-party credentials never reach Bedrock Mantle', () => {
+    let configDir: string;
+
+    beforeEach(() => {
+      delete process.env['ANTHROPIC_API_KEY'];
+      delete process.env['ANTHROPIC_AUTH_TOKEN'];
+      configDir = fs.mkdtempSync(path.join(tmpdir(), 'bedrock-mantle-creds-test-'));
+      fs.mkdirSync(path.join(configDir, 'configs'));
+      fs.mkdirSync(path.join(configDir, 'credentials'));
+      fs.writeFileSync(
+        path.join(configDir, 'configs', 'default.json'),
+        JSON.stringify({
+          organization_id: 'org-123',
+          workspace_id: 'wrkspc-123',
+          authentication: { type: 'user_oauth' },
+        }),
+      );
+      fs.writeFileSync(
+        path.join(configDir, 'credentials', 'default.json'),
+        JSON.stringify({ access_token: 'store-token', expires_at: Math.floor(Date.now() / 1000) + 3600 }),
+        { mode: 0o600 },
+      );
+      process.env['ANTHROPIC_CONFIG_DIR'] = configDir;
+    });
+
+    afterEach(() => {
+      fs.rmSync(configDir, { recursive: true });
+    });
+
+    test('a resolvable shared-config-store profile is never consulted in SigV4 mode', async () => {
+      const client = new AnthropicBedrockMantle({
+        awsAccessKey: 'my-access-key',
+        awsSecretAccessKey: 'my-secret-key',
+        awsRegion: 'us-east-1',
+        maxRetries: 0,
+      });
+
+      await makeRequest(client);
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(getRequestUrl()).not.toContain('/v1/oauth/token');
+      const headers = getRequestHeaders();
+      expect(headers.get('authorization')).toBe('AWS4-HMAC-SHA256 Credential=mock');
+      expect(headers.get('x-api-key')).toBeNull();
+      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('anthropic-organization-id')).toBeNull();
+    });
+
+    test('a resolvable shared-config-store profile is never consulted with skipAuth', async () => {
+      const client = new AnthropicBedrockMantle({ awsRegion: 'us-east-1', skipAuth: true, maxRetries: 0 });
+
+      await makeRequest(client);
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      const headers = getRequestHeaders();
+      expect(headers.get('authorization')).toBeNull();
+      expect(headers.get('x-api-key')).toBeNull();
+      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('anthropic-organization-id')).toBeNull();
+    });
+
+    test('env ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN are not sent, including by withOptions clones', async () => {
+      process.env['ANTHROPIC_API_KEY'] = 'sk-ant-should-not-leak';
+      process.env['ANTHROPIC_AUTH_TOKEN'] = 'oauth-should-not-leak';
+      process.env['AWS_REGION'] = 'us-east-1';
+
+      const client = new AnthropicBedrockMantle({ maxRetries: 0 });
+      expect(client.apiKey).toBeNull();
+      expect(client.authToken).toBeNull();
+
+      for (const c of [client, client.withOptions({ timeout: 1234 })]) {
+        await makeRequest(c);
+      }
+
+      for (const call of [0, 1]) {
+        const headers = getRequestHeaders(call);
+        expect(headers.get('authorization')).toBe('AWS4-HMAC-SHA256 Credential=mock');
+        expect(headers.get('x-api-key')).toBeNull();
+      }
+      expect(mockGetAuthHeaders).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  test('user agent is a hardcoded string', async () => {
+    const originalName = AnthropicBedrockMantle.name;
+    // Rename the class, as a minifier would, to prove the header isn't derived from it.
+    Object.defineProperty(AnthropicBedrockMantle, 'name', { value: 'MinifiedClient' });
+    try {
+      const client = new AnthropicBedrockMantle({
+        apiKey: 'test-key',
+        awsRegion: 'us-east-1',
+      });
+      expect(client.constructor.name).toBe('MinifiedClient');
+      const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
+      expect(req.headers.get('user-agent')).toBe(`AnthropicBedrockMantle/JS ${VERSION}`);
+    } finally {
+      Object.defineProperty(AnthropicBedrockMantle, 'name', { value: originalName });
+    }
+  });
+});

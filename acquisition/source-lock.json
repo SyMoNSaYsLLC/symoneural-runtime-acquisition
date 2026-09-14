@@ -369,7 +369,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/anthropics/anthropic-sdk-typescript",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "4747d9c46d90c4c0a0046945fec712d460afbe60",
+      "pins_path": "Symoneural-CLI/src/anthropic/.gitpins/anthropic-sdk-typescript.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-CLI/build/devtool-workspace/appends/symoneural-mcp-python-sdk_git.bbappend",

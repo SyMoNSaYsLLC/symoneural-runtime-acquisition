@@ -1,0 +1,955 @@
+import Anthropic, { APIConnectionError, APIUserAbortError } from '@anthropic-ai/sdk';
+import { AnthropicError } from '@anthropic-ai/sdk/error';
+import {
+  BetaMessage,
+  BetaMessageDeltaUsage,
+  BetaRawMessageDeltaEvent,
+  BetaRawMessageStreamEvent,
+} from '@anthropic-ai/sdk/resources/beta/messages';
+import * as partialJsonParser from '@anthropic-ai/sdk/_vendor/partial-json-parser/parser';
+import { mockFetch } from '../lib/mock-fetch';
+import { loadFixture, parseSSEFixture } from '../lib/sse-helpers';
+
+// The swc-compiled module exports are non-configurable, so `jest.spyOn` can't patch
+// `partialParse`; wrap the real implementation in a `jest.fn` to count calls instead.
+jest.mock('@anthropic-ai/sdk/_vendor/partial-json-parser/parser', () => {
+  const actual = jest.requireActual('@anthropic-ai/sdk/_vendor/partial-json-parser/parser');
+  return { ...actual, partialParse: jest.fn(actual.partialParse) };
+});
+
+// tripwire: a new BetaRawMessageDeltaEvent field must be handled in BetaMessageStream#accumulateMessage,
+// then listed here (missing key -> required-property error, extra key -> excess-property error);
+// enforced at compile time by tsc via ./scripts/lint, not by jest
+const _accumulatedDeltaEventKeys: Record<keyof BetaRawMessageDeltaEvent, true> = {
+  type: true,
+  delta: true,
+  usage: true,
+  context_management: true,
+  input_transformations: true,
+};
+const _accumulatedDeltaKeys: Record<keyof BetaRawMessageDeltaEvent.Delta, true> = {
+  container: true,
+  stop_details: true,
+  stop_reason: true,
+  stop_sequence: true,
+};
+const _accumulatedDeltaUsageKeys: Record<keyof BetaMessageDeltaUsage, true> = {
+  cache_creation_input_tokens: true,
+  cache_read_input_tokens: true,
+  fallback_credit: true,
+  input_tokens: true,
+  iterations: true,
+  output_tokens: true,
+  output_tokens_details: true,
+  server_tool_use: true,
+};
+void _accumulatedDeltaEventKeys;
+void _accumulatedDeltaKeys;
+void _accumulatedDeltaUsageKeys;
+
+const EXPECTED_BASIC_MESSAGE = {
+  id: 'msg_4QpJur2dWWDjF6C758FbBw5vm12BaVipnK',
+  model: 'claude-opus-4-8',
+  role: 'assistant',
+  stop_reason: 'end_turn',
+  stop_sequence: null,
+  type: 'message',
+  content: [{ type: 'text', text: 'Hello there!' }],
+  usage: { input_tokens: 11, output_tokens: 6 },
+};
+
+const EXPECTED_BASIC_EVENT_TYPES = [
+  'message_start',
+  'content_block_start',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_stop',
+  'message_delta',
+  'message_stop',
+];
+
+const EXPECTED_TOOL_USE_MESSAGE = {
+  id: 'msg_019Q1hrJbZG26Fb9BQhrkHEr',
+  model: 'claude-opus-4-8',
+  role: 'assistant',
+  stop_reason: 'tool_use',
+  stop_sequence: null,
+  type: 'message',
+  content: [
+    { type: 'text', text: "I'll check the current weather in Paris for you." },
+    {
+      type: 'tool_use',
+      id: 'toolu_01NRLabsLyVHZPKxbKvkfSMn',
+      name: 'get_weather',
+      input: { location: 'Paris' },
+    },
+  ],
+  usage: {
+    input_tokens: 377,
+    output_tokens: 65,
+    cache_creation_input_tokens: 0,
+    cache_read_input_tokens: 0,
+    service_tier: 'standard',
+  },
+};
+
+const EXPECTED_TOOL_USE_EVENT_TYPES = [
+  'message_start',
+  'content_block_start',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_stop',
+  'content_block_start',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_stop',
+  'message_delta',
+  'message_stop',
+];
+
+const EXPECTED_INCOMPLETE_MESSAGE = {
+  id: 'msg_01UdjYBBipA9omjYhicnevgq',
+  model: 'claude-sonnet-4-5',
+  role: 'assistant',
+  stop_reason: 'max_tokens',
+  stop_sequence: null,
+  type: 'message',
+  content: [
+    {
+      type: 'text',
+      text: "I'll create a comprehensive tax guide for someone with multiple W2s and save it in a file called taxes.txt. Let me do that for you now.",
+    },
+    {
+      type: 'tool_use',
+      id: 'toolu_01EKqbqmZrGRXy18eN7m9kvY',
+      name: 'make_file',
+      input: {
+        filename: 'taxes.txt',
+        lines_of_text: ['# COMPREHENSIVE TAX GUIDE FOR INDIVIDUALS WITH MULTIPLE W-2s'],
+      },
+    },
+  ],
+  usage: {
+    input_tokens: 450,
+    output_tokens: 124,
+    cache_creation_input_tokens: 0,
+    cache_read_input_tokens: 0,
+    service_tier: 'standard',
+  },
+  parsed_output: null,
+};
+
+const EXPECTED_INCOMPLETE_EVENT_TYPES = [
+  'message_start',
+  'content_block_start',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_stop',
+  'content_block_start',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'content_block_delta',
+  'message_delta',
+  'message_stop',
+];
+
+function assertBasicResponse(events: BetaRawMessageStreamEvent[], message: BetaMessage) {
+  expect(events.map((e) => e.type)).toEqual(EXPECTED_BASIC_EVENT_TYPES);
+  expect(message).toMatchObject(EXPECTED_BASIC_MESSAGE);
+}
+
+function assertToolUseResponse(events: BetaRawMessageStreamEvent[], message: BetaMessage) {
+  expect(events.map((e) => e.type)).toEqual(EXPECTED_TOOL_USE_EVENT_TYPES);
+  expect(message).toMatchObject(EXPECTED_TOOL_USE_MESSAGE);
+}
+
+describe('BetaMessageStream class', () => {
+  it('handles partial JSON parsing errors in input_json_delta events', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    const streamEvents = [
+      {
+        type: 'message_start',
+        message: {
+          type: 'message',
+          id: 'msg_test',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          usage: { output_tokens: 0, input_tokens: 10 },
+        },
+      },
+      {
+        type: 'content_block_start',
+        content_block: {
+          type: 'tool_use',
+          id: 'toolu_test',
+          name: 'test_tool',
+          input: {},
+        },
+        index: 0,
+      },
+      {
+        type: 'content_block_delta',
+        delta: {
+          type: 'input_json_delta',
+          partial_json: '{"foo": "bar", "baz": ', // valid JSON but incomplete
+        },
+        index: 0,
+      },
+      {
+        type: 'content_block_delta',
+        delta: {
+          type: 'input_json_delta',
+          partial_json: '"qux": "quux"}', // valid JSON but not complete
+        },
+        index: 0,
+      },
+      {
+        type: 'content_block_delta',
+        delta: {
+          type: 'input_json_delta',
+          partial_json: 'invalid malformed json with syntax errors}', // Invalid JSON
+        },
+        index: 0,
+      },
+      {
+        type: 'content_block_stop',
+        index: 0,
+      },
+      {
+        type: 'message_delta',
+        usage: { output_tokens: 5 },
+        delta: { stop_reason: 'end_turn', stop_sequence: null },
+      },
+      {
+        type: 'message_stop',
+      },
+    ];
+
+    handleStreamEvents(streamEvents);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Use the test tool' }],
+    });
+
+    const errors: AnthropicError[] = [];
+    stream.on('error', (error) => {
+      errors.push(error);
+    });
+
+    try {
+      await stream.done();
+    } catch (error) {
+      // Stream processing may throw the error
+    }
+
+    // Verify that an error was caught and handled
+    expect(errors.length).toBe(1);
+    expect(errors[0]).toBeInstanceOf(AnthropicError);
+    expect(errors[0]!.message).toContain('Unable to parse tool parameter JSON from model');
+    expect(errors[0]!.message).toContain('{"foo": "bar", "baz": "qux": "quux"}');
+  });
+
+  it('handles incomplete partial JSON responses gracefully', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const fixtureContent = loadFixture('incomplete_partial_json_response.txt');
+    const streamEvents = await parseSSEFixture(fixtureContent);
+    handleStreamEvents(streamEvents);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-sonnet-4-5',
+      messages: [{ role: 'user', content: 'Create a tax guide' }],
+    });
+
+    const events: any[] = [];
+    const contentBlocks: any[] = [];
+
+    stream.on('streamEvent', (event) => {
+      events.push(event.type);
+    });
+
+    stream.on('contentBlock', (block) => {
+      contentBlocks.push(block);
+    });
+
+    await stream.done();
+    const finalMessage = await stream.finalMessage();
+
+    expect(events).toEqual(EXPECTED_INCOMPLETE_EVENT_TYPES);
+
+    const actualMessage = JSON.parse(JSON.stringify(finalMessage));
+    expect(actualMessage).toEqual(EXPECTED_INCOMPLETE_MESSAGE);
+  });
+
+  it('handles basic response fixture', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const fixtureContent = loadFixture('basic_response.txt');
+    const streamEvents = await parseSSEFixture(fixtureContent);
+    handleStreamEvents(streamEvents);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Say hello there!' }],
+    });
+
+    const events: any[] = [];
+    stream.on('streamEvent', (event) => {
+      events.push(event);
+    });
+
+    await stream.done();
+    const finalMessage = await stream.finalMessage();
+    const finalText = await stream.finalText();
+
+    assertBasicResponse(events, finalMessage);
+    expect(finalText).toBe('Hello there!');
+  });
+
+  it('handles tool use response fixture', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const fixtureContent = loadFixture('tool_use_response.txt');
+    const streamEvents = await parseSSEFixture(fixtureContent);
+    handleStreamEvents(streamEvents);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
+    });
+
+    const events: any[] = [];
+    stream.on('streamEvent', (event) => {
+      events.push(event);
+    });
+
+    await stream.done();
+    const finalMessage = await stream.finalMessage();
+    const finalText = await stream.finalText();
+
+    assertToolUseResponse(events, finalMessage);
+    expect(finalText).toBe("I'll check the current weather in Paris for you.");
+  });
+
+  it('parses tool input lazily — once per block, not per delta', async () => {
+    const partialParse = jest.mocked(partialJsonParser.partialParse);
+    partialParse.mockClear();
+    const { fetch, handleStreamEvents } = mockFetch();
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents(await parseSSEFixture(loadFixture('tool_use_response.txt')));
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.content[1]).toEqual({
+      type: 'tool_use',
+      id: 'toolu_01NRLabsLyVHZPKxbKvkfSMn',
+      name: 'get_weather',
+      input: { location: 'Paris' },
+    });
+    expect(Object.getOwnPropertyDescriptor(finalMessage.content[1], 'input')?.get).toBeUndefined();
+    // Fixture has five input_json_delta events; only the content_block_stop parse runs.
+    expect(partialParse).toHaveBeenCalledTimes(1);
+  });
+
+  it('aborts on break', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Say hello there!' }],
+    });
+
+    const fixtureContent = loadFixture('basic_response.txt');
+    const streamEvents = await parseSSEFixture(fixtureContent);
+    handleStreamEvents(streamEvents);
+
+    for await (const event of stream) {
+      if (
+        event.type === 'content_block_delta' &&
+        event.delta.type == 'text_delta' &&
+        event.delta.text.includes('He')
+      ) {
+        break;
+      }
+    }
+
+    await expect(async () => stream.done()).rejects.toThrow(APIUserAbortError);
+
+    expect(stream.aborted).toBe(true);
+  });
+
+  it('handles network errors', async () => {
+    const { fetch, handleRequest } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const stream = anthropic.beta.messages.stream(
+      {
+        max_tokens: 1024,
+        model: 'claude-sonnet-4-5',
+        messages: [{ role: 'user', content: 'Say hello there!' }],
+      },
+      { maxRetries: 0 },
+    );
+
+    handleRequest(async () => {
+      throw new Error('mock request error');
+    });
+
+    async function runStream() {
+      await stream.done();
+    }
+
+    await expect(runStream).rejects.toThrow(APIConnectionError);
+  });
+
+  it('handles network errors on async iterator', async () => {
+    const { fetch, handleRequest } = mockFetch();
+
+    const anthropic = new Anthropic({
+      apiKey: 'test-key',
+      fetch,
+      defaultHeaders: {
+        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+      },
+    });
+
+    const stream = anthropic.beta.messages.stream(
+      {
+        max_tokens: 1024,
+        model: 'claude-sonnet-4-5',
+        messages: [{ role: 'user', content: 'Say hello there!' }],
+      },
+      { maxRetries: 0 },
+    );
+
+    handleRequest(async () => {
+      throw new Error('mock request error');
+    });
+
+    async function runStream() {
+      for await (const event of stream) {
+        if (
+          event.type === 'content_block_delta' &&
+          event.delta.type === 'text_delta' &&
+          event.delta.text.includes('He')
+        ) {
+          break;
+        }
+      }
+    }
+
+    await expect(runStream).rejects.toThrow(APIConnectionError);
+  });
+
+  it('carries stop_details from message_delta into the final message', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_refusal_01',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          usage: { input_tokens: 15, output_tokens: 1 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'I cannot help' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        delta: {
+          stop_reason: 'refusal',
+          stop_sequence: null,
+          stop_details: {
+            type: 'refusal',
+            category: 'cyber',
+            explanation: 'Declined by a streaming policy classifier.',
+          },
+        },
+        usage: { output_tokens: 8 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Do something disallowed.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.stop_reason).toBe('refusal');
+    expect(finalMessage.stop_details).toEqual({
+      type: 'refusal',
+      category: 'cyber',
+      explanation: 'Declined by a streaming policy classifier.',
+    });
+  });
+
+  it('carries usage.fallback_credit from message_delta into the final message', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_credit_01',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-sonnet-4-5',
+          stop_reason: null,
+          stop_sequence: null,
+          usage: { input_tokens: 12, output_tokens: 1 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Hello again!' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'end_turn', stop_sequence: null },
+        usage: { output_tokens: 7, fallback_credit: { status: { type: 'redeemed' } } },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-sonnet-4-5',
+      messages: [{ role: 'user', content: 'Say hello again!' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.usage.output_tokens).toBe(7);
+    expect(finalMessage.usage.fallback_credit).toEqual({ status: { type: 'redeemed' } });
+  });
+
+  it('applies container, context_management and every usage field from message_delta', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_beta_delta_01',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          container: null,
+          context_management: null,
+          usage: {
+            input_tokens: 10,
+            output_tokens: 1,
+            cache_creation_input_tokens: 2,
+            cache_read_input_tokens: 3,
+            cache_creation: { ephemeral_5m_input_tokens: 2, ephemeral_1h_input_tokens: 0 },
+            service_tier: 'standard',
+          },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Done.' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        context_management: {
+          applied_edits: [
+            { type: 'clear_tool_uses_20250919', cleared_input_tokens: 100, cleared_tool_uses: 2 },
+          ],
+        },
+        delta: {
+          stop_reason: 'end_turn',
+          stop_sequence: null,
+          stop_details: null,
+          container: { id: 'container_01', expires_at: '2026-01-01T00:00:00Z', skills: null },
+        },
+        usage: {
+          input_tokens: 42,
+          output_tokens: 99,
+          cache_creation_input_tokens: 7,
+          cache_read_input_tokens: 8,
+          server_tool_use: { web_search_requests: 1, web_fetch_requests: 2 },
+          output_tokens_details: { thinking_tokens: 30 },
+        },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Run some code.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.container).toEqual({
+      id: 'container_01',
+      expires_at: '2026-01-01T00:00:00Z',
+      skills: null,
+    });
+    expect(finalMessage.context_management).toEqual({
+      applied_edits: [{ type: 'clear_tool_uses_20250919', cleared_input_tokens: 100, cleared_tool_uses: 2 }],
+    });
+    expect(finalMessage.usage).toMatchObject({
+      input_tokens: 42,
+      output_tokens: 99,
+      cache_creation_input_tokens: 7,
+      cache_read_input_tokens: 8,
+      server_tool_use: { web_search_requests: 1, web_fetch_requests: 2 },
+      output_tokens_details: { thinking_tokens: 30 },
+      // never re-sent on message_delta
+      cache_creation: { ephemeral_5m_input_tokens: 2, ephemeral_1h_input_tokens: 0 },
+      service_tier: 'standard',
+    });
+  });
+
+  it('keeps accumulated container and context_management when a later message_delta omits them', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_beta_delta_02',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          container: null,
+          context_management: null,
+          usage: { input_tokens: 10, output_tokens: 1, service_tier: 'standard' },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Done.' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        context_management: { applied_edits: [] },
+        delta: {
+          stop_reason: null,
+          stop_sequence: null,
+          stop_details: null,
+          container: { id: 'container_01', expires_at: '2026-01-01T00:00:00Z', skills: null },
+        },
+        usage: { output_tokens: 50 },
+      },
+      {
+        type: 'message_delta',
+        context_management: null,
+        delta: { stop_reason: 'end_turn', stop_sequence: null, stop_details: null, container: null },
+        usage: { output_tokens: 99 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Run some code.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.container).toEqual({
+      id: 'container_01',
+      expires_at: '2026-01-01T00:00:00Z',
+      skills: null,
+    });
+    expect(finalMessage.context_management).toEqual({ applied_edits: [] });
+    expect(finalMessage.usage).toMatchObject({
+      input_tokens: 10,
+      output_tokens: 99,
+      service_tier: 'standard',
+    });
+  });
+
+  it('replaces input_transformations with the list from message_delta', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_beta_delta_03',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          input_transformations: [
+            { type: 'thinking_dropped', path: 'messages.2.content.0', reason: 'prefix_binding_mismatch' },
+          ],
+          usage: { input_tokens: 10, output_tokens: 1 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Done.' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        input_transformations: [
+          { type: 'thinking_dropped', path: 'messages.1.content.0', reason: 'model_binding_mismatch' },
+        ],
+        delta: { stop_reason: 'end_turn', stop_sequence: null, stop_details: null },
+        usage: { output_tokens: 5 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Hello.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.input_transformations).toEqual([
+      { type: 'thinking_dropped', path: 'messages.1.content.0', reason: 'model_binding_mismatch' },
+    ]);
+  });
+
+  it('clears input_transformations when message_delta sends an empty list', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_beta_delta_05',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          input_transformations: [
+            { type: 'thinking_dropped', path: 'messages.1.content.0', reason: 'prefix_binding_mismatch' },
+          ],
+          usage: { input_tokens: 10, output_tokens: 1 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Done.' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        input_transformations: [],
+        delta: { stop_reason: 'end_turn', stop_sequence: null, stop_details: null },
+        usage: { output_tokens: 5 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Hello.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.input_transformations).toEqual([]);
+  });
+
+  it('keeps input_transformations from message_start when message_delta omits them', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_beta_delta_04',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          input_transformations: [
+            { type: 'thinking_dropped', path: 'messages.1.content.0', reason: 'prefix_binding_mismatch' },
+          ],
+          usage: { input_tokens: 10, output_tokens: 1 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'Done.' } },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'end_turn', stop_sequence: null, stop_details: null },
+        usage: { output_tokens: 5 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Hello.' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.input_transformations).toEqual([
+      { type: 'thinking_dropped', path: 'messages.1.content.0', reason: 'prefix_binding_mismatch' },
+    ]);
+  });
+
+  it('relabels the snapshot model from fallback content blocks', async () => {
+    const { fetch, handleStreamEvents } = mockFetch();
+
+    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+
+    handleStreamEvents([
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_fallback_01',
+          type: 'message',
+          role: 'assistant',
+          content: [],
+          model: 'claude-opus-4-8',
+          stop_reason: null,
+          stop_sequence: null,
+          usage: { input_tokens: 10, output_tokens: 1 },
+        },
+      },
+      {
+        type: 'content_block_start',
+        index: 0,
+        content_block: {
+          type: 'fallback',
+          from: { model: 'claude-opus-4-8' },
+          to: { model: 'claude-sonnet-4-5' },
+          trigger: { type: 'refusal', category: null },
+        },
+      },
+      { type: 'content_block_stop', index: 0 },
+      { type: 'content_block_start', index: 1, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 1, delta: { type: 'text_delta', text: 'Hello there!' } },
+      { type: 'content_block_stop', index: 1 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'end_turn', stop_sequence: null },
+        usage: { output_tokens: 6 },
+      },
+      { type: 'message_stop' },
+    ]);
+
+    const stream = anthropic.beta.messages.stream({
+      max_tokens: 1024,
+      model: 'claude-opus-4-8',
+      messages: [{ role: 'user', content: 'Say hello there!' }],
+    });
+
+    const finalMessage = await stream.finalMessage();
+
+    expect(finalMessage.model).toBe('claude-sonnet-4-5');
+    expect(finalMessage.content).toMatchObject([
+      {
+        type: 'fallback',
+        from: { model: 'claude-opus-4-8' },
+        to: { model: 'claude-sonnet-4-5' },
+      },
+      { type: 'text', text: 'Hello there!' },
+    ]);
+  });
+});
