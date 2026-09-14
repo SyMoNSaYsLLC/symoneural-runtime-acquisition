@@ -75,9 +75,18 @@ def load(p):
 
 
 def save(p, data):
+    """Write a lock file. The serialisation MUST match tools/lib_acq.py dump()
+    (indent=1, sort_keys=True, ensure_ascii=False) - source-lock.json and
+    submodule-lock.json are the only records with two writers, and the scanner
+    is their authority. When these disagreed (indent=2/sort_keys=False here),
+    every ingest committed one format and every scan-acquisition.py rewrote it
+    to the other: a 5430-line diff with zero semantic change, which made
+    "did the scan alter the records?" useless as a determinism gate.
+    The atomic replace is ours; lib_acq.dump() writes in place and takes a
+    record NAME rather than a path, so only the kwargs are shared."""
     tmp = str(p) + ".tmp"
     with open(tmp, "w") as f:
-        json.dump(data, f, indent=2, sort_keys=False)
+        json.dump(data, f, indent=1, sort_keys=True, ensure_ascii=False)
         f.write("\n")
     os.replace(tmp, p)
 
