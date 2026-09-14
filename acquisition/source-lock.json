@@ -794,7 +794,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/sympy/sympy",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "78e751ff73613ed44db3e2d9a48f317935181db5",
+      "pins_path": "Symoneural-Ravencalc/src/symbolic/.gitpins/sympy.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Remix/build/devtool-workspace/appends/symoneural-librespot_git.bbappend",
