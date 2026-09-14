@@ -1,0 +1,40 @@
+# CUDA 13.4.1 component set - the estate CUDA authority (P7, 2026-09-14)
+# Source: NVIDIA Debian 13 repository index as fetched by the host's apt (local file, no network read here)
+# index: developer.download.nvidia.com_compute_cuda_repos_debian13_x86%5f64_Packages
+# index sha256: 769ece572c8ac8998c02859ae4fb2f1e0b9c2762639fe8ea493c1741aadd70ca  size: 1871032
+# repo: https://developer.download.nvidia.com/compute/cuda/repos/debian13/x86_64
+# 33 packages, 2133377128 bytes (2.13 GB)
+
+cuda-nvcc-13-4                     13.4.59-1              33280382  785ef7d36e816e1c900151a12ea89e2cee46341763451f9a2fb4f88b8a4cb408  cuda-nvcc-13-4_13.4.59-1_amd64.deb
+cuda-crt-13-4                      13.4.59-1                104896  b592c1d3ebde89c1532724fecafe864137785c205ef5856cbe21297f8ef02e26  cuda-crt-13-4_13.4.59-1_amd64.deb
+libnvvm-13-4                       13.4.59-1              51315386  ba6776060918182fcf32a52f1ac38207e2b0f475c22c4f88a1d8d38e783107f7  libnvvm-13-4_13.4.59-1_amd64.deb
+libnvptxcompiler-13-4              13.4.59-1              10782482  0ff6cf73cb15adc9909d853878e9aec04bf17904be6d707782de09a2c64286c7  libnvptxcompiler-13-4_13.4.59-1_amd64.deb
+cuda-cuobjdump-13-4                13.4.49-1                289428  eba85253516218bab686119badde05d2b901d183c4eaae884dbef2b6f3e68f6e  cuda-cuobjdump-13-4_13.4.49-1_amd64.deb
+cuda-cuxxfilt-13-4                 13.4.49-1                 56282  8576f7e4ab50f0e428ce41a9d33d4b4116f1cfb3d3977c0ca4ab9323e5a61d9e  cuda-cuxxfilt-13-4_13.4.49-1_amd64.deb
+cuda-nvprune-13-4                  13.4.49-1                570964  53a30da7484e62941fb6d0cdb31d8dd367a02ba3ed0240d749d23917de0977cc  cuda-nvprune-13-4_13.4.49-1_amd64.deb
+cuda-cudart-13-4                   13.4.49-1                185768  36a28d919e012ad4a2e3e34199bae057be958241e86e9b14e751aadc190bfbd2  cuda-cudart-13-4_13.4.49-1_amd64.deb
+cuda-cudart-dev-13-4               13.4.49-1               1588530  74af55d4183173ed16e9a8e6d8a0949cdef3058466e184a5271b38e31d52aca5  cuda-cudart-dev-13-4_13.4.49-1_amd64.deb
+cuda-driver-dev-13-4               13.4.49-1                 31286  7714a88bc872271858da9d84d3fafbad5624de767e0b1e89b7b036b37c365a7f  cuda-driver-dev-13-4_13.4.49-1_amd64.deb
+cuda-culibos-dev-13-4              13.4.49-1                 23922  4df11d998e1178185c72cd9e4e4f6274157bd54641b3b858091f2264962e9970  cuda-culibos-dev-13-4_13.4.49-1_amd64.deb
+cccl-13-4                          13.3.4.2.1-1            1464182  a0910963b40ae631aa7f8199b7877c6ce54e95a2b7c252a37d9122dd629baee1  cccl-13-4_13.3.4.2.1-1_amd64.deb
+cuda-nvrtc-13-4                    13.4.59-1              38561986  aeb9962c55e09a2555d7bbfd96fbe1edbb2789d29760ada66c56a4685d233f23  cuda-nvrtc-13-4_13.4.59-1_amd64.deb
+cuda-nvrtc-dev-13-4                13.4.59-1              33692718  d35ebc6f38a603c8c7888eca7650794ecc732465b6c808d1a432e42580a679b4  cuda-nvrtc-dev-13-4_13.4.59-1_amd64.deb
+libcublas-13-4                     13.7.0.27-1           410241834  a4abaccf6e3e84ce59a548cdaf1c6eca8bf32f089bd88f83b61bd0fbbfd52b70  libcublas-13-4_13.7.0.27-1_amd64.deb
+libcublas-dev-13-4                 13.7.0.27-1           470796180  3608619f7623ccd173a1ba8eee44835a5fd271de8ce81a93b022d8ee79a37133  libcublas-dev-13-4_13.7.0.27-1_amd64.deb
+libcufft-13-4                      12.4.0.34-1           125177566  871832cd9811badcbbc7fd9327fc320e1285ccd30226232d581548c60bba1573  libcufft-13-4_12.4.0.34-1_amd64.deb
+libcufft-dev-13-4                  12.4.0.34-1           123627490  2ec43f8c580ce5291e9a70a53dc3257a99a2002d5e5f4e4d3044fd1508761878  libcufft-dev-13-4_12.4.0.34-1_amd64.deb
+libcurand-13-4                     10.4.4.49-1            43493486  a51e236ccf5ec056c91a19431044d01bc12be59a88bf2f330e795cdcb80e0d67  libcurand-13-4_10.4.4.49-1_amd64.deb
+libcurand-dev-13-4                 10.4.4.49-1            43701646  20bcd990e0e7a1ff4667ba506483a09b5376613088aefb772c5bca0eb046234d  libcurand-dev-13-4_10.4.4.49-1_amd64.deb
+libcusolver-13-4                   12.3.2.15-1           213574522  5a5bb997df7ee660bf91eb58ab08a884be79e489578c2623d2b1a32b7c5813c8  libcusolver-13-4_12.3.2.15-1_amd64.deb
+libcusolver-dev-13-4               12.3.2.15-1           130839630  fd631986323029892449ce5aed30fac4006b31d42f73f1051b50c3f1a2c6d1ba  libcusolver-dev-13-4_12.3.2.15-1_amd64.deb
+libcusparse-13-4                   12.8.6.49-1           159818970  33afebd5257fc6f680aa79f7c79cd2da6f9bcc45c9f5403191def34420cb37d6  libcusparse-13-4_12.8.6.49-1_amd64.deb
+libcusparse-dev-13-4               12.8.6.49-1           162761026  09a281df1cf6eb41440fc16e838bc78d6b6e3d07d6b69f7874a1ecf45617f205  libcusparse-dev-13-4_12.8.6.49-1_amd64.deb
+libnvjitlink-13-4                  13.4.52-1              30685310  0ce03afa84876aa193465c60f7e38e55350c4cf55d0d016e17c383adf5d162a6  libnvjitlink-13-4_13.4.52-1_amd64.deb
+libnvjitlink-dev-13-4              13.4.52-1              27584446  ac7f1e11d4c6bb4f8d8fbdd808a091f6d272bd96f6f4bcea12ae2d44405a2c38  libnvjitlink-dev-13-4_13.4.52-1_amd64.deb
+cuda-nvtx-13-4                     13.4.49-1                101852  a34be1fa3d1bbb64d74b184bf97219474a5511752fd555a7c88dd1c1dd3c8929  cuda-nvtx-13-4_13.4.49-1_amd64.deb
+cuda-profiler-api-13-4             13.4.49-1                 19590  95a9ec122d0d675bc7b14ab31e20992692c109c773b685f92a92fab5b2126011  cuda-profiler-api-13-4_13.4.49-1_amd64.deb
+cuda-nvml-dev-13-4                 13.4.61-1                164056  f059669c1cccc8ae9b796053958bd9aa85138f7a2a9ad5a911e858bb14f487b3  cuda-nvml-dev-13-4_13.4.61-1_amd64.deb
+cuda-cupti-13-4                    13.4.58-1              16106554  555949ebdb216c0de4caf367c131d8b1b3357cdf05a130a17a5718e843515727  cuda-cupti-13-4_13.4.58-1_amd64.deb
+cuda-cupti-dev-13-4                13.4.58-1               2680506  03ed500926ebcb7a9fbe39a3cbb8bf699470335e656a48d0015461f1bff978ce  cuda-cupti-dev-13-4_13.4.58-1_amd64.deb
+cuda-toolkit-13-4                  13.4.1-1                   3310  d22afceef650970cbfb5f3f996c51c9b55ebf4c0568d1a3d78334fca38900ecb  cuda-toolkit-13-4_13.4.1-1_amd64.deb
+cuda-documentation-13-4            13.4.49-1                 50942  c6639fa4e3bd76d375b3baf150b7faad4c2ec4de51a21ee815987eac7e626da9  cuda-documentation-13-4_13.4.49-1_amd64.deb
