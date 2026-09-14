@@ -245,24 +245,9 @@ def is_component_submodule(abspath):
 def rebuilt_tree(treeish, children):
     """Hash of <treeish> after replacing each (relpath, commit_sha) in children
     with a 160000 gitlink - i.e. what upstream's tree looks like where ours holds
-    submodule CONTENT. Uses a scratch index; never touches the estate index."""
-    import tempfile
-    fd, idx = tempfile.mkstemp(prefix="symon-rebuild-")
-    os.close(fd); os.unlink(idx)
-    env = dict(os.environ, GIT_INDEX_FILE=idx)
-    def g(*a):
-        r = subprocess.run(["git", "-C", ROOT, *a], capture_output=True, text=True, env=env)
-        return r.stdout.strip() if r.returncode == 0 else ""
-    try:
-        if not g("read-tree", treeish):
-            pass
-        for rel, sha in children:
-            g("rm", "-r", "--cached", "-q", "--ignore-unmatch", "--", rel)
-            g("update-index", "--add", "--cacheinfo", "160000,%s,%s" % (sha, rel))
-        return g("write-tree")
-    finally:
-        if os.path.exists(idx):
-            os.unlink(idx)
+    submodule CONTENT. No index or object-store writes, even for nested trees."""
+    from git_tree_identity import rebuilt_tree as reconstruct
+    return reconstruct(ROOT, treeish, children)
 
 def sha256_file(p):
     h = hashlib.sha256()

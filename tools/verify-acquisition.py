@@ -17,7 +17,7 @@ TOOLS = os.path.dirname(os.path.abspath(__file__))
 FAIL, WARN = [], []
 
 def rescan(tmp):
-    env = dict(os.environ, ACQ_OUT=tmp)
+    env = dict(os.environ, ACQ_OUT=tmp, PYTHONDONTWRITEBYTECODE="1", GIT_OPTIONAL_LOCKS="0")
     # provider scan reads vendor-lock from the same isolated dir
     for s in ("scan-acquisition.py", "scan-dependencies.py", "scan-oe-providers.py",
               "scan-source-collisions.py"):
@@ -32,7 +32,10 @@ def dep_ident(r):
             r["resolved_identity"], r["classification"], r["scope"])
 
 def ident(kind, rec):
-    if kind == "source":    return (rec["source_path"], rec["commit_sha"], rec["worktree"])
+    if kind == "source":
+        return tuple(rec.get(k) for k in (
+            "source_path", "upstream_url", "commit_sha", "tree_sha", "worktree",
+            "recipe_path", "recipe_SRCREV", "lock_state"))
     if kind == "submodule": return (rec["identity"], rec["commit_sha"], rec["configured_url"])
     if kind == "licence":   return (rec["owner_component"], rec["path"], rec["sha256"])
     if kind == "vendor":    return (rec["location"], rec["name"], rec["scope"])
@@ -61,6 +64,26 @@ COMPLETE_FAIL = []
 AGREE = []
 DUP_URL = []
 RESIDUE = []
+
+def source_failures(records):
+    """Agreement between two equally bad records is not a successful check."""
+    errors = []
+    for rec in records:
+        path = rec["source_path"]
+        if rec.get("lock_state") in {"MISMATCH", "UNKNOWN"}:
+            errors.append("source identity invalid: " + path)
+        if rec.get("worktree") != "clean":
+            errors.append("acquired worktree is not clean: " + path)
+        revision = rec.get("recipe_SRCREV")
+        if revision not in (None, "NOT-APPLICABLE") and revision != rec.get("commit_sha"):
+            errors.append("recipe SRCREV differs from pin: " + path)
+        for sub in rec.get("submodules", []):
+            if sub.get("content_check") != "AT-RECORDED-TREE" or sub.get("gitlink_check") != "GITLINK-VERIFIED":
+                errors.append("submodule verification failed: " + path + "/" + sub["path"])
+    return errors
+
+def result_code():
+    return 1 if FAIL or COMPLETE_FAIL else 0
 
 def main():
     # ---- build-stack identity
@@ -99,6 +122,10 @@ def main():
     tmp = tempfile.mkdtemp(prefix="symon-verify-")
     try:
         rescan(tmp)
+        try:
+            FAIL.extend(source_failures(load("source-lock.json", base=tmp)["components"]))
+        except Exception as e:
+            FAIL.append("source-state validation failed: %s" % e)
         for fn, key, kind, label in SPEC:
             try:
                 old = {ident(kind, r) for r in load(fn)[key]}
@@ -251,7 +278,7 @@ def main():
     comp = "FAIL" if COMPLETE_FAIL else "PASS"
     print("  CONTROL-PLANE RESULT:      %s" % verdict)
     print("  ESTATE-COMPLETENESS RESULT: %s" % comp)
-    return 1 if FAIL else 0
+    return result_code()
 
 if __name__ == "__main__":
     sys.exit(main())

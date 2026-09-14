@@ -1,0 +1,41 @@
+image   : /home/google/SymonSaysLLC/Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914061826.tar.gz
+manifest: /home/google/SymonSaysLLC/Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914061826.manifest
+root    : /tmp/symoneural-api-proof-9hshhijz  (2384 files)
+--- interpreter
+python 3.14.7 prefix /tmp/symoneural-api-proof-9hshhijz/usr
+--- imports (17 upstream runtime sources)
+  fastapi              0.141.1      PASS
+  starlette            1.6.0        PASS
+  uvicorn              0.52.4       PASS
+  pydantic             2.13.5       PASS
+  httpx                0.28.1       PASS
+  httpcore             1.0.9        PASS
+  pydantic_core        2.46.5       PASS
+  typing_extensions    4.16.0       PASS
+  typing_inspection    0.4.4        PASS
+  annotated_types      0.8.0        PASS
+  annotated_doc        0.0.5        PASS
+  anyio                4.15.1       PASS
+  sniffio              1.3.1        PASS
+  idna                 3.19         PASS
+  certifi              2026.7.22    PASS
+  h11                  0.16.0       PASS
+  click                8.5.0        PASS
+  meaningful op: pydantic validation via pydantic_core 2.46.5 + FastAPI openapi() PASS
+CLEAN ROOT IMPORT PROOF: PASS
+--- first-party packages (symoneural-api, symoneural-api-util, symoneural-api-python)
+  SOURCE-TREE: 898f4decdfc5e549e2a2a5c63477fb76a0380fb5 HEAD:Symoneural-API/app
+  libsymoneural-api.so.1  SONAME=libsymoneural-api.so.1  NEEDED=[libc.so.6 ]
+  symoneural-api-util     NEEDED=[libc.so.6 libsymoneural-api.so.1 ]
+  A14 in the shipped library: popen/pclose imported=0 (must be 0), posix_spawn imported=6 (must be >0)
+  NOT TESTED: symoneural-api-util has no 'rack' subcommand; threads_total checked through the C tests instead
+  util version=1.0.0 abi=65536 capabilities=gpu-lock priority-table rack-telemetry unit-supervisor selftest=selftest PASS: 0 failure(s), abi 1.0.0 (rc=0)
+<stdin>:18: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  symoneural_api 1.0.0 dist 1.0.0
+  native via ctypes: version 1.0.0 capabilities ['gpu-lock', 'priority-table', 'rack-telemetry', 'unit-supervisor'] priority table 6 units
+  native gpu lock acquire/release through the packaged library: PASS
+  applications registered: ['dispatchos'] ; dispatchos page /demo/dispatchos.html public_demo True
+  GET /api/apps -> 200 ['dispatchos'] ; GET /api/apps/dispatchos/status -> 200 {"application_id": "dispatchos", "readiness": "BLOCKED", "blocking_units": ["ravencalc"], "degraded_units": ["chat"], "units": [{"unit": "ravencalc", "required"
+  GET /api/health -> 200 {"status": "ready", "uptime_s": 0.1}
+FIRST-PARTY CLEAN ROOT PROOF: PASS
+rc=0  (upstream closure rc=0, first-party fail=0)

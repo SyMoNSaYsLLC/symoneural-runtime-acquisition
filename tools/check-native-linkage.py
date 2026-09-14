@@ -27,16 +27,22 @@ and it enforces the boundary rules the reconstruction states:
 Artifacts that do not exist yet are reported NOT STARTED, never PASS.
 
   tools/check-native-linkage.py [--json out.json]
-Exit 0 only if every existing artifact passes every rule that applies to it.
+Exit 0 only if every required artifact is present and its selected package passes
+every applicable rule. This is not a check of every runtime feed or deployed image.
 """
 import glob, json, os, re, subprocess, sys
 
 ROOT = "/home/google/SymonSaysLLC"
 
 def sh(*a):
-    return subprocess.run(a, capture_output=True, text=True).stdout
+    result = subprocess.run(a, capture_output=True, text=True)
+    if result.returncode:
+        raise SystemExit("FAIL: %s failed (rc=%d)" % (a[0], result.returncode))
+    return result.stdout
 
 def newest(pattern):
+    if not os.path.isabs(pattern):
+        pattern = os.path.join(ROOT, pattern)
     c = sorted(glob.glob(pattern), key=os.path.getmtime)
     return c[-1] if c else None
 
@@ -84,27 +90,33 @@ TARGETS = [
     ("libggml",             "symoneural-ggml_*.ipk",       "usr/lib/libggml-base.so.*.*.*"),
 ]
 
-UNPACK = os.path.join(os.environ.get("TMPDIR", "/tmp"), "native-linkage-unpack")
+from proof_support import new_root
+UNPACK = str(new_root("native-linkage"))
+UNPACKED = {}
 
 def unpack(ipk):
     """Extract an .ipk (ar: debian-binary, control.tar.gz, data.tar.<zst|gz|xz>)."""
-    d = os.path.join(UNPACK, os.path.basename(ipk)[:-4])
-    # a cached extraction is only valid for the ipk it came from: an ipk rebuilt
-    # under the same name (PR is fixed at r0) is newer than the directory
-    if os.path.isdir(d):
-        if os.path.getmtime(d) >= os.path.getmtime(ipk):
-            return d
-        import shutil
-        shutil.rmtree(d)
-    os.makedirs(d, exist_ok=True)
+    # No predictable/shared cache, mtime-based reuse, or recursive deletion.
+    # A given package path is reused only within this one audit invocation.
+    if ipk in UNPACKED:
+        return UNPACKED[ipk]
+    import tempfile
+    d = tempfile.mkdtemp(prefix="package-", dir=UNPACK)
     members = sh("ar", "t", ipk).split()
     data = next((m for m in members if m.startswith("data.tar")), None)
     if not data:
         return None
     flag = {"zst": "--zstd", "gz": "-z", "xz": "-J", "bz2": "-j"}.get(data.rsplit(".", 1)[-1], "")
-    rc = subprocess.run("ar p %s %s | tar %s -x -C %s" % (ipk, data, flag, d),
-                        shell=True, capture_output=True).returncode
-    return d if rc == 0 else None
+    with subprocess.Popen(["ar", "p", ipk, data], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as archive:
+        result = subprocess.run(["tar", *([flag] if flag else []), "-x", "-C", d,
+                                 "--no-same-owner", "--no-same-permissions"],
+                                stdin=archive.stdout, capture_output=True)
+        archive.stdout.close()
+        archive_rc = archive.wait()
+    if result.returncode or archive_rc:
+        raise SystemExit("FAIL: package extraction failed; preserved " + d)
+    UNPACKED[ipk] = d
+    return d
 
 def source_tree_of(root):
     """The committed subtree a first-party artifact was exported from. symoneural-
@@ -125,9 +137,17 @@ for name, ipk_glob, inner in TARGETS:
     if not p:
         report[name] = {"state": "NOT STARTED", "reason": "%s holds no %s" % (os.path.basename(ipk), inner)}
         missing.append(name); continue
-    e = elf(p); e["state"] = "BUILT"
+    if name == "symoneural-llm":
+        with open(p, "rb") as stream:
+            first = stream.readline()
+        if not first.startswith(b"#!") or b"python" not in first:
+            raise SystemExit("FAIL: packaged symoneural-llm is not the expected Python entry point")
+        e = dict(path=p, machine="Python script (not an ELF)", soname=None, needed=[], runpath=[], exported_symbols=0)
+    else:
+        e = elf(p)
+        e["exported_symbols"] = len(defined(p, r".*"))
+    e["state"] = "BUILT"
     e["package"] = os.path.relpath(ipk, ROOT)
-    e["exported_symbols"] = len(defined(p, r".*"))
     st = source_tree_of(root)
     if st:
         e["source_tree"] = st
@@ -186,7 +206,7 @@ for name, r in report.items():
             print("      %-24s %s" % (k, v))
 if missing:
     print("\n  NOT STARTED: %s" % ", ".join(missing))
-print("\nRESULT: %s" % ("PASS" if not failures else "FAIL"))
+print("\nRESULT: %s" % ("FAIL" if failures else "NOT FULLY EVALUATED" if missing else "PASS"))
 for f in failures:
     print("  - %s" % f)
 if "--json" in sys.argv:
@@ -195,4 +215,4 @@ if "--json" in sys.argv:
     json.dump({"artifacts": report, "failures": failures, "not_started": missing},
               open(out, "w"), indent=1, sort_keys=True)
     print("wrote %s" % out)
-sys.exit(1 if failures else 0)
+sys.exit(1 if failures or missing else 0)

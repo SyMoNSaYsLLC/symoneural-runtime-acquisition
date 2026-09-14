@@ -6,12 +6,19 @@
 # consumers require. Exit 0 only if every import and check passes.
 set -uo pipefail
 ROOT=/home/google/SymonSaysLLC
+if [ "${1:-}" = --help ] || [ "${1:-}" = -h ]; then
+  echo 'Usage: tools/api-clean-root-proof [NEW absolute destination]'; exit 0
+fi
+[ "$#" -le 1 ] || { echo 'FAIL: use --help for usage' >&2; exit 2; }
 IMG=$(ls -t $ROOT/Symoneural-API/build/devtool-master/tmp/deploy/images/*/symoneural-image-api-*.rootfs.tar.gz 2>/dev/null | head -1)
 [ -n "$IMG" ] || { echo "FAIL: no symoneural-image-api rootfs tarball; run: tools/symonbake Symoneural-API symoneural-image-api"; exit 1; }
-R=${1:-${TMPDIR:-/tmp/claude-1000}/api-clean-root}
-rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
+IMG=$(readlink -f "$IMG") || exit 1
+MANI="${IMG%.tar.gz}.manifest"
+[ -f "$MANI" ] || { echo "FAIL: missing image manifest: $MANI" >&2; exit 1; }
+R=$(python3 -B "$ROOT/tools/proof_support.py" new-root API "$@") || exit 1
+tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions || { echo "FAIL: extraction failed; preserved $R" >&2; exit 1; }
 echo "image   : $IMG"
-echo "manifest: $(ls $(dirname $IMG)/symoneural-image-api-*.manifest 2>/dev/null | head -1)"
+echo "manifest: $MANI"
 echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
 LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/lib64/ld-linux-x86-64.so.2 2>/dev/null | head -1)
 PY=$(ls "$R"/usr/bin/python3.14 "$R"/usr/bin/python3 2>/dev/null | head -1)

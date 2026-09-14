@@ -18,9 +18,9 @@ THE PIN MODEL (S1)
 
   Assertion without submodules:   git rev-parse HEAD:<source_path> == tree_sha
   Assertion with submodules:      upstream holds gitlinks where we hold content,
-    so rebuild upstream's tree from ours: read HEAD:<source_path> into a scratch
-    index, replace each recorded submodule path with a 160000 gitlink at its
-    recorded commit, write-tree, compare to tree_sha. Then recurse into each
+    so rebuild upstream's tree from ours in memory: replace each recorded
+    submodule path with a 160000 gitlink at its recorded commit, hash the tree
+    bytes, compare to tree_sha. No index/object writes. Then recurse into each
     submodule against ITS tree_sha. One equality per level; no pin, no upstream
     access needed - the lock and the clone are enough.
 
@@ -37,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from git_tree_identity import rebuilt_tree, TreeIdentityError
 
 ROOT = Path(__file__).resolve().parent.parent
 LOCK = ROOT / "acquisition" / "source-lock.json"
@@ -411,18 +412,11 @@ def reconstruct(source_path, prefix, expected_tree, subs, treeish, depth_counts)
         if not any(o is not s and rel.startswith((o["path"] if not prefix else o["path"][len(prefix) + 1:]) + "/")
                    for o in children):
             direct.append((rel, s))
-    fd, idx = tempfile.mkstemp(prefix="symon-verify-")
-    os.close(fd)
-    os.unlink(idx)
     try:
-        git("read-tree", "%s:%s" % (treeish, node), index=idx)
-        for rel, s in direct:
-            git("rm", "-r", "--cached", "-q", "--ignore-unmatch", "--", rel, index=idx)
-            git("update-index", "--add", "--cacheinfo", "160000,%s,%s" % (s["commit_sha"], rel), index=idx)
-        rebuilt = git("write-tree", index=idx)
-    finally:
-        if os.path.exists(idx):
-            os.unlink(idx)
+        rebuilt = rebuilt_tree(ROOT, "%s:%s" % (treeish, node),
+                               [(rel, s["commit_sha"]) for rel, s in direct])
+    except TreeIdentityError as exc:
+        return False, str(exc)
     if rebuilt != expected_tree:
         return False, "%s rebuilt %s != recorded %s" % (node, rebuilt[:12], expected_tree[:12])
     depth_counts["verified"] += 1

@@ -20,6 +20,7 @@ set -uo pipefail
 ROOT=/home/google/SymonSaysLLC
 cd "$ROOT" || { echo "cannot cd $ROOT"; exit 1; }
 CSV=${1:-}
+case "$CSV" in ''|--csv) ;; --help|-h) echo 'Usage: tools/audit-workscope.sh [--csv]'; exit 0 ;; *) echo 'Unknown argument; use --help' >&2; exit 2 ;; esac
 
 # ---------------------------------------------------------------- fd pressure
 NF=$(cat /proc/sys/fs/file-nr 2>/dev/null | awk '{print $1}')
@@ -33,11 +34,12 @@ echo
 
 # stage 0, once for every component; the tool reads HEAD and the lock only
 AUD=$(mktemp "${TMPDIR:-/tmp}/aud-committed.XXXXXX") || exit 1
-python3 tools/ingest-tree verify --all > "$AUD" 2>&1
-echo "stage 0 (tools/ingest-tree verify --all) rc=$?"
+python3 -B tools/ingest-tree verify --all > "$AUD" 2>&1
+verify_rc=$?
+echo "stage 0 (tools/ingest-tree verify --all) rc=$verify_rc; evidence: $AUD"
 echo
 
-python3 - "$CSV" "$AUD" <<'PY'
+python3 -B - "$CSV" "$AUD" <<'PY'
 import json, os, re, subprocess, sys, glob
 csv = (len(sys.argv) > 1 and sys.argv[1] == "--csv")
 AUD = sys.argv[2]
@@ -46,10 +48,12 @@ ROOT = "/home/google/SymonSaysLLC"
 def jload(p):
     try:
         return json.load(open(os.path.join(ROOT, "acquisition", p)))
-    except Exception:
-        return {}
+    except Exception as exc:
+        raise SystemExit("FAIL: cannot read acquisition/" + p + ": " + str(exc))
 
 lock_l = jload("source-lock.json").get("components", [])
+if not lock_l:
+    raise SystemExit("FAIL: source lock is empty")
 lock = {c.get("component"): c for c in lock_l}
 man  = {e.get("component"): e for e in jload("source-manifest.json").get("entries", [])}
 
@@ -120,7 +124,7 @@ def packages_of(pn):
     return n
 
 # rows: every lock component, plus any on-disk source dir the lock does not know
-rows, per_rt = [], {}
+rows, per_rt, failures = [], {}, []
 seen_paths = set()
 def add_row(runtime, comp, sp, in_lock):
     l = lock.get(comp, {}); m = man.get(comp, {})
@@ -159,12 +163,20 @@ def add_row(runtime, comp, sp, in_lock):
     n_pkg = packages_of(pn) if packaged else 0
     if packaged: st["packaged"] += 1
 
-    if is_ref:               status = cstate[comp]["state"] + (" -> " + cstate[comp]["provider"] if cstate[comp].get("provider") else "")
-    elif packaged:           status = "DONE"
+    identity_ok = is_committed and acquired and recorded and pinok != "MISMATCH"
+    if not identity_ok:
+        status = "FAIL: SOURCE/RECORD"
+        failures.append(comp + ": source/record validation")
+    elif is_ref:             status = cstate[comp]["state"] + (" -> " + cstate[comp]["provider"] if cstate[comp].get("provider") else "")
     elif is_stub:            status = "STUB — no build class"
     elif not r:              status = "NO RECIPE"
-    elif not recorded:       status = "NOT IN CONTROL PLANE"
+    elif "symoneural-pristine" not in r.get("inherit", "") or pinok != "ok":
+        status = "FAIL: RECIPE CONTRACT"
+        failures.append(comp + ": recipe contract")
+    elif packaged:           status = "PKGDATA EXISTS; NOT QA"
     else:                    status = "RECIPE, NEVER PACKAGED"
+    if not is_ref and (is_stub or not r):
+        failures.append(comp + ": target has no buildable recipe")
 
     rows.append((runtime, comp, cstat, head[:9] if head else "-", "ok" if acquired else "-",
                  "y" if recorded else "-", pn or "-", pinok, "y" if has_class else ("stub" if r else "-"),
@@ -211,5 +223,13 @@ print("=" * 78)
 print("sources committed  : %d of %d   (verified %d · listing-verified %d · pending %d)" % (ver + lst, tot, ver, lst, pend))
 print("components packaged: %d of %d   (%d exempt by recorded ruling: %s)" % (pkg, tot - exempt, exempt, ", ".join(sorted(refonly)) or "none"))
 print("=" * 78)
+print("Package counts are historical pkgdata evidence, not current package QA or consumer passes.")
+print("Integrity result: " + ("FAIL" if failures else "PASS") + "; remaining unbuilt work is shown above.")
+for failure in failures:
+    print("FAIL: " + failure)
+sys.exit(1 if failures else 0)
 PY
-rm -f "$AUD"
+report_rc=$?
+# Preserve the verifier transcript for diagnosis; never hide either failure.
+[ "$verify_rc" -eq 0 ] && [ "$report_rc" -eq 0 ] || exit 1
+exit 0

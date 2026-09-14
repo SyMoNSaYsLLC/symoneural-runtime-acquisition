@@ -1,0 +1,9 @@
+MISMATCH Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+MISSING Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.tar.gz
+MISSING Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.manifest
+MISSING Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.0.0-r0_x86-64-v3.ipk
+MISSING Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.0.0-r0_x86-64-v3.ipk
+MISMATCH Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk
+MISMATCH Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml_0.23.0-r0_x86-64-v3.ipk
+COUNTS: {"MATCH": 109, "MISMATCH": 3, "MISSING": 4}
+RESULT: FAIL / NO CURRENT PROOF

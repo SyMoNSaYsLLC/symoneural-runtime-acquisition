@@ -1,62 +1,54 @@
 #!/usr/bin/env bash
-# build-all - sweep every runtime, build every recipe in its layer.
-#
-# The estate's rule is ONE bitbake per build directory, so different runtimes can
-# run concurrently and recipes within one runtime run in a single bitbake
-# invocation (bitbake schedules them itself - that is its job, not ours).
-#
-# Everything goes through symonbake, so every build is nice 10 / ionice idle and
-# the desktop stays usable.
+# Sweep all configured runtime recipe directories; preserve each child's status.
 set -uo pipefail
-ROOT=/home/google/SymonSaysLLC
-LOGS="${BUILD_ALL_LOGS:-/tmp/claude-1000/-home-google-SymonSaysLLC/aa121b2c-575f-422d-93f3-e402bdaf7a4f/scratchpad/buildall}"
-MAXJOBS="${BUILD_ALL_JOBS:-3}"
-mkdir -p "$LOGS"
-
-# runtime dir : layer dir
-MAP="
-Symoneural-Ravencalc:recipes-ravencalc
-Symoneural-API:recipes-api
-Symoneural-CLI:recipes-cli
-Symoneural-Crypto:recipes-crypto
-Symoneural-LLM:recipes-llm
-Symoneural-Remix:recipes-remix
-Symoneural-Streamer:recipes-streamer
-Symoneural-Web:recipes-web
-Symoneural-Adaptive-Fabric:recipes-adaptive-fabric
-"
-
-run_one() {
-    local rt="$1" layer="$2"
-    local recipes
-    recipes=$(find "$ROOT/meta-symoneural/$layer" -name '*.bb' 2>/dev/null \
-              | sed 's|.*/||; s|_.*||' | sort -u | tr '\n' ' ')
-    [ -z "$recipes" ] && { echo "SKIP $rt (no recipes)" ; return 0; }
-    echo "START $rt : $recipes"
-    "$ROOT/tools/symonbake" "$rt" $recipes > "$LOGS/$rt.log" 2>&1
-    local rc=$?
-    echo "$rc" > "$LOGS/$rt.rc"
-    if [ $rc -eq 0 ]; then echo "OK   $rt"; else echo "FAIL $rt (rc=$rc)"; fi
-    return $rc
+ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P) || exit 1
+if [ "${1:-}" = --help ] || [ "${1:-}" = -h ]; then
+    echo 'Usage: tools/build-all [--dry-run]'
+    echo 'BUILD_ALL_JOBS: concurrent runtime directories (default 3)'
+    echo 'BUILD_ALL_LOGS: parent for a fresh per-run log directory (default /tmp)'
+    exit 0
+fi
+dry=0
+if [ "${1:-}" = --dry-run ]; then dry=1; shift; fi
+[ "$#" -eq 0 ] || { echo 'build-all: unknown arguments; use --help' >&2; exit 2; }
+MAXJOBS=${BUILD_ALL_JOBS:-3}
+[[ "$MAXJOBS" =~ ^[1-9][0-9]*$ ]] && [ "${#MAXJOBS}" -le 3 ] || {
+    echo 'build-all: BUILD_ALL_JOBS must be a positive integer (1..999)' >&2; exit 2;
 }
-
-echo "build-all starting - max $MAXJOBS concurrent build directories"
-echo "logs: $LOGS"
-echo
-for line in $MAP; do
-    rt="${line%%:*}"; layer="${line##*:}"
-    [ -d "$ROOT/$rt/build/devtool-master/conf" ] || { echo "SKIP $rt (no build dir)"; continue; }
-    while [ "$(jobs -rp | wc -l)" -ge "$MAXJOBS" ]; do sleep 5; done
-    run_one "$rt" "$layer" &
-    sleep 2
+LOGS=''
+if [ "$dry" -eq 0 ]; then
+    LOGS=$(mktemp -d "${BUILD_ALL_LOGS:-${TMPDIR:-/tmp}}/symoneural-build-all.XXXXXX") || exit 1
+    echo "logs: $LOGS"
+fi
+run_one() {
+    local rt=$1; shift
+    "$ROOT/tools/symonbake" "$rt" "$@" > "$LOGS/$rt.log" 2>&1
+    local rc=$?
+    printf '%s\n' "$rc" > "$LOGS/$rt.rc"
+    if [ "$rc" -eq 0 ]; then echo "OK $rt"; else echo "FAIL $rt (rc=$rc; $LOGS/$rt.log)"; fi
+    return "$rc"
+}
+pids=(); failed=0; planned=0
+for dir in "$ROOT"/Symoneural-*; do
+    [ -d "$dir" ] || continue
+    rt=${dir##*/}; layer="recipes-${rt#Symoneural-}"; layer=${layer,,}
+    [ -d "$ROOT/meta-symoneural/$layer" ] || { echo "FAIL $rt: no own recipe directory" >&2; failed=1; continue; }
+    [ -d "$dir/build/devtool-master/conf" ] || { echo "FAIL $rt: no build configuration" >&2; failed=1; continue; }
+    recipes=()
+    while IFS= read -r file; do
+        pn=${file##*/}; pn=${pn%%_*}; pn=${pn%.bb}; recipes+=("$pn")
+    done < <(find "$ROOT/meta-symoneural/$layer" -type f -name '*.bb' | sort)
+    [ "${#recipes[@]}" -gt 0 ] || { echo "FAIL $rt: no recipes" >&2; failed=1; continue; }
+    planned=$((planned + 1))
+    printf '%s: %s\n' "$rt" "${recipes[*]}"
+    [ "$dry" -eq 0 ] || continue
+    run_one "$rt" "${recipes[@]}" & pids+=("$!")
+    if [ "${#pids[@]}" -ge "$MAXJOBS" ]; then
+        for pid in "${pids[@]}"; do wait "$pid"; rc=$?; [ "$rc" -eq 0 ] || failed=1; done
+        pids=()
+    fi
 done
-wait
-
-echo
-echo "================ SUMMARY ================"
-for f in "$LOGS"/*.rc; do
-    [ -f "$f" ] || continue
-    rt=$(basename "$f" .rc); rc=$(cat "$f")
-    if [ "$rc" = "0" ]; then printf '  OK    %s\n' "$rt"
-    else printf '  FAIL  %-28s rc=%s  log: %s/%s.log\n' "$rt" "$rc" "$LOGS" "$rt"; fi
-done
+for pid in "${pids[@]}"; do wait "$pid"; rc=$?; [ "$rc" -eq 0 ] || failed=1; done
+[ "$planned" -gt 0 ] || { echo 'FAIL: no runtimes planned' >&2; failed=1; }
+echo "build-all: $planned runtime(s); dry-run=$dry; rc=$failed"
+exit "$failed"

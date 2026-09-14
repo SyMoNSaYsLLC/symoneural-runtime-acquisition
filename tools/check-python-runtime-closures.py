@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""check-python-runtime-closures.py - the estate-wide Python runtime closure gate.
+"""check-python-runtime-closures.py - direct built-wheel dependency audit.
 
 OpenEmbedded does not turn a wheel's Requires-Dist into RDEPENDS; the recipe
 author must. So a symoneural-* Python package can build, package and look
-healthy in pkgdata while `import` fails on the target. This tool derives the
-closure FROM THE BUILT WHEELS every time and compares it with what the recipes
-declare, what the feeds hold and (optionally) what a clean root has installed.
+healthy in pkgdata while `import` fails on the target. This tool reads direct
+requirements FROM THE BUILT WHEELS and compares them with what the recipes
+declare, what the selected feeds hold and (optionally) what a clean root has
+installed. It is not a recursive dependency solver or a consumer execution proof.
 
   tools/check-python-runtime-closures.py --runtime API [--runtime CLI ...] | --all
         [--root <clean-target-root>] [--json out.json] [--emit-dir dir]
@@ -25,7 +26,7 @@ Sources of truth (all read from disk, none hard-coded):
   estate recipes   meta-symoneural/recipes-*/*/*.bb (active) - retired/ are NOT providers
   layer recipes    ~/symoneural-bootstrap-master/{openembedded-core/meta,meta-openembedded/*}/recipes-*/python/python3-<name>_<ver>.bb
   ownership        acquisition/provider-decisions.json  (rule: own what you ship)
-  target env       Python 3.14, linux, x86_64, CPython - read from the built python3 work dir
+  target env       Python version read from built python3 work dirs; fixed linux/x86_64/CPython target
 """
 import argparse, glob, json, os, re, sys
 from packaging.requirements import Requirement, InvalidRequirement
@@ -42,7 +43,7 @@ RUNTIMES = sorted(d.replace("Symoneural-", "") for d in os.listdir(ROOT)
                   if d.startswith("Symoneural-") and os.path.isdir(os.path.join(ROOT, d)))
 
 STATUS_FATAL = ("MISSING RDEPENDS", "MISSING PACKAGE", "WRONG VERSION", "UNKNOWN PROVIDER",
-                "DUPLICATE PROVIDER", "UNRESOLVED SOURCE OWNERSHIP")
+                "DUPLICATE PROVIDER", "UNRESOLVED SOURCE OWNERSHIP", "AMBIGUOUS PACKAGE VERSION", "UNVERIFIED VERSION")
 
 
 def norm(name):
@@ -53,16 +54,21 @@ def build_dir(rt):
     return os.path.join(ROOT, "Symoneural-" + rt, "build", "devtool-master")
 
 
-def target_environment():
+def target_environment(runtimes=None):
     """Marker environment for the TARGET, not the host. Version from the built
     python3 work directory; the rest from the estate's fixed target."""
-    pyver = "3.14.7"
-    for d in glob.glob(os.path.join(ROOT, "Symoneural-*/build/devtool-master/tmp/work/*/python3/*/")):
-        pyver = os.path.basename(d.rstrip("/")); break
+    versions = set()
+    for rt in runtimes or RUNTIMES:
+        for d in glob.glob(os.path.join(build_dir(rt), "tmp/work/*/python3/*/")):
+            versions.add(os.path.basename(d.rstrip("/")))
+    if len(versions) != 1:
+        raise ValueError("target Python version absent or ambiguous: " + repr(sorted(versions)))
+    pyver = versions.pop()
     env = default_environment()
     env.update({"python_version": ".".join(pyver.split(".")[:2]), "python_full_version": pyver,
                 "sys_platform": "linux", "platform_system": "Linux", "platform_machine": "x86_64",
                 "platform_python_implementation": "CPython", "implementation_name": "cpython",
+                "implementation_version": pyver,
                 "os_name": "posix", "platform_release": "", "platform_version": ""})
     return env
 
@@ -136,10 +142,11 @@ def layer_recipes():
     return out
 
 
-def feed_packages():
-    """package name -> [(version, ipk path)] across every runtime feed."""
+def feed_packages(rt=None):
+    """Package candidates from the selected runtime, never another runtime's feed."""
     out = {}
-    for p in glob.glob(os.path.join(ROOT, "Symoneural-*/build/devtool-master/tmp/deploy/ipk/*/*.ipk")):
+    base = build_dir(rt) if rt else os.path.join(ROOT, "Symoneural-*/build/devtool-master")
+    for p in sorted(glob.glob(os.path.join(base, "tmp/deploy/ipk/*/*.ipk"))):
         b = os.path.basename(p)[:-4]
         name, _, rest = b.partition("_")
         ver = rest.split("_")[0].split("-r")[0] if rest else ""
@@ -162,7 +169,8 @@ def root_installed(root):
 def ownership_decisions():
     """logical name -> selected_provider, from the curated record."""
     try:
-        d = json.load(open(os.path.join(ROOT, "acquisition/provider-decisions.json")))
+        with open(os.path.join(ROOT, "acquisition/provider-decisions.json")) as stream:
+            d = json.load(stream)
     except Exception:
         return {}
     out = {}
@@ -185,8 +193,17 @@ def main():
     rts = RUNTIMES if a.all else a.runtime
     if not rts:
         ap.error("--runtime <RT> or --all")
-
-    env = target_environment()
+    if a.all and a.runtime:
+        ap.error("choose --all or --runtime, not both")
+    unknown = sorted(set(rts) - set(RUNTIMES))
+    if unknown:
+        ap.error("unknown runtime(s): " + ", ".join(unknown))
+    if a.root and not os.path.isdir(a.root):
+        ap.error("--root must be an existing target root")
+    try:
+        env = target_environment(rts)
+    except ValueError as exc:
+        ap.error(str(exc))
     selected_extras = {}
     for e in a.extra:
         d, _, xs = e.partition("=")
@@ -246,6 +263,9 @@ def main():
     per_rt_closure = {}
     for rt in rts:
         wheels = built_wheels(rt)
+        feeds = feed_packages(rt)
+        if not wheels:
+            fatal.append("NO WHEEL EVIDENCE: " + rt)
         runtime_closure, build_closure = {}, {}
         for pn, md in sorted(wheels.items()):
             dist = md["Name"] or pn
@@ -331,8 +351,12 @@ def main():
                     status = "MISSING RDEPENDS"
                 elif not built:
                     status = "MISSING PACKAGE"
+                elif len({v for v, p in built}) != 1:
+                    status = "AMBIGUOUS PACKAGE VERSION"
                 elif ver_ok is False:
                     status = "WRONG VERSION"
+                elif req.specifier and ver_ok is None:
+                    status = "UNVERIFIED VERSION"
                 elif a.root and not inst_ok:
                     status = "MISSING PACKAGE" if not inst else "WRONG VERSION"
                 else:
@@ -359,6 +383,7 @@ def main():
                 inh = " ".join(re.findall(r"^inherit\s+(.*)$", txt, re.M)).split()
                 build_closure[pn] = {"DEPENDS": sorted(deps), "inherit": inh, "classification": "BUILD_REQUIRED"}
         per_rt_closure[rt] = {"runtime_closure": runtime_closure, "build_closure": build_closure,
+                              "coverage": "DIRECT WHEEL REQUIREMENTS" if wheels else "NOT EVALUATED: NO WHEELS",
                               "direct_wheels": {pn: {"distribution": md["Name"], "version": md["Version"], "metadata": md["_path"]}
                                                 for pn, md in wheels.items()}}
 
@@ -399,8 +424,10 @@ def main():
         print("closure manifests written to", a.emit_dir)
     if a.json:
         json.dump({"schema": "symoneural-python-closure-check/1", "target_environment": env, "rows": rows,
+                   "coverage": {rt: {"status": cl["coverage"], "direct_wheels": len(cl["direct_wheels"])} for rt, cl in per_rt_closure.items()},
                    "edges": edges, "fatal": sorted(set(fatal))}, open(a.json, "w"), indent=1, sort_keys=True)
-    print("RESULT:", "FAIL (%s)" % ", ".join(sorted(set(fatal))) if fatal else "PASS")
+    print("Scope: built-wheel direct requirements; not a full image or runtime consumer proof.")
+    print("RESULT:", "FAIL / NOT FULLY EVALUATED (%s)" % ", ".join(sorted(set(fatal))) if fatal else "PASS (direct requirements only)")
     return 1 if fatal else 0
 
 

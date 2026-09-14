@@ -1,0 +1,130 @@
+file descriptors: 14160 of 4194304 in use (0%)
+
+stage 0 (tools/ingest-tree verify --all) rc=0; evidence: /tmp/aud-committed.aHKZYV
+
+RUNTIME     COMPONENT                   COMMITTED                             HEAD        ACQ   REC   RECIPE                            PIN        CLASS   PKGS  STATUS                  
+----------  --------------------------  ------------------------------------  ----------  ----  ----  --------------------------------  ---------  ------  ----  ------------------------
+API         annotated-doc               VERIFIED                              ef48d6ad5   ok    y     symoneural-annotated-doc          ok         y       7     PKGDATA EXISTS; NOT QA  
+API         annotated-types             VERIFIED                              9eb966801   ok    y     symoneural-annotated-types        ok         y       7     PKGDATA EXISTS; NOT QA  
+API         anyio                       VERIFIED                              ffcd1542c   ok    y     symoneural-anyio                  ok         y       7     PKGDATA EXISTS; NOT QA  
+API         certifi                     VERIFIED                              f4bc676bc   ok    y     symoneural-certifi                ok         y       7     PKGDATA EXISTS; NOT QA  
+API         click                       VERIFIED                              8b19813f2   ok    y     symoneural-click                  ok         y       7     PKGDATA EXISTS; NOT QA  
+API         fastapi                     VERIFIED                              95f8322ee   ok    y     symoneural-fastapi                ok         y       7     PKGDATA EXISTS; NOT QA  
+API         h11                         VERIFIED                              1c5b07581   ok    y     symoneural-h11                    ok         y       7     PKGDATA EXISTS; NOT QA  
+API         httpcore                    VERIFIED                              98209758c   ok    y     symoneural-httpcore               ok         y       7     PKGDATA EXISTS; NOT QA  
+API         httpx                       VERIFIED                              26d48e063   ok    y     symoneural-httpx                  ok         y       7     PKGDATA EXISTS; NOT QA  
+API         idna                        VERIFIED                              03a9a11dd   ok    y     symoneural-idna                   ok         y       7     PKGDATA EXISTS; NOT QA  
+API         pydantic                    VERIFIED                              001dea020   ok    y     symoneural-pydantic               ok         y       7     PKGDATA EXISTS; NOT QA  
+API         sniffio                     VERIFIED                              ae020e13b   ok    y     symoneural-sniffio                ok         y       7     PKGDATA EXISTS; NOT QA  
+API         starlette                   VERIFIED                              4f250d6b8   ok    y     symoneural-starlette              ok         y       7     PKGDATA EXISTS; NOT QA  
+API         typing-extensions           VERIFIED                              f29cd28d8   ok    y     symoneural-typing-extensions      ok         y       7     PKGDATA EXISTS; NOT QA  
+API         typing-inspection           VERIFIED                              83d4dbb74   ok    y     symoneural-typing-inspection      ok         y       7     PKGDATA EXISTS; NOT QA  
+API         uvicorn                     VERIFIED                              8988c2370   ok    y     symoneural-uvicorn                ok         y       7     PKGDATA EXISTS; NOT QA  
+  API: sources committed 16/16 · packaged 16/16
+
+Adaptive-F  FreeToken                   VERIFIED                              9db1a3945   ok    y     symoneural-freetoken              ok         y       0     RECIPE, NEVER PACKAGED  
+  Adaptive-Fabric: sources committed 1/1 · packaged 0/1
+
+Build       autoconf                    VERIFIED                              44d712a26   ok    y     -                                 ?          -       0     RETIRED_TO_PROVIDER -> O
+Build       automake                    VERIFIED                              e82d2d34d   ok    y     -                                 ?          -       0     RETIRED_TO_PROVIDER -> O
+Build       bitbake                     VERIFIED                              046a90b0e   ok    y     symoneural-bitbake                ok         stub    0     REFERENCE_ONLY          
+Build       libtool                     LISTING-VERIFIED(2                    309bb53a8   ok    y     -                                 ?          -       0     RETIRED_TO_PROVIDER -> O
+Build       m4                          LISTING-VERIFIED(2                    fe2f13ab9   ok    y     -                                 ?          -       0     RETIRED_TO_PROVIDER -> O
+Build       ninja                       VERIFIED                              3441b633c   ok    y     -                                 ?          -       0     RETIRED_TO_PROVIDER -> O
+Build       openembedded-core           VERIFIED                              fe7a24bc6   ok    y     symoneural-openembedded-core      ok         stub    0     REFERENCE_ONLY          
+  Build: sources committed 7/7 · packaged 0/0
+
+CLI         anthropic-sdk-python        VERIFIED                              eb21a4352   ok    y     symoneural-anthropic-sdk-python   ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         anthropic-sdk-typescript    VERIFIED                              135f71e92   ok    y     -                                 ?          -       0     REFERENCE_ONLY          
+CLI         attrs                       VERIFIED                              7bfc49e9b   ok    y     symoneural-attrs                  ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         cffi                        VERIFIED                              fd33e7700   ok    y     symoneural-cffi                   ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         cryptography                VERIFIED                              ffde75a2b   ok    y     symoneural-cryptography           ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         docstring-parser            VERIFIED                              87dca55a7   ok    y     symoneural-docstring-parser       ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         httpx2                      VERIFIED                              71ae23be5   ok    y     symoneural-httpx2                 ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         jiter                       VERIFIED                              2b5ec63e5   ok    y     symoneural-jiter                  ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         jsonschema                  VERIFIED                              a7277432b   ok    y     symoneural-jsonschema             ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         jsonschema-specifications   VERIFIED                              3b846010c   ok    y     symoneural-jsonschema-specificat  ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         opentelemetry-python        VERIFIED                              53a5a40c9   ok    y     symoneural-opentelemetry-api      ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         pycparser                   VERIFIED                              77de509f0   ok    y     symoneural-pycparser              ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         pyjwt                       VERIFIED                              c6fe464b3   ok    y     symoneural-pyjwt                  ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         python-multipart            VERIFIED                              238ead62a   ok    y     symoneural-python-multipart       ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         python-sdk                  VERIFIED                              9972c21aa   ok    y     symoneural-mcp-python-sdk         ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         referencing                 LISTING-VERIFIED(1                    944ed5a20   ok    y     symoneural-referencing            ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         rpds-py                     VERIFIED                              7277eb681   ok    y     symoneural-rpds-py                ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         sse-starlette               VERIFIED                              6754ef387   ok    y     symoneural-sse-starlette          ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         truststore                  VERIFIED                              0714f72a7   ok    y     symoneural-truststore             ok         y       7     PKGDATA EXISTS; NOT QA  
+CLI         typescript-sdk              VERIFIED                              cc4b41617   ok    y     -                                 ?          -       0     REFERENCE_ONLY          
+  CLI: sources committed 20/20 · packaged 18/18
+
+Common      accelerate                  VERIFIED                              6afc1e5ee   ok    y     symoneural-accelerate             ok         y       7     DEFERRED                
+Common      filelock                    VERIFIED                              4efd93e04   ok    y     symoneural-filelock               ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      fsspec                      VERIFIED                              9e22b60ea   ok    y     symoneural-fsspec                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      hf-xet                      VERIFIED                              de71453d9   ok    y     symoneural-hf-xet                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      huggingface-hub             VERIFIED                              495b17c85   ok    y     symoneural-huggingface-hub        ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      jinja2                      VERIFIED                              15206881c   ok    y     symoneural-jinja2                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      markdown-it-py              VERIFIED                              36c5f5471   ok    y     symoneural-markdown-it-py         ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      markupsafe                  VERIFIED                              297fc8e35   ok    y     symoneural-markupsafe             ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      mdurl                       VERIFIED                              596bf1c87   ok    y     symoneural-mdurl                  ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      networkx                    VERIFIED                              7530809bf   ok    y     symoneural-networkx               ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      packaging                   VERIFIED                              929fd4b14   ok    y     symoneural-packaging              ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      psutil                      VERIFIED                              9eea97dd6   ok    y     symoneural-psutil                 ok         y       8     PKGDATA EXISTS; NOT QA  
+Common      pygments                    VERIFIED                              a43b45dcf   ok    y     symoneural-pygments               ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      pytorch                     LISTING-VERIFIED(65                   2b3ec3482   ok    y     symoneural-pytorch                ok         y       0     RECIPE, NEVER PACKAGED  
+Common      pyyaml                      VERIFIED                              49790e736   ok    y     symoneural-pyyaml                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      regex                       VERIFIED                              7dd71c15c   ok    y     symoneural-regex                  ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      rich                        VERIFIED                              6ac483cbe   ok    y     symoneural-rich                   ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      safetensors                 VERIFIED                              a406ca3e7   ok    y     symoneural-safetensors            ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      setuptools                  VERIFIED                              72e919a8b   ok    y     symoneural-setuptools             ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      shellingham                 VERIFIED                              cba059e7f   ok    y     symoneural-shellingham            ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      tokenizers                  VERIFIED                              88a4498ad   ok    y     symoneural-tokenizers             ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      tqdm                        VERIFIED                              9cf5a12b1   ok    y     symoneural-tqdm                   ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      transformers                VERIFIED                              856157a2f   ok    y     symoneural-transformers           ok         y       7     PKGDATA EXISTS; NOT QA  
+Common      typer                       VERIFIED                              99eb220df   ok    y     symoneural-typer                  ok         y       7     PKGDATA EXISTS; NOT QA  
+  Common: sources committed 24/24 · packaged 23/23
+
+Crypto      stratum                     VERIFIED                              c1a799139   ok    y     symoneural-stratum                ok         y       0     RECIPE, NEVER PACKAGED  
+Crypto      sv2-apps                    VERIFIED                              d7d556d1a   ok    y     symoneural-sv2-apps               ok         stub    0     STUB — no build class   
+Crypto      sv2-spec                    VERIFIED                              67d2178e1   ok    y     symoneural-sv2-spec               ok         stub    0     REFERENCE_ONLY          
+  Crypto: sources committed 3/3 · packaged 0/2
+
+LLM         ggml                        VERIFIED                              e91ded11b   ok    y     symoneural-ggml                   ok         y       8     PKGDATA EXISTS; NOT QA  
+LLM         llama.cpp                   VERIFIED                              5266f24da   ok    y     symoneural-llama-cpp              ok         y       7     PKGDATA EXISTS; NOT QA  
+LLM         triton                      VERIFIED                              c01b6774b   ok    y     symoneural-triton                 ok         y       0     REFERENCE_ONLY          
+LLM         vllm                        VERIFIED                              98dff2a81   ok    y     symoneural-vllm                   ok         y       0     REFERENCE_ONLY          
+  LLM: sources committed 4/4 · packaged 2/2
+
+Live        gstreamer                   LISTING-VERIFIED(1                    070125524   ok    y     symoneural-gstreamer              ok         stub    0     STUB — no build class   
+  Live: sources committed 1/1 · packaged 0/1
+
+Ravencalc   cloudpickle                 VERIFIED                              7576fff24   ok    y     symoneural-cloudpickle            ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   cython                      VERIFIED                              ec152091c   ok    y     symoneural-cython                 ok         y       0     RECIPE, NEVER PACKAGED  
+Ravencalc   joblib                      VERIFIED                              cd9a6b05f   ok    y     symoneural-joblib                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   mpmath                      VERIFIED                              b5c04506e   ok    y     symoneural-mpmath                 ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   narwhals                    VERIFIED                              e34715d1e   ok    y     symoneural-narwhals               ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   numpy                       LISTING-VERIFIED(7                    dd88c0c19   ok    y     symoneural-numpy                  ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   openblas                    VERIFIED                              e0166008b   ok    y     symoneural-openblas               ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   pybind11                    VERIFIED                              d03662f09   ok    y     symoneural-pybind11               ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   scikit-learn                VERIFIED                              866c0f51e   ok    y     symoneural-scikit-learn           ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   scipy                       LISTING-VERIFIED(8                    e4e854eaa   ok    y     symoneural-scipy                  ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   sympy                       VERIFIED                              16fa85535   ok    y     symoneural-sympy                  ok         y       7     PKGDATA EXISTS; NOT QA  
+Ravencalc   threadpoolctl               VERIFIED                              d5bf10bcf   ok    y     symoneural-threadpoolctl          ok         y       7     PKGDATA EXISTS; NOT QA  
+  Ravencalc: sources committed 12/12 · packaged 11/12
+
+Remix       librespot                   VERIFIED                              d36f9f190   ok    y     symoneural-librespot              ok         y       7     PKGDATA EXISTS; NOT QA  
+  Remix: sources committed 1/1 · packaged 1/1
+
+Streamer    hls.js                      VERIFIED                              e5ff35839   ok    y     symoneural-hlsjs                  ok         y       7     PKGDATA EXISTS; NOT QA  
+  Streamer: sources committed 1/1 · packaged 1/1
+
+Web         workerd                     VERIFIED                              925464ba9   ok    y     symoneural-workerd                ok         stub    0     REFERENCE_ONLY          
+Web         workers-sdk                 VERIFIED                              00ae21fa8   ok    y     -                                 ?          -       0     REFERENCE_ONLY          
+  Web: sources committed 2/2 · packaged 0/0
+
+==============================================================================
+sources committed  : 92 of 92   (verified 85 · listing-verified 7 · pending 0)
+components packaged: 72 of 77   (15 exempt by recorded ruling: accelerate, anthropic-sdk-typescript, autoconf, automake, bitbake, libtool, m4, ninja, openembedded-core, sv2-spec, triton, typescript-sdk, vllm, workerd, workers-sdk)
+==============================================================================
+Package counts are historical pkgdata evidence, not current package QA or consumer passes.
+Integrity result: FAIL; remaining unbuilt work is shown above.
+FAIL: sv2-apps: target has no buildable recipe
+FAIL: gstreamer: target has no buildable recipe

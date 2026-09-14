@@ -1,0 +1,30 @@
+image   : /home/google/SymonSaysLLC/Symoneural-Ravencalc/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.tar.gz
+sha256  : 45c20059fd9be2f442e260f13d2ad1dfc3a4fa5cceadadfecb550ce7ab31f394
+manifest: /home/google/SymonSaysLLC/Symoneural-Ravencalc/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.manifest (112 packages)
+root    : /tmp/symoneural-ravencalc-proof-n_0o6knm  (11640 files)
+mode    : self-contained (no host directory on the loader path)
+--- interpreter
+python 3.14.7 prefix /tmp/symoneural-ravencalc-proof-n_0o6knm/usr
+--- /home/google/SymonSaysLLC/tools/proofs/ravencalc.py
+  numpy            2.5.3        PASS
+  scipy            1.18.1       PASS
+  sklearn          1.9.1        PASS
+  sympy            1.14.0       PASS
+  mpmath           1.3.0        PASS
+  joblib           1.6.0        PASS
+  cloudpickle      3.1.2        PASS
+  threadpoolctl    3.6.0        PASS
+  narwhals         2.26.0       PASS
+  fastapi          0.141.1      PASS
+  pydantic         2.13.5       PASS
+  uvicorn          0.52.4       PASS
+  symoneural_api   1.0.0        PASS
+  meaningful ops PASS: scipy.linalg.solve residual ok; LinearRegression under joblib.parallel_backend('threading') -> coef 2.5 intercept 1.0; sklearn Parallel/delayed -> [3, 1, 4]; ThreadpoolController capped 1 native pool(s) to 1 and restored; cloudpickle round-tripped a lambda pickle refused; sympy integrate(t**2, 0..3) = 9; mpmath pi @30dps; narwhals 2.26.0
+  process parallelism PASS: joblib loky backend -> [4, 25, 81] computed in 2 worker process(es) [47, 48], none of them this one (pid 39); workers are the target interpreter re-entered through /tmp/symoneural-ravencalc-proof-n_0o6knm/tmp/target-python
+  sympy declares ['mpmath<1.4,>=1.1.0']; installed mpmath 1.3.0 -> SATISFIED
+RAVENCALC CLEAN ROOT PROOF: PASS
+rc=0
+--- host leakage (libraries with loader initialization records, across traced processes)
+  173 distinct target-library initialization paths across 6 traced processes; 4 shell-launcher transitions
+  none: no external library initialization in captured loader traces
+rc=0

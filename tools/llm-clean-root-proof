@@ -13,11 +13,23 @@
 # throwaway root's registry - test data, never weights, never committed.
 set -uo pipefail
 ROOT=/home/google/SymonSaysLLC
+if [ "${1:-}" = --help ] || [ "${1:-}" = -h ]; then
+  echo 'Usage: tools/llm-clean-root-proof [NEW absolute destination]'; exit 0
+fi
+[ "$#" -le 1 ] || { echo 'FAIL: use --help for usage' >&2; exit 2; }
+S2=${SYM_CUDA_S2:-0}; HOSTDRV=/usr/lib/x86_64-linux-gnu; DRV=''
+case "$S2" in
+  0) ;;
+  1) DRV=$(cat /sys/module/nvidia/version 2>/dev/null)
+     [[ "$DRV" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo 'FAIL: S2 needs a verified loaded NVIDIA driver version' >&2; exit 1; } ;;
+  *) echo 'FAIL: SYM_CUDA_S2 must be 0 or 1' >&2; exit 2 ;;
+esac
 IMG=$(ls -t $ROOT/Symoneural-LLM/build/devtool-master/tmp/deploy/images/*/symoneural-image-llm-*.rootfs-*.tar.gz 2>/dev/null | head -1)
 [ -n "$IMG" ] || { echo "FAIL: no symoneural-image-llm rootfs tarball; run: tools/symonbake Symoneural-LLM symoneural-image-llm"; exit 1; }
-R=${1:-${TMPDIR:-/tmp/claude-1000}/llm-clean-root}
-rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
 MANI="${IMG%.tar.gz}.manifest"
+[ -f "$MANI" ] || { echo "FAIL: missing image manifest: $MANI" >&2; exit 1; }
+R=$(python3 -B "$ROOT/tools/proof_support.py" new-root LLM "$@") || exit 1
+tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions || { echo "FAIL: extraction failed; preserved $R" >&2; exit 1; }
 echo "image   : $IMG"; echo "sha256  : $(sha256sum "$IMG" | cut -d' ' -f1)"
 echo "manifest: $MANI ($( [ -f "$MANI" ] && wc -l < "$MANI" || echo '?') packages)"
 echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
@@ -30,7 +42,6 @@ PYV=$(basename "$PY" | sed 's/python//')
 # owned by a package at the installed driver version (the S2 boundary), and the
 # native capabilities must name a GPU backend. Without S2 the same image must still
 # work on the CPU and report "cpu".
-S2=${SYM_CUDA_S2:-0}; HOSTDRV=/usr/lib/x86_64-linux-gnu; DRV=$(cat /sys/module/nvidia/version 2>/dev/null)
 LIBPATH="$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload"
 [ "$S2" = "1" ] && LIBPATH="$LIBPATH:$HOSTDRV"
 LIB="$R/usr/lib/libsymoneural-llm.so.1"; UTIL="$R/usr/bin/symoneural-llm-util"; CLI="$R/usr/bin/symoneural-llm"
@@ -77,13 +88,17 @@ echo "  version=$v abi=$a capabilities=[$c] (rc=$rc)"
 # every file the loader mapped from outside the root, in either mode (the dlopen'ed
 # backend modules included: LD_DEBUG sees them too)
 env -i LD_DEBUG=libs "$LD" --inhibit-cache --library-path "$LIBPATH" "$UTIL" capabilities >/dev/null 2>"$R/tmp/ld-debug.txt"
+trace_rc=$?
+[ "$trace_rc" -eq 0 ] && grep -q 'calling init:' "$R/tmp/ld-debug.txt" || { echo 'FAIL: missing/failed loader trace'; fail=1; }
 grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | sort -u | grep -v "^$R/" > "$R/tmp/host-mapped.txt" || true
 grep -oE 'calling init: [^ ]+' "$R/tmp/ld-debug.txt" | awk '{print $3}' | grep -F "$R/usr/lib/ggml/" | sed "s|^$R||" | sort -u | sed 's/^/  module loaded: /'
 if [ "$S2" = "1" ]; then
   [[ "$c" == *" gpu:"* ]] && echo "  backend (S2, driver $DRV): ${c##* }" || { echo "  FAIL: S2 mode but no GPU backend enumerable: $c"; fail=1; }
   # every host-mapped library must belong to a package at the installed driver release
   while read -r l; do owner=$(dpkg -S "$l" 2>/dev/null | cut -d: -f1 | head -1); over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)
-    case "$over" in "$DRV"*) echo "  HOST  $l  ($owner $over, S2)" ;; *) echo "  FAIL  host leak: $l (${owner:-none})"; fail=1 ;; esac; done < "$R/tmp/host-mapped.txt"
+    if python3 -B "$ROOT/tools/proof_support.py" driver-package "$DRV" "$owner" "$over" "$l"; then
+      echo "  HOST  $l  ($owner $over, S2)"
+    else echo "  FAIL  host leak: $l (${owner:-none})"; fail=1; fi; done < "$R/tmp/host-mapped.txt"
 else
   # the cuda module must have FAILED to dlopen (no libcuda.so.1 reachable) and the CPU module must have loaded
   [[ "$c" == *" cpu" ]] && echo "  backend: cpu (the cuda module cannot dlopen without the driver; the CPU module did)" || { echo "  FAIL: expected exactly cpu without S2: $c"; fail=1; }

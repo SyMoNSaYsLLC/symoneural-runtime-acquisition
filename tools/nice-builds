@@ -1,17 +1,4 @@
-#!/bin/bash
-# nice-builds - drop every running bitbake to nice 10 / idle I/O.
-#
-# Run it any time a build is going and the desktop feels slow. Idempotent, safe
-# to run repeatedly, exits immediately.
-#
-# Why a separate one-shot rather than a wrapper: `bitbake` is a shell wrapper
-# that re-execs python and spawns bitbake-server DETACHED, so nice-ing the
-# launcher does not reach the server, and a backgrounded poller inside the
-# wrapper dies with its parent. Renicing after the fact always works - verified:
-# "273499 (process ID) old priority 0, new priority 10".
-n=0
-for p in $(pgrep -f 'bitbake-server|bin/bitbake |cc1plus|cc1|rustc|node' 2>/dev/null); do
-    ps -o comm= -p "$p" >/dev/null 2>&1 || continue
-    renice -n 10 -p "$p" >/dev/null 2>&1 && ionice -c3 -p "$p" >/dev/null 2>&1 && n=$((n+1))
-done
-echo "nice-builds: reniced $n process(es) to nice 10 / idle I/O"
+#!/usr/bin/env bash
+# Only estate BitBake processes and their descendants; --dry-run is read-only.
+set -uo pipefail
+exec python3 -B "$(dirname -- "${BASH_SOURCE[0]}")/estate_processes.py" nice "$@"

@@ -1,0 +1,38 @@
+MANIFEST generated/evidence/api/API-SHA256SUMS
+COUNTS {'match': 99}
+MANIFEST generated/evidence/common/COMMON-SHA256SUMS
+MISSING 9 Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+COUNTS {'match': 9, 'missing': 1}
+MANIFEST generated/evidence/llm/LLM-SHA256SUMS
+MISSING 1 Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.tar.gz
+MISSING 2 Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.manifest
+MISSING 3 Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.0.0-r0_x86-64-v3.ipk
+MISSING 4 Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.0.0-r0_x86-64-v3.ipk
+MISMATCH 5 Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk expected=4e1b998481be1ac9a5c5632f8f9f3fde11b12d3aa75849b56ca925b5c9c8a1cf actual=6e2e2600e4b519987e91ab58f12cd227e4d31465b58d2c746e81eb332347651c
+MISMATCH 7 Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml_0.23.0-r0_x86-64-v3.ipk expected=c31786a0ea2d1377624fb196aafc388d85482b0d09b6d934ebf02f6ff9404de9 actual=dbaa136dc087955e8ce7c99648113d5fdf7a0ab7993fd333bbae92afc1ccc4fe
+COUNTS {'missing': 4, 'mismatch': 2, 'match': 1}
+TOTAL_HASH_COUNTS {'match': 109, 'missing': 5, 'mismatch': 2}
+JSON generated/evidence/api/API-BUILD-CLOSURE.json topkeys=note,recipes,runtime,schema
+JSON_PATH_COUNTS {}
+JSON generated/evidence/api/API-RUNTIME-CLOSURE.json topkeys=direct,edges,requirements,runtime,schema,target_environment
+JSON_PATH_COUNTS {'exists': 18}
+JSON generated/evidence/api/API-SOURCE-CLOSURE.json topkeys=applications,counts,external_secrets_config,first_party,head,packaged,recipes_services_packagegroups,schema,tier_a_direct,tier_b_runtime,tier_b_shared_providers,tier_c_build_only,units,wheel_edges
+JSON_PATH_COUNTS {'exists': 50}
+JSON generated/evidence/common/COMMON-CLOSURE-FULL.json topkeys=edges,fatal,rows,schema,target_environment
+JSON_PATH_MISSING rows.4.built_ipk Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+JSON_PATH_COUNTS {'exists': 65, 'missing': 1}
+JSON generated/evidence/common/Common-BUILD-CLOSURE.json topkeys=note,recipes,runtime,schema
+JSON_PATH_COUNTS {}
+JSON generated/evidence/common/Common-RUNTIME-CLOSURE.json topkeys=direct,edges,requirements,runtime,schema,target_environment
+JSON_PATH_COUNTS {'exists': 45}
+JSON generated/evidence/llm/LLM-BUILD-CLOSURE.json topkeys=note,recipes,runtime,schema
+JSON_PATH_COUNTS {}
+JSON generated/evidence/llm/LLM-CLOSURE-FULL.json topkeys=edges,fatal,rows,schema,target_environment
+JSON_PATH_COUNTS {}
+JSON generated/evidence/llm/LLM-RUNTIME-CLOSURE.json topkeys=direct,edges,requirements,runtime,schema,target_environment
+JSON_PATH_COUNTS {'exists': 1}
+JSON generated/evidence/llm/NATIVE-LINKAGE.json topkeys=artifacts,failures,not_started
+JSON_PATH_COUNTS {'exists': 14}
+JSON generated/evidence/llm/UPSTREAM-MAP.json topkeys=ggml,library_only_build_plan,llama_cpp,network_fetches,schema,vendored_closure
+JSON_PATH_COUNTS {'exists': 1}
+DISTINCT_JSON_PATHS 170 Counter({'exists': 169, 'missing': 1})

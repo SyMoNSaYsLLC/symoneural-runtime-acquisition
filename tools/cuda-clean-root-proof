@@ -12,12 +12,18 @@
 #   tools/cuda-clean-root-proof [root-dir]
 set -uo pipefail
 ROOT=/home/google/SymonSaysLLC
+if [ "${1:-}" = --help ] || [ "${1:-}" = -h ]; then
+  echo 'Usage: tools/cuda-clean-root-proof [NEW absolute destination]'; exit 0
+fi
+[ "$#" -le 1 ] || { echo 'FAIL: use --help for usage' >&2; exit 2; }
+DRV=$(cat /sys/module/nvidia/version 2>/dev/null)
+[[ "$DRV" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo 'FAIL: S2 needs a verified loaded NVIDIA driver version' >&2; exit 1; }
 FEED=$(ls -d $ROOT/Symoneural-*/build/devtool-master/tmp/deploy/ipk 2>/dev/null | head -50)
 newest() { ls -t $ROOT/Symoneural-*/build/devtool-master/tmp/deploy/ipk/*/$1 2>/dev/null | head -1; }
 TK=$(newest 'cuda-toolkit-bin_13.4.1-r0_*.ipk'); PROBE=$(newest 'symoneural-cuda-probe_1.0-r0_*.ipk')
 LIBC=$(newest 'libc6_*.ipk'); LIBSTDCXX=$(newest 'libstdc++6_*.ipk'); LIBGCC=$(newest 'libgcc1_*.ipk'); LIBM=$LIBC
 for v in TK PROBE LIBC LIBSTDCXX LIBGCC; do [ -n "${!v}" ] || { echo "FAIL: no ipk for $v in any feed"; exit 1; }; done
-R=${1:-${TMPDIR:-/tmp/claude-1000}/cuda-clean-root}; rm -rf "$R"; mkdir -p "$R"
+R=$(python3 -B "$ROOT/tools/proof_support.py" new-root CUDA "$@") || exit 1
 for ipk in "$TK" "$PROBE" "$LIBC" "$LIBSTDCXX" "$LIBGCC"; do ar p "$ipk" data.tar.zst | tar --zstd -x -C "$R" 2>/dev/null || { echo "FAIL: extract $ipk"; exit 1; }; done
 echo "toolkit : $TK"; echo "probe   : $PROBE"; echo "root    : $R ($(find "$R" -type f | wc -l) files)"
 LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/usr/lib/ld-linux-x86-64.so.2 2>/dev/null | head -1)
@@ -36,7 +42,7 @@ echo "  host-driver libraries the loader may use (S2): libcuda.so.1 libnvidia-ml
 # the ONLY host path admitted is the directory holding the driver's libcuda; the trace
 # below shows every mapping the loader made, so a leak cannot hide
 HOSTDRV=/usr/lib/x86_64-linux-gnu
-DRV=$(cat /sys/module/nvidia/version 2>/dev/null); echo "  installed driver release (S2 boundary): ${DRV:-UNKNOWN}"
+echo "  installed driver release (S2 boundary): $DRV"
 echo "--- run through the target loader (env -i)"
 OUT=$(env -i LD_DEBUG=libs "$LD" --inhibit-cache --library-path "$R/lib:$R/usr/lib:$HOSTDRV" "$BIN" 2>"$R/ld-debug.txt"); rc=$?
 echo "  rc=$rc"; echo "  $OUT"
@@ -45,6 +51,7 @@ echo "--- what the loader actually mapped"
 # DRIVER packages own it (dpkg -S); libcuda.so.1 dlopens its own JIT/NVVM helpers,
 # and those are driver files too. Anything else from the host is a leak and FAILS.
 grep -oE 'calling init: [^ ]+' "$R/ld-debug.txt" | awk '{print $3}' | sort -u > "$R/mapped.txt"
+[ -s "$R/mapped.txt" ] || { echo 'FAIL: no loader trace evidence'; fail=1; }
 while read -r l; do
   case "$l" in
     "$R"/*) echo "  root  ${l#$R}" ;;
@@ -52,10 +59,9 @@ while read -r l; do
        over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)   # one line per arch; the first is enough
        # the installed driver release is the S2 boundary: a host file is admitted iff a
        # package at that exact driver version owns it (libcuda1, libnvidia-*, ...)
-       case "$over" in
-         "$DRV"*) echo "  HOST  $l  (driver package $owner $over, S2)" ;;
-         *) echo "  FAIL  host leak: $l (owner: ${owner:-none} ${over:-})"; fail=1 ;;
-       esac ;;
+       if python3 -B "$ROOT/tools/proof_support.py" driver-package "$DRV" "$owner" "$over" "$l"; then
+         echo "  HOST  $l  (driver package $owner $over, S2)"
+       else echo "  FAIL  host leak: $l (owner: ${owner:-none} ${over:-})"; fail=1; fi ;;
   esac
 done < "$R/mapped.txt"
 echo "--- verdict"

@@ -1,0 +1,70 @@
+No same-user BitBake process observed on the host (point-in-time check; not a lock).
+This is the default build configuration for the openembedded-core layer.
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    core-image-full-cmdline
+    core-image-sato
+    core-image-weston
+    meta-toolchain
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86-64'.
+
+Other commonly useful commands are:
+ - 'devtool' and 'recipetool' handle common recipe tasks
+ - 'bitbake-layers' handles common layer tasks
+ - 'oe-pkgdata-util' handles common target package tasks
+WARNING: You are using a local hash equivalence server but have configured an sstate mirror. This will likely mean no sstate will match from the mirror. You may wish to disable the hash equivalence use (BB_HASHSERVE), or use a hash equivalence server alongside the sstate mirror.
+WARNING: Sstate directory is shared between several builds (it is set via SSTATE_DIR to /home/google/SymonSaysLLC/Symoneural-Common/sstate-cache-master),
+        but hash equivalency database is inside this particular build directory /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master.
+
+        This will prevent sstate reuse, and it is recommended to set the location for the database to a common path
+        via BB_HASHSERVE_DB_DIR, for example:
+
+        BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"
+Loading cache...done.
+Loaded 5110 entries from dependency cache.
+Parsing recipes...WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb: symoneural-api-python: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+LICENSE = "LicenseRef-symoneural-api-python-CLOSED"
+WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb: symoneural-api: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+LICENSE = "LicenseRef-symoneural-api-CLOSED"
+done.
+Parsing of 2860 .bb files complete (2855 cached, 5 parsed). 5109 targets, 110 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION           = "2.19.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "x86_64-oe-linux"
+MACHINE              = "qemux86-64"
+SDKMACHINE           = "x86_64"
+DISTRO               = "nodistro"
+DISTRO_VERSION       = "nodistro.0"
+TUNE_FEATURES        = "m64 x86-64-v3"
+meta                 = "HEAD:fe7a24bc67118e7e184b5f5247258715e3904e7c"
+meta-oe              
+meta-python          = "HEAD:43b79d8e372c4f69ebab6c85b39d97b41522080f"
+meta-symoneural      = "main:eb5fbad94ce3abf7cd173c76df632855af77bd5e"
+
+Initialising tasks...Sstate summary: Wanted 19 Local 0 Mirrors 12 Missed 7 Current 859 (63% match, 99% complete)
+done.
+NOTE: Executing Tasks
+NOTE: Running task 1812 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_install)
+NOTE: Running task 2103 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_package)
+NOTE: Running task 2104 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_symon_assert_nonempty_d)
+NOTE: Running task 2225 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_packagedata)
+NOTE: Running task 2226 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_populate_sysroot)
+NOTE: Running task 2227 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_package_write_ipk)
+NOTE: Running task 2228 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_create_spdx)
+NOTE: Running task 2229 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_package_qa)
+NOTE: Running task 2230 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_create_package_spdx)
+NOTE: Running noexec task 2231 of 2231 (/home/google/SymonSaysLLC/meta-symoneural/recipes-common/symoneural-pytorch/symoneural-pytorch_git.bb:do_build)
+NOTE: Tasks Summary: Attempted 2231 tasks of which 2221 didn't need to be rerun and all succeeded.
+
+Summary: There were 4 WARNING messages.
