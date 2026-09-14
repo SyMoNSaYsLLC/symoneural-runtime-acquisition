@@ -819,7 +819,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/librespot-org/librespot",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "26e57669570805dcf26c56770d8dd1647be72585",
+      "pins_path": "Symoneural-Remix/src/librespot/.gitpins/librespot.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Streamer/build/devtool-workspace/appends/symoneural-hlsjs_git.bbappend",
