@@ -2288,7 +2288,7 @@
    "declared_version_PV": "84.0.0",
    "excluded": [],
    "lock_state": "VERIFIED",
-   "pins_path": "IN-TREE",
+   "pins_path": "Symoneural-Common/src/util/.gitpins/setuptools.git",
    "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
    "recipe_LICENSE": "MIT",
    "recipe_SRCREV": "72e919a8b10aaafc041205d4e3ae0e6a2e1e5f87",
