@@ -1,9 +1,45 @@
 {
  "components": [
   {
+   "component": "annotated-doc",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/annotated-doc",
+   "state": "TARGET"
+  },
+  {
+   "component": "annotated-types",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/annotated-types",
+   "state": "TARGET"
+  },
+  {
+   "component": "anyio",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/anyio",
+   "state": "TARGET"
+  },
+  {
+   "component": "certifi",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/certifi",
+   "state": "TARGET"
+  },
+  {
+   "component": "click",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/click",
+   "state": "TARGET"
+  },
+  {
    "component": "fastapi",
    "runtime": "API",
    "source_path": "Symoneural-API/src/web/source/fastapi",
+   "state": "TARGET"
+  },
+  {
+   "component": "h11",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/h11",
    "state": "TARGET"
   },
   {
@@ -19,15 +55,39 @@
    "state": "TARGET"
   },
   {
+   "component": "idna",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/idna",
+   "state": "TARGET"
+  },
+  {
    "component": "pydantic",
    "runtime": "API",
    "source_path": "Symoneural-API/src/model/source/pydantic",
    "state": "TARGET"
   },
   {
+   "component": "sniffio",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/sniffio",
+   "state": "TARGET"
+  },
+  {
    "component": "starlette",
    "runtime": "API",
    "source_path": "Symoneural-API/src/web/source/starlette",
+   "state": "TARGET"
+  },
+  {
+   "component": "typing-extensions",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/typing-extensions",
+   "state": "TARGET"
+  },
+  {
+   "component": "typing-inspection",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/typing-inspection",
    "state": "TARGET"
   },
   {
@@ -189,6 +249,12 @@
    "state": "REFERENCE_ONLY"
   },
   {
+   "component": "ggml",
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/ggml",
+   "state": "TARGET"
+  },
+  {
    "component": "llama.cpp",
    "runtime": "LLM",
    "source_path": "Symoneural-LLM/src/inference/source/llama.cpp",
@@ -223,9 +289,21 @@
    "state": "TARGET"
   },
   {
+   "component": "joblib",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/util/source/joblib",
+   "state": "TARGET"
+  },
+  {
    "component": "mpmath",
    "runtime": "Ravencalc",
    "source_path": "Symoneural-Ravencalc/src/symbolic/source/mpmath",
+   "state": "TARGET"
+  },
+  {
+   "component": "narwhals",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/dataframe/source/narwhals",
    "state": "TARGET"
   },
   {
@@ -262,6 +340,12 @@
    "component": "sympy",
    "runtime": "Ravencalc",
    "source_path": "Symoneural-Ravencalc/src/symbolic/source/sympy",
+   "state": "TARGET"
+  },
+  {
+   "component": "threadpoolctl",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/util/source/threadpoolctl",
    "state": "TARGET"
   },
   {

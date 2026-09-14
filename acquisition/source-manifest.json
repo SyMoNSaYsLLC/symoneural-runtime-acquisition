@@ -502,6 +502,18 @@
     {
       "acquisition_state": "ACQUIRED",
       "category": "inference",
+      "component": "ggml",
+      "intended_revision": "e91ded11bdcd78c42f9c8d3978ff6686eb4c1226",
+      "intended_tag_version": "v0.23.0 (= llama.cpp scripts/sync-ggml.last e91ded11)",
+      "notes": "Licence MIT (LICENSE in tree).",
+      "required_by": "LLM: canonical ggml for libggml; llama.cpp 5266f24da75d syncs exactly this commit (scripts/sync-ggml.last) and its vendored ggml/ is byte-identical (diff -rq include src cmake: 0 differences, 2026-09-13). llama.cpp will link it with LLAMA_USE_SYSTEM_GGML=ON.",
+      "revision_authority": "tools/map-llama-upstreams.py: sync-ggml.last of the pinned llama.cpp; never 'latest ggml'",
+      "runtime": "LLM",
+      "upstream_url": "https://github.com/ggml-org/ggml"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "inference",
       "component": "llama.cpp",
       "intended_revision": "5266f24da75dc449bd56cbed7addb9c8e4a6a73e",
       "intended_tag_version": "b10809 (also v0.4.0)",
@@ -565,6 +577,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "joblib",
+      "intended_revision": "cd9a6b05fc4f2b1c8202eb62c4e863484f8cc099",
+      "intended_tag_version": "1.6.0",
+      "notes": "Licence BSD-3-Clause (LICENSE.txt in tree).",
+      "required_by": "Ravencalc: scikit-learn 1.9.1 wheel Requires-Dist joblib>=1.4.0",
+      "revision_authority": "tools/check-python-runtime-closures.py 2026-09-13 - newest stable satisfying the constraint; own what you ship",
+      "runtime": "Ravencalc",
+      "upstream_url": "https://github.com/joblib/joblib"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "symbolic",
       "component": "mpmath",
       "intended_revision": "c1131e2d64abcbb57728ca8a499c920c0c69e67f",
@@ -574,6 +598,18 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Ravencalc",
       "upstream_url": "https://github.com/mpmath/mpmath"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "dataframe",
+      "component": "narwhals",
+      "intended_revision": "e34715d1e9e2bd6f5306662e8ad495eaf0c1325a",
+      "intended_tag_version": "v2.26.0",
+      "notes": "Licence MIT (LICENSE.md in tree).",
+      "required_by": "Ravencalc: scikit-learn 1.9.1 wheel Requires-Dist narwhals>=2.0.1",
+      "revision_authority": "same",
+      "runtime": "Ravencalc",
+      "upstream_url": "https://github.com/narwhals-dev/narwhals"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -646,6 +682,18 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Ravencalc",
       "upstream_url": "https://github.com/sympy/sympy"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "threadpoolctl",
+      "intended_revision": "d5bf10bcf90d9a8a315fe9496fb1bc97007d2fea",
+      "intended_tag_version": "3.6.0",
+      "notes": "Licence BSD-3-Clause (LICENSE in tree).",
+      "required_by": "Ravencalc: scikit-learn 1.9.1 wheel Requires-Dist threadpoolctl>=3.5.0",
+      "revision_authority": "same",
+      "runtime": "Ravencalc",
+      "upstream_url": "https://github.com/joblib/threadpoolctl"
     },
     {
       "acquisition_state": "ACQUIRED",

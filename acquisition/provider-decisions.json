@@ -47,10 +47,11 @@
  "pending_collisions": [
   {
    "classification": "CROSS-RUNTIME-DUPLICATE",
-   "decision": "UNRESOLVED",
+   "decision": "RESOLVED-FOR-LLM",
    "evidence": "ggml will exist three times once Diffuse is acquired: llama.cpp (LLM, ggml-org upstream), whisper.cpp (Diffuse, ggml-org upstream), and stable-diffusion.cpp (Diffuse, leejet/ggml - a PERSONAL FORK). Two upstreams, three copies. Recorded before acquiring, per A3.",
    "logical": "ggml",
-   "selected_provider": "UNRESOLVED"
+   "resolution_2026_09_13": "libggml is built once from canonical ggml-org/ggml at the commit the pinned llama.cpp syncs (scripts/sync-ggml.last); the vendored llama.cpp/ggml/ was proven byte-identical to it, so llama.cpp consumes libggml via LLAMA_USE_SYSTEM_GGML=ON - one ggml copy for LLM. whisper.cpp and stable-diffusion.cpp (Diffuse, not yet acquired) carry their OWN sync commits/fork; when Diffuse is acquired each must be checked against this tree and either match it or be recorded as a second, distinct ggml identity. The cross-runtime collision is therefore narrowed, not closed.",
+   "selected_provider": "SYMONEURAL-OWNED: Symoneural-LLM/src/inference/source/ggml @ e91ded11 (v0.23.0)"
   }
  ],
  "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
@@ -150,6 +151,30 @@
    "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
    "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
    "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+  },
+  {
+   "consumers": "scikit-learn >=1.4.0",
+   "distribution": "joblib",
+   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-Ravencalc/src/*/source/joblib"
+  },
+  {
+   "consumers": "scikit-learn >=2.0.1",
+   "distribution": "narwhals",
+   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-Ravencalc/src/*/source/narwhals"
+  },
+  {
+   "consumers": "scikit-learn >=3.5.0",
+   "distribution": "threadpoolctl",
+   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-Ravencalc/src/*/source/threadpoolctl"
   }
  ],
  "python_runtime_providers_note": "Per-distribution provider decisions for Python runtime dependencies discovered from built wheel METADATA (tools/check-python-runtime-closures.py). A distribution shipped on the target is SYMONEURAL-OWNED; layer recipes (oe-core / meta-python) provide BUILD-time tooling only (maturin, hatchling, flit-core, setuptools, pdm-backend, setuptools-scm).",
