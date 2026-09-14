@@ -3,6 +3,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "641dd5661bc2769a54c6214cdbcce43b",
+   "owner_component": "AWCC",
+   "owner_runtime": "Platform",
+   "path": "LICENSE",
+   "sha256": "17655e56b323d4975106dccc901048865a63da96eda41d67ed2afb2ea61d2c05",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "25efce27fa98f89e99bb6e11f55bf8e8",
    "owner_component": "FreeToken",
    "owner_runtime": "Adaptive-Fabric",
@@ -523,6 +533,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "98d93d1ddc537f9b9ea6def64e046b5f",
+   "owner_component": "glfw",
+   "owner_runtime": "Platform",
+   "path": "LICENSE.md",
+   "sha256": "149704059b5d0bf551637e50042dd4de9c2cae921021f6636298911e3a5f9462",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "69333daa044cb77e486cc36129f7a770",
    "owner_component": "gstreamer",
    "owner_runtime": "Live",
@@ -923,6 +943,26 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "b8cd90c48092bf3bc38d9fc3dcf35180",
+   "owner_component": "imgui",
+   "owner_runtime": "Platform",
+   "path": "LICENSE.txt",
+   "sha256": "173506a2d6f7fb67990d257fb2507f188690eca39060c39469ae7bef43aae2a3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f543d41f3829a608a406b713e4e72731",
+   "owner_component": "imgui",
+   "owner_runtime": "Platform",
+   "path": "examples/libs/glfw/COPYING.txt",
+   "sha256": "da2fb2c802537710cdebe8881b55356d07b88a6dbd7e4b912ac3091f8e6b5f6a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "5dc88300786f1c214c1e9827a5229462",
    "owner_component": "jinja2",
    "owner_runtime": "Common",
@@ -978,6 +1018,66 @@
    "owner_runtime": "Ravencalc",
    "path": "LICENSE.txt",
    "sha256": "42612911c1872c5e4b43f6ae0e8ee59467cd350332241cf72ce90640264fae6a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b489645de9825cca5beeb9a7e18b6eb",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "LICENSE.MIT",
+   "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c846ebb396f8b174b10ded4771514fcc",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "LICENSES/Apache-2.0.txt",
+   "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f739ef75581cae312e8c711bcdab16",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "LICENSES/BSD-3-Clause.txt",
+   "sha256": "5a93d5831e1297ab10fe643e1a631e83be392896da14ee2951285a79012df69d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8da5784ab1c72e63ac74971f88658166",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "LICENSES/GPL-3.0-only.txt",
+   "sha256": "b6a8bf63ae2c95b0aa256ee774680d7bd18f21f457da75466f7610b3b16acc4e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7dda4e90ded66ab88b86f76169f28663",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "LICENSES/MIT.txt",
+   "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "0b50ae6ab6b292c61ea813fc02dafce5",
+   "owner_component": "json",
+   "owner_runtime": "Platform",
+   "path": "docs/mkdocs/docs/home/license.md",
+   "sha256": "d4b7ed0261c2c840e9ccc7d483b3b659bfddc8be797f3007da080f0c4a78d960",
    "status": "UNRESOLVED"
   },
   {
@@ -1263,6 +1363,26 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "1803fa9c2c3ce8cb06b4861d75310742",
+   "owner_component": "libusb-cmake",
+   "owner_runtime": "Platform",
+   "path": "LICENSE",
+   "sha256": "20c17d8b8c48a600800dfd14f95d5cb9ff47066a9641ddeab48dc54aec96e331",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fbc093901857fcd118f065f900982c24",
+   "owner_component": "libusb-cmake",
+   "owner_runtime": "Platform",
+   "path": "libusb/COPYING",
+   "sha256": "5df07007198989c622f5d41de8d703e7bef3d0e79d62e24332ee739a452af62a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "223b26b3c1143120c87e2b13111d3e99",
    "owner_component": "llama.cpp",
    "owner_runtime": "LLM",
@@ -1368,6 +1488,16 @@
    "owner_runtime": "LLM",
    "path": "vendor/hash/xxhash/LICENSE",
    "sha256": "6ffedbc0f7878612d2b23589f1ff2ab15633e1df7963a5d9fc750ec5500c7e7a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "d88e9e08385d2a17052dac348bde4bc1",
+   "owner_component": "loguru",
+   "owner_runtime": "Platform",
+   "path": "LICENSE",
+   "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e",
    "status": "UNRESOLVED"
   },
   {
@@ -5048,6 +5178,26 @@
    "owner_runtime": "API",
    "path": "LICENSE.md",
    "sha256": "dcb95677a02240243187e964f941847d19b17821cf99e5afae684fab328c19bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fb994481c55623ef338885280e676f3b",
+   "owner_component": "stb",
+   "owner_runtime": "Platform",
+   "path": "LICENSE",
+   "sha256": "bebfe904b14301657e4e5d655c811d51fd31b97c455b9cc2d8600d6bac6cff63",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "29f6140896f24a5416b1d1b5ca4a8a0f",
+   "owner_component": "stb",
+   "owner_runtime": "Platform",
+   "path": "data/herringbone/license.txt",
+   "sha256": "100868556be0b9e6df6593886e9e1f7746cac63e1ad6b3a655e36bd23ad4f4fd",
    "status": "UNRESOLVED"
   },
   {

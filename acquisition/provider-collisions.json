@@ -428,6 +428,231 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "doctest",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/doctest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/doctest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/doctest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/json",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/doctest",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "fifo-map",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/fifo_map",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/fifo_map",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/fifo_map",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/json",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/fifo_map",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "fuzzer",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/Fuzzer",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/Fuzzer",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/Fuzzer",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/json",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/Fuzzer",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "hedley",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann/thirdparty/hedley",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann/thirdparty/hedley",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/include/nlohmann/thirdparty/hedley",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/json",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/json/include/nlohmann/thirdparty/hedley",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "imapdl",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/imapdl",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/imapdl",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "VENDORED",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/imapdl",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/json",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/imapdl",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Ravencalc/scikit-learn",
     "Ravencalc/scipy"
    ],
@@ -626,6 +851,45 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "Platform/json"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "json",
+   "provider_count": 3,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Platform/json",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Platform/src/alienware/source/json",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json",
+     "state": "AVAILABLE",
+     "version": "55f93686c015"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json",
+     "state": "AVAILABLE",
+     "version": "55f93686c015"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Build/ninja",
     "ninja",
     "python3-ninja"
@@ -740,6 +1004,45 @@
      "location": "Symoneural-Common/src/ml/source/pytorch/third_party/protobuf",
      "state": "AVAILABLE",
      "version": "f0dc78d7e6e3"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "LLM/llama.cpp",
+    "Platform/stb"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "stb",
+   "provider_count": 3,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "Platform/stb",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Platform/src/alienware/source/stb",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "LLM/llama.cpp",
+     "kind": "VENDORED",
+     "location": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/stb",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    },
+    {
+     "identity": "Platform/stb",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/stb",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -1394,6 +1697,70 @@
      "location": "Symoneural-Common/src/ml/source/pytorch/third_party/gemmlowp",
      "state": "AVAILABLE",
      "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Platform/glfw",
+    "glad"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "glad",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "glad",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-graphics/glad/glad_2.0.8.bb",
+     "state": "AVAILABLE",
+     "version": "2.0.8"
+    },
+    {
+     "identity": "Platform/glfw",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/glfw/deps/glad",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Platform/glfw",
+    "glfw"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "glfw",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Platform/glfw",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Platform/src/alienware/source/glfw",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "glfw",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-oe/recipes-core/glfw/glfw_3.3.8.bb",
+     "state": "AVAILABLE",
+     "version": "3.3.8"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -3215,6 +3582,38 @@
      "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-uvicorn_0.49.0.bb",
      "state": "AVAILABLE",
      "version": "0.49.0"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Platform/glfw",
+    "wayland"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "wayland",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "identity": "wayland",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-graphics/wayland/wayland_1.26.0.bb",
+     "state": "AVAILABLE",
+     "version": "1.26.0"
+    },
+    {
+     "identity": "Platform/glfw",
+     "kind": "VENDORED",
+     "location": "Symoneural-Platform/src/alienware/source/glfw/deps/wayland",
+     "state": "AVAILABLE",
+     "version": "UNKNOWN"
     }
    ],
    "selected_provider": "UNRESOLVED"

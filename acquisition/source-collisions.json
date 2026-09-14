@@ -341,6 +341,147 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "nlohmann",
+   "provider_count": 15,
+   "provider_kinds": [
+    "SUBMODULE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "SUBMODULE",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann",
+     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/nlohmann/json.git"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/cudnn_frontend/include/cudnn_frontend/thirdparty/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/single_include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/abi/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/single_include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/abi/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/single_include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/abi/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "llama.cpp",
+     "path": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "LLM",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/single_include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/tests/abi/include/nlohmann",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "LLM",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -467,122 +608,6 @@
    ],
    "runtimes": [
     "Ravencalc"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "CROSS-RUNTIME-DUPLICATE",
-   "classification_flags": [
-    "CROSS-RUNTIME-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "nlohmann",
-   "provider_count": 12,
-   "provider_kinds": [
-    "SUBMODULE",
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann",
-     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/nlohmann/json.git"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/cudnn_frontend/include/cudnn_frontend/thirdparty/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/single_include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/abi/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/single_include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/abi/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/single_include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/abi/include/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "llama.cpp",
-     "path": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/nlohmann",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "LLM",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common",
-    "LLM"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -1572,6 +1597,261 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "doctest",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/doctest",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/doctest",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/doctest",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/doctest",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "fifo-map",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/fifo_map",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/fifo_map",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/fifo_map",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/fifo_map",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "fuzzer",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/Fuzzer",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/Fuzzer",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/Fuzzer",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/Fuzzer",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "hedley",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann/thirdparty/hedley",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann/thirdparty/hedley",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/include/nlohmann/thirdparty/hedley",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/include/nlohmann/thirdparty/hedley",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "imapdl",
+   "provider_count": 4,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/imapdl",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/imapdl",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/imapdl",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json/tests/thirdparty/imapdl",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -1882,90 +2162,6 @@
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
-   "logical_source": "doctest",
-   "provider_count": 3,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/doctest",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/doctest",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/doctest",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "fifo-map",
-   "provider_count": 3,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/fifo_map",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/fifo_map",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/fifo_map",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
    "logical_source": "flatbuffers",
    "provider_count": 3,
    "provider_kinds": [
@@ -2042,48 +2238,6 @@
    ],
    "runtimes": [
     "Ravencalc"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "fuzzer",
-   "provider_count": 3,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/Fuzzer",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/Fuzzer",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/Fuzzer",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -2176,86 +2330,46 @@
    "selected_provider": "SYMONEURAL-OWNED"
   },
   {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification": "CROSS-RUNTIME-DUPLICATE",
    "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
+    "CROSS-RUNTIME-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
-   "logical_source": "hedley",
+   "logical_source": "json",
    "provider_count": 3,
    "provider_kinds": [
-    "VENDORED"
+    "DIRECT-ACQUISITION",
+    "SUBMODULE"
    ],
    "providers": [
     {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/include/nlohmann/thirdparty/hedley",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "json",
+     "path": "Symoneural-Platform/src/alienware/source/json",
+     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/nlohmann/json.git"
     },
     {
-     "kind": "VENDORED",
+     "kind": "SUBMODULE",
      "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/include/nlohmann/thirdparty/hedley",
-     "resolved_revision": "UNKNOWN",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json",
+     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
      "runtime": "Common",
-     "upstream_url": "UNKNOWN"
+     "upstream_url": "https://github.com/nlohmann/json.git"
     },
     {
-     "kind": "VENDORED",
+     "kind": "SUBMODULE",
      "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/include/nlohmann/thirdparty/hedley",
-     "resolved_revision": "UNKNOWN",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json",
+     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
      "runtime": "Common",
-     "upstream_url": "UNKNOWN"
+     "upstream_url": "https://github.com/nlohmann/json.git"
     }
    ],
    "runtimes": [
-    "Common"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "imapdl",
-   "provider_count": 3,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json/tests/thirdparty/imapdl",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json/tests/thirdparty/imapdl",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/nlohmann/tests/thirdparty/imapdl",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common"
+    "Common",
+    "Platform"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -2386,6 +2500,50 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "stb",
+   "provider_count": 3,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "stb",
+     "path": "Symoneural-Platform/src/alienware/source/stb",
+     "resolved_revision": "2c980bb59875b0d32144a71867fbdebb2f77cd20",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/nothings/stb.git"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "llama.cpp",
+     "path": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/stb",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "LLM",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "stb",
+     "path": "Symoneural-Platform/src/alienware/source/stb",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "LLM",
+    "Platform"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3440,6 +3598,77 @@
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
+   "logical_source": "glad",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "glad",
+     "path": "meta-openembedded/meta-oe/recipes-graphics/glad/glad_2.0.8.bb",
+     "resolved_revision": "2.0.8",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "glfw",
+     "path": "Symoneural-Platform/src/alienware/source/glfw/deps/glad",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "glfw",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "glfw",
+     "path": "Symoneural-Platform/src/alienware/source/glfw",
+     "resolved_revision": "d9d6f0f1f967807ffade6598ea9a631ebaf37a56",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/glfw/glfw.git"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "glfw",
+     "path": "meta-openembedded/meta-oe/recipes-core/glfw/glfw_3.3.8.bb",
+     "resolved_revision": "3.3.8",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
    "logical_source": "gst-devtools",
    "provider_count": 2,
    "provider_kinds": [
@@ -3926,40 +4155,6 @@
    ],
    "runtimes": [
     "Ravencalc"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "json",
-   "provider_count": 2,
-   "provider_kinds": [
-    "SUBMODULE"
-   ],
-   "providers": [
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/fbgemm/external/json",
-     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/nlohmann/json.git"
-    },
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/kineto/libkineto/third_party/json",
-     "resolved_revision": "55f93686c01528224f448c19128836e7df245f72",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/nlohmann/json.git"
-    }
-   ],
-   "runtimes": [
-    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -5739,6 +5934,41 @@
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
+   "logical_source": "wayland",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "wayland",
+     "path": "openembedded-core/meta/recipes-graphics/wayland/wayland_1.26.0.bb",
+     "resolved_revision": "1.26.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "glfw",
+     "path": "Symoneural-Platform/src/alienware/source/glfw/deps/wayland",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Platform",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
    "logical_source": "wheel",
    "provider_count": 2,
    "provider_kinds": [
@@ -6114,6 +6344,30 @@
     "Common"
    ],
    "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "RESOLVED (D2): Platform deliverable, GPL-3.0, approved by Garrett 2026-09-14 as a separate executable (own package and process; never linked into proprietary or native estate libraries). Built from the acquired AWCC tree; its six FetchContent dependencies (loguru, json, glfw, imgui, libusb-cmake, stb) are acquired, pinned and compiled into the executable (SYMON_DEP_TREES); system libraries (GL dispatch libglvnd, X11, libudev) are oe-core's, dynamically linked. Run-time boundary: the acpi_call kernel module is required and not yet acquired.",
+   "logical_source": "awcc",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "AWCC",
+     "path": "Symoneural-Platform/src/alienware/source/AWCC",
+     "resolved_revision": "0ec42c4b3ddc3c4e412ad69353cd251e1f348280",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/tr1xem/AWCC"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "SYMONEURAL-OWNED"
   },
   {
    "classification": "SINGLE-PROVIDER",
@@ -8063,6 +8317,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "imgui",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "imgui",
+     "path": "Symoneural-Platform/src/alienware/source/imgui",
+     "resolved_revision": "f1cc2ae15e53a861a874c3034aae6798fde194ab",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/ocornut/imgui.git"
+    }
+   ],
+   "runtimes": [
+    "Platform"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "importlib-metadata-8-7-1-dist-info",
    "provider_count": 1,
    "provider_kinds": [
@@ -8484,6 +8762,30 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "loguru",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "loguru",
+     "path": "Symoneural-Platform/src/alienware/source/loguru",
+     "resolved_revision": "ba2240d19baedc5a6727383040ff309810f0f825",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/emilk/loguru"
+    }
+   ],
+   "runtimes": [
+    "Platform"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -10361,30 +10663,6 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
-   "logical_source": "stb",
-   "provider_count": 1,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "llama.cpp",
-     "path": "Symoneural-LLM/src/inference/source/llama.cpp/vendor/stb",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "LLM",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "LLM"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "SINGLE-PROVIDER",
-   "classification_flags": [],
-   "decision": "UNRESOLVED",
    "logical_source": "stratum",
    "provider_count": 1,
    "provider_kinds": [
@@ -11338,6 +11616,30 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "usb-cmake",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "libusb-cmake",
+     "path": "Symoneural-Platform/src/alienware/source/libusb-cmake",
+     "resolved_revision": "c8477c10ac2ac6b1718d4d498e102b9f18b776f5",
+     "runtime": "Platform",
+     "upstream_url": "https://github.com/libusb/libusb-cmake.git"
+    }
+   ],
+   "runtimes": [
+    "Platform"
    ],
    "selected_provider": "UNRESOLVED"
   },

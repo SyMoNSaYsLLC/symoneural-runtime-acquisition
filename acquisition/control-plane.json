@@ -104,12 +104,13 @@
   "lib_acq.py": "d6b297150d6b1017b53ae62de6660d57125e7d3481f92082c10bc226943c8971",
   "map-api-runtime.py": "5b556cac8712b11a01260685f54135a7a9047ea163607228ab9c9e195a5c98c2",
   "map-llama-upstreams.py": "89958c119a0bef473c6e8c6629b5c0d2cd9efe971afccf61b94e0df3e1a4c492",
+  "originals-by-runtime.py": "bb27f2bc78459ebcee3f3570aab55cafd36a143fd1b9916f5e04a84eeec2a716",
   "proof_support.py": "697725a15fa2db9033fffa2592af628f73b0b898c11904272314d8182a3c793c",
-  "scan-acquisition.py": "8fc51a4917247b27c00f8fc2f81c46f62f95a8d29ae8adb2af629e13113a9e50",
+  "scan-acquisition.py": "dd55579d6153c858e2a661c0b28b49b39d3e738731864904467b7c3ecb178e68",
   "scan-dependencies.py": "163f137408fec52d11214e206362ec90c0a9a8fa79c9a91fc37a159b190061be",
   "scan-oe-providers.py": "fcf8d107e0b22fbe458721b5a87fa34cbc032beca098da04af0c200ced52e043",
   "scan-source-collisions.py": "690d939d3950c74804d0d7e3b9452839d0f1805630c5bbc7ed8ceb3ca4606565",
   "test-estate-operators.py": "ac82cf6560c732ebc8f31ec1475021ea5264ac9064014c5188f243b5a378b4cd",
-  "verify-acquisition.py": "bd4fc8d923672083ef306bf0f63e683c8ca788d39510616e3bacfdf4277fefb0"
+  "verify-acquisition.py": "ac816084f495592022a17a61473e3315edeb0059c0e658dd0483b2dce79f31d3"
  }
 }

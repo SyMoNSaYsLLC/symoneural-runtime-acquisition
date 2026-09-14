@@ -827,6 +827,79 @@
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
+   "component": "AWCC",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 11,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/AWCC",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "glfw",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 68,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/glfw",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "imgui",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 54,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/imgui",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "json",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 404,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/json",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "libusb-cmake",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 46,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/libusb-cmake",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "loguru",
+   "declared_capabilities": [
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 6,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/loguru",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "stb",
+   "declared_capabilities": [
+    "UNKNOWN"
+   ],
+   "native_source_files": 58,
+   "runtime": "Platform",
+   "source_path": "Symoneural-Platform/src/alienware/source/stb",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
    "component": "open-gpu-kernel-modules",
    "declared_capabilities": [
     "UNKNOWN"

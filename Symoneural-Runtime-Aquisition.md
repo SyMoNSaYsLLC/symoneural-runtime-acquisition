@@ -6,13 +6,13 @@
 
 | | |
 |---|---|
-| Parent HEAD | `4bee9bce9560c6f3eec2e95367f51162c89f72ec` |
+| Parent HEAD | `d9add47bffbc4457900110384889cfa7e0e70c9c` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
-| Scanner identity | `acquisition/control-plane.json` (19 tools hashed) |
+| Scanner identity | `acquisition/control-plane.json` (20 tools hashed) |
 | Determinism verified | YES |
-| Tree inventory | `generated/runtime-tree.txt` (31805 dirs) |
-| Tree SHA-256 | `a30a991b1ac96dcc19ad939de74c3a61ab492f601b1c9b7c3c7dd391491dbed5` |
+| Tree inventory | `generated/runtime-tree.txt` (32076 dirs) |
+| Tree SHA-256 | `f5603ade8e5ba3bc5954194249b749fadf794f2c11a666519e64979532f01d6f` |
 | Report self-validation | PASS (10/10 totals re-derived) |
 
 ## Verdicts
@@ -27,7 +27,7 @@ before its description of the estate means anything.
 
 Acquisition FAIL reasons:
 
-- 87 provider collision(s) unresolved (57 direct-vs-OE-Core)
+- 97 provider collision(s) unresolved (58 direct-vs-OE-Core)
 - 366 vendored decision(s) unresolved
 - 429 licence file(s) without an established identifier
 - 3 explicit control-plane decisions open (FreeToken/torch, nvidia-userspace-driver-provider, nvidia-gsp-firmware-provider)
@@ -39,8 +39,8 @@ This FAIL is expected and is a statement of open decisions, not a defect.
 
 | Method | Count |
 |---|---|
-| A — filesystem candidate + `git rev-parse` validation | 93 |
-| B — independent git work-tree-top census | 93 |
+| A — filesystem candidate + `git rev-parse` validation | 100 |
+| B — independent git work-tree-top census | 100 |
 | **Sets identical** | **YES** |
 
 `.git` is accepted as a file or a directory; submodules are excluded from the
@@ -70,12 +70,12 @@ This locks the **build stack only**, never the application sources.
 | Crypto | 3 | 3 | 3 |
 | LLM | 4 | 4 | 4 |
 | Live | 1 | 1 | 1 |
-| Platform | 1 | 1 | 1 |
+| Platform | 8 | 8 | 8 |
 | Ravencalc | 12 | 12 | 12 |
 | Remix | 1 | 1 | 1 |
 | Streamer | 1 | 1 | 1 |
 | Web | 2 | 1 | 2 |
-| **TOTAL** | **93** | **91** | **93** |
+| **TOTAL** | **100** | **98** | **100** |
 
 ## Top-level source lock
 
@@ -157,6 +157,13 @@ This locks the **build stack only**, never the application sources.
 | LLM | triton | `c01b6774b186` | VERIFIED | 0 | yes |
 | LLM | vllm | `98dff2a81d74` | VERIFIED | 0 | yes |
 | Live | gstreamer | `070125524a84` | VERIFIED | 1 | yes |
+| Platform | AWCC | `0ec42c4b3ddc` | VERIFIED | 0 | yes |
+| Platform | glfw | `d9d6f0f1f967` | VERIFIED | 0 | yes |
+| Platform | imgui | `f1cc2ae15e53` | VERIFIED | 0 | yes |
+| Platform | json | `55f93686c015` | VERIFIED | 0 | yes |
+| Platform | libusb-cmake | `c8477c10ac2a` | VERIFIED | 0 | yes |
+| Platform | loguru | `ba2240d19bae` | VERIFIED | 0 | yes |
+| Platform | stb | `2c980bb59875` | VERIFIED | 0 | yes |
 | Platform | open-gpu-kernel-modules | `61dcc93722ec` | VERIFIED | 0 | yes |
 | Ravencalc | openblas | `e0166008be8e` | VERIFIED | 0 | yes |
 | Ravencalc | narwhals | `e34715d1e9e2` | VERIFIED | 0 | yes |
@@ -183,24 +190,24 @@ Entries: **86** · identity key `owner_source_path + submodule_path` · unknown 
 
 ## Dependency graph
 
-Declarations discovered from on-disk manifests: **16247**. No depth limit; nothing fetched.
+Declarations discovered from on-disk manifests: **16265**. No depth limit; nothing fetched.
 
 | Classification | Count |
 |---|---|
-| PACKAGE-MANAGED | 11347 |
-| DIRECT-DECLARED | 4436 |
-| BUILD-FETCH | 234 |
+| PACKAGE-MANAGED | 11351 |
+| DIRECT-DECLARED | 4437 |
+| BUILD-FETCH | 247 |
 | WORKSPACE-LOCAL | 144 |
 | SUBMODULE | 86 |
 
 | Scope | Count |
 |---|---|
-| UNKNOWN | 7727 |
+| UNKNOWN | 7739 |
 | DEV-ONLY | 6215 |
-| RUNTIME/SHIP | 1630 |
+| RUNTIME/SHIP | 1631 |
 | DOC-ONLY | 357 |
-| BUILD-ONLY | 298 |
-| TEST-ONLY | 20 |
+| BUILD-ONLY | 300 |
+| TEST-ONLY | 23 |
 
 A lockfile establishes resolution, not directness: a `Cargo.lock` entry with no
 source URL is `WORKSPACE-LOCAL`, never `DIRECT-DECLARED`.
@@ -208,21 +215,21 @@ source URL is `WORKSPACE-LOCAL`, never `DIRECT-DECLARED`.
 
 ## Vendored register
 
-Entries **395** across **245** logical packages; **44** appear in more than one place.
+Entries **406** across **247** logical packages; **45** appear in more than one place.
 
 | Scope | Count |
 |---|---|
-| UNKNOWN | 341 |
+| UNKNOWN | 347 |
 | PRIVATE-VENDORED | 31 |
-| TEST-ONLY | 21 |
+| TEST-ONLY | 26 |
 | DOC-ONLY | 2 |
 
 | Most-duplicated | Copies |
 |---|---|
 | sub | 23 |
 | cmmod | 15 |
+| nlohmann | 14 |
 | foo | 14 |
-| nlohmann | 11 |
 | gtest | 10 |
 | a | 9 |
 | b | 8 |
@@ -240,8 +247,8 @@ OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**
 |---|---|
 | OE-Core recipes inspected | 2760 |
 | Providers indexed | 2823 |
-| Collisions | 94 |
-| Direct-acquisition vs OE-Core | **57** |
+| Collisions | 104 |
+| Direct-acquisition vs OE-Core | **58** |
 
 | Logical dependency | Direct | OE-Core recipe |
 |---|---|---|
@@ -264,6 +271,7 @@ OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**
 | fastapi | API/fastapi | python3-fastapi 0.141.1 |
 | filelock | Common/filelock | python3-filelock 3.32.4 |
 | fsspec | Common/fsspec | python3-fsspec 2026.7.0 |
+| glfw | Platform/glfw | glfw 3.3.8 |
 | h11 | API/h11 | python3-h11 0.16.0 |
 | httpcore | API/httpcore | python3-httpcore 1.0.9 |
 | httpx | API/httpx | python3-httpx 0.28.1 |
@@ -313,19 +321,26 @@ Provider kinds indexed: DIRECT-ACQUISITION, OE-CORE-RECIPE, SUBMODULE, VENDORED
 
 | | |
 |---|---|
-| Logical sources indexed | 388 |
-| With more than one provider | **133** |
-| INTRA-COMPONENT-DUPLICATE | 119 |
+| Logical sources indexed | 395 |
+| With more than one provider | **137** |
+| INTRA-COMPONENT-DUPLICATE | 116 |
 | CROSS-COMPONENT-DUPLICATE | 7 |
-| CROSS-RUNTIME-DUPLICATE | 7 |
-| DIRECT-VERSUS-OE-CORE | 55 |
+| CROSS-RUNTIME-DUPLICATE | 14 |
+| DIRECT-VERSUS-OE-CORE | 56 |
 | Vendor entries reclassified as SUBMODULE | 64 |
 | Duplicate top-level upstream URLs | 0 (invariant) |
 
 | Cross-runtime source | Runtimes | Copies | Kinds |
 |---|---|---|---|
-| nlohmann | Common, LLM | 12 | SUBMODULE, VENDORED |
+| nlohmann | Common, LLM, Platform | 15 | SUBMODULE, VENDORED |
+| doctest | Common, Platform | 4 | VENDORED |
+| fifo-map | Common, Platform | 4 | VENDORED |
+| fuzzer | Common, Platform | 4 | VENDORED |
+| hedley | Common, Platform | 4 | VENDORED |
+| imapdl | Common, Platform | 4 | VENDORED |
 | cpp-httplib | Common, LLM | 3 | SUBMODULE, VENDORED |
+| json | Common, Platform | 3 | DIRECT-ACQUISITION, SUBMODULE |
+| stb | LLM, Platform | 3 | DIRECT-ACQUISITION, VENDORED |
 | tomli | Build, Common | 3 | OE-CORE-RECIPE, VENDORED |
 | pocketfft | Common, Ravencalc | 2 | SUBMODULE |
 | progressbar | Build, Common | 2 | VENDORED |
@@ -337,10 +352,10 @@ no copy is collapsed, deleted or rewritten; every entry is `UNRESOLVED`.
 
 ## Licence inventory
 
-Licence-bearing files: **553**
+Licence-bearing files: **568**
 
-- NESTED/DEPENDENCY: 441
-- TOP-LEVEL: 112
+- NESTED/DEPENDENCY: 449
+- TOP-LEVEL: 119
 
 **LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts.**
 This inventory is drift evidence, not a licensing conclusion.
@@ -354,13 +369,13 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 |---|---|
 | PYTHON-PACKAGE | 77 |
 | PYTHON-EXTENSION | 30 |
-| EXECUTABLE | 16 |
+| EXECUTABLE | 18 |
+| NODE-BUNDLE | 15 |
 | RUST-RLIB | 15 |
-| NODE-BUNDLE | 14 |
 | RUST-CDYLIB | 11 |
-| UNKNOWN | 7 |
+| UNKNOWN | 10 |
+| STATIC-LIBRARY|SHARED-LIBRARY | 10 |
 | SHARED-LIBRARY | 7 |
-| STATIC-LIBRARY|SHARED-LIBRARY | 6 |
 
 ## Unresolved decisions
 
