@@ -23,7 +23,7 @@ root    : /tmp/claude-1000/llm-clean-root-s2  (859 files)
   HOST  /usr/lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1  (libnvidia-ptxjitcompiler1 615.71.09-2, S2)
   empty registry -> 0 models, rc ok
 --- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)
-  registry: vocab-llama-bpe vocab-qwen2 
+  registry: vocab-llama-bpe vocab-qwen2
   info: {"id":"vocab-qwen2","arch":"qwen2","name":"qwen2","desc":"","n_ctx_train":0,"n_vocab":151936,"n_params":0,"vocab_only":true} (rc=0)
   tokenize: 15 tokens, detokenize_status 0, round_trip == input  -> PASS
   tokenize (llama-bpe): 16 tokens, round trip == input

@@ -94,7 +94,7 @@ n=$(util models "$REG" | wc -l); [ "$n" -eq 0 ] && echo "  empty registry -> 0 m
 echo "--- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)"
 SRC=$ROOT/Symoneural-LLM/src/inference/source/llama.cpp/models
 cp "$SRC/ggml-vocab-qwen2.gguf" "$REG/vocab-qwen2.gguf"; cp "$SRC/ggml-vocab-llama-bpe.gguf" "$REG/vocab-llama-bpe.gguf"
-echo "  registry: $(util models "$REG" | tr '\n' ' ')"
+echo "  registry: $(util models "$REG" | tr '\n' ' ' | sed 's/ $//')"
 info=$(util info "$REG" vocab-qwen2); rc=$?; echo "  info: $info (rc=$rc)"
 [ $rc -eq 0 ] && [[ "$info" == *'"vocab_only":true'* ]] && [[ "$info" == *'"arch":"qwen2"'* ]] || { echo "  FAIL: model_info on the vocabulary fixture"; fail=1; }
 TEXT="SyMoNeuRaL builds its runtimes from pristine upstream source."
