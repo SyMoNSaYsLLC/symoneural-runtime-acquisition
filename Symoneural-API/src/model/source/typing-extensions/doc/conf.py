@@ -1,0 +1,76 @@
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+import os.path
+import sys
+
+from docutils.nodes import Element
+from sphinx.writers.html5 import HTML5Translator
+
+sys.path.insert(0, os.path.abspath('.'))
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = 'typing_extensions'
+copyright = '2023, Guido van Rossum and others'
+author = 'Guido van Rossum and others'
+release = '4.6.0'
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = ['sphinx.ext.intersphinx', '_extensions.gh_link']
+
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# Use Python 3.15 for new features and Python 3.14 as a fallback for APIs that
+# were removed in Python 3.15.
+intersphinx_mapping = {
+    'py': ('https://docs.python.org/3.15', None),
+    'py314': ('https://docs.python.org/3.14', None),
+}
+
+add_module_names = False
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_theme = 'alabaster'
+
+html_theme_options = {
+    "description": "Backported and experimental type hints for Python",
+    # Make the sidebar "sticky" so that is stays visible when scrolling.
+    # Also makes the sidebar appear at the top of the page on mobile.
+    "fixed_sidebar": True,
+}
+
+html_sidebars = {
+    '**': [
+        'about.html',
+        'searchfield.html',
+        'localtoc.html',
+    ]
+}
+
+# Don't include object entries (e.g. functions, classes) in the table of contents.
+toc_object_entries = False
+
+# Warn about all references where the target cannot be found.
+nitpicky = True
+
+
+class MyTranslator(HTML5Translator):
+    """Adds a link target to name without `typing_extensions.` prefix."""
+    def visit_desc_signature(self, node: Element) -> None:
+        desc_name = node.get("fullname")
+        if desc_name:
+            self.body.append(f'<span id="{desc_name}"></span>')
+        super().visit_desc_signature(node)
+
+
+def setup(app):
+    app.set_translator('html', MyTranslator)
