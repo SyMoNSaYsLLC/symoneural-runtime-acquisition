@@ -1,0 +1,25 @@
+Common      accelerate                  VERIFIED                              6afc1e5ee   ok    y     symoneural-accelerate             ok         y       7     DONE                    
+Common      filelock                    VERIFIED                              4efd93e04   ok    y     symoneural-filelock               ok         y       7     DONE                    
+Common      fsspec                      VERIFIED                              9e22b60ea   ok    y     symoneural-fsspec                 ok         y       7     DONE                    
+Common      hf-xet                      VERIFIED                              de71453d9   ok    y     symoneural-hf-xet                 ok         y       7     DONE                    
+Common      huggingface-hub             VERIFIED                              495b17c85   ok    y     symoneural-huggingface-hub        ok         y       7     DONE                    
+Common      jinja2                      VERIFIED                              15206881c   ok    y     symoneural-jinja2                 ok         y       7     DONE                    
+Common      markdown-it-py              VERIFIED                              36c5f5471   ok    y     symoneural-markdown-it-py         ok         y       7     DONE                    
+Common      markupsafe                  VERIFIED                              297fc8e35   ok    y     symoneural-markupsafe             ok         y       7     DONE                    
+Common      mdurl                       VERIFIED                              596bf1c87   ok    y     symoneural-mdurl                  ok         y       7     DONE                    
+Common      networkx                    VERIFIED                              7530809bf   ok    y     symoneural-networkx               ok         y       7     DONE                    
+Common      packaging                   VERIFIED                              929fd4b14   ok    y     symoneural-packaging              ok         y       7     DONE                    
+Common      psutil                      VERIFIED                              9eea97dd6   ok    y     symoneural-psutil                 ok         y       8     DONE                    
+Common      pygments                    VERIFIED                              a43b45dcf   ok    y     symoneural-pygments               ok         y       7     DONE                    
+Common      pytorch                     LISTING-VERIFIED(65                   2b3ec3482   ok    y     symoneural-pytorch                ok         y       7     DONE                    
+Common      pyyaml                      VERIFIED                              49790e736   ok    y     symoneural-pyyaml                 ok         y       7     DONE                    
+Common      regex                       VERIFIED                              7dd71c15c   ok    y     symoneural-regex                  ok         y       7     DONE                    
+Common      rich                        VERIFIED                              6ac483cbe   ok    y     symoneural-rich                   ok         y       7     DONE                    
+Common      safetensors                 VERIFIED                              a406ca3e7   ok    y     symoneural-safetensors            ok         y       7     DONE                    
+Common      setuptools                  VERIFIED                              72e919a8b   ok    y     symoneural-setuptools             ok         y       7     DONE                    
+Common      shellingham                 VERIFIED                              cba059e7f   ok    y     symoneural-shellingham            ok         y       7     DONE                    
+Common      tokenizers                  VERIFIED                              88a4498ad   ok    y     symoneural-tokenizers             ok         y       7     DONE                    
+Common      tqdm                        VERIFIED                              9cf5a12b1   ok    y     symoneural-tqdm                   ok         y       7     DONE                    
+Common      transformers                VERIFIED                              856157a2f   ok    y     symoneural-transformers           ok         y       7     DONE                    
+Common      typer                       VERIFIED                              99eb220df   ok    y     symoneural-typer                  ok         y       7     DONE                    
+  Common: sources committed 24/24 · packaged 24/24

@@ -1,0 +1,10 @@
+08fb05df1dfc5a87f644f5e19b95c1c2ad9ab7c30ad3c52b9927701a836d671e  Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.tar.gz
+675fd21f11dd6ce838f835eebe841923c07647479c7ae9bcbc47cc158f1a443c  Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.manifest
+c5b5023ae3962d929c245ce66e6cc2873c4668afcb3f6a4a47c286fd025271c9  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-setuptools_84.0.0-r0_x86-64-v3.ipk
+7cb04483d30ed17283395d08f866e9a576e7f590451d9e4c92d2b5f015ba1a2a  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-jinja2_3.1.6-r0_x86-64-v3.ipk
+c22cf74c6261e93746e50bd094fc00cb1ac68ad301206039c0eabd25351196e3  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-markupsafe_3.0.3-r0_x86-64-v3.ipk
+60908cf992a38c0ee103bad46e62f56b2521f0953ab612a26c50adb86868ecea  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-networkx_3.6.1-r0_x86-64-v3.ipk
+aeb603e8f2ee9992a21e520d30d1f40bf3fa0a9a0f520192d6b894601034cc59  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-psutil_7.2.2-r0_x86-64-v3.ipk
+e9f83152b76d2bc187f18ab12051fe66f4f4bcdca6a980ef743ed4862222d7fb  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-accelerate_1.15.0+git-r0_x86-64-v3.ipk
+5e0d58d86286add557abeade76c7ac68f2141d83e4721028f709a720f8ca6bb0  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+cc404502203a3c84292d547d0e4d7d575486baf87785f61145ebd5aee1ddd2e6  Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-transformers_5.17.0+git-r0_x86-64-v3.ipk

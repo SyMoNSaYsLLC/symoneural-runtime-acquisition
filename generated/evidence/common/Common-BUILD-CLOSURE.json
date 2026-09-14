@@ -1,0 +1,417 @@
+{
+ "note": "what the build host/sysroot needs to produce the packages; never installed on the target",
+ "recipes": {
+  "symoneural-accelerate": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "setuptools3"
+   ]
+  },
+  "symoneural-annotated-doc": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_pdm"
+   ]
+  },
+  "symoneural-annotated-types": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-anyio": {
+   "DEPENDS": [
+    "python3-setuptools-scm-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-api-python": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-firstparty",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-certifi": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-click": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-fastapi": {
+   "DEPENDS": [
+    "python3-pdm-backend-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_pep517",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-filelock": {
+   "DEPENDS": [
+    "python3-hatch-vcs-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-fsspec": {
+   "DEPENDS": [
+    "python3-hatch-vcs-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-h11": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "setuptools3"
+   ]
+  },
+  "symoneural-hf-xet": {
+   "DEPENDS": [
+    "python3-maturin-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_maturin",
+    "cargo-update-recipe-crates"
+   ]
+  },
+  "symoneural-httpcore": {
+   "DEPENDS": [
+    "python3-hatch-fancy-pypi-readme-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-httpx": {
+   "DEPENDS": [
+    "python3-hatch-fancy-pypi-readme-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-huggingface-hub": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "setuptools3"
+   ]
+  },
+  "symoneural-idna": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-jinja2": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-markdown-it-py": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-markupsafe": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-mdurl": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-mpmath": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-networkx": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-numpy": {
+   "DEPENDS": [
+    "symoneural-cython-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "pkgconfig",
+    "python_mesonpy"
+   ]
+  },
+  "symoneural-packaging": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-psutil": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-pydantic": {
+   "DEPENDS": [
+    "python3-hatch-fancy-pypi-readme-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-pydantic-core": {
+   "DEPENDS": [
+    "python3-maturin-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_maturin",
+    "cargo-update-recipe-crates"
+   ]
+  },
+  "symoneural-pygments": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-pytorch": {
+   "DEPENDS": [
+    "cmake-native",
+    "python3-packaging-native",
+    "python3-pyyaml-native",
+    "python3-scikit-build-core-native",
+    "python3-setuptools-native",
+    "python3-six-native",
+    "symoneural-numpy-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_pep517"
+   ]
+  },
+  "symoneural-pyyaml": {
+   "DEPENDS": [
+    "libyaml",
+    "python3-setuptools-native",
+    "symoneural-cython-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_pep517"
+   ]
+  },
+  "symoneural-regex": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-rich": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_poetry_core"
+   ]
+  },
+  "symoneural-safetensors": {
+   "DEPENDS": [
+    "python3-maturin-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_maturin",
+    "cargo-update-recipe-crates"
+   ]
+  },
+  "symoneural-setuptools": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-shellingham": {
+   "DEPENDS": [
+    "python3-wheel-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-sniffio": {
+   "DEPENDS": [
+    "python3-setuptools-scm-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-starlette": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-sympy": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "setuptools3"
+   ]
+  },
+  "symoneural-tokenizers": {
+   "DEPENDS": [
+    "python3-maturin-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_maturin",
+    "cargo-update-recipe-crates"
+   ]
+  },
+  "symoneural-tqdm": {
+   "DEPENDS": [
+    "python3-setuptools-scm-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_setuptools_build_meta"
+   ]
+  },
+  "symoneural-transformers": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "setuptools3"
+   ]
+  },
+  "symoneural-typer": {
+   "DEPENDS": [
+    "python3-pdm-backend-native"
+   ],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_pdm"
+   ]
+  },
+  "symoneural-typing-extensions": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_flit_core"
+   ]
+  },
+  "symoneural-typing-inspection": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  },
+  "symoneural-uvicorn": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-pristine",
+    "python_hatchling"
+   ]
+  }
+ },
+ "runtime": "Common",
+ "schema": "symoneural-build-closure/1"
+}

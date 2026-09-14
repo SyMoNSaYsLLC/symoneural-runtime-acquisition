@@ -1,0 +1,27 @@
+SyMoNeuRaL acquisition verification (read-only)
+  components : 92
+  source drift:                clean (92 identities)
+  submodule drift:             clean (86 identities)
+  dependency drift:            clean (16247 identities)
+  vendor drift:                clean (395 identities)
+  license drift:               clean (551 identities)
+  provider drift:              clean (94 identities)
+  artifact-capability drift:   clean (92 identities)
+  source-collision drift:      clean (387 identities)
+  build-stack drift:           checked
+  duplicate top-level upstream URLs: 0 (must be 0)
+  acquired trees carrying ignored residue: 0
+  -- completeness reconciliation --
+  PRESENT-AT-INTENDED-REVISION:  93
+  PRESENT-REVISION-MISMATCH:     0
+  MISSING:                       0
+  EXTRA-UNDECLARED:              0
+  INTENT-UNRESOLVED:             0
+  DEFERRED:                      2
+  -- report agreement --
+  source drift:                  report=92     verifier=92     OK
+  dependency drift:              report=16247  verifier=16247  OK
+  submodule drift:               report=86     verifier=86     OK
+  license drift:                 report=551    verifier=551    OK
+  CONTROL-PLANE RESULT:      PASS
+  ESTATE-COMPLETENESS RESULT: PASS

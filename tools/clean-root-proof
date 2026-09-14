@@ -36,7 +36,7 @@ mkdir -p "$R/tmp"
 WRAP="$R/tmp/target-python"
 { echo '#!/bin/sh'; echo "exec \"$LD\" --library-path \"$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload\" \"$PY\" \"\$@\""; } > "$WRAP"
 chmod +x "$WRAP"
-run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" SYM_TARGET_PYTHON="$WRAP" \
+run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" SYM_IMAGE_MANIFEST="$MANI" SYM_TARGET_PYTHON="$WRAP" \
         "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload" "$PY" -I "$@"; }
 echo "--- interpreter"
 run -c 'import sys; print("python", sys.version.split()[0], "prefix", sys.prefix); assert "SymonSaysLLC/Symoneural-" not in " ".join(sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }

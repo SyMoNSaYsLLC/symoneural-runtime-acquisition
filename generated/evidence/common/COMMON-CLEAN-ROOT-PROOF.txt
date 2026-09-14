@@ -1,0 +1,46 @@
+image   : /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.tar.gz
+sha256  : 08fb05df1dfc5a87f644f5e19b95c1c2ad9ab7c30ad3c52b9927701a836d671e
+manifest: /home/google/SymonSaysLLC/Symoneural-Common/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-common-qemux86-64.rootfs-20260914101505.manifest (127 packages)
+root    : /tmp/claude-1000/common-clean-root  (30736 files)
+--- interpreter
+python 3.14.7 prefix /tmp/claude-1000/common-clean-root/usr
+--- /home/google/SymonSaysLLC/tools/proofs/common.py
+
+
+
+  install record: deploy manifest -> 127 packages, 45 symoneural-*
+  torch                2.14.0a0+gitunknown
+  transformers         5.17.0
+  huggingface_hub      1.31.0
+  tokenizers           0.23.2
+  safetensors          0.8.0
+  numpy                2.5.3
+  filelock             3.32.6
+  fsspec               2026.7.0
+  hf_xet               1.6.0
+  packaging            26.3
+  yaml                 6.0.3
+  tqdm                 4.70.1
+  typer                0.27.2
+  rich                 15.0.0
+  pygments             2.21.0
+  markdown_it          4.2.0
+  mdurl                0.1.2
+  shellingham          1.5.4
+  regex                2026.9.10
+  jinja2               3.1.6
+  markupsafe           3.0.3
+  networkx             3.6.1
+  setuptools           84.0.0
+  sympy                1.14.0
+  mpmath               1.3.0
+  typing_extensions    4.16.0
+  click                8.5.0
+  httpx                0.28.1
+  annotated_doc        0.0.5
+  wheel resolves only via setuptools/_vendor (setuptools' private copy; no wheel distribution shipped)
+  declared closure: 34 runtime requirements evaluated against installed versions
+  meaningful ops PASS: torch matmul == numpy reference and autograd grad == 2x; torch.utils.cpp_extension imported setuptools at load (live runtime edge); torch.fx traced a module; tokenizers trained BPE in-process (Rust) and round-tripped; transformers PreTrainedTokenizerFast wrapped it and BertModel(config) ran a forward pass -> (2, 6, 32); safetensors round-tripped the state_dict; accelerate: not shipped in this image (BLOCKED on torch USE_DISTRIBUTED=0; see symoneural-accelerate recipe); huggingface_hub refused a download under HF_HUB_OFFLINE; hf_xet loaded; PyYAML via libyaml; regex \p{Greek}; filelock; fsspec local fs; tqdm; packaging; typer CliRunner exit 0; rich table; pygments; markdown-it-py rendered a link; shellingham detected; jinja2 escaped through markupsafe._speedups; networkx shortest_path
+  NO NETWORK: offline mode asserted before import; the one hub call made was proven to be refused; no model weights were fetched or present.
+COMMON CLEAN ROOT PROOF: PASS
+rc=0

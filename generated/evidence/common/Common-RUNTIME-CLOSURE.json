@@ -1,0 +1,1161 @@
+{
+ "direct": {
+  "symoneural-accelerate": {
+   "distribution": "accelerate",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-accelerate/1.15.0+git/image/usr/lib/python3.14/site-packages/accelerate-1.15.0.dist-info/METADATA",
+   "version": "1.15.0"
+  },
+  "symoneural-annotated-doc": {
+   "distribution": "annotated-doc",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-annotated-doc/0.0.5/image/usr/lib/python3.14/site-packages/annotated_doc-0.0.5.dist-info/METADATA",
+   "version": "0.0.5"
+  },
+  "symoneural-annotated-types": {
+   "distribution": "annotated-types",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-annotated-types/0.8.0/image/usr/lib/python3.14/site-packages/annotated_types-0.8.0.dist-info/METADATA",
+   "version": "0.8.0"
+  },
+  "symoneural-anyio": {
+   "distribution": "anyio",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-anyio/4.15.1/image/usr/lib/python3.14/site-packages/anyio-4.15.1.dist-info/METADATA",
+   "version": "4.15.1"
+  },
+  "symoneural-api-python": {
+   "distribution": "symoneural-api",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-api-python/1.0.0/image/usr/lib/python3.14/site-packages/symoneural_api-1.0.0.dist-info/METADATA",
+   "version": "1.0.0"
+  },
+  "symoneural-certifi": {
+   "distribution": "certifi",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-certifi/2026.07.22/image/usr/lib/python3.14/site-packages/certifi-2026.7.22.dist-info/METADATA",
+   "version": "2026.7.22"
+  },
+  "symoneural-click": {
+   "distribution": "click",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-click/8.5.0/image/usr/lib/python3.14/site-packages/click-8.5.0.dist-info/METADATA",
+   "version": "8.5.0"
+  },
+  "symoneural-fastapi": {
+   "distribution": "fastapi",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-fastapi/0.141.1/image/usr/lib/python3.14/site-packages/fastapi-0.141.1.dist-info/METADATA",
+   "version": "0.141.1"
+  },
+  "symoneural-filelock": {
+   "distribution": "filelock",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-filelock/3.32.6/image/usr/lib/python3.14/site-packages/filelock-3.32.6.dist-info/METADATA",
+   "version": "3.32.6"
+  },
+  "symoneural-fsspec": {
+   "distribution": "fsspec",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-fsspec/2026.7.0/image/usr/lib/python3.14/site-packages/fsspec-2026.7.0.dist-info/METADATA",
+   "version": "2026.7.0"
+  },
+  "symoneural-h11": {
+   "distribution": "h11",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-h11/0.16.0/image/usr/lib/python3.14/site-packages/h11-0.16.0.dist-info/METADATA",
+   "version": "0.16.0"
+  },
+  "symoneural-hf-xet": {
+   "distribution": "hf-xet",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-hf-xet/1.6.0/image/usr/lib/python3.14/site-packages/hf_xet-1.6.0.dist-info/METADATA",
+   "version": "1.6.0"
+  },
+  "symoneural-httpcore": {
+   "distribution": "httpcore",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-httpcore/1.0.9/image/usr/lib/python3.14/site-packages/httpcore-1.0.9.dist-info/METADATA",
+   "version": "1.0.9"
+  },
+  "symoneural-httpx": {
+   "distribution": "httpx",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-httpx/0.28.1/image/usr/lib/python3.14/site-packages/httpx-0.28.1.dist-info/METADATA",
+   "version": "0.28.1"
+  },
+  "symoneural-huggingface-hub": {
+   "distribution": "huggingface_hub",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-huggingface-hub/1.31.0/image/usr/lib/python3.14/site-packages/huggingface_hub-1.31.0.dist-info/METADATA",
+   "version": "1.31.0"
+  },
+  "symoneural-idna": {
+   "distribution": "idna",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-idna/3.19/image/usr/lib/python3.14/site-packages/idna-3.19.dist-info/METADATA",
+   "version": "3.19"
+  },
+  "symoneural-jinja2": {
+   "distribution": "Jinja2",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-jinja2/3.1.6/image/usr/lib/python3.14/site-packages/jinja2-3.1.6.dist-info/METADATA",
+   "version": "3.1.6"
+  },
+  "symoneural-markdown-it-py": {
+   "distribution": "markdown-it-py",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-markdown-it-py/4.2.0/image/usr/lib/python3.14/site-packages/markdown_it_py-4.2.0.dist-info/METADATA",
+   "version": "4.2.0"
+  },
+  "symoneural-markupsafe": {
+   "distribution": "MarkupSafe",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-markupsafe/3.0.3/image/usr/lib/python3.14/site-packages/markupsafe-3.0.3.dist-info/METADATA",
+   "version": "3.0.3"
+  },
+  "symoneural-mdurl": {
+   "distribution": "mdurl",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-mdurl/0.1.2/image/usr/lib/python3.14/site-packages/mdurl-0.1.2.dist-info/METADATA",
+   "version": "0.1.2"
+  },
+  "symoneural-mpmath": {
+   "distribution": "mpmath",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-mpmath/1.3.0/image/usr/lib/python3.14/site-packages/mpmath-1.3.0.dist-info/METADATA",
+   "version": "1.3.0"
+  },
+  "symoneural-networkx": {
+   "distribution": "networkx",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-networkx/3.6.1/image/usr/lib/python3.14/site-packages/networkx-3.6.1.dist-info/METADATA",
+   "version": "3.6.1"
+  },
+  "symoneural-numpy": {
+   "distribution": "numpy",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-numpy/2.5.3/image/usr/lib/python3.14/site-packages/numpy-2.5.3.dist-info/METADATA",
+   "version": "2.5.3"
+  },
+  "symoneural-packaging": {
+   "distribution": "packaging",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-packaging/26.3/image/usr/lib/python3.14/site-packages/packaging-26.3.dist-info/METADATA",
+   "version": "26.3"
+  },
+  "symoneural-psutil": {
+   "distribution": "psutil",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-psutil/7.2.2/image/usr/lib/python3.14/site-packages/psutil-7.2.2.dist-info/METADATA",
+   "version": "7.2.2"
+  },
+  "symoneural-pydantic": {
+   "distribution": "pydantic",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pydantic/2.13.5/image/usr/lib/python3.14/site-packages/pydantic-2.13.5.dist-info/METADATA",
+   "version": "2.13.5"
+  },
+  "symoneural-pydantic-core": {
+   "distribution": "pydantic_core",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pydantic-core/2.46.5/image/usr/lib/python3.14/site-packages/pydantic_core-2.46.5.dist-info/METADATA",
+   "version": "2.46.5"
+  },
+  "symoneural-pygments": {
+   "distribution": "Pygments",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pygments/2.21.0/image/usr/lib/python3.14/site-packages/pygments-2.21.0.dist-info/METADATA",
+   "version": "2.21.0"
+  },
+  "symoneural-pytorch": {
+   "distribution": "torch",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pytorch/2.14.0/image/usr/lib/python3.14/site-packages/torch-2.14.0a0+gitunknown.dist-info/METADATA",
+   "version": "2.14.0a0+gitunknown"
+  },
+  "symoneural-pyyaml": {
+   "distribution": "PyYAML",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pyyaml/6.0.3/image/usr/lib/python3.14/site-packages/pyyaml-6.0.3.dist-info/METADATA",
+   "version": "6.0.3"
+  },
+  "symoneural-regex": {
+   "distribution": "regex",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-regex/2026.9.10/image/usr/lib/python3.14/site-packages/regex-2026.9.10.dist-info/METADATA",
+   "version": "2026.9.10"
+  },
+  "symoneural-rich": {
+   "distribution": "rich",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-rich/15.0.0/image/usr/lib/python3.14/site-packages/rich-15.0.0.dist-info/METADATA",
+   "version": "15.0.0"
+  },
+  "symoneural-safetensors": {
+   "distribution": "safetensors",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-safetensors/0.8.0/image/usr/lib/python3.14/site-packages/safetensors-0.8.0.dist-info/METADATA",
+   "version": "0.8.0"
+  },
+  "symoneural-setuptools": {
+   "distribution": "setuptools",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-setuptools/84.0.0/image/usr/lib/python3.14/site-packages/setuptools-84.0.0.dist-info/METADATA",
+   "version": "84.0.0"
+  },
+  "symoneural-shellingham": {
+   "distribution": "shellingham",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-shellingham/1.5.4/image/usr/lib/python3.14/site-packages/shellingham-1.5.4.dist-info/METADATA",
+   "version": "1.5.4"
+  },
+  "symoneural-sniffio": {
+   "distribution": "sniffio",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-sniffio/1.3.1/image/usr/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/METADATA",
+   "version": "1.3.1"
+  },
+  "symoneural-starlette": {
+   "distribution": "starlette",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-starlette/1.6.0/image/usr/lib/python3.14/site-packages/starlette-1.6.0.dist-info/METADATA",
+   "version": "1.6.0"
+  },
+  "symoneural-sympy": {
+   "distribution": "sympy",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-sympy/1.14.0/image/usr/lib/python3.14/site-packages/sympy-1.14.0.dist-info/METADATA",
+   "version": "1.14.0"
+  },
+  "symoneural-tokenizers": {
+   "distribution": "tokenizers",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-tokenizers/0.23.2/image/usr/lib/python3.14/site-packages/tokenizers-0.23.2.dist-info/METADATA",
+   "version": "0.23.2"
+  },
+  "symoneural-tqdm": {
+   "distribution": "tqdm",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-tqdm/4.70.1/image/usr/lib/python3.14/site-packages/tqdm-4.70.1.dist-info/METADATA",
+   "version": "4.70.1"
+  },
+  "symoneural-transformers": {
+   "distribution": "transformers",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-transformers/5.17.0+git/image/usr/lib/python3.14/site-packages/transformers-5.17.0.dist-info/METADATA",
+   "version": "5.17.0"
+  },
+  "symoneural-typer": {
+   "distribution": "typer",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-typer/0.27.2/image/usr/lib/python3.14/site-packages/typer-0.27.2.dist-info/METADATA",
+   "version": "0.27.2"
+  },
+  "symoneural-typing-extensions": {
+   "distribution": "typing_extensions",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-typing-extensions/4.16.0/image/usr/lib/python3.14/site-packages/typing_extensions-4.16.0.dist-info/METADATA",
+   "version": "4.16.0"
+  },
+  "symoneural-typing-inspection": {
+   "distribution": "typing-inspection",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-typing-inspection/0.4.4/image/usr/lib/python3.14/site-packages/typing_inspection-0.4.4.dist-info/METADATA",
+   "version": "0.4.4"
+  },
+  "symoneural-uvicorn": {
+   "distribution": "uvicorn",
+   "metadata": "Symoneural-Common/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-uvicorn/0.52.4/image/usr/lib/python3.14/site-packages/uvicorn-0.52.4.dist-info/METADATA",
+   "version": "0.52.4"
+  }
+ },
+ "edges": [
+  [
+   "symoneural-accelerate",
+   "numpy",
+   ">=1.17"
+  ],
+  [
+   "symoneural-accelerate",
+   "packaging",
+   ">=20.0"
+  ],
+  [
+   "symoneural-accelerate",
+   "psutil",
+   "any"
+  ],
+  [
+   "symoneural-accelerate",
+   "pyyaml",
+   "any"
+  ],
+  [
+   "symoneural-accelerate",
+   "torch",
+   ">=2.0.0"
+  ],
+  [
+   "symoneural-accelerate",
+   "huggingface-hub",
+   ">=0.21.0"
+  ],
+  [
+   "symoneural-accelerate",
+   "safetensors",
+   ">=0.4.3"
+  ],
+  [
+   "symoneural-anyio",
+   "idna",
+   ">=2.8"
+  ],
+  [
+   "symoneural-anyio",
+   "typing-extensions",
+   ">=4.16.0"
+  ],
+  [
+   "symoneural-api-python",
+   "fastapi",
+   ">=0.115"
+  ],
+  [
+   "symoneural-api-python",
+   "pydantic",
+   ">=2.11"
+  ],
+  [
+   "symoneural-api-python",
+   "uvicorn",
+   ">=0.30"
+  ],
+  [
+   "symoneural-fastapi",
+   "starlette",
+   ">=0.46.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "pydantic",
+   ">=2.9.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "typing-extensions",
+   ">=4.8.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "typing-inspection",
+   ">=0.4.2"
+  ],
+  [
+   "symoneural-fastapi",
+   "annotated-doc",
+   ">=0.0.2"
+  ],
+  [
+   "symoneural-httpcore",
+   "certifi",
+   "any"
+  ],
+  [
+   "symoneural-httpcore",
+   "h11",
+   ">=0.16"
+  ],
+  [
+   "symoneural-httpx",
+   "anyio",
+   "any"
+  ],
+  [
+   "symoneural-httpx",
+   "certifi",
+   "any"
+  ],
+  [
+   "symoneural-httpx",
+   "httpcore",
+   "==1.*"
+  ],
+  [
+   "symoneural-httpx",
+   "idna",
+   "any"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "click",
+   "<9.0.0,>=8.4.2"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "filelock",
+   ">=3.10.0"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "fsspec",
+   ">=2023.5.0"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "hf-xet",
+   "<2.0.0,>=1.5.2"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "httpx",
+   "<1,>=0.23.0"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "packaging",
+   ">=20.9"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "pyyaml",
+   ">=5.1"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "tqdm",
+   ">=4.42.1"
+  ],
+  [
+   "symoneural-huggingface-hub",
+   "typing-extensions",
+   ">=4.1.0"
+  ],
+  [
+   "symoneural-jinja2",
+   "markupsafe",
+   ">=2.0"
+  ],
+  [
+   "symoneural-markdown-it-py",
+   "mdurl",
+   "~=0.1"
+  ],
+  [
+   "symoneural-pydantic",
+   "annotated-types",
+   ">=0.6.0"
+  ],
+  [
+   "symoneural-pydantic",
+   "pydantic-core",
+   "==2.46.5"
+  ],
+  [
+   "symoneural-pydantic",
+   "typing-extensions",
+   ">=4.14.1"
+  ],
+  [
+   "symoneural-pydantic",
+   "typing-inspection",
+   ">=0.4.2"
+  ],
+  [
+   "symoneural-pydantic-core",
+   "typing-extensions",
+   ">=4.14.1"
+  ],
+  [
+   "symoneural-pytorch",
+   "filelock",
+   "any"
+  ],
+  [
+   "symoneural-pytorch",
+   "typing-extensions",
+   ">=4.10.0"
+  ],
+  [
+   "symoneural-pytorch",
+   "setuptools",
+   ">=77.0.3"
+  ],
+  [
+   "symoneural-pytorch",
+   "sympy",
+   ">=1.13.3"
+  ],
+  [
+   "symoneural-pytorch",
+   "networkx",
+   ">=2.5.1"
+  ],
+  [
+   "symoneural-pytorch",
+   "jinja2",
+   "any"
+  ],
+  [
+   "symoneural-pytorch",
+   "fsspec",
+   ">=0.8.5"
+  ],
+  [
+   "symoneural-rich",
+   "markdown-it-py",
+   ">=2.2.0"
+  ],
+  [
+   "symoneural-rich",
+   "pygments",
+   "<3.0.0,>=2.13.0"
+  ],
+  [
+   "symoneural-starlette",
+   "anyio",
+   "<5,>=3.6.2"
+  ],
+  [
+   "symoneural-sympy",
+   "mpmath",
+   "<1.4,>=1.1.0"
+  ],
+  [
+   "symoneural-tokenizers",
+   "huggingface-hub",
+   "<2.0,>=0.16.4"
+  ],
+  [
+   "symoneural-transformers",
+   "huggingface-hub",
+   "<2.0,>=1.5.0"
+  ],
+  [
+   "symoneural-transformers",
+   "numpy",
+   ">=1.17"
+  ],
+  [
+   "symoneural-transformers",
+   "packaging",
+   ">=20.0"
+  ],
+  [
+   "symoneural-transformers",
+   "pyyaml",
+   ">=5.1"
+  ],
+  [
+   "symoneural-transformers",
+   "regex",
+   ">=2025.10.22"
+  ],
+  [
+   "symoneural-transformers",
+   "tokenizers",
+   "<0.24.0,>=0.23.1"
+  ],
+  [
+   "symoneural-transformers",
+   "typer",
+   "any"
+  ],
+  [
+   "symoneural-transformers",
+   "safetensors",
+   ">=0.8.0"
+  ],
+  [
+   "symoneural-transformers",
+   "tqdm",
+   ">=4.60"
+  ],
+  [
+   "symoneural-typer",
+   "shellingham",
+   ">=1.3.0"
+  ],
+  [
+   "symoneural-typer",
+   "rich",
+   ">=13.8.0"
+  ],
+  [
+   "symoneural-typer",
+   "annotated-doc",
+   ">=0.0.2"
+  ],
+  [
+   "symoneural-typing-inspection",
+   "typing-extensions",
+   ">=4.15.0"
+  ],
+  [
+   "symoneural-uvicorn",
+   "click",
+   ">=7.0"
+  ],
+  [
+   "symoneural-uvicorn",
+   "h11",
+   ">=0.8"
+  ]
+ ],
+ "requirements": {
+  "annotated-doc": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.0.2",
+    ">=0.0.2"
+   ],
+   "consumers": [
+    "symoneural-fastapi",
+    "symoneural-typer"
+   ],
+   "distribution": "annotated-doc",
+   "package": "symoneural-annotated-doc",
+   "provider": "SYMONEURAL",
+   "version": "0.0.5"
+  },
+  "annotated-types": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.6.0"
+   ],
+   "consumers": [
+    "symoneural-pydantic"
+   ],
+   "distribution": "annotated-types",
+   "package": "symoneural-annotated-types",
+   "provider": "SYMONEURAL",
+   "version": "0.8.0"
+  },
+  "anyio": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any",
+    "<5,>=3.6.2"
+   ],
+   "consumers": [
+    "symoneural-httpx",
+    "symoneural-starlette"
+   ],
+   "distribution": "anyio",
+   "package": "symoneural-anyio",
+   "provider": "SYMONEURAL",
+   "version": "4.15.1"
+  },
+  "certifi": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any",
+    "any"
+   ],
+   "consumers": [
+    "symoneural-httpcore",
+    "symoneural-httpx"
+   ],
+   "distribution": "certifi",
+   "package": "symoneural-certifi",
+   "provider": "SYMONEURAL",
+   "version": "2026.07.22"
+  },
+  "click": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "<9.0.0,>=8.4.2",
+    ">=7.0"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub",
+    "symoneural-uvicorn"
+   ],
+   "distribution": "click",
+   "package": "symoneural-click",
+   "provider": "SYMONEURAL",
+   "version": "8.5.0"
+  },
+  "fastapi": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.115"
+   ],
+   "consumers": [
+    "symoneural-api-python"
+   ],
+   "distribution": "fastapi",
+   "package": "symoneural-fastapi",
+   "provider": "SYMONEURAL",
+   "version": "0.141.1"
+  },
+  "filelock": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=3.10.0",
+    "any"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub",
+    "symoneural-pytorch"
+   ],
+   "distribution": "filelock",
+   "package": "symoneural-filelock",
+   "provider": "SYMONEURAL",
+   "version": "3.32.6"
+  },
+  "fsspec": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2023.5.0",
+    ">=0.8.5"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub",
+    "symoneural-pytorch"
+   ],
+   "distribution": "fsspec",
+   "package": "symoneural-fsspec",
+   "provider": "SYMONEURAL",
+   "version": "2026.7.0"
+  },
+  "h11": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.16",
+    ">=0.8"
+   ],
+   "consumers": [
+    "symoneural-httpcore",
+    "symoneural-uvicorn"
+   ],
+   "distribution": "h11",
+   "package": "symoneural-h11",
+   "provider": "SYMONEURAL",
+   "version": "0.16.0"
+  },
+  "hf-xet": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "<2.0.0,>=1.5.2"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub"
+   ],
+   "distribution": "hf-xet",
+   "package": "symoneural-hf-xet",
+   "provider": "SYMONEURAL",
+   "version": "1.6.0"
+  },
+  "httpcore": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "==1.*"
+   ],
+   "consumers": [
+    "symoneural-httpx"
+   ],
+   "distribution": "httpcore",
+   "package": "symoneural-httpcore",
+   "provider": "SYMONEURAL",
+   "version": "1.0.9"
+  },
+  "httpx": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "<1,>=0.23.0"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub"
+   ],
+   "distribution": "httpx",
+   "package": "symoneural-httpx",
+   "provider": "SYMONEURAL",
+   "version": "0.28.1"
+  },
+  "huggingface-hub": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.21.0",
+    "<2.0,>=0.16.4",
+    "<2.0,>=1.5.0"
+   ],
+   "consumers": [
+    "symoneural-accelerate",
+    "symoneural-tokenizers",
+    "symoneural-transformers"
+   ],
+   "distribution": "huggingface-hub",
+   "package": "symoneural-huggingface-hub",
+   "provider": "SYMONEURAL",
+   "version": "1.31.0"
+  },
+  "idna": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.8",
+    "any"
+   ],
+   "consumers": [
+    "symoneural-anyio",
+    "symoneural-httpx"
+   ],
+   "distribution": "idna",
+   "package": "symoneural-idna",
+   "provider": "SYMONEURAL",
+   "version": "3.19"
+  },
+  "jinja2": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any"
+   ],
+   "consumers": [
+    "symoneural-pytorch"
+   ],
+   "distribution": "jinja2",
+   "package": "symoneural-jinja2",
+   "provider": "SYMONEURAL",
+   "version": "3.1.6"
+  },
+  "markdown-it-py": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.2.0"
+   ],
+   "consumers": [
+    "symoneural-rich"
+   ],
+   "distribution": "markdown-it-py",
+   "package": "symoneural-markdown-it-py",
+   "provider": "SYMONEURAL",
+   "version": "4.2.0"
+  },
+  "markupsafe": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.0"
+   ],
+   "consumers": [
+    "symoneural-jinja2"
+   ],
+   "distribution": "markupsafe",
+   "package": "symoneural-markupsafe",
+   "provider": "SYMONEURAL",
+   "version": "3.0.3"
+  },
+  "mdurl": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "~=0.1"
+   ],
+   "consumers": [
+    "symoneural-markdown-it-py"
+   ],
+   "distribution": "mdurl",
+   "package": "symoneural-mdurl",
+   "provider": "SYMONEURAL",
+   "version": "0.1.2"
+  },
+  "mpmath": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "<1.4,>=1.1.0"
+   ],
+   "consumers": [
+    "symoneural-sympy"
+   ],
+   "distribution": "mpmath",
+   "package": "symoneural-mpmath",
+   "provider": "SYMONEURAL",
+   "version": "1.3.0"
+  },
+  "networkx": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.5.1"
+   ],
+   "consumers": [
+    "symoneural-pytorch"
+   ],
+   "distribution": "networkx",
+   "package": "symoneural-networkx",
+   "provider": "SYMONEURAL",
+   "version": "3.6.1"
+  },
+  "numpy": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=1.17",
+    ">=1.17"
+   ],
+   "consumers": [
+    "symoneural-accelerate",
+    "symoneural-transformers"
+   ],
+   "distribution": "numpy",
+   "package": "symoneural-numpy",
+   "provider": "SYMONEURAL",
+   "version": "2.5.3"
+  },
+  "packaging": {
+   "authority": "SYMONEURAL-OWNED (feed also holds python3-packaging as build tooling; ruled)",
+   "constraints": [
+    ">=20.0",
+    ">=20.9",
+    ">=20.0"
+   ],
+   "consumers": [
+    "symoneural-accelerate",
+    "symoneural-huggingface-hub",
+    "symoneural-transformers"
+   ],
+   "distribution": "packaging",
+   "package": "symoneural-packaging",
+   "provider": "SYMONEURAL",
+   "version": "26.3"
+  },
+  "psutil": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any"
+   ],
+   "consumers": [
+    "symoneural-accelerate"
+   ],
+   "distribution": "psutil",
+   "package": "symoneural-psutil",
+   "provider": "SYMONEURAL",
+   "version": "7.2.2"
+  },
+  "pydantic": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.11",
+    ">=2.9.0"
+   ],
+   "consumers": [
+    "symoneural-api-python",
+    "symoneural-fastapi"
+   ],
+   "distribution": "pydantic",
+   "package": "symoneural-pydantic",
+   "provider": "SYMONEURAL",
+   "version": "2.13.5"
+  },
+  "pydantic-core": {
+   "authority": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+   "constraints": [
+    "==2.46.5"
+   ],
+   "consumers": [
+    "symoneural-pydantic"
+   ],
+   "distribution": "pydantic-core",
+   "package": "symoneural-pydantic-core",
+   "provider": "SYMONEURAL",
+   "version": "2.46.5"
+  },
+  "pygments": {
+   "authority": "SYMONEURAL-OWNED (feed also holds python3-pygments as build tooling; ruled)",
+   "constraints": [
+    "<3.0.0,>=2.13.0"
+   ],
+   "consumers": [
+    "symoneural-rich"
+   ],
+   "distribution": "pygments",
+   "package": "symoneural-pygments",
+   "provider": "SYMONEURAL",
+   "version": "2.21.0"
+  },
+  "pyyaml": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any",
+    ">=5.1",
+    ">=5.1"
+   ],
+   "consumers": [
+    "symoneural-accelerate",
+    "symoneural-huggingface-hub",
+    "symoneural-transformers"
+   ],
+   "distribution": "pyyaml",
+   "package": "symoneural-pyyaml",
+   "provider": "SYMONEURAL",
+   "version": "6.0.3"
+  },
+  "regex": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2025.10.22"
+   ],
+   "consumers": [
+    "symoneural-transformers"
+   ],
+   "distribution": "regex",
+   "package": "symoneural-regex",
+   "provider": "SYMONEURAL",
+   "version": "2026.9.10"
+  },
+  "rich": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=13.8.0"
+   ],
+   "consumers": [
+    "symoneural-typer"
+   ],
+   "distribution": "rich",
+   "package": "symoneural-rich",
+   "provider": "SYMONEURAL",
+   "version": "15.0.0"
+  },
+  "safetensors": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.4.3",
+    ">=0.8.0"
+   ],
+   "consumers": [
+    "symoneural-accelerate",
+    "symoneural-transformers"
+   ],
+   "distribution": "safetensors",
+   "package": "symoneural-safetensors",
+   "provider": "SYMONEURAL",
+   "version": "0.8.0"
+  },
+  "setuptools": {
+   "authority": "SYMONEURAL-OWNED (feed also holds python3-setuptools as build tooling; ruled)",
+   "constraints": [
+    ">=77.0.3"
+   ],
+   "consumers": [
+    "symoneural-pytorch"
+   ],
+   "distribution": "setuptools",
+   "package": "symoneural-setuptools",
+   "provider": "SYMONEURAL",
+   "version": "84.0.0"
+  },
+  "shellingham": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=1.3.0"
+   ],
+   "consumers": [
+    "symoneural-typer"
+   ],
+   "distribution": "shellingham",
+   "package": "symoneural-shellingham",
+   "provider": "SYMONEURAL",
+   "version": "1.5.4"
+  },
+  "starlette": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.46.0"
+   ],
+   "consumers": [
+    "symoneural-fastapi"
+   ],
+   "distribution": "starlette",
+   "package": "symoneural-starlette",
+   "provider": "SYMONEURAL",
+   "version": "1.6.0"
+  },
+  "sympy": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=1.13.3"
+   ],
+   "consumers": [
+    "symoneural-pytorch"
+   ],
+   "distribution": "sympy",
+   "package": "symoneural-sympy",
+   "provider": "SYMONEURAL",
+   "version": "1.14.0"
+  },
+  "tokenizers": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "<0.24.0,>=0.23.1"
+   ],
+   "consumers": [
+    "symoneural-transformers"
+   ],
+   "distribution": "tokenizers",
+   "package": "symoneural-tokenizers",
+   "provider": "SYMONEURAL",
+   "version": "0.23.2"
+  },
+  "torch": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    ">=2.0.0"
+   ],
+   "consumers": [
+    "symoneural-accelerate"
+   ],
+   "distribution": "torch",
+   "package": "symoneural-pytorch",
+   "provider": "SYMONEURAL",
+   "version": "2.14.0"
+  },
+  "tqdm": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=4.42.1",
+    ">=4.60"
+   ],
+   "consumers": [
+    "symoneural-huggingface-hub",
+    "symoneural-transformers"
+   ],
+   "distribution": "tqdm",
+   "package": "symoneural-tqdm",
+   "provider": "SYMONEURAL",
+   "version": "4.70.1"
+  },
+  "typer": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any"
+   ],
+   "consumers": [
+    "symoneural-transformers"
+   ],
+   "distribution": "typer",
+   "package": "symoneural-typer",
+   "provider": "SYMONEURAL",
+   "version": "0.27.2"
+  },
+  "typing-extensions": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=4.16.0",
+    ">=4.8.0",
+    ">=4.1.0",
+    ">=4.14.1",
+    ">=4.14.1",
+    ">=4.10.0",
+    ">=4.15.0"
+   ],
+   "consumers": [
+    "symoneural-anyio",
+    "symoneural-fastapi",
+    "symoneural-huggingface-hub",
+    "symoneural-pydantic",
+    "symoneural-pydantic-core",
+    "symoneural-pytorch",
+    "symoneural-typing-inspection"
+   ],
+   "distribution": "typing-extensions",
+   "package": "symoneural-typing-extensions",
+   "provider": "SYMONEURAL",
+   "version": "4.16.0"
+  },
+  "typing-inspection": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.4.2",
+    ">=0.4.2"
+   ],
+   "consumers": [
+    "symoneural-fastapi",
+    "symoneural-pydantic"
+   ],
+   "distribution": "typing-inspection",
+   "package": "symoneural-typing-inspection",
+   "provider": "SYMONEURAL",
+   "version": "0.4.4"
+  },
+  "uvicorn": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.30"
+   ],
+   "consumers": [
+    "symoneural-api-python"
+   ],
+   "distribution": "uvicorn",
+   "package": "symoneural-uvicorn",
+   "provider": "SYMONEURAL",
+   "version": "0.52.4"
+  }
+ },
+ "runtime": "Common",
+ "schema": "symoneural-runtime-closure/1",
+ "target_environment": {
+  "implementation_name": "cpython",
+  "implementation_version": "3.13.5",
+  "os_name": "posix",
+  "platform_machine": "x86_64",
+  "platform_python_implementation": "CPython",
+  "platform_release": "",
+  "platform_system": "Linux",
+  "platform_version": "",
+  "python_full_version": "3.14.7",
+  "python_version": "3.14",
+  "sys_platform": "linux"
+ }
+}
