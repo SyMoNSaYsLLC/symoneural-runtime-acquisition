@@ -1,0 +1,1 @@
+Symoneural-Platform estate kernel target. Targets: virtual/kernel (linux-yocto 6.18.48), symoneural-nvidia-open-kernel.

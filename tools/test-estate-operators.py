@@ -127,6 +127,19 @@ class Launcher(unittest.TestCase):
         write(self.root / "tools/estate_processes.py", 'import sys; sys.exit(2)\n')
         self.assertEqual(run(str(self.launcher), "Symoneural-Common", "recipe").returncode, 2)
 
+    def test_build_dir_option_selects_sibling_directory(self):
+        other = self.root / "Symoneural-Common/build/other-target"
+        (other / "conf").mkdir(parents=True)
+        result = run(str(self.launcher), "--show-path", "Symoneural-Common", "--build-dir", "other-target")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), str(other))
+        self.assertIn("Symoneural-Common --build-dir other-target", run(str(self.launcher), "--list").stdout)
+        self.assertEqual(run(str(self.launcher), "Symoneural-Common", "--build-dir", "../evil", "x").returncode, 2)
+        self.assertEqual(run(str(self.launcher), "Symoneural-Common", "--build-dir").returncode, 2)
+        self.assertEqual(run(str(self.launcher), "Symoneural-Common", "--build-dir", "missing", "x").returncode, 1)
+        # the default directory is unchanged when the option is absent
+        self.assertEqual(run(str(self.launcher), "--show-path", "Symoneural-Common").stdout.strip(), str(self.bd))
+
     def test_cooperating_wrapper_lock(self):
         import fcntl
         with (self.bd / ".symonbake.lock").open("w") as lock:

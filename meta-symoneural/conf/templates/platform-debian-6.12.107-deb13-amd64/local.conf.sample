@@ -1,0 +1,41 @@
+# Symoneural-Platform :: DEBIAN 6.12.107+deb13-amd64 kernel target (build/debian-6.12.107-deb13-amd64)
+# (the directory name carries no "+": OE's sanity checker rejects that character in TMPDIR paths;
+#  the ABI string itself stays verbatim in recipe and package names, where it is allowed)
+# Source of truth: meta-symoneural/conf/templates/platform-debian-6.12.107-deb13-amd64/local.conf.sample.
+# A SEPARATE build directory from the estate target: separate TMPDIR, sysroots, deploy tree and
+# package format. Same MACHINE so the cross tune (x86-64-v3) and DPKG_ARCH (amd64) are defined;
+# the Debian-profile recipes never use the cross toolchain (INHIBIT_DEFAULT_DEPS).
+MACHINE ??= "qemux86-64"
+USER_CLASSES ?= "buildstats"
+PATCHRESOLVE = "noop"
+BB_DISKMON_DIRS ??= "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    STOPTASKS,/tmp,100M,100K \
+    HALT,${TMPDIR},100M,1K \
+    HALT,${DL_DIR},100M,1K \
+    HALT,${SSTATE_DIR},100M,1K \
+    HALT,/tmp,10M,1K"
+CONF_VERSION = "2"
+DL_DIR = "/home/google/SymonSaysLLC/Symoneural-Platform/downloads"
+SSTATE_DIR = "/home/google/SymonSaysLLC/Symoneural-Platform/sstate-cache-master"
+SSTATE_MIRRORS = "\
+    file://.* file:///home/google/SymonSaysLLC/Symoneural-Common/sstate-cache-master/PATH \n \
+    file://.* file:///home/google/SymonSaysLLC/Symoneural-Ravencalc/sstate-cache-master/PATH \n \
+    "
+BB_NUMBER_THREADS = "10"
+PARALLEL_MAKE = "-j 12"
+
+# Debian deliverable: .deb through package_deb.bbclass (DPKG_ARCH amd64 from TARGET_ARCH x86_64).
+PACKAGE_CLASSES = "package_deb"
+MAINTAINER = "SyMoNeuRaL <gmcdonald@symoneural.com>"
+
+# HOST-CONDITIONED TOOLCHAIN DECLARATION. The Debian kernel 6.12.107+deb13-amd64 records
+# CONFIG_CC_VERSION_TEXT="x86_64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0" with GNU ld 2.44 and
+# pahole 1.30 (CONFIG_PAHOLE_VERSION=130). Its out-of-tree modules are built with that identity,
+# taken from the host at the index-recorded versions (gcc-14 14.2.0-19, binutils 2.44-3, dwarves
+# 1.30-1) and admitted ONLY through this list; nothing else on the host is reachable from a task.
+# Until a pinned toolchain root exists, BUILD/PACKAGE results of this profile are
+# HOST-CONDITIONED and REPRODUCIBILITY is NOT TESTED (docs/platform/NVIDIA-OPEN-KERNEL.md).
+HOSTTOOLS += "x86_64-linux-gnu-gcc-14 x86_64-linux-gnu-ld x86_64-linux-gnu-ld.bfd x86_64-linux-gnu-ar x86_64-linux-gnu-nm x86_64-linux-gnu-objcopy x86_64-linux-gnu-objdump x86_64-linux-gnu-strip x86_64-linux-gnu-readelf pahole"

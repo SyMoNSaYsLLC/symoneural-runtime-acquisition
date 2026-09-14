@@ -1,0 +1,14 @@
+# Symoneural-Platform build configuration (estate kernel target). Source of truth:
+# meta-symoneural/conf/templates/platform-estate/ - copied by oe-init-build-env when the
+# build directory is created (conf/templateconf.cfg names the template).
+LCONF_VERSION = "7"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  /home/google/symoneural-bootstrap-master/openembedded-core/meta \
+  /home/google/symoneural-bootstrap-master/meta-openembedded/meta-oe \
+  /home/google/symoneural-bootstrap-master/meta-openembedded/meta-python \
+  /home/google/SymonSaysLLC/meta-symoneural \
+  "

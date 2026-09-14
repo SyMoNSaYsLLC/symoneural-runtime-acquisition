@@ -1,0 +1,14 @@
+# Symoneural-Platform build configuration (Debian 6.12.107+deb13-amd64 target). Source of truth:
+# meta-symoneural/conf/templates/platform-debian-6.12.107-deb13-amd64/ - copied by oe-init-build-env when the
+# build directory is created (conf/templateconf.cfg names the template).
+LCONF_VERSION = "7"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  /home/google/symoneural-bootstrap-master/openembedded-core/meta \
+  /home/google/symoneural-bootstrap-master/meta-openembedded/meta-oe \
+  /home/google/symoneural-bootstrap-master/meta-openembedded/meta-python \
+  /home/google/SymonSaysLLC/meta-symoneural \
+  "
