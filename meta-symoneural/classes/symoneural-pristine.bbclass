@@ -10,16 +10,31 @@
 #   * Python build backends emitting .egg-info / _version.py / .pdm-build
 #     next to setup.py regardless of where the build directory points
 #
-# Here ${S} is a throwaway `git archive` export under ${WORKDIR}. Writers can do
-# whatever they like to it; the acquired tree is never opened for writing at all.
+# Here ${S} is a throwaway `git archive` export under ${WORKDIR}, taken from the
+# ESTATE repository's object store at HEAD:<tree path>. Writers can do whatever
+# they like to it; the acquired tree is never opened for writing - or reading.
 # Each BBCLASSEXTEND variant has its own ${WORKDIR}, so each gets its own export
 # and the sharing problem disappears by construction.
 #
 # Required:
-#   SYMON_TREE - absolute path to the acquired git tree
-#   SRCREV     - the commit the tree MUST be at
+#   SYMON_TREE - absolute path of the acquired tree INSIDE this repository
+#   SRCREV     - the upstream commit the tree MUST be at (= lock.commit_sha)
+#
+# SOURCES-100 (S1/P): the acquired tree's own .git no longer sits in the tree - it
+# is moved to .gitpins/ and the tree's FILES are committed to the estate repository
+# at their pin. So `git -C ${SYMON_TREE} rev-parse HEAD` would walk upward, find THIS
+# repository, and return the estate's HEAD: every build would fail PIN MISMATCH.
+# The identity check is now the lock's content address:
+#     git rev-parse HEAD:${SYMON_REPO_PATH}  ==  source-lock.json tree_sha
+# (for submodule-bearing trees, upstream's gitlink tree rebuilt from ours and
+# compared - tools/ingest-tree verify is the one implementation of both), and the
+# export comes from the repository's OBJECT STORE (git archive HEAD:<path>), never
+# from the working tree. Committed as trees, submodules are IN the export - the
+# old per-tree `git archive` never descended into them.
 
+SYMON_REPO ?= "/home/google/SymonSaysLLC"
 SYMON_TREE ?= ""
+SYMON_REPO_PATH = "${@os.path.relpath(d.getVar('SYMON_TREE') or '/nonexistent', d.getVar('SYMON_REPO'))}"
 SYMON_PRISTINE_DIR = "${WORKDIR}/pristine"
 
 S = "${SYMON_PRISTINE_DIR}"
@@ -41,80 +56,82 @@ symon_export_pristine[cleandirs] = "${SYMON_PRISTINE_DIR}"
 # vendor directory containing 0 crates. Recipes with no extra SRC_URI never
 # noticed, which is exactly why it went undetected.
 do_unpack[prefuncs] += "symon_export_pristine"
+# the lock is an input to the export: a re-ingested tree must re-run it
+symon_export_pristine[file-checksums] += "${SYMON_REPO}/acquisition/source-lock.json:True"
 
 python symon_export_pristine() {
-    import subprocess, os
+    import subprocess, os, sys, json
 
+    repo = d.getVar("SYMON_REPO")
     tree = d.getVar("SYMON_TREE")
+    rel  = d.getVar("SYMON_REPO_PATH")
     want = d.getVar("SRCREV")
     dest = d.getVar("SYMON_PRISTINE_DIR")
     pf   = d.getVar("PF")
 
     if not tree:
         bb.fatal("%s: SYMON_TREE is unset. symoneural-pristine needs the acquired tree." % pf)
-    if not os.path.isdir(os.path.join(tree, ".git")) and not os.path.isfile(os.path.join(tree, ".git")):
-        bb.fatal("%s: SYMON_TREE %s is not a git work tree." % (pf, tree))
+    if not os.path.isdir(tree):
+        bb.fatal("%s: SYMON_TREE %s is not a directory." % (pf, tree))
+    if rel.startswith("..") or os.path.isabs(rel):
+        bb.fatal("%s: SYMON_TREE %s is not inside the estate repository %s." % (pf, tree, repo))
     if not want or want == "INVALID":
         bb.fatal("%s: SRCREV is unset. The pin is the identity; it cannot be implicit." % pf)
 
-    def git(*a):
-        return subprocess.run(("git", "-C", tree) + a, capture_output=True,
-                              text=True).stdout.strip()
+    lock_path = os.path.join(repo, "acquisition", "source-lock.json")
+    with open(lock_path) as f:
+        comps = json.load(f)["components"]
+    ent = next((c for c in comps if c.get("source_path") == rel), None)
+    if ent is None:
+        bb.fatal("%s: %s is not a component source_path in %s." % (pf, rel, lock_path))
+    if ent.get("commit_sha") != want:
+        bb.fatal("%s: PIN MISMATCH. SRCREV is %s but source-lock.json commit_sha for %s is %s."
+                 % (pf, want, rel, ent.get("commit_sha")))
+    if not ent.get("tree_sha"):
+        bb.fatal("%s: %s has no tree_sha in source-lock.json - the tree was never ingested "
+                 "(tools/ingest-tree ingest %s). Refusing to build an unverifiable tree."
+                 % (pf, rel, ent.get("component")))
 
-    have = git("rev-parse", "HEAD")
-    if have != want:
-        # The whole point of the class: a tree that has drifted from its pin must
-        # not build. Silently building the wrong commit is the failure this prevents.
-        bb.fatal("%s: PIN MISMATCH. %s is at %s but SRCREV says %s. "
-                 "Refusing to build a tree that is not at its pinned revision."
-                 % (pf, tree, have or "<unknown>", want))
+    # THE assertion: what is committed at HEAD:<path> IS upstream's tree.
+    # One implementation, shared with the audit; its last line is the verdict.
+    r = subprocess.run([sys.executable, os.path.join(repo, "tools", "ingest-tree"), "verify",
+                        ent["component"]], cwd=repo, capture_output=True, text=True)
+    verdict = (r.stdout.strip().splitlines() or [r.stderr.strip()])[-1]
+    if r.returncode != 0 or not (" · VERIFIED" in verdict or " · LISTING-VERIFIED(" in verdict):
+        bb.fatal("%s: PIN MISMATCH. HEAD:%s does not equal the locked tree_sha %s. "
+                 "Refusing to build a tree that is not at its pinned content. Verifier said: %s"
+                 % (pf, rel, ent["tree_sha"][:12], verdict or r.stderr.strip()[-400:]))
 
+    # export from the object store - the working tree is never read
     bb.utils.mkdirhier(dest)
-    # Export the tree itself...
-    rc = subprocess.run("git -C %s archive HEAD | tar -x -C %s" % (tree, dest),
-                        shell=True).returncode
+    rc = subprocess.run(["bash", "-o", "pipefail", "-c",
+                         "git -C '%s' archive 'HEAD:%s' | tar -x -C '%s'" % (repo, rel, dest)]).returncode
     if rc:
-        bb.fatal("%s: git archive of %s failed (rc=%d)" % (pf, tree, rc))
-
-    # ...then every INITIALISED submodule at its own path. git archive does not
-    # recurse into submodules, so each is exported separately or the export is
-    # silently incomplete.
-    n = 0
-    out = subprocess.run(("git", "-C", tree, "submodule", "status", "--recursive"),
-                         capture_output=True, text=True).stdout
-    for line in out.splitlines():
-        if not line.strip() or line[0] == "-":
-            continue                      # "-" = not initialised, nothing to export
-        parts = line[1:].split()
-        if len(parts) < 2:
-            continue
-        sp = parts[1]
-        sub = os.path.join(tree, sp)
-        tgt = os.path.join(dest, sp)
-        if not os.path.isdir(sub):
-            continue
-        bb.utils.mkdirhier(tgt)
-        rc = subprocess.run("git -C %s archive HEAD | tar -x -C %s" % (sub, tgt),
-                            shell=True).returncode
-        if rc:
-            bb.fatal("%s: git archive of submodule %s failed (rc=%d)" % (pf, sp, rc))
-        n += 1
+        bb.fatal("%s: git archive HEAD:%s failed (rc=%d)" % (pf, rel, rc))
 
     # N2 - SOURCE_DATE_EPOCH from the PIN, not from the clock or a fallback.
-    # The export has no .git, so create_source_date_epoch_stamp found nothing and
-    # silently used SOURCE_DATE_EPOCH_FALLBACK (observed: 1302044400, i.e. 2011).
-    # Every reproducible-build timestamp in the estate was that constant. The commit
-    # date OF THE PINNED SHA is the honest value: it derives from the identity.
-    epoch = git("log", "-1", "--format=%ct", want)
+    # The commit date OF THE PINNED UPSTREAM SHA is the honest value: it derives
+    # from the identity. It lives in the pin store (local); when that is absent the
+    # date of the estate commit that ingested the tree is used, and said so.
+    epoch, origin = "", ""
+    pin = ent.get("pins_path")
+    if pin and os.path.isdir(os.path.join(repo, pin)):
+        epoch = subprocess.run(["git", "--git-dir=" + os.path.join(repo, pin), "--work-tree=/",
+                                "log", "-1", "--format=%ct", want],
+                               capture_output=True, text=True).stdout.strip()
+        origin = "commit date of upstream %s" % want[:12]
+    if not epoch.isdigit():
+        epoch = subprocess.run(["git", "-C", repo, "log", "-1", "--format=%ct", "HEAD", "--", rel],
+                               capture_output=True, text=True).stdout.strip()
+        origin = "date of the estate commit that ingested %s (pin store absent)" % rel
     if epoch.isdigit():
         sde = os.path.join(d.getVar("WORKDIR"), "source-date-epoch")
         bb.utils.mkdirhier(sde)
         with open(os.path.join(sde, "__source_date_epoch.txt"), "w") as f:
             f.write(epoch)
-        bb.note("%s: SOURCE_DATE_EPOCH %s (commit date of %s)" % (pf, epoch, want[:12]))
+        bb.note("%s: SOURCE_DATE_EPOCH %s (%s)" % (pf, epoch, origin))
     else:
-        bb.warn("%s: could not read commit date for %s; SOURCE_DATE_EPOCH will fall back"
-                % (pf, want[:12]))
+        bb.warn("%s: could not derive SOURCE_DATE_EPOCH for %s; it will fall back" % (pf, want[:12]))
 
     # N3 - permanent unpack-time assertions. Each of these corresponds to a defect
     # that actually shipped and was only caught later by reading a build log.
@@ -130,22 +147,22 @@ python symon_export_pristine() {
     # (b) every LIC_FILES_CHKSUM path exists in the export. Catches the same class
     #     of failure at unpack time, where the cause is still obvious.
     missing = []
-    for ent in (d.getVar("LIC_FILES_CHKSUM") or "").split():
-        if not ent.startswith("file://"):
+    for e in (d.getVar("LIC_FILES_CHKSUM") or "").split():
+        if not e.startswith("file://"):
             continue
-        rel = ent[len("file://"):].split(";", 1)[0]
-        if rel.startswith("${") or not rel:
+        p = e[len("file://"):].split(";", 1)[0]
+        if p.startswith("${") or not p:
             continue
-        if not os.path.exists(os.path.join(dest, rel)):
-            missing.append(rel)
+        if not os.path.exists(os.path.join(dest, p)):
+            missing.append(p)
     if missing:
         bb.fatal("%s: LIC_FILES_CHKSUM names %d file(s) absent from the export: %s"
                  % (pf, len(missing), ", ".join(missing[:5])))
 
     bb.note("%s: export verified - %d files, %d licence file(s) present"
             % (pf, got, len((d.getVar("LIC_FILES_CHKSUM") or "").split())))
-    bb.note("%s: exported pristine tree at %s (+%d submodules) to %s"
-            % (pf, want[:12], n, dest))
+    bb.note("%s: %s; exported HEAD:%s (%d submodules committed as trees) to %s"
+            % (pf, verdict, rel, len(ent.get("submodules") or []), dest))
 }
 
 # The upstream git:// URI is redundant - SYMON_TREE already holds that source,
