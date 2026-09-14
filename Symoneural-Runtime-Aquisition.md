@@ -6,13 +6,13 @@
 
 | | |
 |---|---|
-| Parent HEAD | `7bba8aca54751b629fa2a93b69ab181a28a98484` |
+| Parent HEAD | `2a726ec405be4f9aa0dd2962e9e02d3e7ee04fb4` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
-| Scanner identity | `acquisition/control-plane.json` (11 tools hashed) |
+| Scanner identity | `acquisition/control-plane.json` (13 tools hashed) |
 | Determinism verified | YES |
-| Tree inventory | `generated/runtime-tree.txt` (28657 dirs) |
-| Tree SHA-256 | `b15ce4a95240abd9bbe7cdc377659599eabde4f13452d73df2eb4df3f4b2fbbc` |
+| Tree inventory | `generated/runtime-tree.txt` (29889 dirs) |
+| Tree SHA-256 | `16ec9ee1f1fbd3c5192880272c1cd88988b9fe2d61b643dd9a74624fc2af5fdf` |
 | Report self-validation | PASS (10/10 totals re-derived) |
 
 ## Verdicts
@@ -30,7 +30,7 @@ Acquisition FAIL reasons:
 - 42 provider collision(s) unresolved (17 direct-vs-OE-Core)
 - 366 vendored decision(s) unresolved
 - 429 licence file(s) without an established identifier
-- 1 explicit control-plane decisions open
+- 1 explicit control-plane decisions open (FreeToken/torch)
 
 This FAIL is expected and is a statement of open decisions, not a defect.
 
@@ -39,8 +39,8 @@ This FAIL is expected and is a statement of open decisions, not a defect.
 
 | Method | Count |
 |---|---|
-| A — filesystem candidate + `git rev-parse` validation | 43 |
-| B — independent git work-tree-top census | 43 |
+| A — filesystem candidate + `git rev-parse` validation | 74 |
+| B — independent git work-tree-top census | 74 |
 | **Sets identical** | **YES** |
 
 `.git` is accepted as a file or a directory; submodules are excluded from the
@@ -62,27 +62,37 @@ This locks the **build stack only**, never the application sources.
 
 | Runtime | Components | Verified | Clean |
 |---|---|---|---|
-| API | 6 | 6 | 6 |
+| API | 16 | 16 | 16 |
 | Adaptive-Fabric | 1 | 1 | 1 |
 | Build | 7 | 7 | 7 |
-| CLI | 4 | 3 | 4 |
+| CLI | 20 | 19 | 20 |
 | Common | 6 | 6 | 6 |
 | Crypto | 3 | 3 | 3 |
-| LLM | 3 | 3 | 3 |
+| LLM | 4 | 4 | 4 |
 | Live | 1 | 1 | 1 |
-| Ravencalc | 8 | 8 | 8 |
+| Ravencalc | 12 | 12 | 12 |
 | Remix | 1 | 1 | 1 |
 | Streamer | 1 | 1 | 1 |
 | Web | 2 | 1 | 2 |
-| **TOTAL** | **43** | **41** | **43** |
+| **TOTAL** | **74** | **72** | **74** |
 
 ## Top-level source lock
 
 | Runtime | Component | Commit | State | Subs | Recipe |
 |---|---|---|---|---|---|
+| API | anyio | `ffcd1542cd6d` | VERIFIED | 0 | yes |
+| API | certifi | `f4bc676bc101` | VERIFIED | 0 | yes |
+| API | h11 | `1c5b07581f05` | VERIFIED | 0 | yes |
 | API | httpcore | `98209758cc14` | VERIFIED | 0 | yes |
 | API | httpx | `26d48e0634e6` | VERIFIED | 0 | yes |
+| API | idna | `03a9a11dd8ae` | VERIFIED | 0 | yes |
+| API | sniffio | `ae020e13b98d` | VERIFIED | 0 | yes |
+| API | annotated-doc | `ef48d6ad51d2` | VERIFIED | 0 | yes |
+| API | annotated-types | `9eb966801382` | VERIFIED | 0 | yes |
 | API | pydantic | `001dea020e08` | VERIFIED | 0 | yes |
+| API | typing-extensions | `f29cd28d8ed7` | VERIFIED | 0 | yes |
+| API | typing-inspection | `83d4dbb74fc3` | VERIFIED | 0 | yes |
+| API | click | `8b19813f2bfc` | VERIFIED | 0 | yes |
 | API | fastapi | `95f8322ee1dc` | VERIFIED | 0 | yes |
 | API | starlette | `4f250d6b8145` | VERIFIED | 0 | yes |
 | API | uvicorn | `8988c23704fc` | VERIFIED | 0 | yes |
@@ -96,8 +106,24 @@ This locks the **build stack only**, never the application sources.
 | Build | ninja | `3441b633c2fe` | VERIFIED | 0 | yes |
 | CLI | anthropic-sdk-python | `eb21a4352015` | VERIFIED | 0 | yes |
 | CLI | anthropic-sdk-typescript | `135f71e92976` | VERIFIED | 0 | yes |
+| CLI | cryptography | `ffde75a2b594` | VERIFIED | 0 | yes |
+| CLI | pyjwt | `c6fe464b356f` | VERIFIED | 0 | yes |
+| CLI | attrs | `7bfc49e9b22d` | VERIFIED | 0 | yes |
+| CLI | cffi | `fd33e7700f0e` | VERIFIED | 0 | yes |
+| CLI | pycparser | `77de509f0268` | VERIFIED | 0 | yes |
+| CLI | httpx2 | `71ae23be5448` | VERIFIED | 0 | yes |
+| CLI | python-multipart | `238ead62a0bb` | VERIFIED | 0 | yes |
+| CLI | sse-starlette | `6754ef387da9` | VERIFIED | 0 | yes |
+| CLI | jiter | `2b5ec63e505b` | VERIFIED | 0 | yes |
+| CLI | jsonschema | `a7277432b0f7` | VERIFIED | 0 | yes |
+| CLI | jsonschema-specifications | `3b846010c34c` | VERIFIED | 0 | yes |
+| CLI | referencing | `944ed5a20bc5` | VERIFIED | 1 | yes |
+| CLI | rpds-py | `7277eb681f6e` | VERIFIED | 0 | yes |
 | CLI | python-sdk | `9972c21aa420` | VERIFIED | 0 | yes |
 | CLI | typescript-sdk | `cc4b41617ce3` | UNRESOLVED | 0 | **none** |
+| CLI | opentelemetry-python | `53a5a40c9604` | VERIFIED | 0 | yes |
+| CLI | docstring-parser | `87dca55a7b5b` | VERIFIED | 0 | yes |
+| CLI | truststore | `0714f72a739d` | VERIFIED | 0 | yes |
 | Common | accelerate | `6afc1e5ee217` | VERIFIED | 0 | yes |
 | Common | huggingface-hub | `495b17c85296` | VERIFIED | 0 | yes |
 | Common | pytorch | `2b3ec3482903` | VERIFIED | 65 | yes |
@@ -107,18 +133,23 @@ This locks the **build stack only**, never the application sources.
 | Crypto | stratum | `c1a799139425` | VERIFIED | 0 | yes |
 | Crypto | sv2-apps | `d7d556d1a3c7` | VERIFIED | 0 | yes |
 | Crypto | sv2-spec | `67d2178e12b2` | VERIFIED | 0 | yes |
+| LLM | ggml | `e91ded11bdcd` | VERIFIED | 0 | yes |
 | LLM | llama.cpp | `5266f24da75d` | VERIFIED | 0 | yes |
 | LLM | triton | `c01b6774b186` | VERIFIED | 0 | yes |
 | LLM | vllm | `98dff2a81d74` | VERIFIED | 0 | yes |
 | Live | gstreamer | `070125524a84` | VERIFIED | 1 | yes |
 | Ravencalc | openblas | `e0166008be8e` | VERIFIED | 0 | yes |
+| Ravencalc | narwhals | `e34715d1e9e2` | VERIFIED | 0 | yes |
 | Ravencalc | cython | `ec152091ca7c` | VERIFIED | 0 | yes |
 | Ravencalc | pybind11 | `d03662f0984f` | VERIFIED | 0 | yes |
 | Ravencalc | scikit-learn | `866c0f51e756` | VERIFIED | 0 | yes |
 | Ravencalc | numpy | `dd88c0c19b54` | VERIFIED | 7 | yes |
 | Ravencalc | scipy | `e4e854eaa8f1` | VERIFIED | 8 | yes |
-| Ravencalc | mpmath | `c1131e2d64ab` | VERIFIED | 0 | yes |
+| Ravencalc | mpmath | `b5c04506ef0c` | VERIFIED | 0 | yes |
 | Ravencalc | sympy | `16fa855354eb` | VERIFIED | 0 | yes |
+| Ravencalc | cloudpickle | `7576fff24b97` | VERIFIED | 0 | yes |
+| Ravencalc | joblib | `cd9a6b05fc4f` | VERIFIED | 0 | yes |
+| Ravencalc | threadpoolctl | `d5bf10bcf90d` | VERIFIED | 0 | yes |
 | Remix | librespot | `d36f9f1907e8` | VERIFIED | 0 | yes |
 | Streamer | hls.js | `e5ff3583965e` | VERIFIED | 0 | yes |
 | Web | workerd | `925464ba9fe5` | VERIFIED | 0 | yes |
@@ -126,28 +157,28 @@ This locks the **build stack only**, never the application sources.
 
 ## Submodule summary
 
-Entries: **85** · identity key `owner_source_path + submodule_path` · unknown URLs: **0**
+Entries: **86** · identity key `owner_source_path + submodule_path` · unknown URLs: **0**
 
-- AT-RECORDED-COMMIT: 85
+- AT-RECORDED-COMMIT: 86
 
 ## Dependency graph
 
-Declarations discovered from on-disk manifests: **12831**. No depth limit; nothing fetched.
+Declarations discovered from on-disk manifests: **13368**. No depth limit; nothing fetched.
 
 | Classification | Count |
 |---|---|
-| PACKAGE-MANAGED | 8692 |
-| DIRECT-DECLARED | 3727 |
-| BUILD-FETCH | 228 |
-| WORKSPACE-LOCAL | 99 |
-| SUBMODULE | 85 |
+| PACKAGE-MANAGED | 8872 |
+| DIRECT-DECLARED | 4066 |
+| BUILD-FETCH | 234 |
+| WORKSPACE-LOCAL | 110 |
+| SUBMODULE | 86 |
 
 | Scope | Count |
 |---|---|
-| DEV-ONLY | 6160 |
-| UNKNOWN | 5188 |
-| RUNTIME/SHIP | 1269 |
-| BUILD-ONLY | 191 |
+| DEV-ONLY | 6166 |
+| UNKNOWN | 5473 |
+| RUNTIME/SHIP | 1431 |
+| BUILD-ONLY | 275 |
 | TEST-ONLY | 20 |
 | DOC-ONLY | 3 |
 
@@ -157,11 +188,11 @@ source URL is `WORKSPACE-LOCAL`, never `DIRECT-DECLARED`.
 
 ## Vendored register
 
-Entries **369** across **223** logical packages; **41** appear in more than one place.
+Entries **370** across **224** logical packages; **41** appear in more than one place.
 
 | Scope | Count |
 |---|---|
-| UNKNOWN | 338 |
+| UNKNOWN | 339 |
 | TEST-ONLY | 21 |
 | PRIVATE-VENDORED | 9 |
 | DOC-ONLY | 1 |
@@ -245,10 +276,10 @@ no copy is collapsed, deleted or rewritten; every entry is `UNRESOLVED`.
 
 ## Licence inventory
 
-Licence-bearing files: **433**
+Licence-bearing files: **501**
 
-- NESTED/DEPENDENCY: 378
-- TOP-LEVEL: 55
+- NESTED/DEPENDENCY: 411
+- TOP-LEVEL: 90
 
 **LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts.**
 This inventory is drift evidence, not a licensing conclusion.
@@ -260,21 +291,22 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 
 | Capability | Components |
 |---|---|
-| PYTHON-PACKAGE | 29 |
-| PYTHON-EXTENSION | 15 |
-| EXECUTABLE | 13 |
-| NODE-BUNDLE | 12 |
-| RUST-RLIB | 11 |
-| RUST-CDYLIB | 7 |
+| PYTHON-PACKAGE | 59 |
+| PYTHON-EXTENSION | 22 |
+| RUST-RLIB | 14 |
+| EXECUTABLE | 14 |
+| NODE-BUNDLE | 13 |
+| RUST-CDYLIB | 10 |
+| UNKNOWN | 6 |
 | SHARED-LIBRARY | 6 |
 | STATIC-LIBRARY|SHARED-LIBRARY | 6 |
-| UNKNOWN | 5 |
 
 ## Unresolved decisions
 
 | Category | Identifier | Blocks |
 |---|---|---|
 | ARCHITECTURE | FreeToken/torch | Adaptive-Fabric build design |
+| VERSION-CONFLICT | sympy-mpmath-constraint | Ravencalc runtime closure PASS (sympy) |
 
 - artifact decisions pending: **41**
 - licence files unresolved: **429**
@@ -296,4 +328,6 @@ Recorded as history. Neither build is authoritative for release.
 ## Generated to-do tasks
 
 1. **[ARCHITECTURE] FreeToken/torch** — FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.
+
+2. **[VERSION-CONFLICT] sympy-mpmath-constraint** — sympy 1.14.0 (sympy-1.14.0 tag, built wheel METADATA) declares Requires-Dist mpmath<1.4,>=1.1.0; the estate pins mpmath 1.4.1 (c1131e2d64ab). Python imports work regardless, but the declared closure is violated and pip-style resolution would refuse it.
 

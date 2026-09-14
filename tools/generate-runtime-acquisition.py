@@ -87,7 +87,12 @@ if un["counts"]["vendored_decisions_unresolved"]:
     af.append("%d vendored decision(s) unresolved" % un["counts"]["vendored_decisions_unresolved"])
 if un["counts"]["licence_files_unresolved"]:
     af.append("%d licence file(s) without an established identifier" % un["counts"]["licence_files_unresolved"])
-if un["items"]: af.append("%d explicit control-plane decisions open" % len(un["items"]))
+# A decision that has been RULED is not open. unresolved.json keeps resolved items
+# as history (sympy-mpmath-constraint is state RESOLVED-A), so counting every row
+# reported a settled ruling as an open blocker. State drives the count; the row stays.
+_open = [i for i in un["items"] if not str(i.get("state", "OPEN")).startswith("RESOLVED")]
+if _open: af.append("%d explicit control-plane decisions open (%s)"
+                    % (len(_open), ", ".join(i["identifier"] for i in _open)))
 ACQ_VERDICT = "PASS" if not af else "FAIL"
 
 o=[]; w=o.append

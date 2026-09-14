@@ -23,6 +23,26 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "e36e91f278975b8bb76a769f32582892",
+   "owner_component": "annotated-doc",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "fff170779a6acbf65abdb405c087f1cee1786691e4a96a4034517e4a504a0cdf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c6afb13fdc220497ee5cded1e717ed67",
+   "owner_component": "annotated-types",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "fe1049884b1a0d9342901e88e07f32925d24b3121d9972b6a6805fb9824b095d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "2453eb85b33e21e22cb4fa811c650d75",
    "owner_component": "anthropic-sdk-python",
    "owner_runtime": "CLI",
@@ -68,6 +88,36 @@
    "owner_runtime": "CLI",
    "path": "src/internal/qs/LICENSE.md",
    "sha256": "d8c77eaffed7f1f874b97f66ee47a557ae24fd59bae8ae14f9b1b84f26a94d2f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c0a769411d2af7894099e8ff75058c9f",
+   "owner_component": "anyio",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "5361ac9dc58f2ef5fd2e9b09c68297c17f04950909bbc8023bdb82eacf22c2b0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5e55731824cf9205cfabeab9a0600887",
+   "owner_component": "attrs",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9b881048ffb97093a0440ac021558dd6",
+   "owner_component": "attrs",
+   "owner_runtime": "CLI",
+   "path": "docs/license.md",
+   "sha256": "b26415d5042a70fcc29edc17112f68311aa09935290a208218d4930d9b571a7a",
    "status": "UNRESOLVED"
   },
   {
@@ -253,6 +303,126 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "11618cb6a975948679286b1211bd573c",
+   "owner_component": "certifi",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c0158ab9b75875f3bb7fea081d388818",
+   "owner_component": "cffi",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "5ba24ddc57067f9249add644c3afc41a5d6dc37e23433ef759d95df370b0af63",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "085f9917800070e791f49bf4733e23fa",
+   "owner_component": "cffi",
+   "owner_runtime": "CLI",
+   "path": "src/c/libffi_x86_x64/LICENSE",
+   "sha256": "40a537c7d74baeed3831304e92d1664ababd7ad8a3cf29f11a257c9e47145248",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1fa98232fd645608937a0fdc82e999b8",
+   "owner_component": "click",
+   "owner_runtime": "API",
+   "path": "LICENSE.txt",
+   "sha256": "9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f960e79e617ed02b50ea48b8c86869c8",
+   "owner_component": "click",
+   "owner_runtime": "API",
+   "path": "docs/license.md",
+   "sha256": "b4aa3a8b0dfd4c8cea97ea65b3f19ef54bd280665533478f35c0a5d205a7d341",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b4d59aa5e2cc777722aac17841237931",
+   "owner_component": "cloudpickle",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "3029ea34173e9fdc233ad315dc6b100bd1ea71f529b1c1af97664a272fdc55f5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8c3617db4fb6fae01f1d253ab91511e4",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "3e0c7c091a948b82533ba98fd7cbb40432d6f1a9acbf85f5922d2f99a93ae6bb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4e168cce331e5c827d4c2b68a6200e1b",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "LICENSE.APACHE",
+   "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5ae30ba4123bc4f2fa49aa0b0dce887b",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "LICENSE.BSD",
+   "sha256": "602c4c7482de6479dd2e9793cda275e5e63d773dacd1eca689232ab7008fb4fb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8c3617db4fb6fae01f1d253ab91511e4",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "vectors/LICENSE",
+   "sha256": "3e0c7c091a948b82533ba98fd7cbb40432d6f1a9acbf85f5922d2f99a93ae6bb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4e168cce331e5c827d4c2b68a6200e1b",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "vectors/LICENSE.APACHE",
+   "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5ae30ba4123bc4f2fa49aa0b0dce887b",
+   "owner_component": "cryptography",
+   "owner_runtime": "CLI",
+   "path": "vectors/LICENSE.BSD",
+   "sha256": "602c4c7482de6479dd2e9793cda275e5e63d773dacd1eca689232ab7008fb4fb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "b0e83e7c087d515d8bfa8c03a5083c4d",
    "owner_component": "cython",
    "owner_runtime": "Ravencalc",
@@ -273,6 +443,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "4014649477385d83f428a6adae447a49",
+   "owner_component": "docstring-parser",
+   "owner_runtime": "CLI",
+   "path": "LICENSE.md",
+   "sha256": "dfe514a337ae8417abd31a8af707bbd6172b03e5430bb083e145899ea97a3eea",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "95792ff3fe8e11aa49ceb247e66e4810",
    "owner_component": "fastapi",
    "owner_runtime": "API",
@@ -288,6 +468,16 @@
    "owner_runtime": "API",
    "path": "docs/en/overrides/partials/copyright.html",
    "sha256": "1ab5fcd269af9bfae7fc39b1cde1900fb449020d4e3e2d70e8b6d95362c9d733",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "223b26b3c1143120c87e2b13111d3e99",
+   "owner_component": "ggml",
+   "owner_runtime": "LLM",
+   "path": "LICENSE",
+   "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
    "status": "UNRESOLVED"
   },
   {
@@ -593,6 +783,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "f5501d19c3116f4aaeef89369f458693",
+   "owner_component": "h11",
+   "owner_runtime": "API",
+   "path": "LICENSE.txt",
+   "sha256": "37db5bb85926db28a427a25867f10b1232003aea1be69ccb851138adb8e6f361",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "8c22b1b3074f826155dbc85e6a0d4d1f",
    "owner_component": "hls.js",
    "owner_runtime": "Streamer",
@@ -623,11 +823,111 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "166cfc32dc0986f87a7e950553b52e5e",
+   "owner_component": "httpx2",
+   "owner_runtime": "CLI",
+   "path": "LICENSE.md",
+   "sha256": "7e7d6dbaf7fe160d39fd6e84fd02c33cab96bcbea34d36998d545bceb4a19c30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "77c5a523c15d4a5887b081bba41ca110",
+   "owner_component": "httpx2",
+   "owner_runtime": "CLI",
+   "path": "src/httpcore2/LICENSE.md",
+   "sha256": "c4df125c807b0613501e943a5c92496dd11d2c16604ce396097a8dde396304d9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "86d3f3a95c324c9479bd8986968f4327",
    "owner_component": "huggingface-hub",
    "owner_runtime": "Common",
    "path": "LICENSE",
    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9a6c29079fc90c29d80332f44d2625f2",
+   "owner_component": "idna",
+   "owner_runtime": "API",
+   "path": "LICENSE.md",
+   "sha256": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aa97bb3778992892e226b4504b83b60c",
+   "owner_component": "jiter",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "7c7134b9f7b978c03fca875517cf398db91f19bbb8109b6685e742aa3f57468e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aa97bb3778992892e226b4504b83b60c",
+   "owner_component": "jiter",
+   "owner_runtime": "CLI",
+   "path": "crates/jiter-python/LICENSE",
+   "sha256": "7c7134b9f7b978c03fca875517cf398db91f19bbb8109b6685e742aa3f57468e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aa97bb3778992892e226b4504b83b60c",
+   "owner_component": "jiter",
+   "owner_runtime": "CLI",
+   "path": "crates/jiter/LICENSE",
+   "sha256": "7c7134b9f7b978c03fca875517cf398db91f19bbb8109b6685e742aa3f57468e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2e481820abf0a70a18011a30153df066",
+   "owner_component": "joblib",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE.txt",
+   "sha256": "42612911c1872c5e4b43f6ae0e8ee59467cd350332241cf72ce90640264fae6a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7a60a81c146ec25599a3e1dabb8610a8",
+   "owner_component": "jsonschema",
+   "owner_runtime": "CLI",
+   "path": "COPYING",
+   "sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9d4de43111d33570c8fe49b4cb0e01af",
+   "owner_component": "jsonschema",
+   "owner_runtime": "CLI",
+   "path": "json/LICENSE",
+   "sha256": "837402bd25fad9b704265801ca3f92566a98157c1f9a7acd6f446299ba1c305a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "93eb9740964b59e9ba30281255b044e2",
+   "owner_component": "jsonschema-specifications",
+   "owner_runtime": "CLI",
+   "path": "COPYING",
+   "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
    "status": "UNRESOLVED"
   },
   {
@@ -1243,11 +1543,21 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
-   "md5": "a6607bd72611b702183473dfb4e6198b",
+   "md5": "bde3c575382996b75d85702949512751",
    "owner_component": "mpmath",
    "owner_runtime": "Ravencalc",
    "path": "LICENSE",
-   "sha256": "01cb9dc26c9afd5804c2ebf72f9ef03b5fd48972875ed59a483a45f441971f1e",
+   "sha256": "c26cae81da4508e5e249985777a33821f183223ebb74d7f8cfbf90fe7eef2fb7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "635dc68cb70b18de784113020c6d814e",
+   "owner_component": "narwhals",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE.md",
+   "sha256": "811445f30147b8f0c9d444c9025fd528f9532c54b7b83f6e2368473dc91cfdf0",
    "status": "UNRESOLVED"
   },
   {
@@ -1853,11 +2163,251 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-http-transport/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-opencensus/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-common/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-json-common/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-json-file/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-proto-common/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-proto-grpc/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp-proto-http/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-otlp/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-prometheus/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-zipkin-json/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-zipkin-proto-http/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "exporter/opentelemetry-exporter-zipkin/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "opentelemetry-api/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "opentelemetry-proto-json/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "opentelemetry-proto/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "opentelemetry-sdk/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "opentelemetry-semantic-conventions/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "propagator/opentelemetry-propagator-b3/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "propagator/opentelemetry-propagator-jaeger/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "shim/opentelemetry-opencensus-shim/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "opentelemetry-python",
+   "owner_runtime": "CLI",
+   "path": "shim/opentelemetry-opentracing-shim/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "774f65abd8a7fe3124be2cdf766cd06f",
    "owner_component": "pybind11",
    "owner_runtime": "Ravencalc",
    "path": "LICENSE",
    "sha256": "83965b843b98f670d3a85bd041ed4b372c8ec50d7b4a5995a83ac697ba675dcb",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9761c3ffee7ba99c60dca0408fd3262b",
+   "owner_component": "pycparser",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "0c846399369ea76ddd7b5c44fe6d16497415fcf015f5cbb508c24bf98b81c5b1",
    "status": "UNRESOLVED"
   },
   {
@@ -1878,6 +2428,26 @@
    "owner_runtime": "API",
    "path": "pydantic-core/LICENSE",
    "sha256": "2afdd30d54b4d62b6f488a6bcc1546e84ec5061f13f4209c03d012348783795a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e4b56d2c9973d8cf54655555be06e551",
+   "owner_component": "pyjwt",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "797a7a20231d4c433e9f1911db1731d06b5828b98f499819a034f7c0f56f5ce5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "python-multipart",
+   "owner_runtime": "CLI",
+   "path": "LICENSE.txt",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
    "status": "UNRESOLVED"
   },
   {
@@ -3453,6 +4023,36 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "93eb9740964b59e9ba30281255b044e2",
+   "owner_component": "referencing",
+   "owner_runtime": "CLI",
+   "path": "COPYING",
+   "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "93eb9740964b59e9ba30281255b044e2",
+   "owner_component": "referencing",
+   "owner_runtime": "CLI",
+   "path": "suite/LICENSE",
+   "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7767fa537c4596c54141f32882c4a984",
+   "owner_component": "rpds-py",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "86d3f3a95c324c9479bd8986968f4327",
    "owner_component": "safetensors",
    "owner_runtime": "Common",
@@ -3913,6 +4513,46 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "fa7b86389e58dd4087a8d2b833e5fe96",
+   "owner_component": "sniffio",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "652c878488d1456361e08c3f8607fd7ba59892a14103d15cce4ff93c85b5cc8b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3b83ef96387f14655fc854ddc3c6bd57",
+   "owner_component": "sniffio",
+   "owner_runtime": "API",
+   "path": "LICENSE.APACHE2",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "e62ba5042d5983462ad229f5aec1576c",
+   "owner_component": "sniffio",
+   "owner_runtime": "API",
+   "path": "LICENSE.MIT",
+   "sha256": "3e6dae555eb92787fc82d1d48355677f454c7f65aeb38d3f9e72bf9a3daf034b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "512780230e4edd77125d98c5f52abafe",
+   "owner_component": "sse-starlette",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "11e8c8dbfd5fa373c703de492140ff7a",
    "owner_component": "starlette",
    "owner_runtime": "API",
@@ -4033,6 +4673,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "8f2439cfddfbeebdb5cac3ae4ae80eaf",
+   "owner_component": "threadpoolctl",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "81ac619075248b06e53660b652d10e485f4675f5d0ae0f97ea22370da1f7e23b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "86d3f3a95c324c9479bd8986968f4327",
    "owner_component": "tokenizers",
    "owner_runtime": "Common",
@@ -4093,11 +4743,41 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "74420fc3965c4558a4a1529e63c2867f",
+   "owner_component": "truststore",
+   "owner_runtime": "CLI",
+   "path": "LICENSE",
+   "sha256": "33be7b7e8fa4fd19b1760e1a8ed8a668bdab852c91b692dd41424bcb725a9fca",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "5498bbc0155db622ff063f9f7396da88",
    "owner_component": "typescript-sdk",
    "owner_runtime": "CLI",
    "path": "LICENSE",
    "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "fcf6b249c2641540219a727f35d8d2c2",
+   "owner_component": "typing-extensions",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "dfe2d84c58973d6a532c4e7638dbb3d8",
+   "owner_component": "typing-inspection",
+   "owner_runtime": "API",
+   "path": "LICENSE",
+   "sha256": "804b59b25f2c31bd278f9202a19ae49a3945aa2664387e2d0a128c7cacc61ec3",
    "status": "UNRESOLVED"
   },
   {

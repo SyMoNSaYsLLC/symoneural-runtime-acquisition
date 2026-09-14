@@ -5070,6 +5070,18 @@
   {
    "decision": "UNRESOLVED",
    "licence_evidence": [],
+   "location": "Symoneural-Ravencalc/src/util/source/joblib/joblib/externals/loky",
+   "name": "loky",
+   "owner_source_path": "Symoneural-Ravencalc/src/util/source/joblib",
+   "owning_upstream": "Ravencalc/joblib",
+   "relpath": "joblib/externals/loky",
+   "scope": "UNKNOWN",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
    "location": "Symoneural-Remix/src/librespot/source/librespot/contrib/cross-compile-armv6hf",
    "name": "cross-compile-armv6hf",
    "owner_source_path": "Symoneural-Remix/src/librespot/source/librespot",
