@@ -601,7 +601,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/ggml-org/llama.cpp",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "0424752fbbc3bb01469ec830a30f2bc035497cd4",
+      "pins_path": "Symoneural-LLM/src/inference/.gitpins/llama.cpp.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-LLM/build/devtool-workspace/appends/symoneural-triton_git.bbappend",
