@@ -68,7 +68,7 @@
       "declared_version_PV": "0.16.0",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/http/.gitpins/h11.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "MIT",
       "recipe_SRCREV": "1c5b07581f058886c8bdd87adababd7d959dc7ca",
