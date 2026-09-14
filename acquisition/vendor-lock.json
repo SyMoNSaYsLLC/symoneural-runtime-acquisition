@@ -1745,6 +1745,332 @@
   },
   {
    "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/networkx/examples/external/force",
+   "name": "force",
+   "owner_source_path": "Symoneural-Common/src/util/source/networkx",
+   "owning_upstream": "Common/networkx",
+   "relpath": "examples/external/force",
+   "scope": "DOC-ONLY",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/packaging/src/packaging",
+   "name": "packaging",
+   "owner_source_path": "Symoneural-Common/src/util/source/packaging",
+   "owning_upstream": "Common/packaging",
+   "relpath": "src/packaging",
+   "scope": "UNKNOWN",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/autocommand",
+   "name": "autocommand",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/autocommand",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "LICENSE"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/autocommand-2.2.2.dist-info",
+   "name": "autocommand-2.2.2.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/autocommand-2.2.2.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/backports",
+   "name": "backports",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/backports",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "LICENSE"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/backports.tarfile-1.2.0.dist-info",
+   "name": "backports.tarfile-1.2.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/backports.tarfile-1.2.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/importlib_metadata",
+   "name": "importlib_metadata",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/importlib_metadata",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/importlib_metadata-8.7.1.dist-info",
+   "name": "importlib_metadata-8.7.1.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/importlib_metadata-8.7.1.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco",
+   "name": "jaraco",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/jaraco",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "LICENSE"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco.text-4.0.0.dist-info",
+   "name": "jaraco.text-4.0.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/jaraco.text-4.0.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco_context-6.1.0.dist-info",
+   "name": "jaraco_context-6.1.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/jaraco_context-6.1.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco_functools-4.4.0.dist-info",
+   "name": "jaraco_functools-4.4.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/jaraco_functools-4.4.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/more_itertools",
+   "name": "more_itertools",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/more_itertools",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/more_itertools-10.8.0.dist-info",
+   "name": "more_itertools-10.8.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/more_itertools-10.8.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/packaging",
+   "name": "packaging",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/packaging",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/packaging-26.0.dist-info",
+   "name": "packaging-26.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/packaging-26.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/platformdirs",
+   "name": "platformdirs",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/platformdirs",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/platformdirs-4.4.0.dist-info",
+   "name": "platformdirs-4.4.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/platformdirs-4.4.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/tomli",
+   "name": "tomli",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/tomli",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/tomli-2.4.0.dist-info",
+   "name": "tomli-2.4.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/tomli-2.4.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/wheel",
+   "name": "wheel",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/wheel",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/wheel-0.46.3.dist-info",
+   "name": "wheel-0.46.3.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/wheel-0.46.3.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/zipp",
+   "name": "zipp",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/zipp",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [
+    "licenses"
+   ],
+   "location": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/zipp-3.23.0.dist-info",
+   "name": "zipp-3.23.0.dist-info",
+   "owner_source_path": "Symoneural-Common/src/util/source/setuptools",
+   "owning_upstream": "Common/setuptools",
+   "relpath": "setuptools/_vendor/zipp-3.23.0.dist-info",
+   "scope": "PRIVATE-VENDORED",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
+   "licence_evidence": [],
+   "location": "Symoneural-Common/src/util/source/typer/docs_src/progressbar",
+   "name": "progressbar",
+   "owner_source_path": "Symoneural-Common/src/util/source/typer",
+   "owning_upstream": "Common/typer",
+   "relpath": "docs_src/progressbar",
+   "scope": "UNKNOWN",
+   "upstream_project": "UNKNOWN",
+   "version": "UNKNOWN"
+  },
+  {
+   "decision": "UNRESOLVED",
    "licence_evidence": [
     "LICENSE"
    ],

@@ -1231,6 +1231,76 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE",
+    "DIRECT-VERSUS-OE-CORE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "packaging",
+   "provider_count": 6,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "packaging",
+     "path": "Symoneural-Common/src/util/source/packaging",
+     "resolved_revision": "929fd4b1410ac7ef61ef3f45b2f5d7e87711a9b5",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pypa/packaging"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-packaging",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-packaging_26.3.bb",
+     "resolved_revision": "26.3",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/torch/_vendor/packaging",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "packaging",
+     "path": "Symoneural-Common/src/util/source/packaging/src/packaging",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/packaging",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "scikit-learn",
+     "path": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/_packaging",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Ravencalc",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -2234,50 +2304,6 @@
    "selected_provider": "OE-CORE"
   },
   {
-   "classification": "CROSS-RUNTIME-DUPLICATE",
-   "classification_flags": [
-    "CROSS-RUNTIME-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "packaging",
-   "provider_count": 3,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "OE-CORE-RECIPE",
-     "owning_component": "python3-packaging",
-     "path": "openembedded-core/meta/recipes-devtools/python/python3-packaging_26.3.bb",
-     "resolved_revision": "26.3",
-     "runtime": "<build-stack>",
-     "upstream_url": "openembedded-core"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/torch/_vendor/packaging",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Common",
-     "upstream_url": "UNKNOWN"
-    },
-    {
-     "kind": "VENDORED",
-     "owning_component": "scikit-learn",
-     "path": "Symoneural-Ravencalc/src/ml/source/scikit-learn/sklearn/externals/_packaging",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Ravencalc",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Common",
-    "Ravencalc"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -2406,6 +2432,50 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "tomli",
+   "provider_count": 3,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-tomli",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-tomli_2.4.1.bb",
+     "resolved_revision": "2.4.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "bitbake",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/tomli",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/tomli",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build",
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -2479,6 +2549,150 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "annotated-doc",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "annotated-doc",
+     "path": "Symoneural-API/src/model/source/annotated-doc",
+     "resolved_revision": "ef48d6ad51d226f772fd9c5284f55199afe4007c",
+     "runtime": "API",
+     "upstream_url": "https://github.com/fastapi/annotated-doc"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-annotated-doc",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-annotated-doc_0.0.5.bb",
+     "resolved_revision": "0.0.5",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "annotated-types",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "annotated-types",
+     "path": "Symoneural-API/src/model/source/annotated-types",
+     "resolved_revision": "9eb96680138269811a39d838d720abc3dce33954",
+     "runtime": "API",
+     "upstream_url": "https://github.com/annotated-types/annotated-types"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-annotated-types",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-annotated-types_0.8.0.bb",
+     "resolved_revision": "0.8.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "anyio",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "anyio",
+     "path": "Symoneural-API/src/http/source/anyio",
+     "resolved_revision": "ffcd1542cd6d127980205f90a0100078849dd703",
+     "runtime": "API",
+     "upstream_url": "https://github.com/agronholm/anyio"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-anyio",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-anyio_4.14.2.bb",
+     "resolved_revision": "4.14.2",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "attrs",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "attrs",
+     "path": "Symoneural-CLI/src/data/source/attrs",
+     "resolved_revision": "7bfc49e9b22d5ba25b6e429524c3d49fee27cb36",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-attrs/attrs"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-attrs",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-attrs_26.1.0.bb",
+     "resolved_revision": "26.1.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -2657,6 +2871,78 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "certifi",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "certifi",
+     "path": "Symoneural-API/src/http/source/certifi",
+     "resolved_revision": "f4bc676bc101fe2235846e37044e8c693d6cbaf4",
+     "runtime": "API",
+     "upstream_url": "https://github.com/certifi/python-certifi"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-certifi",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-certifi_2026.7.22.bb",
+     "resolved_revision": "2026.7.22",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "cffi",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "cffi",
+     "path": "Symoneural-CLI/src/ffi/source/cffi",
+     "resolved_revision": "fd33e7700f0ebafe6f30bd5053f13327221b77a2",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-cffi/cffi"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-cffi",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-cffi_2.1.1.bb",
+     "resolved_revision": "2.1.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -2722,6 +3008,78 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "click",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "click",
+     "path": "Symoneural-API/src/web/source/click",
+     "resolved_revision": "8b19813f2bfca99f1018a587a8cf54fc959f2e5d",
+     "runtime": "API",
+     "upstream_url": "https://github.com/pallets/click"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-click",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-click_8.5.0.bb",
+     "resolved_revision": "8.5.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "cloudpickle",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "cloudpickle",
+     "path": "Symoneural-Ravencalc/src/util/source/cloudpickle",
+     "resolved_revision": "7576fff24b9769432f76cc6d2c01282583ee87a9",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/cloudpipe/cloudpickle"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-cloudpickle",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-cloudpickle_3.1.2.bb",
+     "resolved_revision": "3.1.2",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -2834,6 +3192,42 @@
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
+   "logical_source": "cryptography",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "cryptography",
+     "path": "Symoneural-CLI/src/auth/source/cryptography",
+     "resolved_revision": "ffde75a2b594822c740a2e4748b56c00548302bf",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/pyca/cryptography"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-cryptography",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-cryptography.bb",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
    "logical_source": "cython",
    "provider_count": 2,
    "provider_kinds": [
@@ -2900,6 +3294,42 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "filelock",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "filelock",
+     "path": "Symoneural-Common/src/util/source/filelock",
+     "resolved_revision": "4efd93e0482e8095a0b6949fb337206e7f67495d",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/tox-dev/filelock"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-filelock",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-filelock_3.32.4.bb",
+     "resolved_revision": "3.32.4",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -2930,6 +3360,42 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "fsspec",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "fsspec",
+     "path": "Symoneural-Common/src/util/source/fsspec",
+     "resolved_revision": "9e22b60ea6e96fbe8635e88cc71909bdd2850e60",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/fsspec/filesystem_spec"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-fsspec",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-fsspec_2026.7.0.bb",
+     "resolved_revision": "2026.7.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3070,6 +3536,42 @@
    ],
    "runtimes": [
     "Live"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "h11",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "h11",
+     "path": "Symoneural-API/src/http/source/h11",
+     "resolved_revision": "1c5b07581f058886c8bdd87adababd7d959dc7ca",
+     "runtime": "API",
+     "upstream_url": "https://github.com/python-hyper/h11"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-h11",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-h11_0.16.0.bb",
+     "resolved_revision": "0.16.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3249,6 +3751,185 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "httpx2",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "httpx2",
+     "path": "Symoneural-CLI/src/http/source/httpx2",
+     "resolved_revision": "71ae23be5448f859c2b4e21d9972ddfa7b8d759d",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/pydantic/httpx2"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-httpx2",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-httpx2_2.12.0.bb",
+     "resolved_revision": "2.12.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "idna",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "idna",
+     "path": "Symoneural-API/src/http/source/idna",
+     "resolved_revision": "03a9a11dd8aecd4fea742cabe20f4d3d9ed82abb",
+     "runtime": "API",
+     "upstream_url": "https://github.com/kjd/idna"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-idna",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-idna_3.19.bb",
+     "resolved_revision": "3.19",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "importlib-metadata",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-importlib-metadata",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-importlib-metadata_9.0.1.bb",
+     "resolved_revision": "9.0.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/importlib_metadata",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "jinja2",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "jinja2",
+     "path": "Symoneural-Common/src/text/source/jinja2",
+     "resolved_revision": "15206881c006c79667fe5154fe80c01c65410679",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pallets/jinja"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-jinja2",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-jinja2_3.1.6.bb",
+     "resolved_revision": "3.1.6",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "joblib",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "joblib",
+     "path": "Symoneural-Ravencalc/src/util/source/joblib",
+     "resolved_revision": "cd9a6b05fc4f2b1c8202eb62c4e863484f8cc099",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/joblib/joblib"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-joblib",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-joblib_1.5.3.bb",
+     "resolved_revision": "1.5.3",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -3314,6 +3995,78 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "jsonschema",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "jsonschema",
+     "path": "Symoneural-CLI/src/json/source/jsonschema",
+     "resolved_revision": "a7277432b0f7bcd0551f6e589d30457017125df4",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-jsonschema/jsonschema"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-jsonschema",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-jsonschema_4.26.0.bb",
+     "resolved_revision": "4.26.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "jsonschema-specifications",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "jsonschema-specifications",
+     "path": "Symoneural-CLI/src/json/source/jsonschema-specifications",
+     "resolved_revision": "3b846010c34ce254d8ced23023451d1d64de37f5",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-jsonschema/jsonschema-specifications"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-jsonschema-specifications",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-jsonschema-specifications_2025.9.1.bb",
+     "resolved_revision": "2025.9.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3388,6 +4141,78 @@
    "selected_provider": "OE-CORE"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "markdown-it-py",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "markdown-it-py",
+     "path": "Symoneural-Common/src/text/source/markdown-it-py",
+     "resolved_revision": "36c5f547144df2d01970a5792d68c71a3380b227",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/executablebooks/markdown-it-py"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-markdown-it-py",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-markdown-it-py_4.2.0.bb",
+     "resolved_revision": "4.2.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "markupsafe",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "markupsafe",
+     "path": "Symoneural-Common/src/text/source/markupsafe",
+     "resolved_revision": "297fc8e356e6836a62087949245d09a28e9f1b13",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pallets/markupsafe"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-markupsafe",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-markupsafe_3.0.3.bb",
+     "resolved_revision": "3.0.3",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "CROSS-COMPONENT-DUPLICATE",
    "classification_flags": [
     "CROSS-COMPONENT-DUPLICATE"
@@ -3419,6 +4244,42 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "mdurl",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "mdurl",
+     "path": "Symoneural-Common/src/text/source/mdurl",
+     "resolved_revision": "596bf1c8752de45fa576a52c315d6d8cc5bb1a4e",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/executablebooks/mdurl"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-mdurl",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-mdurl_0.1.2.bb",
+     "resolved_revision": "0.1.2",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3458,6 +4319,41 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "more-itertools",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-more-itertools",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-more-itertools_10.6.0.bb",
+     "resolved_revision": "10.6.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/more_itertools",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "DIRECT-VERSUS-OE-CORE",
    "classification_flags": [
     "DIRECT-VERSUS-OE-CORE",
@@ -3475,7 +4371,7 @@
      "kind": "DIRECT-ACQUISITION",
      "owning_component": "mpmath",
      "path": "Symoneural-Ravencalc/src/symbolic/source/mpmath",
-     "resolved_revision": "c1131e2d64abcbb57728ca8a499c920c0c69e67f",
+     "resolved_revision": "b5c04506ef0cd4a1f1213f8389ee21c9c3551582",
      "runtime": "Ravencalc",
      "upstream_url": "https://github.com/mpmath/mpmath"
     },
@@ -3490,6 +4386,42 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "networkx",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "networkx",
+     "path": "Symoneural-Common/src/util/source/networkx",
+     "resolved_revision": "7530809bfa1ea7ed6fdf918a4d1431488953cb1f",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/networkx/networkx"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-networkx",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-networkx_3.6.1.bb",
+     "resolved_revision": "3.6.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3634,6 +4566,41 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "platformdirs",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-platformdirs",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-platformdirs_4.10.1.bb",
+     "resolved_revision": "4.10.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/platformdirs",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "CROSS-RUNTIME-DUPLICATE",
    "classification_flags": [
     "CROSS-RUNTIME-DUPLICATE"
@@ -3665,6 +4632,41 @@
    "runtimes": [
     "Common",
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "CROSS-RUNTIME-DUPLICATE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "progressbar",
+   "provider_count": 2,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "bitbake",
+     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/progressbar",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Build",
+     "upstream_url": "UNKNOWN"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "typer",
+     "path": "Symoneural-Common/src/util/source/typer/docs_src/progressbar",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Build",
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3709,6 +4711,78 @@
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
+   "logical_source": "psutil",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "psutil",
+     "path": "Symoneural-Common/src/util/source/psutil",
+     "resolved_revision": "9eea97dd6f1d16ea33f5144c8925f1ce7a0688e1",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/giampaolo/psutil"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-psutil",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-psutil_7.2.2.bb",
+     "resolved_revision": "7.2.2",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "pycparser",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "pycparser",
+     "path": "Symoneural-CLI/src/ffi/source/pycparser",
+     "resolved_revision": "77de509f0268f44ee587b5a4d9f0d680e269fcae",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/eliben/pycparser"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-pycparser",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-pycparser_3.0.bb",
+     "resolved_revision": "3.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
    "logical_source": "pydantic",
    "provider_count": 2,
    "provider_kinds": [
@@ -3735,6 +4809,258 @@
    ],
    "runtimes": [
     "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "pygments",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "pygments",
+     "path": "Symoneural-Common/src/text/source/pygments",
+     "resolved_revision": "a43b45dcf081b6010c6ab4428f149f7f6d2499c4",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pygments/pygments"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-pygments",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-pygments_2.21.0.bb",
+     "resolved_revision": "2.21.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "pyjwt",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "pyjwt",
+     "path": "Symoneural-CLI/src/auth/source/pyjwt",
+     "resolved_revision": "c6fe464b356ff4b1ebc9ba62172d331a40aa27df",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/jpadilla/pyjwt"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-pyjwt",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-pyjwt_2.13.0.bb",
+     "resolved_revision": "2.13.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "pyyaml",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "pyyaml",
+     "path": "Symoneural-Common/src/data/source/pyyaml",
+     "resolved_revision": "49790e73684bebad1df05ef8d828fa12f685bffb",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/yaml/pyyaml"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-pyyaml",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-pyyaml_6.0.3.bb",
+     "resolved_revision": "6.0.3",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "referencing",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "referencing",
+     "path": "Symoneural-CLI/src/json/source/referencing",
+     "resolved_revision": "944ed5a20bc5125f2349156cbdc365daac0e67e6",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-jsonschema/referencing"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-referencing",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-referencing_0.37.0.bb",
+     "resolved_revision": "0.37.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "regex",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "regex",
+     "path": "Symoneural-Common/src/text/source/regex",
+     "resolved_revision": "7dd71c15c4fb5c94206bed1763abd4c2bd2f1b33",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/mrabarnett/mrab-regex"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-regex",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-regex_2026.8.31.bb",
+     "resolved_revision": "2026.8.31",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "rich",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "rich",
+     "path": "Symoneural-Common/src/text/source/rich",
+     "resolved_revision": "6ac483cbea39cab124dfd3483bba70ffafb71050",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/Textualize/rich"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-rich",
+     "path": "meta-openembedded/meta-python/recipes-extended/python-rich/python3-rich_15.0.0.bb",
+     "resolved_revision": "15.0.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "rpds-py",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "rpds-py",
+     "path": "Symoneural-CLI/src/json/source/rpds-py",
+     "resolved_revision": "7277eb681f6efd67eca1bbaa32f78d78bdc044a5",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/crate-py/rpds"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-rpds-py",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-rpds-py_2026.6.3.bb",
+     "resolved_revision": "2026.6.3",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3945,6 +5271,114 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "setuptools",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools",
+     "resolved_revision": "72e919a8b10aaafc041205d4e3ae0e6a2e1e5f87",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pypa/setuptools"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-setuptools",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-setuptools_84.0.0.bb",
+     "resolved_revision": "84.0.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "shellingham",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "shellingham",
+     "path": "Symoneural-Common/src/util/source/shellingham",
+     "resolved_revision": "cba059e7f29f731c2fdf9c8c3ea7921182b7d6c3",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/sarugaku/shellingham"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-shellingham",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-shellingham_1.5.4.bb",
+     "resolved_revision": "1.5.4",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "sniffio",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "sniffio",
+     "path": "Symoneural-API/src/http/source/sniffio",
+     "resolved_revision": "ae020e13b98d276a6558ffc25e82509fd4c288f0",
+     "runtime": "API",
+     "upstream_url": "https://github.com/python-trio/sniffio"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-sniffio",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-sniffio_1.3.1.bb",
+     "resolved_revision": "1.3.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "INTRA-COMPONENT-DUPLICATE",
    "classification_flags": [
     "INTRA-COMPONENT-DUPLICATE"
@@ -4120,37 +5554,146 @@
    "selected_provider": "UNRESOLVED"
   },
   {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification": "DIRECT-VERSUS-OE-CORE",
    "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
     "INTRA-COMPONENT-DUPLICATE"
    ],
    "decision": "UNRESOLVED",
-   "logical_source": "tomli",
+   "logical_source": "tqdm",
    "provider_count": 2,
    "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "VENDORED"
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
    ],
    "providers": [
     {
-     "kind": "OE-CORE-RECIPE",
-     "owning_component": "python3-tomli",
-     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-tomli_2.4.1.bb",
-     "resolved_revision": "2.4.1",
-     "runtime": "<build-stack>",
-     "upstream_url": "openembedded-core"
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "tqdm",
+     "path": "Symoneural-Common/src/util/source/tqdm",
+     "resolved_revision": "9cf5a12b1f955468a17f0ba3c59092b23e4258ac",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/tqdm/tqdm"
     },
     {
-     "kind": "VENDORED",
-     "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/tomli",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Build",
-     "upstream_url": "UNKNOWN"
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-tqdm",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-tqdm_4.69.1.bb",
+     "resolved_revision": "4.69.1",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
     }
    ],
    "runtimes": [
-    "Build"
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "typer",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "typer",
+     "path": "Symoneural-Common/src/util/source/typer",
+     "resolved_revision": "99eb220df7c69a0f14a0b69214042677e0760b9d",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/fastapi/typer"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-typer",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-typer_0.27.2.bb",
+     "resolved_revision": "0.27.2",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "typing-extensions",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "typing-extensions",
+     "path": "Symoneural-API/src/model/source/typing-extensions",
+     "resolved_revision": "f29cd28d8ed7642cafb1d18daf5aa41be6a5c0aa",
+     "runtime": "API",
+     "upstream_url": "https://github.com/python/typing_extensions"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-typing-extensions",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-typing-extensions_4.16.0.bb",
+     "resolved_revision": "4.16.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "typing-inspection",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "typing-inspection",
+     "path": "Symoneural-API/src/model/source/typing-inspection",
+     "resolved_revision": "83d4dbb74fc367db4403c76be8c0f83cd4b63fbe",
+     "runtime": "API",
+     "upstream_url": "https://github.com/pydantic/typing-inspection"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-typing-inspection",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-typing-inspection_0.4.4.bb",
+     "resolved_revision": "0.4.4",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "API"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -4187,6 +5730,76 @@
    ],
    "runtimes": [
     "API"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "wheel",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-wheel",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-wheel_0.48.0.bb",
+     "resolved_revision": "0.48.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/wheel",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "INTRA-COMPONENT-DUPLICATE",
+   "classification_flags": [
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "zipp",
+   "provider_count": 2,
+   "provider_kinds": [
+    "OE-CORE-RECIPE",
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-zipp",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-zipp_4.1.0.bb",
+     "resolved_revision": "4.1.0",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/zipp",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -4451,6 +6064,102 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "autocommand",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/autocommand",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "autocommand-2-2-2-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/autocommand-2.2.2.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "backports",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/backports",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "backports-tarfile-1-2-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/backports.tarfile-1.2.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -5034,6 +6743,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "docstring-parser",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "docstring-parser",
+     "path": "Symoneural-CLI/src/text/source/docstring-parser",
+     "resolved_revision": "87dca55a7b5bdc854ad1d190f1c461015ba5f008",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/rr-/docstring_parser"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "dot",
    "provider_count": 1,
    "provider_kinds": [
@@ -5610,6 +7343,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "force",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "networkx",
+     "path": "Symoneural-Common/src/util/source/networkx/examples/external/force",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "force-cmake",
    "provider_count": 1,
    "provider_kinds": [
@@ -5747,6 +7504,30 @@
    ],
    "runtimes": [
     "Web"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "ggml",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "ggml",
+     "path": "Symoneural-LLM/src/inference/source/ggml",
+     "resolved_revision": "e91ded11bdcd78c42f9c8d3978ff6686eb4c1226",
+     "runtime": "LLM",
+     "upstream_url": "https://github.com/ggml-org/ggml"
+    }
+   ],
+   "runtimes": [
+    "LLM"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -6114,6 +7895,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "hf-xet",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "hf-xet",
+     "path": "Symoneural-Common/src/ml/source/hf-xet",
+     "resolved_revision": "de71453d952bd8b806edaa997c72313051a49050",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/huggingface/xet-core"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "highs",
    "provider_count": 1,
    "provider_kinds": [
@@ -6258,6 +8063,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "importlib-metadata-8-7-1-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/importlib_metadata-8.7.1.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "inctest",
    "provider_count": 1,
    "provider_kinds": [
@@ -6323,6 +8152,126 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "jaraco",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "jaraco-context-6-1-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco_context-6.1.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "jaraco-functools-4-4-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco_functools-4.4.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "jaraco-text-4-0-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/jaraco.text-4.0.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "jiter",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "jiter",
+     "path": "Symoneural-CLI/src/json/source/jiter",
+     "resolved_revision": "2b5ec63e505b44775e29b865c3161ea13bdad16b",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/pydantic/jiter"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -6535,6 +8484,30 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "loky",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "joblib",
+     "path": "Symoneural-Ravencalc/src/util/source/joblib/joblib/externals/loky",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Ravencalc",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -6854,6 +8827,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "more-itertools-10-8-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/more_itertools-10.8.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "moredata",
    "provider_count": 1,
    "provider_kinds": [
@@ -6926,6 +8923,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "multipart",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "python-multipart",
+     "path": "Symoneural-CLI/src/http/source/python-multipart",
+     "resolved_revision": "238ead62a0bb6f6cdfe122708faa13812f59f9a6",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/Kludex/python-multipart"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "mylibc",
    "provider_count": 1,
    "provider_kinds": [
@@ -6987,6 +9008,30 @@
      "resolved_revision": "UNKNOWN",
      "runtime": "Ravencalc",
      "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "narwhals",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "narwhals",
+     "path": "Symoneural-Ravencalc/src/dataframe/source/narwhals",
+     "resolved_revision": "e34715d1e9e2bd6f5306662e8ad495eaf0c1325a",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/narwhals-dev/narwhals"
     }
    ],
    "runtimes": [
@@ -7382,6 +9427,54 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "opentelemetry-python",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "opentelemetry-python",
+     "path": "Symoneural-CLI/src/telemetry/source/opentelemetry-python",
+     "resolved_revision": "53a5a40c9604583c501bcf13970a635f00e62df4",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/open-telemetry/opentelemetry-python"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "packaging-26-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/packaging-26.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "partial-json-parser",
    "provider_count": 1,
    "provider_kinds": [
@@ -7502,6 +9595,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "platformdirs-4-4-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/platformdirs-4.4.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "png",
    "provider_count": 1,
    "provider_kinds": [
@@ -7519,30 +9636,6 @@
    ],
    "runtimes": [
     "Ravencalc"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "SINGLE-PROVIDER",
-   "classification_flags": [],
-   "decision": "UNRESOLVED",
-   "logical_source": "progressbar",
-   "provider_count": 1,
-   "provider_kinds": [
-    "VENDORED"
-   ],
-   "providers": [
-    {
-     "kind": "VENDORED",
-     "owning_component": "bitbake",
-     "path": "Symoneural-Build/src/bitbake/source/lib/bb/_vendor/progressbar",
-     "resolved_revision": "UNKNOWN",
-     "runtime": "Build",
-     "upstream_url": "UNKNOWN"
-    }
-   ],
-   "runtimes": [
-    "Build"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -7688,6 +9781,28 @@
    "runtimes": [
     "Ravencalc"
    ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "python-multipart",
+   "provider_count": 1,
+   "provider_kinds": [
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-python-multipart",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-python-multipart_0.0.32.bb",
+     "resolved_revision": "0.0.32",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [],
    "selected_provider": "UNRESOLVED"
   },
   {
@@ -8167,6 +10282,30 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "sse-starlette",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "sse-starlette",
+     "path": "Symoneural-CLI/src/http/source/sse-starlette",
+     "resolved_revision": "6754ef387da97cf6cfbcd1bd5c216b533937b304",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/sysid/sse-starlette"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -8678,6 +10817,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "suite",
+   "provider_count": 1,
+   "provider_kinds": [
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "kind": "SUBMODULE",
+     "owning_component": "referencing",
+     "path": "Symoneural-CLI/src/json/source/referencing/suite",
+     "resolved_revision": "792cb7f98ac2e74e2c6c40d2c679e445151bbb00",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/python-jsonschema/referencing-suite"
+    }
+   ],
+   "runtimes": [
+    "CLI"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "sv2-apps",
    "provider_count": 1,
    "provider_kinds": [
@@ -8846,6 +11009,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "threadpoolctl",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "threadpoolctl",
+     "path": "Symoneural-Ravencalc/src/util/source/threadpoolctl",
+     "resolved_revision": "d5bf10bcf90d9a8a315fe9496fb1bc97007d2fea",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/joblib/threadpoolctl"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "tokenizers",
    "provider_count": 1,
    "provider_kinds": [
@@ -8859,6 +11046,30 @@
      "resolved_revision": "88a4498ad4ea1a9487b0a9b0ff881383fd5a06a3",
      "runtime": "Common",
      "upstream_url": "https://github.com/huggingface/tokenizers"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "tomli-2-4-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/tomli-2.4.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
     }
    ],
    "runtimes": [
@@ -8959,6 +11170,30 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "truststore",
+   "provider_count": 1,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "truststore",
+     "path": "Symoneural-CLI/src/tls/source/truststore",
+     "resolved_revision": "0714f72a739d182cdb8502f4e1bb4cf7ebfe4eb5",
+     "runtime": "CLI",
+     "upstream_url": "https://github.com/sethmlarson/truststore"
+    }
+   ],
+   "runtimes": [
+    "CLI"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -9278,6 +11513,30 @@
    "classification": "SINGLE-PROVIDER",
    "classification_flags": [],
    "decision": "UNRESOLVED",
+   "logical_source": "wheel-0-46-3-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/wheel-0.46.3.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
    "logical_source": "win-flex-bison-binaries",
    "provider_count": 1,
    "provider_kinds": [
@@ -9559,6 +11818,30 @@
    ],
    "runtimes": [
     "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "SINGLE-PROVIDER",
+   "classification_flags": [],
+   "decision": "UNRESOLVED",
+   "logical_source": "zipp-3-23-0-dist-info",
+   "provider_count": 1,
+   "provider_kinds": [
+    "VENDORED"
+   ],
+   "providers": [
+    {
+     "kind": "VENDORED",
+     "owning_component": "setuptools",
+     "path": "Symoneural-Common/src/util/source/setuptools/setuptools/_vendor/zipp-3.23.0.dist-info",
+     "resolved_revision": "UNKNOWN",
+     "runtime": "Common",
+     "upstream_url": "UNKNOWN"
+    }
+   ],
+   "runtimes": [
+    "Common"
    ],
    "selected_provider": "UNRESOLVED"
   },

@@ -473,6 +473,46 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "2c6acbdf7bb74caa37512c3a5ca6857b",
+   "owner_component": "filelock",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "608c89d5060ae9921adccf3236695bc654a9946e12323ef6c021dfa04e294d48",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "92148516810c76f08bfc1e528850b992",
+   "owner_component": "filelock",
+   "owner_runtime": "Common",
+   "path": "docs/license.rst",
+   "sha256": "feec665d3f93b49689f5a94040c514454bb8aeea2ca9f8edf58f6ab7536f8298",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b38a11bf4dcdfc66307f8515ce1fbaa6",
+   "owner_component": "fsspec",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "2dc35496ce53a7307915c008a844aad53e772b49b34cdd00445067691407ec94",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "44c9221cecc91cb6ac99cc8d8cb966e8",
+   "owner_component": "fsspec",
+   "owner_runtime": "Common",
+   "path": "docs/source/copying.rst",
+   "sha256": "f5ad318fa586440ffe87d4e876f6bf1d84172857891547c650dbc7e2bb535aed",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "223b26b3c1143120c87e2b13111d3e99",
    "owner_component": "ggml",
    "owner_runtime": "LLM",
@@ -793,6 +833,26 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "hf-xet",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "86d3f3a95c324c9479bd8986968f4327",
+   "owner_component": "hf-xet",
+   "owner_runtime": "Common",
+   "path": "hf_xet/LICENSE",
+   "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "8c22b1b3074f826155dbc85e6a0d4d1f",
    "owner_component": "hls.js",
    "owner_runtime": "Streamer",
@@ -858,6 +918,26 @@
    "owner_runtime": "API",
    "path": "LICENSE.md",
    "sha256": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "5dc88300786f1c214c1e9827a5229462",
+   "owner_component": "jinja2",
+   "owner_runtime": "Common",
+   "path": "LICENSE.txt",
+   "sha256": "3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9c09fd3983d581cb05598a19742ff5df",
+   "owner_component": "jinja2",
+   "owner_runtime": "Common",
+   "path": "docs/license.rst",
+   "sha256": "1e07e9c25f2618a040560b70e63f42259eab24e558d0f3532e6163d751cb4eea",
    "status": "UNRESOLVED"
   },
   {
@@ -1543,6 +1623,56 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "a38a1697260a7ad7bf29f44b362db1fc",
+   "owner_component": "markdown-it-py",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "4a2260d6e2cd0f5a151a1e86dbfe7d3ed552b1e2beabf9941c1ba5c49cbce484",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "4323c95e1014fb58368f2d4c2b78064b",
+   "owner_component": "markdown-it-py",
+   "owner_runtime": "Common",
+   "path": "LICENSE.markdown-it",
+   "sha256": "792c48c5a849a15fdf9e37e8bcf9e6d1dd13b32b46c642a748a0a46a9919d473",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ffeffa59c90c9c4a033c7574f8f3fb75",
+   "owner_component": "markupsafe",
+   "owner_runtime": "Common",
+   "path": "LICENSE.txt",
+   "sha256": "489a8e1108509ed98a37bb983e11e0f7e1d31f0bd8f99a79c8448e7ff37d07ea",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2b2ad55419d389d17492540ca5de39a7",
+   "owner_component": "markupsafe",
+   "owner_runtime": "Common",
+   "path": "docs/license.rst",
+   "sha256": "6fc7e80b75b5999783a328d90976a2585e0956c4a348c3c888453938ceca742d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aca1dc6b9088f1dda81c89cad2c77ad1",
+   "owner_component": "mdurl",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "7c605df6e28667a9603118e98274f64a49ce3eed0d26fccce9534a345e0ef955",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "bde3c575382996b75d85702949512751",
    "owner_component": "mpmath",
    "owner_runtime": "Ravencalc",
@@ -1558,6 +1688,16 @@
    "owner_runtime": "Ravencalc",
    "path": "LICENSE.md",
    "sha256": "811445f30147b8f0c9d444c9025fd528f9532c54b7b83f6e2368473dc91cfdf0",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "f7592b173aee2da0e062f9cfa0378e9d",
+   "owner_component": "networkx",
+   "owner_runtime": "Common",
+   "path": "LICENSE.txt",
+   "sha256": "3cf7c3a179d817b23b8b8568211769fefdf93797d207d984b8b2fa24d0220b33",
    "status": "UNRESOLVED"
   },
   {
@@ -2393,6 +2533,86 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "faadaedca9251a90b205c9167578ce91",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2ee41112a44fe7014dce33e26468ba93",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "LICENSE.APACHE",
+   "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7bef9bf4a8e4263634d0597e7ba100b8",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "LICENSE.BSD",
+   "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "15cec122e136a83b21225def3737819a",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "docs/licenses.rst",
+   "sha256": "763abb29c53e906e1e8d839deff7cca19c98d1c6c2bbf576ddc7394baeacf9c3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "bd15e6083f27646fcf4e1c6ecaf2c2b0",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "src/packaging/licenses/__init__.py",
+   "sha256": "590d12eee73ddbec53b4e9ee5bfc64d9cb3aacb4940e8ebcba260757ce56740b",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f3a6f6de2ccbb9fc1b4e9d733c88d7",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "src/packaging/licenses/_spdx.py",
+   "sha256": "596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "04296fb1ba243ae79d3bb7c833abec1c",
+   "owner_component": "packaging",
+   "owner_runtime": "Common",
+   "path": "tasks/licenses.py",
+   "sha256": "2f665f3926068c9a4ba1d9974a1c7ffcb6e20f68b9bef6e88979eaa349b75dca",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "a9c72113a843d0d732a0ac1c200d81b1",
+   "owner_component": "psutil",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "b89c063b3786e28e0c0a38f1931db61fed35e69dd2a2966fbecffee0f46c8d10",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "774f65abd8a7fe3124be2cdf766cd06f",
    "owner_component": "pybind11",
    "owner_runtime": "Ravencalc",
@@ -2428,6 +2648,16 @@
    "owner_runtime": "API",
    "path": "pydantic-core/LICENSE",
    "sha256": "2afdd30d54b4d62b6f488a6bcc1546e84ec5061f13f4209c03d012348783795a",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "36a13c90514e2899f1eba7f41c3ee592",
+   "owner_component": "pygments",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "a9d66f1d526df02e29dce73436d34e56e8632f46c275bbdffc70569e882f9f17",
    "status": "UNRESOLVED"
   },
   {
@@ -4023,6 +4253,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "6d8242660a8371add5fe547adf083079",
+   "owner_component": "pyyaml",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "93eb9740964b59e9ba30281255b044e2",
    "owner_component": "referencing",
    "owner_runtime": "CLI",
@@ -4038,6 +4278,26 @@
    "owner_runtime": "CLI",
    "path": "suite/LICENSE",
    "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7b5751ddd6b643203c31ff873051d069",
+   "owner_component": "regex",
+   "owner_runtime": "Common",
+   "path": "LICENSE.txt",
+   "sha256": "bff55ef4cdcc8c14ce259f8e8ab60e264418440d6335f4dc138273fbd506144d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "b5f0b94fbc94f5ad9ae4efcf8a778303",
+   "owner_component": "rich",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "deed7c17a4318158190a3ea239cc879a5a50271cebb98ae7025f48fbe58dca15",
    "status": "UNRESOLVED"
   },
   {
@@ -4513,6 +4773,216 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "141643e11c48898150daa83802dbc65f",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "dc95b16613e50ed624fbad323dce59a2",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "docs/userguide/license_migration.rst",
+   "sha256": "49e725dd64d57ea335ba61af755273ad03dbe39b8a689882c49e1c820b295944",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "8466cfc6533376d42efa6f7423f2b8e8",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/autocommand-2.2.2.dist-info/LICENSE",
+   "sha256": "ade78d04982d69972d444a8e14a94f87a2334dd3855cc80348ea8e240aa0df2d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "141643e11c48898150daa83802dbc65f",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/backports.tarfile-1.2.0.dist-info/LICENSE",
+   "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "cf73015ea0156450506e8000d1f7fa37",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/importlib_metadata-8.7.1.dist-info/licenses/LICENSE",
+   "sha256": "458502e12d97bbf64438606a20044aa85eb05fb0a8a807bb35dbec253fd1fc04",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "141643e11c48898150daa83802dbc65f",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/jaraco.text-4.0.0.dist-info/LICENSE",
+   "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2e21c3f75eb8d9427c8a611a8e83e9d6",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/jaraco_context-6.1.0.dist-info/licenses/LICENSE",
+   "sha256": "9755a18519666e5f0f4cae3daad3d7012bcae48a600b31237d75e9fe134e6683",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1aeae65f25a15b1e46d4381f2f094e0a",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/jaraco_functools-4.4.0.dist-info/licenses/LICENSE",
+   "sha256": "5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "3396ea30f9d21389d7857719816f83b5",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/more_itertools-10.8.0.dist-info/licenses/LICENSE",
+   "sha256": "09f1c8c9e941af3e584d59641ea9b87d83c0cb0fd007eb5ef391a7e2643c1a46",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "faadaedca9251a90b205c9167578ce91",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE",
+   "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2ee41112a44fe7014dce33e26468ba93",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.APACHE",
+   "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7bef9bf4a8e4263634d0597e7ba100b8",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.BSD",
+   "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "c17a5334802b8311a8a9744aaa858652",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/packaging/licenses/__init__.py",
+   "sha256": "4f05cb1d9097c1281d17044b3f15bad364fa99289eba74851cce9fa7ca605bbf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "71f3a6f6de2ccbb9fc1b4e9d733c88d7",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/packaging/licenses/_spdx.py",
+   "sha256": "596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "ea4f5a41454746a9ed111e3d8723d17a",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/platformdirs-4.4.0.dist-info/licenses/LICENSE",
+   "sha256": "29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "aaaaf0879d17df0110d1aa8c8c9f46f5",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/tomli-2.4.0.dist-info/licenses/LICENSE",
+   "sha256": "b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "7ffb0db04527cfe380e4f2726bd05ebf",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/wheel-0.46.3.dist-info/licenses/LICENSE.txt",
+   "sha256": "30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1aeae65f25a15b1e46d4381f2f094e0a",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/_vendor/zipp-3.23.0.dist-info/licenses/LICENSE",
+   "sha256": "5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "9b0094c5118f803d15bda8138865dbf5",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/config/NOTICE",
+   "sha256": "2dddf08818297a3b89d43d95ff659d8da85741108c9136dfa3a4d856c0623bd8",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "2f9e5e2a3f02e70ea5e61b49cc977d00",
+   "owner_component": "setuptools",
+   "owner_runtime": "Common",
+   "path": "setuptools/config/_validate_pyproject/NOTICE",
+   "sha256": "09c9bcea95ca086f8bc5bed174e40bc835b297d40fb5f86bbbb570fe0a5581a7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "78e1c0248051c32a38a7f820c30bd7a5",
+   "owner_component": "shellingham",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "f388fd38cad13112c1dc0f669bbe80e7f84541edbafb72f3030d2ca7642c3c9d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "fa7b86389e58dd4087a8d2b833e5fe96",
    "owner_component": "sniffio",
    "owner_runtime": "API",
@@ -4713,6 +5183,16 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "9a9bed097dea538bf341c8623c8f8852",
+   "owner_component": "tqdm",
+   "owner_runtime": "Common",
+   "path": "LICENCE",
+   "sha256": "fcff87c3a47ce8028a8512aa182d4fcf0ad1c90544ee75cf9b343684cac194de",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "d15f16de23b5d7f8e28dd073d2ed8b28",
    "owner_component": "transformers",
    "owner_runtime": "Common",
@@ -4748,6 +5228,26 @@
    "owner_runtime": "CLI",
    "path": "LICENSE",
    "sha256": "33be7b7e8fa4fd19b1760e1a8ed8a668bdab852c91b692dd41424bcb725a9fca",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "173d405eb704b1499218013178722617",
+   "owner_component": "typer",
+   "owner_runtime": "Common",
+   "path": "LICENSE",
+   "sha256": "58992cebcf8dfb6e40c4e2112ed12126c243666dca3912a3d78b7ecac4859d49",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "1fa98232fd645608937a0fdc82e999b8",
+   "owner_component": "typer",
+   "owner_runtime": "Common",
+   "path": "typer/_click/LICENSE.txt",
+   "sha256": "9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d",
    "status": "UNRESOLVED"
   },
   {

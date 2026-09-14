@@ -465,6 +465,17 @@
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
+   "component": "pyyaml",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 1,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/data/source/pyyaml",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
    "component": "accelerate",
    "declared_capabilities": [
     "PYTHON-PACKAGE"
@@ -472,6 +483,21 @@
    "native_source_files": 0,
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/accelerate",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "hf-xet",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "RUST-CDYLIB",
+    "RUST-RLIB"
+   ],
+   "native_source_files": 333,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/hf-xet",
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
@@ -536,6 +562,174 @@
    "native_source_files": 0,
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/transformers",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "jinja2",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/jinja2",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "markdown-it-py",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/markdown-it-py",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "markupsafe",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 1,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/markupsafe",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "mdurl",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/mdurl",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "pygments",
+   "declared_capabilities": [
+    "EXECUTABLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "SHARED-LIBRARY"
+   ],
+   "native_source_files": 12,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/pygments",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "regex",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 2,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/regex",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "rich",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/rich",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "filelock",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/filelock",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "fsspec",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/fsspec",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "networkx",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/networkx",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "packaging",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 1,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/packaging",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "psutil",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 88,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/psutil",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "setuptools",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 3,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/setuptools",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "shellingham",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/shellingham",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "tqdm",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/tqdm",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "typer",
+   "declared_capabilities": [
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 0,
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/typer",
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {

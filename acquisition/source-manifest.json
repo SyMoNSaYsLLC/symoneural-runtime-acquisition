@@ -639,6 +639,18 @@
     {
       "acquisition_state": "ACQUIRED",
       "category": "text",
+      "component": "jinja2",
+      "intended_revision": "15206881c006c79667fe5154fe80c01c65410679",
+      "intended_tag_version": "3.1.6",
+      "notes": "Licence BSD-3-Clause (LICENSE.txt md5 5dc88300786f1c214c1e9827a5229462). flit_core, runtime dep MarkupSafe>=2.0 -> symoneural-markupsafe. Version rule: newest upstream release satisfying every recorded consumer constraint; equals the layer's own version, so the OE recipe mirrors exactly.",
+      "required_by": "Common: torch wheel Requires-Dist jinja2 (unconditional)",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/pallets/jinja"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "text",
       "component": "markdown-it-py",
       "intended_revision": "36c5f547144df2d01970a5792d68c71a3380b227",
       "intended_tag_version": "v4.2.0",
@@ -647,6 +659,18 @@
       "revision_authority": "same",
       "runtime": "Common",
       "upstream_url": "https://github.com/executablebooks/markdown-it-py"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "markupsafe",
+      "intended_revision": "297fc8e356e6836a62087949245d09a28e9f1b13",
+      "intended_tag_version": "3.0.3",
+      "notes": "Licence BSD-3-Clause (LICENSE.txt md5 ffeffa59c90c9c4a033c7574f8f3fb75). setuptools.build_meta (C extension _speedups), no runtime deps. Version rule: newest upstream release satisfying every recorded consumer constraint; equals the layer's own version, so the OE recipe mirrors exactly.",
+      "required_by": "Common: Jinja2 wheel Requires-Dist MarkupSafe>=2.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/pallets/markupsafe"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -663,6 +687,18 @@
     {
       "acquisition_state": "ACQUIRED",
       "category": "util",
+      "component": "networkx",
+      "intended_revision": "7530809bfa1ea7ed6fdf918a4d1431488953cb1f",
+      "intended_tag_version": "networkx-3.6.1",
+      "notes": "Licence BSD-3-Clause (LICENSE.txt md5 f7592b173aee2da0e062f9cfa0378e9d). setuptools.build_meta, no runtime deps (pyproject dependencies = []; meta-python's python3-decorator edge is stale). Version rule: newest upstream release satisfying every recorded consumer constraint; equals the layer's own version, so the OE recipe mirrors exactly.",
+      "required_by": "Common: torch wheel Requires-Dist networkx>=2.5.1 (unconditional)",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/networkx/networkx"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
       "component": "packaging",
       "intended_revision": "929fd4b1410ac7ef61ef3f45b2f5d7e87711a9b5",
       "intended_tag_version": "26.3",
@@ -671,6 +707,18 @@
       "revision_authority": "same",
       "runtime": "Common",
       "upstream_url": "https://github.com/pypa/packaging"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "psutil",
+      "intended_revision": "9eea97dd6f1d16ea33f5144c8925f1ce7a0688e1",
+      "intended_tag_version": "release-7.2.2",
+      "notes": "Licence BSD-3-Clause (LICENSE md5 a9c72113a843d0d732a0ac1c200d81b1). setuptools.build_meta (C extensions _psutil_linux, _psutil_posix), no runtime deps. Version rule: newest upstream release satisfying every recorded consumer constraint; equals the layer's own version, so the OE recipe mirrors exactly.",
+      "required_by": "Common: accelerate install_requires psutil (unconditional)",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/giampaolo/psutil"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -746,6 +794,18 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Common",
       "upstream_url": "https://github.com/huggingface/safetensors"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "setuptools",
+      "intended_revision": "72e919a8b10aaafc041205d4e3ae0e6a2e1e5f87",
+      "intended_tag_version": "v84.0.0",
+      "notes": "Licence MIT (LICENSE md5 141643e11c48898150daa83802dbc65f). setuptools.build_meta (self-hosted via python3-setuptools-native), no runtime deps. Version rule: newest upstream release satisfying every recorded consumer constraint; equals the layer's own version, so the OE recipe mirrors exactly.",
+      "required_by": "Common: torch wheel Requires-Dist setuptools>=77.0.3 (unconditional)",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/pypa/setuptools"
     },
     {
       "acquisition_state": "ACQUIRED",

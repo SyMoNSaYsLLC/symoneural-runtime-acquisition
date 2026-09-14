@@ -682,6 +682,71 @@
       "tag": "v15.0.0",
       "tag_kind": "RELEASE",
       "upstream_url": "https://github.com/Textualize/rich"
+    },
+    {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
+      "category": "util",
+      "component": "setuptools",
+      "licence_expected": "MIT",
+      "notes": "Not pre-queued: surfaced as UNRESOLVED SOURCE OWNERSHIP by tools/check-python-runtime-closures.py --runtime Common after the first Common image build (torch's Requires-Dist is unconditional). Queued and acquired in the same phase.",
+      "required_by": "Common: torch wheel Requires-Dist setuptools>=77.0.3 (unconditional)",
+      "runtime": "Common",
+      "sha": "72e919a8b10aaafc041205d4e3ae0e6a2e1e5f87",
+      "tag": "v84.0.0",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/pypa/setuptools"
+    },
+    {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
+      "category": "text",
+      "component": "jinja2",
+      "licence_expected": "BSD-3-Clause",
+      "notes": "Not pre-queued: surfaced as UNRESOLVED SOURCE OWNERSHIP by tools/check-python-runtime-closures.py --runtime Common after the first Common image build (torch's Requires-Dist is unconditional). Queued and acquired in the same phase.",
+      "required_by": "Common: torch wheel Requires-Dist jinja2 (unconditional)",
+      "runtime": "Common",
+      "sha": "15206881c006c79667fe5154fe80c01c65410679",
+      "tag": "3.1.6",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/pallets/jinja"
+    },
+    {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
+      "category": "text",
+      "component": "markupsafe",
+      "licence_expected": "BSD-3-Clause",
+      "notes": "Not pre-queued: surfaced as UNRESOLVED SOURCE OWNERSHIP by tools/check-python-runtime-closures.py --runtime Common after the first Common image build (torch's Requires-Dist is unconditional). Queued and acquired in the same phase.",
+      "required_by": "Common: Jinja2 wheel Requires-Dist MarkupSafe>=2.0",
+      "runtime": "Common",
+      "sha": "297fc8e356e6836a62087949245d09a28e9f1b13",
+      "tag": "3.0.3",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/pallets/markupsafe"
+    },
+    {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
+      "category": "util",
+      "component": "networkx",
+      "licence_expected": "BSD-3-Clause",
+      "notes": "Not pre-queued: surfaced as UNRESOLVED SOURCE OWNERSHIP by tools/check-python-runtime-closures.py --runtime Common after the first Common image build (torch's Requires-Dist is unconditional). Queued and acquired in the same phase.",
+      "required_by": "Common: torch wheel Requires-Dist networkx>=2.5.1 (unconditional)",
+      "runtime": "Common",
+      "sha": "7530809bfa1ea7ed6fdf918a4d1431488953cb1f",
+      "tag": "networkx-3.6.1",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/networkx/networkx"
+    },
+    {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
+      "category": "util",
+      "component": "psutil",
+      "licence_expected": "BSD-3-Clause",
+      "notes": "Tabled in docs/OBJECTIVE-100-PERCENT-SOURCES.md as a pending C-extension acquisition for accelerate; acquired when accelerate was brought into the Common packagegroup.",
+      "required_by": "Common: accelerate install_requires psutil",
+      "runtime": "Common",
+      "sha": "9eea97dd6f1d16ea33f5144c8925f1ce7a0688e1",
+      "tag": "release-7.2.2",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/giampaolo/psutil"
     }
   ],
   "schema": "symoneural-pending-acquisitions/1"

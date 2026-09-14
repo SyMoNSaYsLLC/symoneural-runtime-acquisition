@@ -199,9 +199,75 @@
    "state": "TARGET"
   },
   {
+   "component": "filelock",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/filelock",
+   "state": "TARGET"
+  },
+  {
+   "component": "fsspec",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/fsspec",
+   "state": "TARGET"
+  },
+  {
+   "component": "hf-xet",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/hf-xet",
+   "state": "TARGET"
+  },
+  {
    "component": "huggingface-hub",
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/huggingface-hub",
+   "state": "TARGET"
+  },
+  {
+   "component": "jinja2",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/jinja2",
+   "state": "TARGET"
+  },
+  {
+   "component": "markdown-it-py",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/markdown-it-py",
+   "state": "TARGET"
+  },
+  {
+   "component": "markupsafe",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/markupsafe",
+   "state": "TARGET"
+  },
+  {
+   "component": "mdurl",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/mdurl",
+   "state": "TARGET"
+  },
+  {
+   "component": "networkx",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/networkx",
+   "state": "TARGET"
+  },
+  {
+   "component": "packaging",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/packaging",
+   "state": "TARGET"
+  },
+  {
+   "component": "psutil",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/psutil",
+   "state": "TARGET"
+  },
+  {
+   "component": "pygments",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/pygments",
    "state": "TARGET"
   },
   {
@@ -211,9 +277,39 @@
    "state": "TARGET"
   },
   {
+   "component": "pyyaml",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/data/source/pyyaml",
+   "state": "TARGET"
+  },
+  {
+   "component": "regex",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/regex",
+   "state": "TARGET"
+  },
+  {
+   "component": "rich",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/text/source/rich",
+   "state": "TARGET"
+  },
+  {
    "component": "safetensors",
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/safetensors",
+   "state": "TARGET"
+  },
+  {
+   "component": "setuptools",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/setuptools",
+   "state": "TARGET"
+  },
+  {
+   "component": "shellingham",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/shellingham",
    "state": "TARGET"
   },
   {
@@ -223,9 +319,21 @@
    "state": "TARGET"
   },
   {
+   "component": "tqdm",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/tqdm",
+   "state": "TARGET"
+  },
+  {
    "component": "transformers",
    "runtime": "Common",
    "source_path": "Symoneural-Common/src/ml/source/transformers",
+   "state": "TARGET"
+  },
+  {
+   "component": "typer",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/util/source/typer",
    "state": "TARGET"
   },
   {
