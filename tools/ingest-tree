@@ -1,0 +1,454 @@
+#!/usr/bin/env python3
+"""ingest-tree - put an acquired upstream tree INTO this repository at its pin,
+and prove from a clone alone that what is committed equals upstream.
+
+  tools/ingest-tree ingest <component>      steps a-e of SOURCES-100 S2; updates
+                                            source-lock.json; does NOT commit
+  tools/ingest-tree verify  <component>     S1 assertion from the lock + HEAD only
+  tools/ingest-tree verify --all            one line per component
+  tools/ingest-tree pins    <component>     where every pin for it lives
+
+THE PIN MODEL (S1)
+  lock.commit_sha   the upstream commit (= SRCREV)
+  lock.tree_sha     git --git-dir=<pins> rev-parse <commit_sha>^{tree}
+  lock.source_path  where the files sit in THIS repository
+  lock.pins_path    the moved .git (local, ignored via **/.gitpins/)
+  lock.submodules   [{path, commit_sha, tree_sha, pins_path, provenance}]
+  lock.excluded     [{path, sha256, reason}]   normally empty
+
+  Assertion without submodules:   git rev-parse HEAD:<source_path> == tree_sha
+  Assertion with submodules:      upstream holds gitlinks where we hold content,
+    so rebuild upstream's tree from ours: read HEAD:<source_path> into a scratch
+    index, replace each recorded submodule path with a 160000 gitlink at its
+    recorded commit, write-tree, compare to tree_sha. Then recurse into each
+    submodule against ITS tree_sha. One equality per level; no pin, no upstream
+    access needed - the lock and the clone are enough.
+
+Ingestion reads upstream's TREE OBJECT (git read-tree), never `git add`: add runs
+this repository's ignore rules and upstream's own .gitignore/.gitattributes over
+the files and silently drops or normalises them. That is how 10 of the first 13
+trees went in short (pytorch: 151 files, all matched by an ignore pattern).
+"""
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+LOCK = ROOT / "acquisition" / "source-lock.json"
+SUBLOCK = ROOT / "acquisition" / "submodule-lock.json"
+PIN_ENV = {
+    "GIT_AUTHOR_NAME": "symoneural-pin", "GIT_AUTHOR_EMAIL": "pin@symoneural.invalid",
+    "GIT_COMMITTER_NAME": "symoneural-pin", "GIT_COMMITTER_EMAIL": "pin@symoneural.invalid",
+}
+
+
+class Fail(Exception):
+    pass
+
+
+def git(*args, cwd=None, gitdir=None, env=None, check=True, index=None):
+    cmd = ["git"]
+    if gitdir:
+        cmd.append("--git-dir=" + str(gitdir))
+    cmd += ["-c", "gc.auto=0"] + list(args)
+    e = dict(os.environ)
+    if env:
+        e.update(env)
+    if index:
+        e["GIT_INDEX_FILE"] = str(index)
+    r = subprocess.run(cmd, cwd=cwd or ROOT, capture_output=True, text=True, env=e)
+    if check and r.returncode:
+        raise Fail("git %s failed (rc=%d): %s" % (" ".join(args[:3]), r.returncode, r.stderr.strip()[-800:]))
+    return r.stdout.strip()
+
+
+def load(p):
+    return json.load(open(p))
+
+
+def save(p, data):
+    tmp = str(p) + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(data, f, indent=2, sort_keys=False)
+        f.write("\n")
+    os.replace(tmp, p)
+
+
+def lock_entry(lock, comp):
+    for c in lock["components"]:
+        if c["component"] == comp:
+            return c
+    raise Fail("%s is not in source-lock.json" % comp)
+
+
+def pins_dir(source_path):
+    # Symoneural-<Runtime>/src/<category>/.gitpins - beside `source`, never inside it
+    parts = source_path.split("/")
+    return "/".join(parts[:3]) + "/.gitpins"
+
+
+def obj_exists(sha, gitdir=None):
+    return subprocess.run(["git"] + (["--git-dir=" + str(gitdir)] if gitdir else []) + ["cat-file", "-e", sha],
+                          cwd=ROOT, capture_output=True).returncode == 0
+
+
+def import_tree(pin, commit):
+    """Bring <commit>'s tree and blobs from a pin repository into this one, without
+    its history. An orphan commit wrapping the tree is fetched by ref; only what it
+    reaches crosses over, and nothing under refs/ is created here."""
+    tree = git("rev-parse", commit + "^{tree}", gitdir=pin)
+    if obj_exists(tree):
+        return tree
+    orphan = git("commit-tree", tree, "-m", "symoneural pin %s" % commit, gitdir=pin, env=PIN_ENV)
+    ref = "refs/symoneural/pin-" + commit
+    git("update-ref", ref, orphan, gitdir=pin)
+    git("fetch", "--quiet", "--no-tags", "--no-write-fetch-head", str(ROOT / pin), ref)
+    if not obj_exists(tree):
+        raise Fail("fetched %s from %s but tree %s is still absent" % (ref, pin, tree))
+    return tree
+
+
+def gitmodules_map(gitdir, commit):
+    """path -> (section name, url) from the .gitmodules AT THAT COMMIT."""
+    out = subprocess.run(["git", "--git-dir=" + str(gitdir), "show", commit + ":.gitmodules"],
+                         cwd=ROOT, capture_output=True, text=True)
+    m = {}
+    if out.returncode:
+        return m
+    with tempfile.NamedTemporaryFile("w", suffix=".gitmodules", delete=False) as f:
+        f.write(out.stdout)
+        tmp = f.name
+    try:
+        cfg = subprocess.run(["git", "config", "-f", tmp, "--list"], capture_output=True, text=True).stdout
+    finally:
+        os.unlink(tmp)
+    sec = {}
+    for line in cfg.splitlines():
+        k, _, v = line.partition("=")
+        if not k.startswith("submodule."):
+            continue
+        name, _, key = k[len("submodule."):].rpartition(".")
+        sec.setdefault(name, {})[key] = v
+    for name, kv in sec.items():
+        if "path" in kv:
+            m[kv["path"]] = (name, kv.get("url", ""))
+    return m
+
+
+def resolve_gitfile(gitfile_path, known_pins):
+    """A nested `.git` FILE says `gitdir: ../../.git/modules/<name>`. The parent
+    .git it points into has been moved to the pins store, so map the reference:
+    <owner worktree>/.git/<rest>  ->  <owner pin>/<rest>."""
+    txt = open(gitfile_path).read().strip()
+    if not txt.startswith("gitdir:"):
+        raise Fail("%s is not a gitfile: %r" % (gitfile_path, txt[:60]))
+    target = os.path.normpath(os.path.join(os.path.dirname(gitfile_path), txt[len("gitdir:"):].strip()))
+    rel = os.path.relpath(target, ROOT)
+    head, sep, rest = rel.partition("/.git/")
+    if not sep:
+        raise Fail("gitfile %s points outside a .git store: %s" % (gitfile_path, rel))
+    if head not in known_pins:
+        raise Fail("gitfile %s points into %s/.git which has no recorded pin" % (gitfile_path, head))
+    return os.path.join(known_pins[head], rest)
+
+
+def cmd_ingest(comp):
+    lock = load(LOCK)
+    sub_lock = load(SUBLOCK)
+    ent = lock_entry(lock, comp)
+    sp = ent["source_path"]
+    commit = ent["commit_sha"]
+    pins = pins_dir(sp)
+    comp_pin = os.path.join(pins, comp + ".git")
+    report = []
+
+    # a  PINS -------------------------------------------------------------------
+    top_git = os.path.join(sp, ".git")
+    if os.path.isdir(top_git):
+        os.makedirs(pins, exist_ok=True)
+        if os.path.exists(comp_pin):
+            raise Fail("%s exists and %s still has a .git - refusing to guess which is the pin" % (comp_pin, sp))
+        shutil.move(top_git, comp_pin)
+        report.append("PINS  moved %s -> %s" % (top_git, comp_pin))
+    elif os.path.isfile(top_git):
+        raise Fail("%s is a gitfile; a top-level acquired tree must own its repository" % top_git)
+    elif not os.path.isdir(comp_pin):
+        raise Fail("no .git in %s and no pin at %s" % (sp, comp_pin))
+    have = git("rev-parse", "HEAD", gitdir=comp_pin)
+    if have != commit:
+        raise Fail("PIN MISMATCH %s: pin HEAD %s, lock commit_sha %s" % (comp, have, commit))
+    tree_sha = git("rev-parse", commit + "^{tree}", gitdir=comp_pin)
+    report.append("PIN   %s HEAD == commit_sha %s  tree %s" % (comp_pin, commit[:12], tree_sha[:12]))
+
+    # b  NESTED - every nested .git is a submodule. Move, never delete. -----------
+    known_pins = {sp: comp_pin}
+    nested = []
+    for dirpath, dirnames, filenames in os.walk(sp):
+        if ".git" in dirnames and dirpath != sp:
+            nested.append(os.path.join(dirpath, ".git"))
+            dirnames.remove(".git")
+        elif ".git" in filenames and dirpath != sp:
+            nested.append(os.path.join(dirpath, ".git"))
+        dirnames[:] = [d for d in dirnames if d != ".git"]
+    nested.sort(key=lambda p: p.count("/"))
+    sub_store = os.path.join(pins, comp + ".submodules")
+    moved_sub_pins = {}   # sub path (relative to sp) -> pin gitdir
+    for g in nested:
+        owner = os.path.dirname(g)
+        rel = os.path.relpath(owner, sp)
+        os.makedirs(os.path.join(sub_store, os.path.dirname(rel)) if os.path.dirname(rel) else sub_store, exist_ok=True)
+        if os.path.isdir(g):
+            dest = os.path.join(sub_store, rel + ".git")
+            if os.path.exists(dest):
+                raise Fail("%s already exists" % dest)
+            shutil.move(g, dest)
+            subpin = dest
+            report.append("SUB   moved dir  %s -> %s" % (g, dest))
+        else:
+            subpin = resolve_gitfile(g, known_pins)
+            if not os.path.isdir(subpin):
+                raise Fail("gitfile %s resolves to %s which does not exist" % (g, subpin))
+            dest = os.path.join(sub_store, rel + ".gitfile")
+            shutil.move(g, dest)
+            report.append("SUB   moved gitfile %s -> %s  (repo: %s)" % (g, dest, subpin))
+        known_pins[owner] = subpin
+        moved_sub_pins[rel] = subpin
+
+    # c  SIZE ------------------------------------------------------------------
+    big = []
+    for dirpath, dirnames, filenames in os.walk(sp):
+        dirnames[:] = [d for d in dirnames if d != ".git"]
+        for fn in filenames:
+            p = os.path.join(dirpath, fn)
+            try:
+                if os.path.getsize(p) > 95 * 1024 * 1024:
+                    big.append(p)
+            except OSError:
+                pass
+    excluded = []
+    for p in big:
+        h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+        excluded.append({"path": os.path.relpath(p, sp), "sha256": h,
+                         "reason": "over GitHub's 100 MB single-file limit; blob stays on disk only"})
+        report.append("SIZE  EXCLUDED %s (%d MB) sha256 %s" % (p, os.path.getsize(p) // 2**20, h[:16]))
+
+    # d  INGEST - read upstream's tree object, not the working tree ---------------
+    import_tree(comp_pin, commit)
+    git("rm", "-r", "--cached", "-q", "--ignore-unmatch", "--", sp)
+    git("read-tree", "--prefix=%s/" % sp, tree_sha)
+    subs = []
+    findings = []
+    pending = True
+    while pending:
+        pending = False
+        for line in git("ls-files", "-s", "--", sp).splitlines():
+            meta, _, path = line.partition("\t")
+            mode, sha, _stage = meta.split()
+            if mode != "160000":
+                continue
+            pending = True
+            rel = os.path.relpath(path, sp)
+            # which tree declares this gitlink? the nearest recorded ancestor, else the top
+            owner_rel, owner_pin, owner_commit = "", comp_pin, commit
+            for s in subs:
+                if rel.startswith(s["path"] + "/") and len(s["path"]) > len(owner_rel):
+                    owner_rel, owner_pin, owner_commit = s["path"], s["_pin"], s["commit_sha"]
+            in_owner = os.path.relpath(rel, owner_rel) if owner_rel else rel
+            gm = gitmodules_map(owner_pin, owner_commit) if owner_pin else {}
+            name, url = gm.get(in_owner, (in_owner, ""))
+            subpin = moved_sub_pins.get(rel)
+            if not subpin and owner_pin:
+                cand = os.path.join(owner_pin, "modules", name)
+                if os.path.isdir(cand):
+                    subpin = cand
+            provenance = None
+            if subpin and obj_exists(sha, gitdir=subpin):
+                sub_tree = import_tree(subpin, sha)
+                sub_head = git("rev-parse", "HEAD", gitdir=subpin, check=False)
+                provenance = "PIN"
+                if sub_head != sha:
+                    findings.append("%s: pin HEAD %s but upstream gitlink wants %s (gitlink wins; content is at the gitlink)"
+                                    % (rel, sub_head[:12], sha[:12]))
+            else:
+                # no pin holds this commit: keep the content this repository already has,
+                # say so, and let S4 verify it against a fresh bare clone
+                existing = git("rev-parse", "HEAD:%s" % path, check=False)
+                if not existing:
+                    raise Fail("submodule %s at %s: no pin holds commit %s and nothing is committed at that path"
+                               % (rel, path, sha))
+                sub_tree = existing
+                subpin = subpin or ""
+                provenance = "CONTENT-ONLY (no local pin; tree not verified against commit)"
+                findings.append("%s: no local pin for %s; committed content kept unverified" % (rel, sha[:12]))
+            rec = next((e for e in sub_lock["entries"] if e["owner_component"] == comp and e["submodule_path"] == rel), None)
+            if rec and rec["commit_sha"] != sha:
+                findings.append("%s: submodule-lock says %s, upstream gitlink says %s" % (rel, rec["commit_sha"][:12], sha[:12]))
+            if not rec:
+                sub_lock["entries"].append({
+                    "commit_sha": sha, "configured_url": url, "gitmodules_section": name,
+                    "identity": "%s::%s" % (sp, rel), "init_state": "AT-RECORDED-COMMIT",
+                    "owner_component": comp, "owner_runtime": ent.get("runtime", ""),
+                    "owner_source_path": sp, "status": "RECORDED-AT-INGEST", "submodule_path": rel})
+            git("rm", "-r", "--cached", "-q", "--", path)
+            git("read-tree", "--prefix=%s/" % path, sub_tree)
+            subs.append({"path": rel, "commit_sha": sha, "tree_sha": sub_tree,
+                         "pins_path": os.path.relpath(subpin, ROOT) if subpin and os.path.isabs(subpin) else subpin,
+                         "provenance": provenance, "_pin": subpin})
+            break   # index changed; rescan
+    for s in subs:
+        s.pop("_pin", None)
+    for x in excluded:
+        git("rm", "--cached", "-q", "--", os.path.join(sp, x["path"]))
+
+    # e  VERIFY BEFORE COMMITTING -------------------------------------------------
+    wt = git("write-tree")
+    gl = [l for l in git("ls-tree", "-r", "--full-tree", wt, "--", sp).splitlines() if l.startswith("160000")]
+    if gl:
+        raise Fail("%d gitlink(s) remain under %s after ingest: %s" % (len(gl), sp, gl[:3]))
+    ent["tree_sha"] = tree_sha
+    ent["pins_path"] = comp_pin
+    ent["submodules"] = subs
+    ent["excluded"] = excluded
+    status, detail = verify_entry(ent, treeish=wt)
+    if status.startswith("DIFFERS"):
+        raise Fail("%s %s: %s" % (comp, status, detail))
+    # working tree must equal the index: nothing to check out if it already does
+    st = git("status", "--porcelain", "--untracked-files=all", "--", sp)
+    if st:
+        lines = st.splitlines()
+        tracked = [l[3:] for l in lines if not l.startswith("??")]
+        untracked = [l[3:] for l in lines if l.startswith("??")]
+        report.append("WT    %d tracked path(s) differ from upstream's tree, %d untracked file(s) present"
+                      % (len(tracked), len(untracked)))
+        for l in lines[:10]:
+            report.append("        " + l)
+        if tracked:
+            git("checkout", "--", *tracked)
+            report.append("WT    checked out %d path(s) from the index so the tree equals upstream" % len(tracked))
+        if untracked:
+            raise Fail("%d untracked file(s) inside %s - the acquired tree is not clean:\n%s"
+                       % (len(untracked), sp, "\n".join(untracked[:20])))
+        st2 = git("status", "--porcelain", "--untracked-files=all", "--", sp)
+        if st2:
+            raise Fail("working tree still differs from index under %s:\n%s" % (sp, st2[:1000]))
+
+    # h  RECORD ---------------------------------------------------------------
+    save(LOCK, lock)
+    save(SUBLOCK, sub_lock)
+    n_files = len(git("ls-files", "--", sp).splitlines())
+    for r in report:
+        print("  " + r)
+    for f in findings:
+        print("  FINDING " + f)
+    print("%s · %s · %d files · %s" % (comp, commit[:12], n_files, status))
+    return 0
+
+
+def reconstruct(source_path, prefix, expected_tree, subs, treeish, depth_counts):
+    """Rebuild upstream's tree for <source_path>/<prefix> from what is committed,
+    replacing each DIRECT child submodule with its gitlink, and compare."""
+    node = source_path if not prefix else "%s/%s" % (source_path, prefix)
+    children = [s for s in subs if (not prefix or s["path"].startswith(prefix + "/"))]
+    direct = []
+    for s in children:
+        rel = s["path"] if not prefix else s["path"][len(prefix) + 1:]
+        if not any(o is not s and rel.startswith((o["path"] if not prefix else o["path"][len(prefix) + 1:]) + "/")
+                   for o in children):
+            direct.append((rel, s))
+    fd, idx = tempfile.mkstemp(prefix="symon-verify-")
+    os.close(fd)
+    os.unlink(idx)
+    try:
+        git("read-tree", "%s:%s" % (treeish, node), index=idx)
+        for rel, s in direct:
+            git("rm", "-r", "--cached", "-q", "--ignore-unmatch", "--", rel, index=idx)
+            git("update-index", "--add", "--cacheinfo", "160000,%s,%s" % (s["commit_sha"], rel), index=idx)
+        rebuilt = git("write-tree", index=idx)
+    finally:
+        if os.path.exists(idx):
+            os.unlink(idx)
+    if rebuilt != expected_tree:
+        return False, "%s rebuilt %s != recorded %s" % (node, rebuilt[:12], expected_tree[:12])
+    depth_counts["verified"] += 1
+    for rel, s in direct:
+        if s.get("provenance", "PIN") != "PIN":
+            depth_counts["unverified_subs"] += 1
+        depth_counts["subs"] += 1
+        ok, why = reconstruct(source_path, s["path"], s["tree_sha"], subs, treeish, depth_counts)
+        if not ok:
+            return False, why
+    return True, ""
+
+
+def verify_entry(ent, treeish="HEAD"):
+    sp = ent["source_path"]
+    if "tree_sha" not in ent:
+        return "UNRECORDED", "no tree_sha in the lock; not ingested by this model"
+    ours = git("rev-parse", "%s:%s" % (treeish, sp), check=False)
+    if not ours:
+        return "NOT-COMMITTED", "nothing at %s:%s" % (treeish, sp)
+    gl = [l for l in git("ls-tree", "-r", "%s:%s" % (treeish, sp)).splitlines() if l.startswith("160000")]
+    if gl:
+        return "DIFFERS(%d gitlinks)" % len(gl), "gitlinks present: %s" % [l.split("\t")[-1] for l in gl[:5]]
+    subs = ent.get("submodules") or []
+    if not subs:
+        if ours == ent["tree_sha"]:
+            return "VERIFIED", ""
+        n = "?"
+        pin = ent.get("pins_path")
+        if pin and os.path.isdir(ROOT / pin):
+            a = set(git("ls-tree", "-r", ent["commit_sha"], gitdir=ROOT / pin).splitlines())
+            b = set(git("ls-tree", "-r", "%s:%s" % (treeish, sp)).splitlines())
+            n = len(a ^ b)
+        return "DIFFERS(%s)" % n, "HEAD:%s = %s, lock.tree_sha = %s" % (sp, ours[:12], ent["tree_sha"][:12])
+    counts = {"verified": 0, "subs": 0, "unverified_subs": 0}
+    ok, why = reconstruct(sp, "", ent["tree_sha"], subs, treeish, counts)
+    if not ok:
+        return "DIFFERS(1)", why
+    tag = "LISTING-VERIFIED(%d submodules" % counts["subs"]
+    if counts["unverified_subs"]:
+        tag += ", %d content-only" % counts["unverified_subs"]
+    return tag + ")", ""
+
+
+def cmd_verify(comp):
+    lock = load(LOCK)
+    ents = lock["components"] if comp == "--all" else [lock_entry(lock, comp)]
+    worst = 0
+    for e in sorted(ents, key=lambda c: (c["runtime"], c["component"])):
+        status, detail = verify_entry(e)
+        n = len(git("ls-files", "--", e["source_path"]).splitlines())
+        print("%-26s %-16s %s · %7d files · %s%s" % (e["component"], e["runtime"], e["commit_sha"][:12], n, status,
+                                                    ("  " + detail) if detail else ""))
+        if not (status == "VERIFIED" or status.startswith("LISTING-VERIFIED")):
+            worst = 1
+    return worst
+
+
+def cmd_pins(comp):
+    lock = load(LOCK)
+    e = lock_entry(lock, comp)
+    print("pins_path :", e.get("pins_path", "(none recorded)"))
+    for s in e.get("submodules", []):
+        print("  %-60s %s  %s" % (s["path"], s["commit_sha"][:12], s.get("pins_path") or "(no pin)"))
+
+
+def main(argv):
+    os.chdir(ROOT)
+    if len(argv) < 3 or argv[1] not in ("ingest", "verify", "pins"):
+        print(__doc__)
+        return 2
+    try:
+        return {"ingest": cmd_ingest, "verify": cmd_verify, "pins": cmd_pins}[argv[1]](argv[2])
+    except Fail as f:
+        print("FAIL: %s" % f, file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

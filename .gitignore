@@ -1,21 +1,21 @@
 # ---------------------------------------------------------------------------
 # SyMoNeuRaL repository policy
 #
-# TRACKED   : SyMoNeuRaL work product only - documents, curated recipes,
-#             bbappends, layer config, scan tools.
-# UNTRACKED : acquired upstream source (own .git, reproducible from pinned
-#             SRCREV) and ALL build output.
+# TRACKED   : SyMoNeuRaL work product - documents, curated recipes, bbappends,
+#             layer config, scan tools - AND every acquired upstream tree at its
+#             pinned commit (acquisition/source-lock.json).
+# UNTRACKED : pin stores (.gitpins), ALL build output, caches, secrets, weights.
 #
 # Rule is deny-by-default: ignore everything heavy, then explicitly re-admit
 # the directories that are actually ours.
 # ---------------------------------------------------------------------------
 
-# Acquired upstream source - reproducible from the source lock, has own .git
-# Acquired upstream source IS committed - it is the product being built.
-# Only each tree's own .git is excluded; nesting a repository would make it a
-# submodule and the pin would then have two sources of truth.
-Symoneural-*/src/*/source/*/.git/
-Symoneural-*/src/*/source/*/.git
+# Acquired upstream source IS committed - it is the product being built, and
+# the objective is every tree in this repository at its pin (SOURCES-100).
+# Nothing under Symoneural-*/src/*/source/ is ignored. Each tree's own .git is
+# MOVED beside it into .gitpins/ (the pin store: local provenance, never pushed)
+# so the files are plain content here and the pin has one source of truth.
+**/.gitpins/
 
 # ALL build output, then re-admit the devtool workspace (our recipes/appends)
 Symoneural-*/build/*
@@ -111,6 +111,7 @@ etc/symoneural/
 # Local operator scratch
 *.local
 .env.*
+developer_settings.json
 
 # ---------------------------------------------------------------------------
 # PERSONAL DATA - never tracked.

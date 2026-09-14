@@ -11,10 +11,12 @@
 # For more information about SLSA and how it improves the supply-chain, visit slsa.dev.
 
 name: SLSA generic generator
+# Phase 20 provenance mechanism. Manual trigger ONLY until Phase 20 configures
+# what it signs; the release trigger below is kept for that day, commented out.
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+  # release:
+  #   types: [created]
 
 jobs:
   build:
