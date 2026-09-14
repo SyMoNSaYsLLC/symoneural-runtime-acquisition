@@ -12,7 +12,11 @@ SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Ravencalc/src/symbolic/source
 
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bde3c575382996b75d85702949512751"
-SRC_URI = "git://github.com/mpmath/mpmath;protocol=https;branch=mpmath-1.4.x"
+# nobranch: the pin is a TAG (1.3.0), not a branch head. The recipe previously
+# named branch=mpmath-1.4.x, which stopped being true the moment the pin moved
+# back to 1.3.0. symoneural-pristine strips git:// from SRC_URI at parse time so
+# nothing is fetched, but this line is the provenance record and must not lie.
+SRC_URI = "git://github.com/mpmath/mpmath;protocol=https;nobranch=1;branch=master"
 
 # Modify these as desired
 PV = "1.3.0"
@@ -25,9 +29,15 @@ SRCREV = "b5c04506ef0cd4a1f1213f8389ee21c9c3551582"
 # class actually runs.
 inherit python_setuptools_build_meta
 
-# Build-time dependency proven by an actual build failure, not inferred:
-# mpmath's PEP-517 build requires setuptools-scm; supplied by OE-Core.
-DEPENDS += "python3-setuptools-scm-native"
+# setuptools-scm was a dependency OF THE 1.4.1 PIN, whose pyproject.toml used it;
+# the comment recording that build failure was true then and is not true now.
+# At 1.3.0 the tree references setuptools_scm nowhere
+# (`grep -rniE "setuptools[_-]scm"` over the tree: no match), setup.py is a bare
+# `setuptools.setup()`, and setup.cfg reads the version with
+# `version = attr: mpmath.__version__`, declaring only `setup_requires = setuptools>=36.7.0`.
+# There is also no pyproject.toml, so pypa/build uses the PEP 517 fallback backend
+# setuptools.build_meta:__legacy__. DEPENDS on setuptools-scm-native would stage a
+# build tool this tree never invokes.
 
 
 # NOTE: no Makefile found, unable to determine what needs to be done
