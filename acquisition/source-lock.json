@@ -331,7 +331,11 @@
       "submodule_count": 0,
       "upstream_url": "https://git.openembedded.org/bitbake",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "ab49f70d112cd740355a7f6054b974e29b624d19",
+      "pins_path": "Symoneural-Build/src/bitbake/.gitpins/bitbake.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-openembedded-core_git.bbappend",
