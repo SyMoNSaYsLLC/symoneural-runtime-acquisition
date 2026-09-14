@@ -925,7 +925,7 @@
       "submodule_path": "vendored-meson/meson"
     },
     {
-      "commit_sha": "d21c58225c09243d5a088b1557654d280925e02",
+      "commit_sha": "3d21c58225c09243d5a088b1557654d280925e02",
       "configured_url": "https://github.com/scipy/scipy-mathjax.git",
       "gitmodules_section": "doc/source/_static/scipy-mathjax",
       "identity": "Symoneural-Ravencalc/src/numerics/source/scipy::doc/source/_static/scipy-mathjax",

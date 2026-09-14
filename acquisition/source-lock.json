@@ -835,56 +835,56 @@
           "commit_sha": "3d21c58225c09243d5a088b1557654d280925e02",
           "tree_sha": "06c8334f8a6d10ca2098b74c8246744460acddfd",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/doc/source/_static/scipy-mathjax",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/array_api_compat/array_api_compat",
           "commit_sha": "145bd7d3f41d0cf98f0a7f35ba7e255874dec948",
-          "tree_sha": "f421472894dbb92c88d18f564b53eedb29c4a030",
+          "tree_sha": "1653ccfe0a407eeec16290b51886e2e373877a0d",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/array_api_compat",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/array_api_extra",
           "commit_sha": "02afc63f8133caad1bf8991eefffb1f8d13ca700",
           "tree_sha": "f11e0cec8327613bcf6ad9f1c035fc495cc743ab",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/array_api_extra",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/boost_math/math",
           "commit_sha": "c114cf4a6ae958ce87ed6db4d55c1db4ec0a9c74",
-          "tree_sha": "89b6f0009186d5098693b140a4d10aac2f974553",
+          "tree_sha": "6b9daad7ad4311e8ed3161f1fa229067d39fd1a4",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/boost_math/math",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/cobyqa",
           "commit_sha": "69b7177b9febb9178a5f7a9d61200407f1f77d25",
-          "tree_sha": "2168990f1472e315dbaf50843f02bb555e60cead",
+          "tree_sha": "ef83910e18baf75bb53f74bb4765fe1086fe3173",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/cobyqa",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/highs",
           "commit_sha": "4f96ee8f40b2d3a46e00d6137d5eb31044680776",
-          "tree_sha": "e11f60f4e51f5c660f7d1a59997d5c67e2789f9e",
+          "tree_sha": "aac6ecbfdd6faded9630f78e4abb924a113978a2",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/highs",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/unuran",
           "commit_sha": "7e2344e93eb688acc430393c12228419fa130b9b",
           "tree_sha": "0c4ce23f35c6a037a007e400d4ac338bbdc20219",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/unuran",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         },
         {
           "path": "subprojects/xsf",
           "commit_sha": "f7b85f505a94fd398024478d2e747b01dd2d7a6d",
           "tree_sha": "e96a8fdadf48a7815bb97c5fac23b24aa8b34bc5",
           "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/scipy.git/modules/subprojects/xsf",
-          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+          "provenance": "PIN"
         }
       ],
       "excluded": []
