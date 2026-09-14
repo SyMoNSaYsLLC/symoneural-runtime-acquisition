@@ -61,4 +61,66 @@ if bad:
     print("FAIL:"); [print("   -", b) for b in bad]; sys.exit(1)
 print("CLEAN ROOT IMPORT PROOF: PASS")
 PYEOF
-rc=$?; echo "rc=$rc"; exit $rc
+rc1=$?
+echo "--- first-party packages (symoneural-api, symoneural-api-util, symoneural-api-python)"
+LIB="$R/usr/lib/libsymoneural-api.so.1"; UTIL="$R/usr/bin/symoneural-api-util"
+fail=0
+[ -e "$LIB" ] || { echo "  FAIL: $LIB missing"; fail=1; }
+[ -x "$UTIL" ] || { echo "  FAIL: $UTIL missing"; fail=1; }
+[ -f "$R/usr/lib/python3.14/site-packages/symoneural_api/main.py" ] || { echo "  FAIL: symoneural_api package missing"; fail=1; }
+[ -f "$R/usr/bin/symoneural-api" ] || { echo "  FAIL: symoneural-api console script missing"; fail=1; }
+echo "  SOURCE-TREE: $(cat "$R/usr/share/symoneural-api/SOURCE-TREE" 2>/dev/null || echo MISSING)"
+# linkage: the library needs libc and nothing else; the util needs the library and libc
+need_lib=$(readelf -d "$LIB" 2>/dev/null | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}' | sort | tr '\n' ' ')
+need_util=$(readelf -d "$UTIL" 2>/dev/null | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}' | sort | tr '\n' ' ')
+soname=$(readelf -d "$LIB" 2>/dev/null | awk '/SONAME/ {gsub(/[\[\]]/,"",$5); print $5}')
+echo "  libsymoneural-api.so.1  SONAME=$soname  NEEDED=[$need_lib]"
+echo "  symoneural-api-util     NEEDED=[$need_util]"
+[ "$need_lib" = "libc.so.6 " ] || { echo "  FAIL: library NEEDED is not exactly libc.so.6"; fail=1; }
+[ "$need_util" = "libc.so.6 libsymoneural-api.so.1 " ] || { echo "  FAIL: util NEEDED unexpected"; fail=1; }
+[ "$soname" = "libsymoneural-api.so.1" ] || { echo "  FAIL: SONAME"; fail=1; }
+# the native utility, run through the target loader, with the GPU lock pointed inside the root
+mkdir -p "$R/run/symoneural"
+urun() { env -i HOME="$R" TMPDIR="$R/tmp" SYM_GPU_LOCK="$R/run/symoneural/gpu.lock" "$LD" --library-path "$R/lib:$R/usr/lib" "$UTIL" "$@"; }
+v=$(urun version); a=$(urun abi); c=$(urun capabilities); st=$(urun selftest); strc=$?
+echo "  util version=$v abi=$a capabilities=$c selftest=$st (rc=$strc)"
+[ "$v" = "1.0.0" ] && [ "$a" = "65536" ] && [ $strc -eq 0 ] || { echo "  FAIL: util version/abi/selftest"; fail=1; }
+# the Python package: import, ctypes binding to the packaged library, application registry,
+# and the FastAPI service answering through the in-process test client against the real opkg status
+SYM_API_NATIVE="$LIB" SYM_GPU_LOCK="$R/run/symoneural/gpu.lock" SYM_OPKG_STATUS="$R/var/lib/opkg/status" \
+env -i HOME="$R" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_API_NATIVE="$LIB" SYM_GPU_LOCK="$R/run/symoneural/gpu.lock" SYM_OPKG_STATUS="$R/var/lib/opkg/status" \
+  "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python3.14/lib-dynload" "$PY" -I - <<'PYEOF'
+import sys, json
+import symoneural_api
+from symoneural_api import native, applications
+from symoneural_api import apps  # registers every shipped application, exactly as main.py does
+from importlib.metadata import version
+print("  symoneural_api", symoneural_api.__version__, "dist", version("symoneural-api"))
+n = native.load()
+assert n.version() == "1.0.0", n.version()
+caps = n.capabilities(); tab = n.priority_table()
+print("  native via ctypes: version", n.version(), "capabilities", caps, "priority table", len(tab), "units")
+h = n.lock_acquire("api"); assert n.lock_current() is not None; assert n.lock_release("api")
+assert n.lock_current() is None
+print("  native gpu lock acquire/release through the packaged library: PASS")
+reg = [a.application_id for a in applications.REGISTRY.values()]
+d = applications.application("dispatchos"); assert d.page == "/demo/dispatchos.html" and d.public_demo, d
+print("  applications registered:", reg, "; dispatchos page", d.page, "public_demo", d.public_demo)
+from symoneural_api.main import app
+from starlette.testclient import TestClient
+c = TestClient(app)
+r = c.get("/api/apps"); assert r.status_code == 200, r.text
+ids = [a["application_id"] for a in r.json()["applications"]]
+assert "dispatchos" in ids, r.json()
+# browser-safe descriptors only: no filesystem paths, no secrets in the public list
+txt = json.dumps(r.json()); assert "/home/" not in txt and "/usr/" not in txt and "token" not in txt.lower(), txt[:200]
+rp = c.get("/api/apps", params={"page": "/demo/dispatchos.html"}); assert rp.status_code == 200 and rp.json()["applications"][0]["application_id"] == "dispatchos"
+r2 = c.get("/api/apps/dispatchos/status"); assert r2.status_code == 200, r2.text
+print("  GET /api/apps ->", r.status_code, ids, "; GET /api/apps/dispatchos/status ->", r2.status_code, json.dumps(r2.json())[:160])
+r3 = c.get("/api/health"); print("  GET /api/health ->", r3.status_code, json.dumps(r3.json())[:120])
+print("FIRST-PARTY CLEAN ROOT PROOF: PASS")
+PYEOF
+rc2=$?
+[ $rc2 -eq 0 ] || { echo "  FAIL: first-party python block rc=$rc2"; fail=1; }
+rc=$(( rc1 != 0 || fail != 0 ))
+echo "rc=$rc  (upstream closure rc=$rc1, first-party fail=$fail)"; exit $rc

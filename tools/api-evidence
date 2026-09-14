@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""api-evidence - reconstruction v1.1 §44/§69 provenance artefacts for the API runtime,
+generated FROM DISK (the deployed image, its package feed, the extracted clean root).
+
+  tools/api-evidence [<clean-root>]     default root: $TMPDIR/api-clean-root, as left by
+                                        tools/api-clean-root-proof (run that first)
+Writes generated/evidence/api/:
+  API-SOURCE-CLOSURE.json    tools/map-api-runtime.py        upstream sources, pins, consumers
+  API-RUNTIME-CLOSURE.json   check-python-runtime-closures   wheel Requires-Dist -> RDEPENDS
+  API-BUILD-CLOSURE.json     check-python-runtime-closures   build-only requirements
+  API-INSTALL-MANIFEST.txt   image manifest + first-party installed files with sha256
+  API-LINKAGE.txt            readelf NEEDED/SONAME/RUNPATH for every ELF the API ships
+  API-SYMBOLS.txt            nm -D exported symbols of libsymoneural-api (ABI surface)
+  API-SHA256SUMS             the rootfs tarball and every .ipk in its manifest
+Every line names where it came from. Facts only; the proof's verdict lives in
+tools/api-clean-root-proof's output, not here.
+"""
+import glob, hashlib, json, os, re, subprocess, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEPLOY = os.path.join(ROOT, "Symoneural-API/build/devtool-master/tmp/deploy")
+OUT = os.path.join(ROOT, "generated/evidence/api")
+CR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.environ.get("TMPDIR", "/tmp/claude-1000"), "api-clean-root")
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+def run(*a, **k):
+    return subprocess.run(a, capture_output=True, text=True, **k)
+
+def die(m):
+    print("FAIL:", m); sys.exit(1)
+
+imgs = sorted(glob.glob(os.path.join(DEPLOY, "images/*/symoneural-image-api-*.rootfs-*.tar.gz")), key=os.path.getmtime)
+if not imgs: die("no symoneural-image-api rootfs tarball under %s" % DEPLOY)
+img = imgs[-1]
+stamp = re.search(r"rootfs-(\d+)\.tar\.gz$", img).group(1)
+mani = img[:-len(".tar.gz")] + ".manifest"
+if not os.path.isfile(mani):
+    cands = sorted(glob.glob(os.path.join(os.path.dirname(img), "symoneural-image-api-*.rootfs-*.manifest")), key=os.path.getmtime)
+    if not cands: die("no image manifest")
+    mani = cands[-1]
+if not os.path.isdir(CR): die("clean root %s missing; run tools/api-clean-root-proof first" % CR)
+os.makedirs(OUT, exist_ok=True)
+rel = lambda p: os.path.relpath(p, ROOT)
+
+# --- closures -------------------------------------------------------------
+r = run(sys.executable, os.path.join(ROOT, "tools/check-python-runtime-closures.py"), "--runtime", "API", "--emit-dir", OUT, cwd=ROOT)
+closure_verdict = (r.stdout.strip().splitlines() or ["(no output)"])[-1]
+r2 = run(sys.executable, os.path.join(ROOT, "tools/map-api-runtime.py"), "--json", os.path.join(OUT, "API-SOURCE-CLOSURE.json"), cwd=ROOT)
+if r2.returncode: die("map-api-runtime.py rc=%d %s" % (r2.returncode, r2.stderr[-300:]))
+
+# --- install manifest ------------------------------------------------------
+pkgs = [l.split() for l in open(mani).read().splitlines() if l.strip()]
+fp_files = []
+for pat in ("usr/lib/libsymoneural-api.so*", "usr/bin/symoneural-api-util", "usr/bin/symoneural-api",
+            "usr/share/symoneural-api/*", "usr/lib/python3.14/site-packages/symoneural_api/**/*.py",
+            "usr/lib/python3.14/site-packages/symoneural_api-*.dist-info/*"):
+    fp_files += glob.glob(os.path.join(CR, pat), recursive=True)
+fp_files = sorted(set(p for p in fp_files if os.path.isfile(p) and not os.path.islink(p)))
+links = sorted(p for p in glob.glob(os.path.join(CR, "usr/lib/libsymoneural-api.so*")) if os.path.islink(p))
+with open(os.path.join(OUT, "API-INSTALL-MANIFEST.txt"), "w") as f:
+    f.write("# API-INSTALL-MANIFEST - symoneural-image-api rootfs %s\n" % stamp)
+    f.write("# image    %s\n# sha256   %s\n# manifest %s\n" % (rel(img), sha256(img), rel(mani)))
+    f.write("# packages %d (name arch version), from the image manifest\n" % len(pkgs))
+    for p in pkgs: f.write("%s %s %s\n" % tuple(p[:3]))
+    f.write("\n# first-party installed files (path relative to /, sha256), read from the extracted root\n")
+    for p in fp_files: f.write("%s %s\n" % (sha256(p), "/" + os.path.relpath(p, CR)))
+    for p in links: f.write("symlink %s -> %s\n" % ("/" + os.path.relpath(p, CR), os.readlink(p)))
+    st = os.path.join(CR, "usr/share/symoneural-api/SOURCE-TREE")
+    if os.path.isfile(st): f.write("\n# SOURCE-TREE (the committed subtree this build exported)\n%s" % open(st).read())
+
+# --- linkage ----------------------------------------------------------------
+elfs = []
+for pat in ("usr/lib/libsymoneural-api.so.*.*.*", "usr/bin/symoneural-api-util", "usr/lib/python3.14/site-packages/**/*.so"):
+    elfs += [p for p in glob.glob(os.path.join(CR, pat), recursive=True) if os.path.isfile(p) and not os.path.islink(p)]
+with open(os.path.join(OUT, "API-LINKAGE.txt"), "w") as f:
+    f.write("# API-LINKAGE - readelf on every ELF the API runtime ships, from the extracted clean root of rootfs %s\n" % stamp)
+    bad = []
+    for p in sorted(elfs):
+        d = run("readelf", "-d", p).stdout
+        h = run("readelf", "-h", p).stdout
+        mach = (re.search(r"Machine:\s+(.*)", h) or [None, "?"])[1].strip()
+        need = re.findall(r"\(NEEDED\)\s+Shared library: \[(.*?)\]", d)
+        so = re.findall(r"\(SONAME\)\s+Library soname: \[(.*?)\]", d)
+        rp = re.findall(r"\((?:RPATH|RUNPATH)\)\s+Library r(?:un)?path: \[(.*?)\]", d)
+        f.write("\n%s\n  machine %s\n  SONAME  %s\n  NEEDED  %s\n  RUNPATH %s\n" % ("/" + os.path.relpath(p, CR), mach, so[0] if so else "-", " ".join(need) or "-", " ".join(rp) or "-"))
+        if any("SymonSaysLLC" in x or "/tmp/" in x for x in rp): bad.append(p)
+    f.write("\n# RUNPATH into a build tree: %s\n" % ("NONE" if not bad else ", ".join(bad)))
+    lib = [p for p in elfs if "libsymoneural-api.so" in p]
+    if lib:
+        need = re.findall(r"\(NEEDED\)\s+Shared library: \[(.*?)\]", run("readelf", "-d", lib[0]).stdout)
+        f.write("# libsymoneural-api NEEDED exactly libc.so.6: %s\n" % ("PASS" if need == ["libc.so.6"] else "FAIL %s" % need))
+
+# --- symbols ----------------------------------------------------------------
+with open(os.path.join(OUT, "API-SYMBOLS.txt"), "w") as f:
+    lib = sorted(p for p in elfs if "libsymoneural-api.so" in p)
+    f.write("# API-SYMBOLS - nm -D --defined-only on libsymoneural-api, rootfs %s\n" % stamp)
+    if lib:
+        syms = []
+        for l in run("nm", "-D", "--defined-only", lib[0]).stdout.splitlines():
+            parts = l.split()
+            if len(parts) >= 3 and parts[1] in "TDBRWiu": syms.append((parts[2], parts[1]))
+        syms.sort()
+        f.write("# %s: %d exported symbols\n" % ("/" + os.path.relpath(lib[0], CR), len(syms)))
+        for n, t in syms: f.write("%s %s\n" % (t, n))
+        alien = [n for n, _ in syms if not n.startswith("sym_") and n not in ("_init", "_fini")]
+        f.write("# every exported symbol carries the sym_ prefix: %s\n" % ("PASS" if not alien else "FAIL %s" % alien))
+
+# --- sha256sums -------------------------------------------------------------
+with open(os.path.join(OUT, "API-SHA256SUMS"), "w") as f:
+    f.write("# API-SHA256SUMS - the rootfs tarball and every package its manifest names (from the ipk feed)\n")
+    f.write("%s  %s\n" % (sha256(img), rel(img)))
+    missing = []
+    for name, arch, ver in (p[:3] for p in pkgs):
+        ver = ver.split(":", 1)[1] if ":" in ver else ver   # the manifest carries the epoch (3:3.53.4-r0); the .ipk filename does not
+        c = glob.glob(os.path.join(DEPLOY, "ipk", "*", "%s_%s_%s.ipk" % (name, ver, arch.replace("-", "?"))))
+        c = c or glob.glob(os.path.join(DEPLOY, "ipk", "*", "%s_%s_*.ipk" % (name, ver)))
+        if not c: missing.append(name); continue
+        f.write("%s  %s\n" % (sha256(c[0]), rel(c[0])))
+    if missing: f.write("# NOT IN FEED: %s\n" % " ".join(missing))
+
+print("image        ", rel(img))
+print("closure      ", closure_verdict)
+for n in ("API-SOURCE-CLOSURE.json", "API-RUNTIME-CLOSURE.json", "API-BUILD-CLOSURE.json", "API-INSTALL-MANIFEST.txt", "API-LINKAGE.txt", "API-SYMBOLS.txt", "API-SHA256SUMS"):
+    p = os.path.join(OUT, n)
+    print("  %-26s %s" % (n, "%d bytes" % os.path.getsize(p) if os.path.exists(p) else "MISSING"))

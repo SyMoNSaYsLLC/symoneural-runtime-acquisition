@@ -1,0 +1,453 @@
+{
+ "direct": {
+  "symoneural-annotated-doc": {
+   "distribution": "annotated-doc",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-annotated-doc/0.0.5/image/usr/lib/python3.14/site-packages/annotated_doc-0.0.5.dist-info/METADATA",
+   "version": "0.0.5"
+  },
+  "symoneural-annotated-types": {
+   "distribution": "annotated-types",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-annotated-types/0.8.0/image/usr/lib/python3.14/site-packages/annotated_types-0.8.0.dist-info/METADATA",
+   "version": "0.8.0"
+  },
+  "symoneural-anyio": {
+   "distribution": "anyio",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-anyio/4.15.1/image/usr/lib/python3.14/site-packages/anyio-4.15.1.dist-info/METADATA",
+   "version": "4.15.1"
+  },
+  "symoneural-api-python": {
+   "distribution": "symoneural-api",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-api-python/1.0.0/image/usr/lib/python3.14/site-packages/symoneural_api-1.0.0.dist-info/METADATA",
+   "version": "1.0.0"
+  },
+  "symoneural-certifi": {
+   "distribution": "certifi",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-certifi/2026.07.22/image/usr/lib/python3.14/site-packages/certifi-2026.7.22.dist-info/METADATA",
+   "version": "2026.7.22"
+  },
+  "symoneural-click": {
+   "distribution": "click",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-click/8.5.0/image/usr/lib/python3.14/site-packages/click-8.5.0.dist-info/METADATA",
+   "version": "8.5.0"
+  },
+  "symoneural-fastapi": {
+   "distribution": "fastapi",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-fastapi/0.141.1/image/usr/lib/python3.14/site-packages/fastapi-0.141.1.dist-info/METADATA",
+   "version": "0.141.1"
+  },
+  "symoneural-h11": {
+   "distribution": "h11",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-h11/0.16.0/image/usr/lib/python3.14/site-packages/h11-0.16.0.dist-info/METADATA",
+   "version": "0.16.0"
+  },
+  "symoneural-httpcore": {
+   "distribution": "httpcore",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-httpcore/1.0.9/image/usr/lib/python3.14/site-packages/httpcore-1.0.9.dist-info/METADATA",
+   "version": "1.0.9"
+  },
+  "symoneural-httpx": {
+   "distribution": "httpx",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-httpx/0.28.1/image/usr/lib/python3.14/site-packages/httpx-0.28.1.dist-info/METADATA",
+   "version": "0.28.1"
+  },
+  "symoneural-idna": {
+   "distribution": "idna",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-idna/3.19/image/usr/lib/python3.14/site-packages/idna-3.19.dist-info/METADATA",
+   "version": "3.19"
+  },
+  "symoneural-pydantic": {
+   "distribution": "pydantic",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pydantic/2.13.5/image/usr/lib/python3.14/site-packages/pydantic-2.13.5.dist-info/METADATA",
+   "version": "2.13.5"
+  },
+  "symoneural-pydantic-core": {
+   "distribution": "pydantic_core",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-pydantic-core/2.46.5/image/usr/lib/python3.14/site-packages/pydantic_core-2.46.5.dist-info/METADATA",
+   "version": "2.46.5"
+  },
+  "symoneural-sniffio": {
+   "distribution": "sniffio",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-sniffio/1.3.1/image/usr/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/METADATA",
+   "version": "1.3.1"
+  },
+  "symoneural-starlette": {
+   "distribution": "starlette",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-starlette/1.6.0/image/usr/lib/python3.14/site-packages/starlette-1.6.0.dist-info/METADATA",
+   "version": "1.6.0"
+  },
+  "symoneural-typing-extensions": {
+   "distribution": "typing_extensions",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-typing-extensions/4.16.0/image/usr/lib/python3.14/site-packages/typing_extensions-4.16.0.dist-info/METADATA",
+   "version": "4.16.0"
+  },
+  "symoneural-typing-inspection": {
+   "distribution": "typing-inspection",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-typing-inspection/0.4.4/image/usr/lib/python3.14/site-packages/typing_inspection-0.4.4.dist-info/METADATA",
+   "version": "0.4.4"
+  },
+  "symoneural-uvicorn": {
+   "distribution": "uvicorn",
+   "metadata": "Symoneural-API/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-uvicorn/0.52.4/image/usr/lib/python3.14/site-packages/uvicorn-0.52.4.dist-info/METADATA",
+   "version": "0.52.4"
+  }
+ },
+ "edges": [
+  [
+   "symoneural-anyio",
+   "idna",
+   ">=2.8"
+  ],
+  [
+   "symoneural-anyio",
+   "typing-extensions",
+   ">=4.16.0"
+  ],
+  [
+   "symoneural-api-python",
+   "fastapi",
+   ">=0.115"
+  ],
+  [
+   "symoneural-api-python",
+   "pydantic",
+   ">=2.11"
+  ],
+  [
+   "symoneural-api-python",
+   "uvicorn",
+   ">=0.30"
+  ],
+  [
+   "symoneural-fastapi",
+   "starlette",
+   ">=0.46.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "pydantic",
+   ">=2.9.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "typing-extensions",
+   ">=4.8.0"
+  ],
+  [
+   "symoneural-fastapi",
+   "typing-inspection",
+   ">=0.4.2"
+  ],
+  [
+   "symoneural-fastapi",
+   "annotated-doc",
+   ">=0.0.2"
+  ],
+  [
+   "symoneural-httpcore",
+   "certifi",
+   "any"
+  ],
+  [
+   "symoneural-httpcore",
+   "h11",
+   ">=0.16"
+  ],
+  [
+   "symoneural-httpx",
+   "anyio",
+   "any"
+  ],
+  [
+   "symoneural-httpx",
+   "certifi",
+   "any"
+  ],
+  [
+   "symoneural-httpx",
+   "httpcore",
+   "==1.*"
+  ],
+  [
+   "symoneural-httpx",
+   "idna",
+   "any"
+  ],
+  [
+   "symoneural-pydantic",
+   "annotated-types",
+   ">=0.6.0"
+  ],
+  [
+   "symoneural-pydantic",
+   "pydantic-core",
+   "==2.46.5"
+  ],
+  [
+   "symoneural-pydantic",
+   "typing-extensions",
+   ">=4.14.1"
+  ],
+  [
+   "symoneural-pydantic",
+   "typing-inspection",
+   ">=0.4.2"
+  ],
+  [
+   "symoneural-pydantic-core",
+   "typing-extensions",
+   ">=4.14.1"
+  ],
+  [
+   "symoneural-starlette",
+   "anyio",
+   "<5,>=3.6.2"
+  ],
+  [
+   "symoneural-typing-inspection",
+   "typing-extensions",
+   ">=4.15.0"
+  ],
+  [
+   "symoneural-uvicorn",
+   "click",
+   ">=7.0"
+  ],
+  [
+   "symoneural-uvicorn",
+   "h11",
+   ">=0.8"
+  ]
+ ],
+ "requirements": {
+  "annotated-doc": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.0.2"
+   ],
+   "consumers": [
+    "symoneural-fastapi"
+   ],
+   "distribution": "annotated-doc",
+   "package": "symoneural-annotated-doc",
+   "provider": "SYMONEURAL",
+   "version": "0.0.5"
+  },
+  "annotated-types": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.6.0"
+   ],
+   "consumers": [
+    "symoneural-pydantic"
+   ],
+   "distribution": "annotated-types",
+   "package": "symoneural-annotated-types",
+   "provider": "SYMONEURAL",
+   "version": "0.8.0"
+  },
+  "anyio": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any",
+    "<5,>=3.6.2"
+   ],
+   "consumers": [
+    "symoneural-httpx",
+    "symoneural-starlette"
+   ],
+   "distribution": "anyio",
+   "package": "symoneural-anyio",
+   "provider": "SYMONEURAL",
+   "version": "4.15.1"
+  },
+  "certifi": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    "any",
+    "any"
+   ],
+   "consumers": [
+    "symoneural-httpcore",
+    "symoneural-httpx"
+   ],
+   "distribution": "certifi",
+   "package": "symoneural-certifi",
+   "provider": "SYMONEURAL",
+   "version": "2026.07.22"
+  },
+  "click": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=7.0"
+   ],
+   "consumers": [
+    "symoneural-uvicorn"
+   ],
+   "distribution": "click",
+   "package": "symoneural-click",
+   "provider": "SYMONEURAL",
+   "version": "8.5.0"
+  },
+  "fastapi": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    ">=0.115"
+   ],
+   "consumers": [
+    "symoneural-api-python"
+   ],
+   "distribution": "fastapi",
+   "package": "symoneural-fastapi",
+   "provider": "SYMONEURAL",
+   "version": "0.141.1"
+  },
+  "h11": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.16",
+    ">=0.8"
+   ],
+   "consumers": [
+    "symoneural-httpcore",
+    "symoneural-uvicorn"
+   ],
+   "distribution": "h11",
+   "package": "symoneural-h11",
+   "provider": "SYMONEURAL",
+   "version": "0.16.0"
+  },
+  "httpcore": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    "==1.*"
+   ],
+   "consumers": [
+    "symoneural-httpx"
+   ],
+   "distribution": "httpcore",
+   "package": "symoneural-httpcore",
+   "provider": "SYMONEURAL",
+   "version": "1.0.9"
+  },
+  "idna": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=2.8",
+    "any"
+   ],
+   "consumers": [
+    "symoneural-anyio",
+    "symoneural-httpx"
+   ],
+   "distribution": "idna",
+   "package": "symoneural-idna",
+   "provider": "SYMONEURAL",
+   "version": "3.19"
+  },
+  "pydantic": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    ">=2.11",
+    ">=2.9.0"
+   ],
+   "consumers": [
+    "symoneural-api-python",
+    "symoneural-fastapi"
+   ],
+   "distribution": "pydantic",
+   "package": "symoneural-pydantic",
+   "provider": "SYMONEURAL",
+   "version": "2.13.5"
+  },
+  "pydantic-core": {
+   "authority": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+   "constraints": [
+    "==2.46.5"
+   ],
+   "consumers": [
+    "symoneural-pydantic"
+   ],
+   "distribution": "pydantic-core",
+   "package": "symoneural-pydantic-core",
+   "provider": "SYMONEURAL",
+   "version": "2.46.5"
+  },
+  "starlette": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    ">=0.46.0"
+   ],
+   "consumers": [
+    "symoneural-fastapi"
+   ],
+   "distribution": "starlette",
+   "package": "symoneural-starlette",
+   "provider": "SYMONEURAL",
+   "version": "1.6.0"
+  },
+  "typing-extensions": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=4.16.0",
+    ">=4.8.0",
+    ">=4.14.1",
+    ">=4.14.1",
+    ">=4.15.0"
+   ],
+   "consumers": [
+    "symoneural-anyio",
+    "symoneural-fastapi",
+    "symoneural-pydantic",
+    "symoneural-pydantic-core",
+    "symoneural-typing-inspection"
+   ],
+   "distribution": "typing-extensions",
+   "package": "symoneural-typing-extensions",
+   "provider": "SYMONEURAL",
+   "version": "4.16.0"
+  },
+  "typing-inspection": {
+   "authority": "SYMONEURAL-OWNED",
+   "constraints": [
+    ">=0.4.2",
+    ">=0.4.2"
+   ],
+   "consumers": [
+    "symoneural-fastapi",
+    "symoneural-pydantic"
+   ],
+   "distribution": "typing-inspection",
+   "package": "symoneural-typing-inspection",
+   "provider": "SYMONEURAL",
+   "version": "0.4.4"
+  },
+  "uvicorn": {
+   "authority": "SYMONEURAL-OWNED (recipe exists; record the decision)",
+   "constraints": [
+    ">=0.30"
+   ],
+   "consumers": [
+    "symoneural-api-python"
+   ],
+   "distribution": "uvicorn",
+   "package": "symoneural-uvicorn",
+   "provider": "SYMONEURAL",
+   "version": "0.52.4"
+  }
+ },
+ "runtime": "API",
+ "schema": "symoneural-runtime-closure/1",
+ "target_environment": {
+  "implementation_name": "cpython",
+  "implementation_version": "3.13.5",
+  "os_name": "posix",
+  "platform_machine": "x86_64",
+  "platform_python_implementation": "CPython",
+  "platform_release": "",
+  "platform_system": "Linux",
+  "platform_version": "",
+  "python_full_version": "3.14.7",
+  "python_version": "3.14",
+  "sys_platform": "linux"
+ }
+}

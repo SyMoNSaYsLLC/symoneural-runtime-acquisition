@@ -1,0 +1,30 @@
+# API-SYMBOLS - nm -D --defined-only on libsymoneural-api, rootfs 20260914041440
+# /usr/lib/libsymoneural-api.so.1.0.0: 27 exported symbols
+T sym_api_abi_version
+T sym_api_capabilities
+T sym_api_lock_acquire
+T sym_api_lock_current
+T sym_api_lock_path
+T sym_api_lock_release
+T sym_api_priority
+T sym_api_priority_entry
+T sym_api_rack_json
+T sym_api_selftest
+T sym_api_strerror
+T sym_api_version_string
+T sym_gpulock_acquire
+T sym_gpulock_current
+T sym_gpulock_path
+T sym_gpulock_priority
+T sym_gpulock_priority_table
+T sym_gpulock_release
+T sym_gpulock_strerror
+T sym_rack_gpu
+T sym_rack_host
+T sym_rack_json
+T sym_unit_json
+T sym_unit_poll
+T sym_unit_start
+T sym_unit_state_name
+T sym_unit_stop
+# every exported symbol carries the sym_ prefix: PASS

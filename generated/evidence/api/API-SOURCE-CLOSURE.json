@@ -1,0 +1,730 @@
+{
+ "applications": [],
+ "counts": {
+  "tier_a": 6,
+  "tier_b_shared": 2,
+  "tier_b_trees": 10,
+  "upstream_runtime_sources": 17
+ },
+ "external_secrets_config": {
+  "env_names": [
+   "SYMONEURAL_HOST",
+   "SYMONEURAL_PORT",
+   "SYM_CHAT_TOKEN",
+   "SYM_CODER_TOKEN",
+   "SYM_GPU_LOCK",
+   "SYM_MINER_TOKEN",
+   "SYM_OWNER_TOKEN",
+   "SYM_PROJECT_TOKEN",
+   "SYM_RAVENCALC_TOKEN",
+   "SYM_REMIX_TOKEN",
+   "SYM_STREAMER_TOKEN",
+   "SYM_STUDIO_TOKEN"
+  ],
+  "provisioned_by": "symoneural-secrets (/etc/symoneural, values never in git)"
+ },
+ "first_party": {
+  "c": [
+   "Symoneural-API/app/include/symoneural/api.h",
+   "Symoneural-API/app/include/symoneural/gpulock.h",
+   "Symoneural-API/app/include/symoneural/rack.h",
+   "Symoneural-API/app/include/symoneural/unit.h",
+   "Symoneural-API/app/src/api.c",
+   "Symoneural-API/app/src/gpulock.c",
+   "Symoneural-API/app/src/rack.c",
+   "Symoneural-API/app/src/unit.c",
+   "Symoneural-API/app/src/util-main.c"
+  ],
+  "python": [
+   "Symoneural-API/app/symoneural_api/__init__.py",
+   "Symoneural-API/app/symoneural_api/applications.py",
+   "Symoneural-API/app/symoneural_api/gpulock.py",
+   "Symoneural-API/app/symoneural_api/main.py",
+   "Symoneural-API/app/symoneural_api/native.py",
+   "Symoneural-API/app/symoneural_api/routeclass.py",
+   "Symoneural-API/app/symoneural_api/units.py"
+  ],
+  "tests": [
+   "Symoneural-API/app/tests/native/Makefile",
+   "Symoneural-API/app/tests/native/check.h",
+   "Symoneural-API/app/tests/native/test_api.c",
+   "Symoneural-API/app/tests/native/test_gpulock",
+   "Symoneural-API/app/tests/native/test_gpulock.c",
+   "Symoneural-API/app/tests/native/test_rack",
+   "Symoneural-API/app/tests/native/test_rack.c",
+   "Symoneural-API/app/tests/native/test_unit",
+   "Symoneural-API/app/tests/native/test_unit.c",
+   "Symoneural-API/app/tests/python/__init__.py",
+   "Symoneural-API/app/tests/python/__pycache__",
+   "Symoneural-API/app/tests/python/test_applications.py",
+   "Symoneural-API/app/tests/python/test_gpulock.py",
+   "Symoneural-API/app/tests/python/test_main.py",
+   "Symoneural-API/app/tests/python/test_native.py",
+   "Symoneural-API/app/tests/python/test_routeclass.py",
+   "Symoneural-API/app/tests/python/test_units.py"
+  ]
+ },
+ "head": "5e79dc2bd",
+ "packaged": [
+  "symoneural-annotated-doc",
+  "symoneural-annotated-types",
+  "symoneural-anyio",
+  "symoneural-api",
+  "symoneural-api-python",
+  "symoneural-certifi",
+  "symoneural-click",
+  "symoneural-fastapi",
+  "symoneural-h11",
+  "symoneural-httpcore",
+  "symoneural-httpx",
+  "symoneural-idna",
+  "symoneural-pydantic",
+  "symoneural-pydantic-core",
+  "symoneural-sniffio",
+  "symoneural-starlette",
+  "symoneural-typing-extensions",
+  "symoneural-typing-inspection",
+  "symoneural-uvicorn"
+ ],
+ "recipes_services_packagegroups": {
+  "images": [
+   "symoneural-image-api",
+   "symoneural-image-ravencalc"
+  ],
+  "packagegroups": [
+   "packagegroup-symoneural-api",
+   "packagegroup-symoneural-ravencalc"
+  ],
+  "recipes": [
+   "symoneural-annotated-doc",
+   "symoneural-annotated-types",
+   "symoneural-anyio",
+   "symoneural-api",
+   "symoneural-api-python",
+   "symoneural-certifi",
+   "symoneural-click",
+   "symoneural-fastapi",
+   "symoneural-h11",
+   "symoneural-httpcore",
+   "symoneural-httpx",
+   "symoneural-idna",
+   "symoneural-pydantic",
+   "symoneural-pydantic-core",
+   "symoneural-sniffio",
+   "symoneural-starlette",
+   "symoneural-typing-extensions",
+   "symoneural-typing-inspection",
+   "symoneural-uvicorn"
+  ],
+  "services": []
+ },
+ "schema": "symoneural-api-runtime-map/1",
+ "tier_a_direct": [
+  {
+   "commit": "98209758cc14e1a5f966fe1dfdc1064b94055d8c",
+   "component": "httpcore",
+   "licence": "BSD-3-Clause",
+   "pv": "1.0.9",
+   "recipe": "symoneural-httpcore",
+   "source_path": "Symoneural-API/src/http/source/httpcore",
+   "tree": "3556bc05a78b2026a75d230d90d6cb23d5ed2336"
+  },
+  {
+   "commit": "26d48e0634e6ee9cdc0533996db289ce4b430177",
+   "component": "httpx",
+   "licence": "BSD-3-Clause",
+   "pv": "0.28.1",
+   "recipe": "symoneural-httpx",
+   "source_path": "Symoneural-API/src/http/source/httpx",
+   "tree": "f6bc290d5ec30e882f9d6215a016aa7aac2c02a1"
+  },
+  {
+   "commit": "001dea020e0809844e5b17666432c9135a976f46",
+   "component": "pydantic",
+   "licence": "MIT",
+   "pv": "2.46.5",
+   "recipe": "symoneural-pydantic-core",
+   "source_path": "Symoneural-API/src/model/source/pydantic",
+   "tree": "a7821651c68ed171260cd40d780e83c693cacfc0"
+  },
+  {
+   "commit": "95f8322ee1dcda7ceace7b1c4f6c9915b36d748f",
+   "component": "fastapi",
+   "licence": "MIT",
+   "pv": "0.141.1",
+   "recipe": "symoneural-fastapi",
+   "source_path": "Symoneural-API/src/web/source/fastapi",
+   "tree": "09d11bed04addfc0fe49e45b2c54aefcbea94357"
+  },
+  {
+   "commit": "4f250d6b814587e20c5365f0a5f0c4d42bcb929f",
+   "component": "starlette",
+   "licence": "BSD-3-Clause",
+   "pv": "1.6.0",
+   "recipe": "symoneural-starlette",
+   "source_path": "Symoneural-API/src/web/source/starlette",
+   "tree": "61bf883a2688ea8302a9840334a2a4400431ec2e"
+  },
+  {
+   "commit": "8988c23704fc373c9206cca53ec57dd8ad7f44a5",
+   "component": "uvicorn",
+   "licence": "BSD-3-Clause",
+   "pv": "0.52.4",
+   "recipe": "symoneural-uvicorn",
+   "source_path": "Symoneural-API/src/web/source/uvicorn",
+   "tree": "6997dc7b797de9003fc317e975ee8273557f1c1a"
+  }
+ ],
+ "tier_b_runtime": [
+  {
+   "commit": "ffcd1542cd6d127980205f90a0100078849dd703",
+   "component": "anyio",
+   "licence": "MIT",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "4.15.1",
+   "recipe": "symoneural-anyio",
+   "source_path": "Symoneural-API/src/http/source/anyio",
+   "tree": "759181fe0d0d9c796aebdc3eb55a410a9352f670"
+  },
+  {
+   "commit": "f4bc676bc101fe2235846e37044e8c693d6cbaf4",
+   "component": "certifi",
+   "licence": "MPL-2.0",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "2026.07.22",
+   "recipe": "symoneural-certifi",
+   "source_path": "Symoneural-API/src/http/source/certifi",
+   "tree": "ee296ab344a7ef99e6be55316c83539b688aa282"
+  },
+  {
+   "commit": "1c5b07581f058886c8bdd87adababd7d959dc7ca",
+   "component": "h11",
+   "licence": "MIT",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "0.16.0",
+   "recipe": "symoneural-h11",
+   "source_path": "Symoneural-API/src/http/source/h11",
+   "tree": "2238e165aefbd55ba20b558bc541e0c31451066d"
+  },
+  {
+   "commit": "03a9a11dd8aecd4fea742cabe20f4d3d9ed82abb",
+   "component": "idna",
+   "licence": "BSD-3-Clause",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "3.19",
+   "recipe": "symoneural-idna",
+   "source_path": "Symoneural-API/src/http/source/idna",
+   "tree": "71e74744c8e0814e9a763ac757e8f6c42d636935"
+  },
+  {
+   "commit": "ae020e13b98d276a6558ffc25e82509fd4c288f0",
+   "component": "sniffio",
+   "licence": "MIT OR Apache-2.0",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "1.3.1",
+   "recipe": "symoneural-sniffio",
+   "source_path": "Symoneural-API/src/http/source/sniffio",
+   "tree": "7d00a4d7dd19977fea22428d1c6c425abe39c384"
+  },
+  {
+   "commit": "ef48d6ad51d226f772fd9c5284f55199afe4007c",
+   "component": "annotated-doc",
+   "licence": "MIT",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "0.0.5",
+   "recipe": "symoneural-annotated-doc",
+   "source_path": "Symoneural-API/src/model/source/annotated-doc",
+   "tree": "9cd696529ebcf86b6a809f7c88bc2ae5cae19f6a"
+  },
+  {
+   "commit": "9eb96680138269811a39d838d720abc3dce33954",
+   "component": "annotated-types",
+   "licence": "MIT",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "0.8.0",
+   "recipe": "symoneural-annotated-types",
+   "source_path": "Symoneural-API/src/model/source/annotated-types",
+   "tree": "5dd6fd66f7d8bf79cfdbcc724609e467a7fb22e3"
+  },
+  {
+   "commit": "f29cd28d8ed7642cafb1d18daf5aa41be6a5c0aa",
+   "component": "typing-extensions",
+   "licence": "PSF-2.0",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "4.16.0",
+   "recipe": "symoneural-typing-extensions",
+   "source_path": "Symoneural-API/src/model/source/typing-extensions",
+   "tree": "9381f93c022005ef0f043b22c06be4e5205ecb9e"
+  },
+  {
+   "commit": "83d4dbb74fc367db4403c76be8c0f83cd4b63fbe",
+   "component": "typing-inspection",
+   "licence": "MIT",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "0.4.4",
+   "recipe": "symoneural-typing-inspection",
+   "source_path": "Symoneural-API/src/model/source/typing-inspection",
+   "tree": "1059cf94e0be763dfd9a63f829ebbdab215ca31e"
+  },
+  {
+   "commit": "8b19813f2bfca99f1018a587a8cf54fc959f2e5d",
+   "component": "click",
+   "licence": "BSD-3-Clause",
+   "provider_decision": "SYMONEURAL-OWNED",
+   "pv": "8.5.0",
+   "recipe": "symoneural-click",
+   "source_path": "Symoneural-API/src/web/source/click",
+   "tree": "2955d48825c98fd7dcbc60eb41cf18a952a2c0a3"
+  }
+ ],
+ "tier_b_shared_providers": [
+  {
+   "consumers": "pydantic ==2.46.5",
+   "distribution": "pydantic-core",
+   "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+   "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
+  },
+  {
+   "consumers": "mcp ==2.2.0",
+   "distribution": "mcp-types",
+   "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
+   "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+  }
+ ],
+ "tier_c_build_only": {
+  "classification": "BUILD_REQUIRED - borrowed from pinned layers, never on the target",
+  "families": [
+   "cargo-update-recipe-crates",
+   "python3-hatch-fancy-pypi-readme-native",
+   "python3-maturin-native",
+   "python3-pdm-backend-native",
+   "python3-setuptools-scm-native",
+   "python_flit_core",
+   "python_hatchling",
+   "python_maturin",
+   "python_pdm",
+   "python_pep517",
+   "python_setuptools_build_meta",
+   "setuptools3"
+  ],
+  "per_recipe": {
+   "symoneural-annotated-doc": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_pdm"
+    ]
+   },
+   "symoneural-annotated-types": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "symoneural-typing-extensions"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-anyio": {
+    "DEPENDS": [
+     "python3-setuptools-scm-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-idna",
+     "symoneural-sniffio",
+     "symoneural-typing-extensions"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_setuptools_build_meta"
+    ]
+   },
+   "symoneural-api": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "${PN}"
+    ],
+    "inherit": [
+     "symoneural-firstparty",
+     "cmake"
+    ]
+   },
+   "symoneural-api-python": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "python3-asyncio",
+     "python3-ctypes",
+     "python3-json",
+     "python3-logging",
+     "symoneural-api",
+     "symoneural-fastapi",
+     "symoneural-pydantic",
+     "symoneural-uvicorn"
+    ],
+    "inherit": [
+     "symoneural-firstparty",
+     "python_flit_core"
+    ]
+   },
+   "symoneural-certifi": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_setuptools_build_meta"
+    ]
+   },
+   "symoneural-click": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_flit_core"
+    ]
+   },
+   "symoneural-fastapi": {
+    "DEPENDS": [
+     "python3-pdm-backend-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-annotated-doc",
+     "symoneural-pydantic",
+     "symoneural-starlette",
+     "symoneural-typing-extensions",
+     "symoneural-typing-inspection"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_pep517",
+     "python_setuptools_build_meta"
+    ]
+   },
+   "symoneural-h11": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "setuptools3"
+    ]
+   },
+   "symoneural-httpcore": {
+    "DEPENDS": [
+     "python3-hatch-fancy-pypi-readme-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-certifi",
+     "symoneural-h11"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-httpx": {
+    "DEPENDS": [
+     "python3-hatch-fancy-pypi-readme-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-anyio",
+     "symoneural-certifi",
+     "symoneural-httpcore",
+     "symoneural-idna"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-idna": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_flit_core"
+    ]
+   },
+   "symoneural-pydantic": {
+    "DEPENDS": [
+     "python3-hatch-fancy-pypi-readme-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-annotated-types",
+     "symoneural-pydantic-core",
+     "symoneural-typing-extensions",
+     "symoneural-typing-inspection"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-pydantic-core": {
+    "DEPENDS": [
+     "python3-maturin-native"
+    ],
+    "RDEPENDS": [
+     "symoneural-typing-extensions"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_maturin",
+     "cargo-update-recipe-crates"
+    ]
+   },
+   "symoneural-sniffio": {
+    "DEPENDS": [
+     "python3-setuptools-scm-native"
+    ],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_setuptools_build_meta"
+    ]
+   },
+   "symoneural-starlette": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "symoneural-anyio"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-typing-extensions": {
+    "DEPENDS": [],
+    "RDEPENDS": [],
+    "inherit": [
+     "symoneural-pristine",
+     "python_flit_core"
+    ]
+   },
+   "symoneural-typing-inspection": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "symoneural-typing-extensions"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   },
+   "symoneural-uvicorn": {
+    "DEPENDS": [],
+    "RDEPENDS": [
+     "symoneural-click",
+     "symoneural-h11"
+    ],
+    "inherit": [
+     "symoneural-pristine",
+     "python_hatchling"
+    ]
+   }
+  }
+ },
+ "units": [
+  {
+   "backed_by": [
+    "symoneural-sympy",
+    "symoneural-mpmath",
+    "symoneural-numpy",
+    "symoneural-scipy",
+    "symoneural-scikit-learn",
+    "symoneural-openblas"
+   ],
+   "port": 8801,
+   "resource": "CPU",
+   "token_env": "SYM_RAVENCALC_TOKEN",
+   "unit": "ravencalc"
+  },
+  {
+   "backed_by": [
+    "symoneural-llama-cpp"
+   ],
+   "port": 8802,
+   "resource": "GPU",
+   "token_env": "SYM_CHAT_TOKEN",
+   "unit": "chat"
+  },
+  {
+   "backed_by": [
+    "symoneural-mcp-python-sdk",
+    "symoneural-anthropic-sdk-python"
+   ],
+   "port": 8803,
+   "resource": "CPU",
+   "token_env": "SYM_CODER_TOKEN",
+   "unit": "coder"
+  },
+  {
+   "backed_by": [
+    "symoneural-fastapi",
+    "symoneural-pydantic"
+   ],
+   "port": 8804,
+   "resource": "CPU",
+   "token_env": "SYM_PROJECT_TOKEN",
+   "unit": "project"
+  },
+  {
+   "backed_by": [
+    "symoneural-gstreamer",
+    "symoneural-hlsjs"
+   ],
+   "port": 8805,
+   "resource": "NET",
+   "token_env": "SYM_STREAMER_TOKEN",
+   "unit": "streamer"
+  },
+  {
+   "backed_by": [
+    "symoneural-librespot"
+   ],
+   "port": 8806,
+   "resource": "NET",
+   "token_env": "SYM_REMIX_TOKEN",
+   "unit": "remix"
+  },
+  {
+   "backed_by": [
+    "symoneural-pytorch",
+    "symoneural-transformers",
+    "symoneural-accelerate",
+    "symoneural-safetensors"
+   ],
+   "port": 8807,
+   "resource": "GPU",
+   "token_env": "SYM_STUDIO_TOKEN",
+   "unit": "studio"
+  },
+  {
+   "backed_by": [
+    "symoneural-stratum",
+    "symoneural-sv2-apps"
+   ],
+   "port": 8808,
+   "resource": "GPU",
+   "token_env": "SYM_MINER_TOKEN",
+   "unit": "miner"
+  }
+ ],
+ "wheel_edges": [
+  {
+   "from": "symoneural-uvicorn",
+   "requires": "click>=7.0"
+  },
+  {
+   "from": "symoneural-uvicorn",
+   "requires": "h11>=0.8"
+  },
+  {
+   "from": "symoneural-uvicorn",
+   "requires": "typing-extensions>=4.0; python_version < '3.11'"
+  },
+  {
+   "from": "symoneural-pydantic",
+   "requires": "annotated-types>=0.6.0"
+  },
+  {
+   "from": "symoneural-pydantic",
+   "requires": "pydantic-core==2.46.5"
+  },
+  {
+   "from": "symoneural-pydantic",
+   "requires": "typing-extensions>=4.14.1"
+  },
+  {
+   "from": "symoneural-pydantic",
+   "requires": "typing-inspection>=0.4.2"
+  },
+  {
+   "from": "symoneural-typing-inspection",
+   "requires": "typing-extensions>=4.15.0"
+  },
+  {
+   "from": "symoneural-httpcore",
+   "requires": "certifi"
+  },
+  {
+   "from": "symoneural-httpcore",
+   "requires": "h11>=0.16"
+  },
+  {
+   "from": "symoneural-httpx",
+   "requires": "anyio"
+  },
+  {
+   "from": "symoneural-httpx",
+   "requires": "certifi"
+  },
+  {
+   "from": "symoneural-httpx",
+   "requires": "httpcore==1.*"
+  },
+  {
+   "from": "symoneural-httpx",
+   "requires": "idna"
+  },
+  {
+   "from": "symoneural-pydantic-core",
+   "requires": "typing-extensions>=4.14.1"
+  },
+  {
+   "from": "symoneural-api-python",
+   "requires": "fastapi>=0.115"
+  },
+  {
+   "from": "symoneural-api-python",
+   "requires": "pydantic>=2.11"
+  },
+  {
+   "from": "symoneural-api-python",
+   "requires": "uvicorn>=0.30"
+  },
+  {
+   "from": "symoneural-fastapi",
+   "requires": "starlette>=0.46.0"
+  },
+  {
+   "from": "symoneural-fastapi",
+   "requires": "pydantic>=2.9.0"
+  },
+  {
+   "from": "symoneural-fastapi",
+   "requires": "typing-extensions>=4.8.0"
+  },
+  {
+   "from": "symoneural-fastapi",
+   "requires": "typing-inspection>=0.4.2"
+  },
+  {
+   "from": "symoneural-fastapi",
+   "requires": "annotated-doc>=0.0.2"
+  },
+  {
+   "from": "symoneural-starlette",
+   "requires": "anyio<5,>=3.6.2"
+  },
+  {
+   "from": "symoneural-starlette",
+   "requires": "typing-extensions>=4.10.0; python_version < '3.13'"
+  },
+  {
+   "from": "symoneural-anyio",
+   "requires": "exceptiongroup>=1.0.2; python_version < \"3.11\""
+  },
+  {
+   "from": "symoneural-anyio",
+   "requires": "idna>=2.8"
+  },
+  {
+   "from": "symoneural-anyio",
+   "requires": "typing_extensions>=4.16.0; python_version < \"3.15\""
+  }
+ ]
+}

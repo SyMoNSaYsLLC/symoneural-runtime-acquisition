@@ -1,0 +1,22 @@
+# API-LINKAGE - readelf on every ELF the API runtime ships, from the extracted clean root of rootfs 20260914041440
+
+/usr/bin/symoneural-api-util
+  machine Advanced Micro Devices X86-64
+  SONAME  -
+  NEEDED  libsymoneural-api.so.1 libc.so.6
+  RUNPATH -
+
+/usr/lib/libsymoneural-api.so.1.0.0
+  machine Advanced Micro Devices X86-64
+  SONAME  libsymoneural-api.so.1
+  NEEDED  libc.so.6
+  RUNPATH -
+
+/usr/lib/python3.14/site-packages/pydantic_core/_pydantic_core.cpython-314-x86_64-linux-gnu.so
+  machine Advanced Micro Devices X86-64
+  SONAME  -
+  NEEDED  libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+  RUNPATH -
+
+# RUNPATH into a build tree: NONE
+# libsymoneural-api NEEDED exactly libc.so.6: PASS
