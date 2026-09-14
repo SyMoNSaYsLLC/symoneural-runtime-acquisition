@@ -1146,7 +1146,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/triton-lang/triton",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "dab7b4ace9c36d16202563817a204e8c4b08ea62",
+      "pins_path": "Symoneural-LLM/src/inference/.gitpins/triton.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-LLM/build/devtool-workspace/appends/symoneural-vllm_git.bbappend",
