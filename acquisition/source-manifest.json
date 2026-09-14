@@ -360,6 +360,78 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "docstring-parser",
+      "intended_revision": "87dca55a7b5bdc854ad1d190f1c461015ba5f008",
+      "intended_tag_version": "0.18.0",
+      "notes": "Licence MIT (LICENSE.md in tree).",
+      "required_by": "CLI: anthropic-sdk-python wheel Requires-Dist docstring-parser<1,>=0.15",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/rr-/docstring_parser"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "json",
+      "component": "jiter",
+      "intended_revision": "2b5ec63e505b44775e29b865c3161ea13bdad16b",
+      "intended_tag_version": "v0.17.0",
+      "notes": "Licence MIT (LICENSE in tree). Rust/maturin extension; Cargo closure via cargo-update-recipe-crates.",
+      "required_by": "CLI: anthropic-sdk-python wheel Requires-Dist jiter<1,>=0.4.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/pydantic/jiter"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "json",
+      "component": "jsonschema",
+      "intended_revision": "a7277432b0f7bcd0551f6e589d30457017125df4",
+      "intended_tag_version": "v4.26.0",
+      "notes": "Licence MIT (COPYING in tree).",
+      "required_by": "CLI: mcp wheel Requires-Dist jsonschema>=4.20.0; its runtime closure attrs, jsonschema-specifications, referencing, rpds-py is NOT yet acquired",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/python-jsonschema/jsonschema"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "telemetry",
+      "component": "opentelemetry-python",
+      "intended_revision": "53a5a40c9604583c501bcf13970a635f00e62df4",
+      "intended_tag_version": "v1.44.0",
+      "notes": "Licence Apache-2.0 (LICENSE in tree). Monorepo: the opentelemetry-api distribution is the opentelemetry-api/ subdirectory.",
+      "required_by": "CLI: mcp wheel Requires-Dist opentelemetry-api>=1.28.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/open-telemetry/opentelemetry-python"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "auth",
+      "component": "pyjwt",
+      "intended_revision": "c6fe464b356ff4b1ebc9ba62172d331a40aa27df",
+      "intended_tag_version": "2.14.0",
+      "notes": "Licence MIT (LICENSE in tree).",
+      "required_by": "CLI: mcp wheel Requires-Dist pyjwt[crypto]>=2.10.1; the [crypto] extra is selected, so cryptography becomes RUNTIME REQUIRED (not yet acquired)",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/jpadilla/pyjwt"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "http",
+      "component": "python-multipart",
+      "intended_revision": "238ead62a0bb6f6cdfe122708faa13812f59f9a6",
+      "intended_tag_version": "0.0.32",
+      "notes": "Licence Apache-2.0 (LICENSE.txt in tree).",
+      "required_by": "CLI: mcp wheel Requires-Dist python-multipart>=0.0.9",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/Kludex/python-multipart"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "mcp",
       "component": "python-sdk",
       "intended_revision": "9972c21aa42054fb1450c5fc614761ed11847ec6",
@@ -370,6 +442,18 @@
       "revision_authority": "release decision",
       "runtime": "CLI",
       "upstream_url": "https://github.com/modelcontextprotocol/python-sdk"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "http",
+      "component": "sse-starlette",
+      "intended_revision": "6754ef387da97cf6cfbcd1bd5c216b533937b304",
+      "intended_tag_version": "v3.4.11",
+      "notes": "Licence BSD-3-Clause (LICENSE in tree).",
+      "required_by": "CLI: mcp wheel Requires-Dist sse-starlette>=3.0.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/sysid/sse-starlette"
     },
     {
       "acquisition_state": "ACQUIRED",
