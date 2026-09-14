@@ -291,7 +291,26 @@
       "submodule_count": 2,
       "upstream_url": "https://git.savannah.gnu.org/git/m4.git",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "e766afe6283d970a7af2457b7af1287b39bbbc24",
+      "pins_path": "Symoneural-Build/src/autotools/.gitpins/m4.git",
+      "submodules": [
+        {
+          "path": "gl-mod/bootstrap",
+          "commit_sha": "a42785aaa63db8a824292f87bc1a3f8863942601",
+          "tree_sha": "20a491edabe8862661a838c9ee2a14441706311e",
+          "pins_path": "Symoneural-Build/src/autotools/.gitpins/m4.git/modules/gl-mod/bootstrap",
+          "provenance": "PIN"
+        },
+        {
+          "path": "gnulib",
+          "commit_sha": "c6842ec25c6d5b1596da4eb6b68603f9578b23e9",
+          "tree_sha": "55e539c98a5f900cf8fd5617d3b3d419c2a0d6fe",
+          "pins_path": "Symoneural-Build/src/autotools/.gitpins/m4.git/modules/gnulib",
+          "provenance": "PIN"
+        }
+      ],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-bitbake_git.bbappend",
