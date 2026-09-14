@@ -64,7 +64,7 @@
     {
       "consumers": "packagegroup-symoneural-common",
       "distribution": "accelerate",
-      "rationale": "Runtime-shipped by Common wheels; acquired at 1.15.0; layer copies are not the provider. Its recipe borrowed python3-packaging/psutil/pyyaml from the layer until 2026-09-14; all three edges now point at estate providers.",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 1.15.0; layer copies are not the provider. Its recipe borrowed python3-packaging/psutil/pyyaml from the layer until 2026-09-14; all three edges now point at estate providers. Shipped again from P7 C7 (2026-09-14): its prepare() consumer path passes on the CUDA/distributed torch in both Common proof modes.",
       "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
       "selected_provider": "SYMONEURAL-OWNED",
       "source": "Symoneural-Common/src/ml/source/accelerate @ 1.15.0"

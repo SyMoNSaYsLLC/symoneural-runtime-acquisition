@@ -183,7 +183,9 @@
     "rebuild torch with USE_DISTRIBUTED=1 (gloo CPU backend; reverses the recorded CPU-only decision; hours)",
     "defer accelerate to the final PyTorch feature-set/CUDA phase by recorded ruling"
    ],
-   "resolution": "DEFERRED BY RECORDED RULING (approved by Garrett 2026-09-14): accelerate is deferred to the final PyTorch feature-set/CUDA phase; torch is NOT rebuilt now. component-state.json Common/accelerate -> DEFERRED. It stays acquired, pinned, recipe'd with estate-owned edges and packaged in the feed, and out of packagegroup-symoneural-common. Re-evaluate when symoneural-pytorch is built with distributed support. Evidence: docs/common/COMMON-CLOSURE.md."
+   "resolution": "DEFERRED BY RECORDED RULING (approved by Garrett 2026-09-14): accelerate is deferred to the final PyTorch feature-set/CUDA phase; torch is NOT rebuilt now. component-state.json Common/accelerate -> DEFERRED. It stays acquired, pinned, recipe'd with estate-owned edges and packaged in the feed, and out of packagegroup-symoneural-common. Re-evaluate when symoneural-pytorch is built with distributed support. Evidence: docs/common/COMMON-CLOSURE.md. RESOLVED BY EVIDENCE 2026-09-14 (P7 C7): the deferral ended when the final PyTorch feature set was built; the prepare() path that failed is now proven in both proof modes. Evidence 2026-09-14 (P7 C7): symoneural-pytorch 2.14.0 rebuilt USE_CUDA=1 sm_120 + cuDNN 9.25.1.1 + USE_DISTRIBUTED=1/Gloo (ipk sha256 8c010d753e4c4209..., do_package_qa PASS); symoneural-accelerate 1.15.0 restored to packagegroup-symoneural-common; image symoneural-image-common rootfs-20260914203500 (sha256 464dab39b9b19a7f..., 131 packages); tools/clean-root-proof Common: Accelerator(cpu).prepare(model, optimizer, dataloader) + one SGD epoch changed the weights, gather ok (no host directory on the loader path); Accelerator(cuda) did the same on the RTX 5070 Ti in S2 mode. generated/evidence/common/COMMON-CLEAN-ROOT-PROOF.txt, generated/evidence/cuda/COMMON-CLEAN-ROOT-PROOF-S2.txt.",
+   "resolved_phase": "P7 C7 2026-09-14",
+   "state": "RESOLVED"
   },
   {
    "blocks": "Crypto: Phase 17b GPU miner (kawpowminer 1.2.4) - not P7",
