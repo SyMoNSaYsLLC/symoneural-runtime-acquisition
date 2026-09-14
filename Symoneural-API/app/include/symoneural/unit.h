@@ -1,7 +1,7 @@
 /* symoneural/unit.h — the unit supervisor.
  *
  * A "unit" is one addressable surface on the rack: a native process the
- * supervisor starts, watches, and stops. This is the C half of DispatchOS -
+ * supervisor starts, watches, and stops. This is the native half of the SyMoNeuRaL API -
  * the part that owns real processes rather than HTTP routes.
  *
  * Units are native binaries (llama-server, the miner, GStreamer pipelines) so

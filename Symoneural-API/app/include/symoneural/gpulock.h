@@ -46,6 +46,9 @@ typedef struct {
 /* Priority. Higher wins. Interactive surfaces outrank batch ones: the miner
  * yields to chat, always. Revenue that makes a user wait is a complaint. */
 int sym_gpulock_priority(const char *unit);
+/* Enumerate the table (index 0..n-1). Returns -1 past the end. The table lives
+ * HERE only; the Python half reads it through the binding. */
+int sym_gpulock_priority_table(int index, const char **unit, int *priority);
 
 /* Path in use: $SYM_GPU_LOCK, else SYM_GPULOCK_DEFAULT_PATH. */
 const char *sym_gpulock_path(void);

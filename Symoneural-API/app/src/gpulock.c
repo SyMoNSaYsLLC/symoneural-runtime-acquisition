@@ -41,6 +41,15 @@ static const struct prio_entry PRIO[] = {
     {"miner",      10},   /* yields to every interactive surface */
 };
 
+int sym_gpulock_priority_table(int index, const char **unit, int *priority)
+{
+    if (index < 0 || (size_t)index >= sizeof(PRIO) / sizeof(PRIO[0]) || unit == NULL || priority == NULL)
+        return -1;
+    *unit = PRIO[index].unit;
+    *priority = PRIO[index].priority;
+    return 0;
+}
+
 int sym_gpulock_priority(const char *unit)
 {
     if (unit == NULL)

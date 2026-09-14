@@ -107,8 +107,11 @@ class DispatchOSTest(unittest.TestCase):
 
     def test_no_customer_name_in_generic_code(self):
         root = Path(__file__).resolve().parents[2]
-        for f in ("symoneural_api/applications.py", "symoneural_api/main.py", "symoneural_api/routeclass.py",
-                  "symoneural_api/units.py", "symoneural_api/gpulock.py", "src/gpulock.c", "src/unit.c", "src/rack.c"):
+        import glob
+        files = ["symoneural_api/applications.py", "symoneural_api/main.py", "symoneural_api/routeclass.py",
+                 "symoneural_api/units.py", "symoneural_api/gpulock.py", "symoneural_api/__init__.py"]
+        files += [os.path.relpath(p, root) for p in glob.glob(str(root / "src" / "*.c")) + glob.glob(str(root / "include" / "symoneural" / "*.h"))]
+        for f in files:
             self.assertNotIn("dispatchos", (root / f).read_text().lower(), f)
 
 

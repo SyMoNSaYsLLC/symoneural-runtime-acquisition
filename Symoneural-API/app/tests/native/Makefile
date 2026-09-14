@@ -4,8 +4,8 @@ CC      ?= cc
 CFLAGS  ?= -std=c11 -Wall -Wextra -Werror -O1 -g
 SRC     := ../../src
 INC     := ../../include
-OBJS    := $(SRC)/gpulock.c $(SRC)/unit.c $(SRC)/rack.c
-TESTS   := test_gpulock test_unit test_rack
+OBJS    := $(SRC)/gpulock.c $(SRC)/unit.c $(SRC)/rack.c $(SRC)/api.c
+TESTS   := test_gpulock test_unit test_rack test_api
 
 all: $(TESTS)
 

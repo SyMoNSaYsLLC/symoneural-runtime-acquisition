@@ -27,8 +27,11 @@ from pathlib import Path
 
 LOCK_PATH = Path(os.environ.get("SYM_GPU_LOCK", "/run/symoneural/gpu.lock"))
 
-# Higher wins. Interactive surfaces outrank batch ones.
-PRIORITY: dict[str, int] = {
+# Higher wins. Interactive surfaces outrank batch ones. The AUTHORITATIVE table is
+# libsymoneural-api's (one table; the C half enumerates it through the ABI); this
+# copy is the fallback for a host without the library and is asserted equal by
+# tests when the library is present.
+_FALLBACK_PRIORITY: dict[str, int] = {
     "chat": 100,
     "image": 100,
     "sigils": 90,
@@ -112,6 +115,17 @@ def current() -> Holder | None:
         release(holder.unit, force=True)
         return None
     return holder
+
+
+def _load_priority() -> dict[str, int]:
+    try:
+        from . import native
+        return native.load().priority_table()
+    except Exception:
+        return dict(_FALLBACK_PRIORITY)
+
+
+PRIORITY: dict[str, int] = _load_priority()
 
 
 def priority(unit: str) -> int:
