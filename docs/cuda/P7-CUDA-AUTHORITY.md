@@ -201,4 +201,4 @@ CPU-mode LLM proof does not touch the device.
 | C7 PyTorch CUDA/distributed matrix · accelerate | NOT STARTED |
 | C8 Crypto/Tune compatibility | NOT STARTED |
 | C9 package / clean-install / host-leakage | PASS for the authority + probe and for the LLM consumer image (both proofs, host cache inhibited: CPU mode maps nothing from outside the root; S2 mode maps only files owned by packages at the installed driver version); PyTorch consumer pending C7 |
-| C10 records / evidence / commits | NOT STARTED |
+| C10 records / evidence / commits | IN PROGRESS — for C0–C6: `unresolved.json:cuda-toolkit-authority` resolved by evidence (repo-deb path, index sha256, proofs), `provider-decisions.json` names `cuda-toolkit` BINARY-EXTERNAL, evidence under `generated/evidence/cuda/` and `…/llm/`, logical commits; determinism / verify-acquisition / workscope PASS. C7/C8 records pending their work |

@@ -34,6 +34,11 @@
       "logical": "gstreamer",
       "rationale": "Live deliverable; built from the acquired tree via EXTERNALSRC",
       "selected_provider": "SYMONEURAL-OWNED"
+    },
+    {
+      "logical": "cuda-toolkit",
+      "rationale": "Proprietary; there is no source to own. CUDA 13.4.1 from NVIDIA's debian13/x86_64 repository, 33 packages pinned by index SHA256 (recipe cuda-toolkit-bin, LicenseRef-NVIDIA-CUDA-EULA), version resolved from evidence not history (driver 615.71.09 generation, torch CI, nvcc 13.4 host_config accepts GCC 16, cuda-python 13.4.1). Every consumer inherits symoneural-cuda.bbclass; nothing binds to /usr/local/cuda-*. libcuda.so.1 and libnvidia-ml.so.1 stay host-driver provided (S2) and are reported as such. Ruling: unresolved.json:cuda-toolkit-authority; evidence: docs/cuda/P7-CUDA-AUTHORITY.md.",
+      "selected_provider": "BINARY-EXTERNAL"
     }
   ],
   "not_acquired": [
