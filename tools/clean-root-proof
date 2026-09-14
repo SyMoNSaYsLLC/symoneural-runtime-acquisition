@@ -1,0 +1,34 @@
+#!/bin/bash
+# clean-root-proof <Runtime> <image-recipe> - the §37/§42 proof for any runtime whose
+# surface is Python: extract the image's rootfs tarball, run the TARGET interpreter
+# through the target loader with an EMPTY environment (no PYTHONPATH, no source tree,
+# no pip, no devtool workspace) and execute tools/proofs/<runtime>.py inside it.
+# That file imports every distribution of the runtime closure, checks versions where a
+# consumer pins one, refuses build frontends, and performs one MEANINGFUL consumer
+# operation. Exit 0 only if everything in it passes.
+#   tools/clean-root-proof Ravencalc symoneural-image-ravencalc
+set -uo pipefail
+ROOT=/home/google/SymonSaysLLC
+RT=${1:?runtime, e.g. Ravencalc}; IMGNAME=${2:?image recipe, e.g. symoneural-image-ravencalc}
+PROOF=$ROOT/tools/proofs/$(echo "$RT" | tr 'A-Z' 'a-z').py
+[ -f "$PROOF" ] || { echo "FAIL: no proof script $PROOF"; exit 1; }
+IMG=$(ls -t $ROOT/Symoneural-$RT/build/devtool-master/tmp/deploy/images/*/$IMGNAME-*.rootfs-*.tar.gz 2>/dev/null | head -1)
+[ -n "$IMG" ] || { echo "FAIL: no $IMGNAME rootfs tarball; run: tools/symonbake Symoneural-$RT $IMGNAME"; exit 1; }
+R=${3:-${TMPDIR:-/tmp/claude-1000}/$(echo "$RT" | tr 'A-Z' 'a-z')-clean-root}
+rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
+MANI="${IMG%.tar.gz}.manifest"
+echo "image   : $IMG"; echo "sha256  : $(sha256sum "$IMG" | cut -d' ' -f1)"
+echo "manifest: $MANI ($( [ -f "$MANI" ] && wc -l < "$MANI" || echo '?') packages)"
+echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
+LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/lib64/ld-linux-x86-64.so.2 2>/dev/null | head -1)
+PY=$(ls "$R"/usr/bin/python3.1[0-9] 2>/dev/null | head -1)
+[ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
+PYV=$(basename "$PY" | sed 's/python//')
+mkdir -p "$R/tmp"
+run() { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_CLEAN_ROOT="$R" SYM_OPKG_STATUS="$R/var/lib/opkg/status" \
+        "$LD" --library-path "$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload" "$PY" -I "$@"; }
+echo "--- interpreter"
+run -c 'import sys; print("python", sys.version.split()[0], "prefix", sys.prefix); assert "SymonSaysLLC/Symoneural-" not in " ".join(sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
+echo "--- $PROOF"
+run "$PROOF"; rc=$?
+echo "rc=$rc"; exit $rc

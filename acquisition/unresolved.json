@@ -23,13 +23,15 @@
    "default_if_unanswered": "A - the consumer's declared constraint decides; 1.3.0 is the exact compatible version. Not executed by the reconstruction because it moves a committed pin.",
    "description": "sympy 1.14.0 (sympy-1.14.0 tag, built wheel METADATA) declares Requires-Dist mpmath<1.4,>=1.1.0; the estate pins mpmath 1.4.1 (c1131e2d64ab). Python imports work regardless, but the declared closure is violated and pip-style resolution would refuse it.",
    "evidence": "tools/check-python-runtime-closures.py --runtime Ravencalc -> WRONG VERSION symoneural-sympy mpmath<1.4,>=1.1.0 vs 1.4.1",
+   "executed": "pin HEAD moved to 1.3.0, tree re-ingested, recipe SRCREV/PV updated - see commits after this record",
    "identifier": "sympy-mpmath-constraint",
    "options": {
     "A": "move the mpmath pin to 1.3.0 (b5c04506ef0c, newest release <1.4): re-acquire, rebuild mpmath and sympy",
     "B": "move sympy forward to a release whose constraint admits mpmath 1.4 (none tagged as of 2026-09-13: newest is sympy-1.14.0)",
     "C": "keep both pins and record the constraint violation as accepted (weakens the closure gate for Ravencalc)"
    },
-   "state": "OPEN"
+   "ruling_2026_09_14": "A: mpmath re-pinned to 1.3.0 (b5c04506ef0cd4a1f1213f8389ee21c9c3551582, newest release satisfying sympy 1.14.0's declared mpmath<1.4,>=1.1.0). The shipped pair must satisfy the DECLARED closure; that is the gate. Evidence that the bound is not functional: sympy master setup.py line 328 reads 'mpmath >= 1.1.0' (read 2026-09-14), the released sympy-1.14.0 setup.py line 324 still reads 'mpmath >= 1.1.0, < 1.4'. Revisit: when a sympy release carries the lifted bound, move mpmath forward again (the only consumer of mpmath is sympy).",
+   "state": "RESOLVED-A"
   }
  ],
  "phase": {
