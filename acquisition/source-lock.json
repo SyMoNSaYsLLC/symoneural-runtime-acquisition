@@ -689,7 +689,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/OpenMathLib/OpenBLAS",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "48a954159e77896d31a458369a8ebe198ad56ca7",
+      "pins_path": "Symoneural-Ravencalc/src/blas/.gitpins/openblas.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Ravencalc/build/devtool-workspace/appends/symoneural-scikit-learn_git.bbappend",
