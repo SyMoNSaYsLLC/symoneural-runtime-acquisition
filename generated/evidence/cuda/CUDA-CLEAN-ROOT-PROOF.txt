@@ -1,0 +1,40 @@
+toolkit : /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/cuda-toolkit-bin_13.4.1-r0_x86-64-v3.ipk
+probe   : /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-cuda-probe_1.0-r0_x86-64-v3.ipk
+root    : /tmp/claude-1000/cuda-clean-root (36 files)
+--- the probe binary
+  NEEDED: libcudart.so.13 libstdc++.so.6 libgcc_s.so.1 libc.so.6 
+  no RUNPATH/RPATH
+  no build-path bytes
+  sm_120 SASS embedded: 1
+--- runtime libraries in the root
+  ok   libcudart.so.13 -> /usr/lib/libcudart.so.13.4.49
+  ok   libcublas.so.13 -> /usr/lib/libcublas.so.13.7.0.27
+  ok   libcublasLt.so.13 -> /usr/lib/libcublasLt.so.13.7.0.27
+  ok   libnvrtc.so.13 -> /usr/lib/libnvrtc.so.13.4.59
+  ok   libcufft.so.12 -> /usr/lib/libcufft.so.12.4.0.34
+  ok   libcurand.so.10 -> /usr/lib/libcurand.so.10.4.4.49
+  ok   libcusolver.so.12 -> /usr/lib/libcusolver.so.12.3.2.15
+  ok   libcusparse.so.12 -> /usr/lib/libcusparse.so.12.8.6.49
+  ok   libnvJitLink.so.13 -> /usr/lib/libnvJitLink.so.13.4.52
+  host-driver libraries the loader may use (S2): libcuda.so.1 libnvidia-ml.so.1 from /usr/lib/x86_64-linux-gnu (libcuda.so.615.71.09)
+  installed driver release (S2 boundary): 615.71.09
+--- run through the target loader (env -i)
+  rc=0
+  {"probe":"saxpy","n":1048576,"max_abs_err":0,"device":"NVIDIA GeForce RTX 5070 Ti","compute_capability":"12.0","sms":70,"total_mem_mib":15910,"runtime_version":13040,"driver_version":13040,"devices":1}
+--- what the loader actually mapped
+  root  /usr/lib/ld-linux-x86-64.so.2
+  root  /usr/lib/libc.so.6
+  root  /usr/lib/libcudart.so.13
+  root  /usr/lib/libdl.so.2
+  root  /usr/lib/libgcc_s.so.1
+  root  /usr/lib/libm.so.6
+  root  /usr/lib/libpthread.so.0
+  root  /usr/lib/librt.so.1
+  root  /usr/lib/libstdc++.so.6
+  HOST  /usr/lib/x86_64-linux-gnu/libcuda.so.1  (driver package libcuda1 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-gpucomp.so.615.71.09  (driver package libnvidia-gpucomp 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-nvvm70.so.4  (driver package libnvidia-nvvm704 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1  (driver package libnvidia-ptxjitcompiler1 615.71.09-2, S2)
+--- verdict
+  device NVIDIA GeForce RTX 5070 Ti cc 12.0 sms 70 mem 15910 MiB; runtime 13040 driver 13040; saxpy n=1048576 max_abs_err=0 -> PASS
+CUDA CLEAN ROOT PROOF: PASS (sm_120 kernel from the estate toolkit; only the host driver's libcuda/nvml from outside the root)

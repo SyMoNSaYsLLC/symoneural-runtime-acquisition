@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(symoneural-cuda-probe VERSION 1.0 LANGUAGES CXX CUDA)
+find_package(CUDAToolkit REQUIRED)
+add_executable(symoneural-cuda-probe probe.cu)
+target_link_libraries(symoneural-cuda-probe PRIVATE CUDA::cudart)
+include(GNUInstallDirs)
+install(TARGETS symoneural-cuda-probe RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

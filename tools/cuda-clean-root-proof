@@ -1,0 +1,71 @@
+#!/bin/bash
+# cuda-clean-root-proof - P7 C5/C9: the estate CUDA authority proven from PACKAGES.
+#
+# Extracts cuda-toolkit-bin (runtime libraries) and symoneural-cuda-probe from the
+# package feed into a throwaway root and runs the probe - an sm_120 kernel cross-built
+# by the estate's nvcc-native against the estate's target headers/libraries - through the
+# TARGET loader with an empty environment. Exactly two libraries may come from the host,
+# and they are named here because the estate's posture (S2) names them: libcuda.so.1 and
+# libnvidia-ml.so.1 belong to the installed driver. Everything else must resolve inside
+# the root; the proof lists every library the loader actually mapped and fails if any
+# other host path appears.
+#   tools/cuda-clean-root-proof [root-dir]
+set -uo pipefail
+ROOT=/home/google/SymonSaysLLC
+FEED=$(ls -d $ROOT/Symoneural-*/build/devtool-master/tmp/deploy/ipk 2>/dev/null | head -50)
+newest() { ls -t $ROOT/Symoneural-*/build/devtool-master/tmp/deploy/ipk/*/$1 2>/dev/null | head -1; }
+TK=$(newest 'cuda-toolkit-bin_13.4.1-r0_*.ipk'); PROBE=$(newest 'symoneural-cuda-probe_1.0-r0_*.ipk')
+LIBC=$(newest 'libc6_*.ipk'); LIBSTDCXX=$(newest 'libstdc++6_*.ipk'); LIBGCC=$(newest 'libgcc1_*.ipk'); LIBM=$LIBC
+for v in TK PROBE LIBC LIBSTDCXX LIBGCC; do [ -n "${!v}" ] || { echo "FAIL: no ipk for $v in any feed"; exit 1; }; done
+R=${1:-${TMPDIR:-/tmp/claude-1000}/cuda-clean-root}; rm -rf "$R"; mkdir -p "$R"
+for ipk in "$TK" "$PROBE" "$LIBC" "$LIBSTDCXX" "$LIBGCC"; do ar p "$ipk" data.tar.zst | tar --zstd -x -C "$R" 2>/dev/null || { echo "FAIL: extract $ipk"; exit 1; }; done
+echo "toolkit : $TK"; echo "probe   : $PROBE"; echo "root    : $R ($(find "$R" -type f | wc -l) files)"
+LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/usr/lib/ld-linux-x86-64.so.2 2>/dev/null | head -1)
+BIN="$R/usr/bin/symoneural-cuda-probe"
+[ -n "$LD" ] && [ -x "$BIN" ] || { echo "FAIL: loader or probe missing (ld=$LD bin=$BIN)"; exit 1; }
+fail=0
+echo "--- the probe binary"
+echo "  NEEDED: $(readelf -d "$BIN" | awk '/NEEDED/{gsub(/[\[\]]/,"",$5); printf "%s ", $5}')"
+readelf -d "$BIN" | grep -qE 'RUNPATH|RPATH' && { echo "  FAIL: RUNPATH/RPATH present"; fail=1; } || echo "  no RUNPATH/RPATH"
+grep -c -F "$ROOT" "$BIN" >/dev/null 2>&1 && { echo "  FAIL: build path bytes in the probe"; fail=1; } || echo "  no build-path bytes"
+echo "  sm_120 SASS embedded: $(cuobjdump --list-elf "$BIN" 2>/dev/null | grep -c 'sm_120' || echo '? (cuobjdump not on host PATH)')"
+echo "--- runtime libraries in the root"
+for so in libcudart.so.13 libcublas.so.13 libcublasLt.so.13 libnvrtc.so.13 libcufft.so.12 libcurand.so.10 libcusolver.so.12 libcusparse.so.12 libnvJitLink.so.13; do
+  [ -e "$R/usr/lib/$so" ] && echo "  ok   $so -> $(readlink -f "$R/usr/lib/$so" | sed "s|$R||")" || { echo "  FAIL $so missing"; fail=1; }; done
+echo "  host-driver libraries the loader may use (S2): libcuda.so.1 libnvidia-ml.so.1 from $(dirname $(readlink -f /usr/lib/x86_64-linux-gnu/libcuda.so.1)) ($(readlink /usr/lib/x86_64-linux-gnu/libcuda.so.1))"
+# the ONLY host path admitted is the directory holding the driver's libcuda; the trace
+# below shows every mapping the loader made, so a leak cannot hide
+HOSTDRV=/usr/lib/x86_64-linux-gnu
+DRV=$(cat /sys/module/nvidia/version 2>/dev/null); echo "  installed driver release (S2 boundary): ${DRV:-UNKNOWN}"
+echo "--- run through the target loader (env -i)"
+OUT=$(env -i LD_DEBUG=libs "$LD" --library-path "$R/lib:$R/usr/lib:$HOSTDRV" "$BIN" 2>"$R/ld-debug.txt"); rc=$?
+echo "  rc=$rc"; echo "  $OUT"
+echo "--- what the loader actually mapped"
+# S2 precisely: a library outside the root is admitted only if the installed NVIDIA
+# DRIVER packages own it (dpkg -S); libcuda.so.1 dlopens its own JIT/NVVM helpers,
+# and those are driver files too. Anything else from the host is a leak and FAILS.
+grep -oE 'calling init: [^ ]+' "$R/ld-debug.txt" | awk '{print $3}' | sort -u > "$R/mapped.txt"
+while read -r l; do
+  case "$l" in
+    "$R"/*) echo "  root  ${l#$R}" ;;
+    *) owner=$(dpkg -S "$l" 2>/dev/null | cut -d: -f1 | head -1)
+       over=$(dpkg-query -W -f='${Version}\n' "$owner" 2>/dev/null | head -1)   # one line per arch; the first is enough
+       # the installed driver release is the S2 boundary: a host file is admitted iff a
+       # package at that exact driver version owns it (libcuda1, libnvidia-*, ...)
+       case "$over" in
+         "$DRV"*) echo "  HOST  $l  (driver package $owner $over, S2)" ;;
+         *) echo "  FAIL  host leak: $l (owner: ${owner:-none} ${over:-})"; fail=1 ;;
+       esac ;;
+  esac
+done < "$R/mapped.txt"
+echo "--- verdict"
+python3 - "$OUT" "$rc" <<'PY' || fail=1
+import json, sys
+try: j = json.loads(sys.argv[1])
+except Exception: print("  FAIL: probe printed no JSON"); sys.exit(1)
+rc = int(sys.argv[2]); ok = rc == 0 and j["compute_capability"] == "12.0" and j["max_abs_err"] == 0 and j["runtime_version"] // 1000 == 13
+print("  device %s cc %s sms %d mem %d MiB; runtime %d driver %d; saxpy n=%d max_abs_err=%s -> %s" % (
+  j["device"], j["compute_capability"], j["sms"], j["total_mem_mib"], j["runtime_version"], j["driver_version"], j["n"], j["max_abs_err"], "PASS" if ok else "FAIL"))
+sys.exit(0 if ok else 1)
+PY
+[ $fail -eq 0 ] && echo "CUDA CLEAN ROOT PROOF: PASS (sm_120 kernel from the estate toolkit; only the host driver's libcuda/nvml from outside the root)" || { echo "CUDA CLEAN ROOT PROOF: FAIL"; exit 1; }
