@@ -59,3 +59,52 @@ export CUDACXX = "${SYMON_CUDA_NATIVE}/bin/nvcc"
 export CUDAHOSTCXX = "${SYMON_CUDA_HOST_CXX}"
 export CUDA_HOME = "${SYMON_CUDA_TARGET}"
 export CUDAARCHS = "${SYMON_CUDA_ARCH}"
+
+# ---- S2: the driver boundary, stated once for every consumer ----------------------
+# libcuda.so.1 and libnvidia-ml.so.1 belong to the host driver. No package in the feed
+# provides them and none may; a consumer that links them cannot satisfy OE's
+# file-rdeps check for those two names. That check is therefore exempted for the
+# consumer's packages - and REPLACED by symon_cuda_qa_s2 below, which walks every ELF
+# in every package and fails the build if any NEEDED library other than the S2 pair
+# has no provider in this build's shared-library registry. Nothing else is hidden.
+SYMON_CUDA_S2_LIBS = "libcuda.so.1 libnvidia-ml.so.1"
+PRIVATE_LIBS:${PN} += "${SYMON_CUDA_S2_LIBS}"
+INSANE_SKIP:${PN} += "file-rdeps"
+
+python symon_cuda_qa_s2() {
+    import os, glob, subprocess
+    pkgdest = d.getVar('PKGDEST'); pkgdata = d.getVar('PKGDATA_DIR'); readelf = d.getVar('READELF')
+    s2 = set(d.getVar('SYMON_CUDA_S2_LIBS').split())
+    providers = set()
+    for lst in glob.glob(os.path.join(pkgdata, 'shlibs2', '*.list')):
+        with open(lst) as fh:
+            for line in fh:
+                providers.add(line.split(':', 1)[0].strip())
+    checked, unresolved, s2_used = 0, [], set()
+    for pkg in d.getVar('PACKAGES').split():
+        root = os.path.join(pkgdest, pkg)
+        for dp, _, fns in os.walk(root):
+            for fn in fns:
+                p = os.path.join(dp, fn)
+                if os.path.islink(p) or not os.path.isfile(p):
+                    continue
+                with open(p, 'rb') as fh:
+                    if fh.read(4) != b'\x7fELF':
+                        continue
+                out = subprocess.run([readelf, '-d', p], capture_output=True, text=True).stdout
+                for line in out.splitlines():
+                    if '(NEEDED)' not in line:
+                        continue
+                    so = line.split('[', 1)[1].rstrip(']').strip()
+                    checked += 1
+                    if so in s2:
+                        s2_used.add(so); continue
+                    if so not in providers:
+                        unresolved.append("%s: %s needs %s" % (pkg, p[len(pkgdest):], so))
+    if unresolved:
+        bb.fatal("symoneural-cuda S2 check: NEEDED libraries without a provider (only %s may come from the host):\n  %s"
+                 % (", ".join(sorted(s2)), "\n  ".join(unresolved)))
+    bb.note("symoneural-cuda S2 check: %d NEEDED entries resolved by providers; host-driver libraries used: %s"
+            % (checked - len(s2_used), ", ".join(sorted(s2_used)) or "none"))
+}
+do_package_qa[postfuncs] += "symon_cuda_qa_s2"

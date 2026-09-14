@@ -134,6 +134,22 @@ do_install() {
     chown -R root:root ${D}
 }
 
+# Link-time driver stubs, SYSROOT ONLY. ld follows a consumer's transitive DT_NEEDED
+# chain (an executable -> libggml -> libggml-cuda -> libcuda.so.1) and must find a
+# libcuda.so.1 to resolve symbols against; NVIDIA ships stubs for that. They are
+# staged into the target sysroot under the SONAME names and are never part of any
+# package: at run time the host driver's libraries are the only libcuda (S2).
+SYSROOT_PREPROCESS_FUNCS:class-target += "cuda_toolkit_stage_driver_stubs"
+cuda_toolkit_stage_driver_stubs() {
+    stubs=../local/cuda-13.4/targets/x86_64-linux/lib/stubs
+    install -d ${SYSROOT_DESTDIR}${libdir}
+    for pair in libcuda.so:libcuda.so.1 libnvidia-ml.so:libnvidia-ml.so.1; do
+        stub=${pair%%:*}; soname=${pair##*:}
+        ln -sf $stubs/$stub ${SYSROOT_DESTDIR}${libdir}/$soname
+        ln -sf $stubs/$stub ${SYSROOT_DESTDIR}${libdir}/$stub
+    done
+}
+
 PACKAGES = "${PN} ${PN}-dev"
 FILES:${PN} = "${libdir}/*.so.* ${prefix}/local/cuda-13.4/version.json ${prefix}/local/cuda-13.4/EULA.txt"
 FILES:${PN}-dev = "${prefix}/local/cuda-13.4 ${prefix}/local/cuda ${libdir}/*.so"
