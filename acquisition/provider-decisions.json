@@ -1,183 +1,311 @@
 {
- "decisions": [
-  {
-   "logical": "autoconf",
-   "rationale": "build tool, never shipped, identical version",
-   "selected_provider": "OE-CORE"
-  },
-  {
-   "logical": "automake",
-   "rationale": "build tool, never shipped, identical version",
-   "selected_provider": "OE-CORE"
-  },
-  {
-   "logical": "libtool",
-   "rationale": "build tool, never shipped, identical version",
-   "selected_provider": "OE-CORE"
-  },
-  {
-   "logical": "m4",
-   "rationale": "build tool, never shipped, identical version",
-   "selected_provider": "OE-CORE"
-  },
-  {
-   "logical": "ninja",
-   "rationale": "build tool, never shipped, identical version",
-   "selected_provider": "OE-CORE"
-  },
-  {
-   "logical": "numpy",
-   "rationale": "Ravencalc deliverable; built from the acquired tree via EXTERNALSRC. scipy and scikit-learn DEPEND on symoneural-numpy, never python3-numpy",
-   "selected_provider": "SYMONEURAL-OWNED"
-  },
-  {
-   "logical": "gstreamer",
-   "rationale": "Live deliverable; built from the acquired tree via EXTERNALSRC",
-   "selected_provider": "SYMONEURAL-OWNED"
-  }
- ],
- "not_acquired": [
-  {
-   "component": "ComfyUI",
-   "decision": "NOT ACQUIRED",
-   "rationale": "GPL-3.0-or-later; replaced by diffusers (Apache-2.0). Strictest-licence posture."
-  }
- ],
- "not_deleted": "The five Build-runtime source trees are retained; only the provider selection changed.",
- "pending_collisions": [
-  {
-   "classification": "CROSS-RUNTIME-DUPLICATE",
-   "decision": "RESOLVED-FOR-LLM",
-   "evidence": "ggml will exist three times once Diffuse is acquired: llama.cpp (LLM, ggml-org upstream), whisper.cpp (Diffuse, ggml-org upstream), and stable-diffusion.cpp (Diffuse, leejet/ggml - a PERSONAL FORK). Two upstreams, three copies. Recorded before acquiring, per A3.",
-   "logical": "ggml",
-   "resolution_2026_09_13": "libggml is built once from canonical ggml-org/ggml at the commit the pinned llama.cpp syncs (scripts/sync-ggml.last); the vendored llama.cpp/ggml/ was proven byte-identical to it, so llama.cpp consumes libggml via LLAMA_USE_SYSTEM_GGML=ON - one ggml copy for LLM. whisper.cpp and stable-diffusion.cpp (Diffuse, not yet acquired) carry their OWN sync commits/fork; when Diffuse is acquired each must be checked against this tree and either match it or be recorded as a second, distinct ggml identity. The cross-runtime collision is therefore narrowed, not closed.",
-   "selected_provider": "SYMONEURAL-OWNED: Symoneural-LLM/src/inference/source/ggml @ e91ded11 (v0.23.0)"
-  }
- ],
- "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
- "python_runtime_providers": [
-  {
-   "consumers": "fastapi >=4.8.0; pydantic >=4.14.1; anthropic-sdk-python <5,>=4.14; mcp >=4.13.0; huggingface-hub >=4.1.0; pydantic-core >=4.14.1; typing-inspection; annotated-types",
-   "distribution": "typing-extensions",
-   "rationale": "Runtime-shipped by API wheels; acquired at 4.16.0; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/model/source/typing-extensions @ 4.16.0"
-  },
-  {
-   "consumers": "fastapi >=0.4.2; pydantic >=0.4.2; mcp >=0.4.1",
-   "distribution": "typing-inspection",
-   "rationale": "Runtime-shipped by API wheels; acquired at v0.4.4; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/model/source/typing-inspection @ v0.4.4"
-  },
-  {
-   "consumers": "pydantic >=0.6.0",
-   "distribution": "annotated-types",
-   "rationale": "Runtime-shipped by API wheels; acquired at v0.8.0; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/model/source/annotated-types @ v0.8.0"
-  },
-  {
-   "consumers": "fastapi >=0.0.2",
-   "distribution": "annotated-doc",
-   "rationale": "Runtime-shipped by API wheels; acquired at 0.0.5; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/model/source/annotated-doc @ 0.0.5"
-  },
-  {
-   "consumers": "starlette <5,>=3.6.2; httpx any; anthropic-sdk-python <5,>=3.5.0; mcp >=4.10",
-   "distribution": "anyio",
-   "rationale": "Runtime-shipped by API wheels; acquired at 4.15.1; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/http/source/anyio @ 4.15.1"
-  },
-  {
-   "consumers": "anyio; anthropic-sdk-python <2,>=1",
-   "distribution": "sniffio",
-   "rationale": "Runtime-shipped by API wheels; acquired at v1.3.1; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/http/source/sniffio @ v1.3.1"
-  },
-  {
-   "consumers": "httpx any; anyio",
-   "distribution": "idna",
-   "rationale": "Runtime-shipped by API wheels; acquired at v3.19; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/http/source/idna @ v3.19"
-  },
-  {
-   "consumers": "httpx any; httpcore any",
-   "distribution": "certifi",
-   "rationale": "Runtime-shipped by API wheels; acquired at 2026.07.22; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/http/source/certifi @ 2026.07.22"
-  },
-  {
-   "consumers": "httpcore >=0.16; uvicorn >=0.8",
-   "distribution": "h11",
-   "rationale": "Runtime-shipped by API wheels; acquired at v0.16.0; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/http/source/h11 @ v0.16.0"
-  },
-  {
-   "consumers": "uvicorn >=7.0; huggingface-hub <9.0.0,>=8.4.2",
-   "distribution": "click",
-   "rationale": "Runtime-shipped by API wheels; acquired at 8.5.0; layer copies are not the provider.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-API/src/web/source/click @ 8.5.0"
-  },
-  {
-   "consumers": "pydantic ==2.46.5",
-   "distribution": "pydantic-core",
-   "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
-   "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
-  },
-  {
-   "consumers": "mcp ==2.2.0",
-   "distribution": "mcp-types",
-   "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
-   "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
-  },
-  {
-   "consumers": "scikit-learn >=1.4.0",
-   "distribution": "joblib",
-   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
-   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-Ravencalc/src/*/source/joblib"
-  },
-  {
-   "consumers": "scikit-learn >=2.0.1",
-   "distribution": "narwhals",
-   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
-   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-Ravencalc/src/*/source/narwhals"
-  },
-  {
-   "consumers": "scikit-learn >=3.5.0",
-   "distribution": "threadpoolctl",
-   "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
-   "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
-   "selected_provider": "SYMONEURAL-OWNED",
-   "source": "Symoneural-Ravencalc/src/*/source/threadpoolctl"
-  }
- ],
- "python_runtime_providers_note": "Per-distribution provider decisions for Python runtime dependencies discovered from built wheel METADATA (tools/check-python-runtime-closures.py). A distribution shipped on the target is SYMONEURAL-OWNED; layer recipes (oe-core / meta-python) provide BUILD-time tooling only (maturin, hatchling, flit-core, setuptools, pdm-backend, setuptools-scm).",
- "rule": "Own what you ship; borrow what you only build with.",
- "schema": "symoneural-provider-decisions/1"
+  "decisions": [
+    {
+      "logical": "autoconf",
+      "rationale": "build tool, never shipped, identical version",
+      "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "automake",
+      "rationale": "build tool, never shipped, identical version",
+      "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "libtool",
+      "rationale": "build tool, never shipped, identical version",
+      "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "m4",
+      "rationale": "build tool, never shipped, identical version",
+      "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "ninja",
+      "rationale": "build tool, never shipped, identical version",
+      "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "numpy",
+      "rationale": "Ravencalc deliverable; built from the acquired tree via EXTERNALSRC. scipy and scikit-learn DEPEND on symoneural-numpy, never python3-numpy",
+      "selected_provider": "SYMONEURAL-OWNED"
+    },
+    {
+      "logical": "gstreamer",
+      "rationale": "Live deliverable; built from the acquired tree via EXTERNALSRC",
+      "selected_provider": "SYMONEURAL-OWNED"
+    }
+  ],
+  "not_acquired": [
+    {
+      "component": "ComfyUI",
+      "decision": "NOT ACQUIRED",
+      "rationale": "GPL-3.0-or-later; replaced by diffusers (Apache-2.0). Strictest-licence posture."
+    }
+  ],
+  "not_deleted": "The five Build-runtime source trees are retained; only the provider selection changed.",
+  "pending_collisions": [
+    {
+      "classification": "CROSS-RUNTIME-DUPLICATE",
+      "decision": "RESOLVED-FOR-LLM",
+      "evidence": "ggml will exist three times once Diffuse is acquired: llama.cpp (LLM, ggml-org upstream), whisper.cpp (Diffuse, ggml-org upstream), and stable-diffusion.cpp (Diffuse, leejet/ggml - a PERSONAL FORK). Two upstreams, three copies. Recorded before acquiring, per A3.",
+      "logical": "ggml",
+      "resolution_2026_09_13": "libggml is built once from canonical ggml-org/ggml at the commit the pinned llama.cpp syncs (scripts/sync-ggml.last); the vendored llama.cpp/ggml/ was proven byte-identical to it, so llama.cpp consumes libggml via LLAMA_USE_SYSTEM_GGML=ON - one ggml copy for LLM. whisper.cpp and stable-diffusion.cpp (Diffuse, not yet acquired) carry their OWN sync commits/fork; when Diffuse is acquired each must be checked against this tree and either match it or be recorded as a second, distinct ggml identity. The cross-runtime collision is therefore narrowed, not closed.",
+      "selected_provider": "SYMONEURAL-OWNED: Symoneural-LLM/src/inference/source/ggml @ e91ded11 (v0.23.0)"
+    }
+  ],
+  "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
+  "python_runtime_providers": [
+    {
+      "consumers": "fastapi >=0.0.2",
+      "distribution": "annotated-doc",
+      "rationale": "Runtime-shipped by API wheels; acquired at 0.0.5; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/model/source/annotated-doc @ 0.0.5"
+    },
+    {
+      "consumers": "pydantic >=0.6.0",
+      "distribution": "annotated-types",
+      "rationale": "Runtime-shipped by API wheels; acquired at v0.8.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/model/source/annotated-types @ v0.8.0"
+    },
+    {
+      "consumers": "starlette <5,>=3.6.2; httpx any; anthropic-sdk-python <5,>=3.5.0; mcp >=4.10",
+      "distribution": "anyio",
+      "rationale": "Runtime-shipped by API wheels; acquired at 4.15.1; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/http/source/anyio @ 4.15.1"
+    },
+    {
+      "consumers": "jsonschema >=22.2.0; referencing >=22.2.0",
+      "distribution": "attrs",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at 26.1.0; layer copies are not the provider. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/data/source/attrs @ 26.1.0"
+    },
+    {
+      "consumers": "httpx any; httpcore any",
+      "distribution": "certifi",
+      "rationale": "Runtime-shipped by API wheels; acquired at 2026.07.22; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/http/source/certifi @ 2026.07.22"
+    },
+    {
+      "consumers": "cryptography >=2.0.0",
+      "distribution": "cffi",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v2.1.1; layer copies are not the provider. C extension. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/ffi/source/cffi @ v2.1.1"
+    },
+    {
+      "consumers": "uvicorn >=7.0; huggingface-hub <9.0.0,>=8.4.2",
+      "distribution": "click",
+      "rationale": "Runtime-shipped by API wheels; acquired at 8.5.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/web/source/click @ 8.5.0"
+    },
+    {
+      "consumers": "pyjwt[crypto] >=3.4.0",
+      "distribution": "cryptography",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at 50.0.1; layer copies are not the provider. Rust/maturin + target OpenSSL. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/auth/source/cryptography @ 50.0.1"
+    },
+    {
+      "consumers": "anthropic-sdk-python <1,>=0.15",
+      "distribution": "docstring-parser",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at 0.18.0; layer copies are not the provider. ",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/text/source/docstring-parser @ 0.18.0"
+    },
+    {
+      "consumers": "httpcore >=0.16; uvicorn >=0.8",
+      "distribution": "h11",
+      "rationale": "Runtime-shipped by API wheels; acquired at v0.16.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/http/source/h11 @ v0.16.0"
+    },
+    {
+      "consumers": "httpx2",
+      "distribution": "httpcore2",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v2.12.0; layer copies are not the provider. Second distribution of the httpx2 workspace.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/http/source/httpx2 (src/httpcore2) @ v2.12.0"
+    },
+    {
+      "consumers": "anthropic-sdk-python <3,>=2.0.0; mcp >=2.5.0",
+      "distribution": "httpx2",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v2.12.0; layer copies are not the provider. Canonical upstream pydantic/httpx2 per PyPI metadata. Layer meta-python copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/http/source/httpx2 (src/httpx2) @ v2.12.0"
+    },
+    {
+      "consumers": "httpx any; anyio",
+      "distribution": "idna",
+      "rationale": "Runtime-shipped by API wheels; acquired at v3.19; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/http/source/idna @ v3.19"
+    },
+    {
+      "consumers": "anthropic-sdk-python <1,>=0.4.0",
+      "distribution": "jiter",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v0.17.0; layer copies are not the provider. Rust/maturin extension.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/json/source/jiter @ v0.17.0"
+    },
+    {
+      "consumers": "scikit-learn >=1.4.0",
+      "distribution": "joblib",
+      "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+      "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Ravencalc/src/*/source/joblib"
+    },
+    {
+      "consumers": "mcp >=4.20.0",
+      "distribution": "jsonschema",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v4.26.0; layer copies are not the provider. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/json/source/jsonschema @ v4.26.0"
+    },
+    {
+      "consumers": "jsonschema >=2023.03.6",
+      "distribution": "jsonschema-specifications",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v2025.9.1; layer copies are not the provider. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/json/source/jsonschema-specifications @ v2025.9.1"
+    },
+    {
+      "consumers": "mcp ==2.2.0",
+      "distribution": "mcp-types",
+      "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
+      "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+    },
+    {
+      "consumers": "scikit-learn >=2.0.1",
+      "distribution": "narwhals",
+      "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+      "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Ravencalc/src/*/source/narwhals"
+    },
+    {
+      "consumers": "mcp >=1.28.0",
+      "distribution": "opentelemetry-api",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v1.44.0; layer copies are not the provider. One distribution of the opentelemetry-python monorepo.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/telemetry/source/opentelemetry-python (opentelemetry-api/) @ v1.44.0"
+    },
+    {
+      "consumers": "cffi",
+      "distribution": "pycparser",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at release_v3.00; layer copies are not the provider. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/ffi/source/pycparser @ release_v3.00"
+    },
+    {
+      "consumers": "pydantic ==2.46.5",
+      "distribution": "pydantic-core",
+      "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+      "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
+    },
+    {
+      "consumers": "mcp pyjwt[crypto]>=2.10.1",
+      "distribution": "pyjwt",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at 2.14.0; layer copies are not the provider. [crypto] extra selected by mcp -> cryptography is RUNTIME REQUIRED. Layer meta-python copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/auth/source/pyjwt @ 2.14.0"
+    },
+    {
+      "consumers": "mcp >=0.0.9",
+      "distribution": "python-multipart",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at 0.0.32; layer copies are not the provider. Layer meta-python copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/http/source/python-multipart @ 0.0.32"
+    },
+    {
+      "consumers": "jsonschema >=0.28.4; jsonschema-specifications >=0.31.0",
+      "distribution": "referencing",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v0.37.0; layer copies are not the provider. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/json/source/referencing @ v0.37.0"
+    },
+    {
+      "consumers": "jsonschema >=0.25.0; referencing >=0.7.0",
+      "distribution": "rpds-py",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v2026.6.3; layer copies are not the provider. Rust/maturin extension. Layer oe-core copy is not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/json/source/rpds-py @ v2026.6.3"
+    },
+    {
+      "consumers": "anyio; anthropic-sdk-python <2,>=1",
+      "distribution": "sniffio",
+      "rationale": "Runtime-shipped by API wheels; acquired at v1.3.1; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/http/source/sniffio @ v1.3.1"
+    },
+    {
+      "consumers": "mcp >=3.0.0",
+      "distribution": "sse-starlette",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v3.4.11; layer copies are not the provider. ",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/http/source/sse-starlette @ v3.4.11"
+    },
+    {
+      "consumers": "scikit-learn >=3.5.0",
+      "distribution": "threadpoolctl",
+      "rationale": "Runtime-shipped by the scikit-learn wheel; own what you ship.",
+      "ruling": "provider-decisions.json rule + unresolved.json:pydantic-core-ownership",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Ravencalc/src/*/source/threadpoolctl"
+    },
+    {
+      "consumers": "fastapi >=4.8.0; pydantic >=4.14.1; anthropic-sdk-python <5,>=4.14; mcp >=4.13.0; huggingface-hub >=4.1.0; pydantic-core >=4.14.1; typing-inspection; annotated-types",
+      "distribution": "typing-extensions",
+      "rationale": "Runtime-shipped by API wheels; acquired at 4.16.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/model/source/typing-extensions @ 4.16.0"
+    },
+    {
+      "consumers": "fastapi >=0.4.2; pydantic >=0.4.2; mcp >=0.4.1",
+      "distribution": "typing-inspection",
+      "rationale": "Runtime-shipped by API wheels; acquired at v0.4.4; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-API/src/model/source/typing-inspection @ v0.4.4"
+    }
+  ],
+  "python_runtime_providers_note": "Per-distribution provider decisions for Python runtime dependencies discovered from built wheel METADATA (tools/check-python-runtime-closures.py). A distribution shipped on the target is SYMONEURAL-OWNED; layer recipes (oe-core / meta-python) provide BUILD-time tooling only (maturin, hatchling, flit-core, setuptools, pdm-backend, setuptools-scm).",
+  "rule": "Own what you ship; borrow what you only build with.",
+  "schema": "symoneural-provider-decisions/1"
 }
