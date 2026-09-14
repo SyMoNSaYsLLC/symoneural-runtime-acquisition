@@ -903,7 +903,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/cython/cython",
       "worktree": "clean",
-      "worktree_detail": ""
+      "worktree_detail": "",
+      "tree_sha": "6f9fd83108ff2bc408b7676a608fec8d034ba9ee",
+      "pins_path": "Symoneural-Ravencalc/src/devtools/.gitpins/cython.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": null,
