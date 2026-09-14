@@ -76,7 +76,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/pydantic/pydantic",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "a7821651c68ed171260cd40d780e83c693cacfc0",
+      "pins_path": "Symoneural-API/src/model/.gitpins/pydantic.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-API/build/devtool-workspace/appends/symoneural-fastapi_git.bbappend",
