@@ -1,6 +1,6 @@
 # libsymoneural-api - the native half of the SyMoNeuRaL API (reconstruction v1.1 §29-§34).
 # Produces libsymoneural-api.so (+ .a), public headers, and symoneural-api-util.
-# Depends on libc/POSIX only. Built by the estate recipe symoneural-api-native and,
+# Depends on libc/POSIX only. Built by the estate recipe symoneural-api (symoneural-firstparty) and,
 # for the host regression run, by tests/native/Makefile + this file.
 cmake_minimum_required(VERSION 3.20)
 project(symoneural-api VERSION 1.0.0 LANGUAGES C)

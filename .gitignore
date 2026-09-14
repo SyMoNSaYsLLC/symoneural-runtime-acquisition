@@ -128,3 +128,8 @@ developer_settings.json
 *seats*.csv
 ops/*.csv
 !ops/*-usage-*.csv
+# host regression binaries built in place by Symoneural-API/app/tests/native/Makefile
+Symoneural-API/app/tests/native/test_gpulock
+Symoneural-API/app/tests/native/test_rack
+Symoneural-API/app/tests/native/test_unit
+Symoneural-API/app/tests/native/test_api

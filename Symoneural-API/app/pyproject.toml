@@ -1,0 +1,24 @@
+# The SyMoNeuRaL API Python package. First-party; built by the estate recipe
+# symoneural-api-python (python_flit_core) from the committed tree. The runtime
+# dependencies below are what tools/check-python-runtime-closures.py reads to
+# demand matching RDEPENDS, so they must stay truthful to the imports.
+[build-system]
+requires = ["flit_core>=3.9,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "symoneural-api"
+version = "1.0.0"
+description = "SyMoNeuRaL API - the estate's generic control plane and application layer"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "pydantic>=2.11",
+    "uvicorn>=0.30",
+]
+
+[project.scripts]
+symoneural-api = "symoneural_api.main:main"
+
+[tool.flit.module]
+name = "symoneural_api"

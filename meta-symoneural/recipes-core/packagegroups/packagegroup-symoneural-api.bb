@@ -5,11 +5,14 @@
 # modules the stack imports (json, logging, asyncio, ssl, sqlite3, ...) are present.
 # No build frontend (maturin, hatchling, pdm, flit, setuptools) is in this group:
 # a clean runtime must not need them (reconstruction v1.1 §68).
-SUMMARY = "SyMoNeuRaL API runtime - the 17-source Python closure"
+SUMMARY = "SyMoNeuRaL API runtime - first-party API + the 17-source Python closure"
 LICENSE = "MIT"
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
+    symoneural-api \
+    symoneural-api-util \
+    symoneural-api-python \
     symoneural-fastapi \
     symoneural-starlette \
     symoneural-uvicorn \
