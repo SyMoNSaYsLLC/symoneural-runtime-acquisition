@@ -1569,7 +1569,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/cloudflare/workers-sdk",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "b58f6cbd4f031e04924d1b0518895b8f906bc67c",
+      "pins_path": "Symoneural-Web/src/tooling/.gitpins/workers-sdk.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": null,
