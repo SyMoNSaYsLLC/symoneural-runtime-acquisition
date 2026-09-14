@@ -918,7 +918,8 @@ export CMAKE_ARGS = "-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
                      -DSYMON_BUILDPATH_WORKDIR=${WORKDIR} \
                      -DSYMON_BUILDPATH_TMPDIR=${TMPDIR} \
                      -DSYMON_BUILDPATH_HOMEDIR=${SYMON_BUILD_HOME} \
-                     -DPYTHON_EXECUTABLE=${SYMON_HOOKS_DIR}/peachpy-relative-path"
+                     -DPYTHON_EXECUTABLE=${SYMON_HOOKS_DIR}/peachpy-relative-path \
+                     -DPYTHON_SIX_SOURCE_DIR=${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
 
 # The build root must not enter the task signature; it is only ever used as the
 # left-hand side of a substitution that erases it.
@@ -953,8 +954,18 @@ do_configure[prefuncs] += "symon_pytorch_write_build_hooks"
 #     host-independent symbol.  The wrapper is transparent for every other
 #     invocation, which matters because FindPythonInterp probes it with -c.
 #
-# Neither correction touches acquired upstream source.  An exemption was not
-# available in any case: insane.bbclass:445 tests TMPDIR unconditionally, and
+# (C) third_party/NNPACK also reaches the network during configure.
+#     NNPACK/CMakeLists.txt:151 guards on IF(NOT DEFINED PYTHON_SIX_SOURCE_DIR)
+#     and otherwise downloads six through an ExternalProject - log.do_compile
+#     line 338 of the 2026-09-14 run shows it actually happening, which breaks
+#     the estate's no-hidden-network invariant.  cmake/External/nnpack.cmake:48
+#     already pre-defines PYTHON_PEACHPY_SOURCE_DIR from the vendored tree, so
+#     PeachPy and opcodes are not fetched; six is the only gap.  python3-six-
+#     native is already a DEPENDS and stages six.py into the native sysroot, so
+#     naming that directory closes the branch without a fetch.
+#
+# None of the three touches acquired upstream source.  For (A) and (B) an
+# exemption was not available in any case: insane.bbclass:445 tests TMPDIR unconditionally, and
 # OEQA_BUILDPATHS_SKIP gates only the HOME branch at line 448.
 # ---------------------------------------------------------------------------
 python symon_pytorch_write_build_hooks() {

@@ -121,7 +121,7 @@ No acquired upstream source tree was touched. Both corrections live in the
 recipe, which generates both hook files into `${WORKDIR}/symoneural-hooks/`
 during `do_configure`.
 
-## Separately recorded, still open
+## NNPACK undeclared network fetch — closed 2026-09-14
 
 `log.do_compile:338` shows a real, executed, undeclared build-time network
 fetch:
@@ -134,9 +134,14 @@ fetch:
 the vendored tree, so PeachPy and opcodes are not fetched — only `six` is.
 `NNPACK/CMakeLists.txt:151` guards on `IF(NOT DEFINED PYTHON_SIX_SOURCE_DIR)`,
 and `recipe-sysroot-native/usr/lib/python3.14/site-packages/six.py` already
-exists via `python3-six-native`. It is currently masked by the CMake cache
-holding the downloaded path. Tracked as the NNPACK hidden-network item; proving
-it requires a clean configure, not a cached one.
+exists via `python3-six-native`. It was masked by the CMake cache holding
+the downloaded path, so a cached rebuild could not have proved anything either
+way.
+
+**Correction.** `-DPYTHON_SIX_SOURCE_DIR=${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages`
+added to `CMAKE_ARGS`. That is the directory `python3-six-native` — already a
+`DEPENDS` — stages `six.py` into, so the guarded branch is never entered and no
+fetch occurs.
 
 ## Result — verified 2026-09-14
 
@@ -208,9 +213,84 @@ Gates run against this build:
 | emitted `.ipk` contents | PASS — TMPDIR and HOME absent |
 | `tools/ingest-tree verify pytorch` | PASS — `2b3ec3482903`, 141210 files, LISTING-VERIFIED (65 submodules); no acquired source modified |
 | `tools/check-native-linkage.py` | PASS |
-| `tools/check-python-runtime-closures.py --runtime Symoneural-Common` | VACUOUS — reports PASS but examined 0 wheels, so it proves nothing here; Common's closure recipes are drafted and not yet applied |
+| `tools/check-python-runtime-closures.py --runtime Common` | **FAIL** — 10 MISSING RDEPENDS, 1 UNKNOWN PROVIDER, 15 UNRESOLVED SOURCE OWNERSHIP over 5 wheels. Separate open item, see below. |
 
-Not claimed by this record: REPRODUCIBILITY PASS. This was an incremental
-rebuild (`do_unpack` did not re-run, so `${S}/build` was reused). The
-substituted values are build-root independent by construction, but a
-from-scratch build under a different root has not been performed.
+## Clean-state rebuild — 2026-09-14 05:06
+
+The run above was incremental (`do_unpack` did not re-run, so `${S}/build` was
+reused), which is not enough to prove the NNPACK no-network behaviour: the
+downloaded path was still sitting in `CMakeCache.txt`. Re-run with
+`tools/symonbake Symoneural-Common -C unpack symoneural-pytorch`, which
+re-exports `${S}` from `git archive` and takes `${S}/build` with it.
+
+Clean-state premise confirmed rather than assumed: `CMakeCache.txt` mtime
+`2026-09-14 04:59:12`, after the rebuild began.
+
+```
+Tasks Summary: Attempted 2031 tasks of which 2013 didn't need to be rerun and all succeeded.
+Summary: There were 5 WARNING messages.
+```
+
+**No-network proof, from a genuinely fresh configure:**
+
+```
+PYTHON_SIX_SOURCE_DIR:UNINITIALIZED=<WORKDIR>/recipe-sysroot-native/usr/lib/python3.14/site-packages
+```
+
+The `UNINITIALIZED` type is the decisive part. A cache entry created by a
+command-line `-D` with no declared type is `UNINITIALIZED`; NNPACK's own
+`SET(PYTHON_SIX_SOURCE_DIR ... CACHE STRING ...)` at line 158 would have written
+`:STRING`. The type therefore proves the value came from the recipe and that
+`IF(NOT DEFINED PYTHON_SIX_SOURCE_DIR)` never fired. Corroborated by:
+
+- `log.do_compile` contains no `Downloading six` line, and no
+  `Downloading ... (Python package)` line of any kind.
+- `<S>/build/confu-srcs` does not exist.
+
+**Buildpaths re-verified from scratch**, and widened from the three known files
+to every file in both packages:
+
+```
+grep -rl --binary-files=binary -F "<TMPDIR>" packages-split/symoneural-pytorch packages-split/symoneural-pytorch-dbg
+  -> no matches
+```
+
+Positive control for that sweep — the same command with a string known to be
+present does match, so the negative is real:
+
+```
+grep -rl ... -F "/usr/src/debug/symoneural-pytorch"
+  -> symoneural-pytorch-dbg/.../torch/lib/.debug/libtorch_global_deps.so
+     symoneural-pytorch-dbg/.../torch/.debug/_C.cpython-314-x86_64-linux-gnu.so
+     symoneural-pytorch-dbg/.../torch/lib/.debug/libtorch.so
+```
+
+`do_package_qa`: 0 ERROR lines, no `[buildpaths]`.
+`tools/ingest-tree verify pytorch`: `2b3ec3482903`, 141210 files,
+LISTING-VERIFIED (65 submodules). `tools/check-native-linkage.py`: PASS.
+
+Packages emitted 05:06 — these supersede the 04:53 set described above:
+
+```
+   116144514  symoneural-pytorch_2.14.0-r0_x86-64-v3.ipk
+    14700212  symoneural-pytorch-src_2.14.0-r0_x86-64-v3.ipk
+  1704950110  symoneural-pytorch-dbg_2.14.0-r0_x86-64-v3.ipk
+         656  symoneural-pytorch-dev_2.14.0-r0_x86-64-v3.ipk
+```
+
+## Status
+
+PyTorch BUILD PASS and PACKAGE PASS, on a from-scratch build.
+
+**REPRODUCIBILITY PASS is NOT claimed.** The two builds produced `.ipk`s of
+different sizes (main 116143868 vs 116144514, dbg 1704950314 vs 1704950110), so
+the output is not yet bit-identical. Nothing in this record was a reproducibility
+experiment: the build root was the same in both runs, and no `SOURCE_DATE_EPOCH`
+or `reproducible_build` comparison was performed. The buildpaths correction is a
+precondition for that gate, not the gate itself. The residual size delta is
+recorded here as the starting point for whoever runs it.
+
+**Common closure is FAIL and unaffected by this work.** PyTorch's own wheel
+declares 7 runtime requirements that are not yet satisfied by the estate
+(`filelock`, `typing-extensions`, `setuptools`, `sympy`, `networkx`, `jinja2`,
+`fsspec`). Common cannot be called PASS.
