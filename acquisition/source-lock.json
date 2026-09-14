@@ -344,7 +344,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/anthropics/anthropic-sdk-python",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "d10ba754ccecb9db572dae877bc076030c58667a",
+      "pins_path": "Symoneural-CLI/src/anthropic/.gitpins/anthropic-sdk-python.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "NOT-APPLICABLE",
