@@ -534,7 +534,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/stratum-mining/stratum",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "6347860094cfa065e66404fd84e33529714b13e4",
+      "pins_path": "Symoneural-Crypto/src/stratum/.gitpins/stratum.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Crypto/build/devtool-workspace/appends/symoneural-sv2-apps_git.bbappend",
