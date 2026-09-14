@@ -822,8 +822,54 @@ do_configure:prepend() {
     fi
     if [ -x "$nb/bin/mkrename" ]; then
         bbnote "native sleef tools ready at $nb/bin"
-        export CMAKE_ARGS="${CMAKE_ARGS} -DNATIVE_BUILD_DIR=$nb"
     else
         bbfatal "native sleef mkrename was not produced at $nb/bin/mkrename"
     fi
 }
+
+# The two halves of the repair above have to reach the cmake that actually runs,
+# and originally neither did. Proven from log.do_compile.3132482:
+#
+#  (a) WRONG TASK. `export CMAKE_ARGS=...` was done inside do_configure:prepend.
+#      Every bitbake task runs in its own shell, and the cmake configure for torch
+#      does not happen in do_configure at all - python_pep517's do_compile runs
+#      `pyproject-build --wheel`, scikit-build-core configures cmake from there.
+#      The export died with the do_configure shell. A recipe-level `export` is
+#      what reaches every task, which is how USE_CUDA and MAX_JOBS above already
+#      work. scikit-build-core does read CMAKE_ARGS from the environment
+#      (builder.py get_cmake_args_from_settings) and filters only
+#      -DCMAKE_BUILD_TYPE and -DCMAKE_INSTALL_PREFIX, so these two survive.
+#
+#  (b) WRONG CONDITION. NATIVE_BUILD_DIR alone changes nothing. sleef consults it
+#      only inside add_host_executable (third_party/sleef/CMakeLists.txt:250-266):
+#          if (NOT CMAKE_CROSSCOMPILING)  -> add_executable(...)   # builds its own
+#          else()                         -> IMPORTED, ${NATIVE_BUILD_DIR}/bin/...
+#      CMAKE_CROSSCOMPILING was FALSE, because CMake only sets it when
+#      CMAKE_SYSTEM_NAME is supplied - which OE does through cmake.bbclass's
+#      toolchain file, and this recipe builds through scikit-build-core instead.
+#      So sleef built mkrename/mkalias/mkdisp with the CROSS compiler and then ran
+#      them on the build host:
+#          [ 12%] Linking C executable ../../bin/mkrename
+#          [ 12%] Built target mkrename
+#          [ 28%] Generating sleeflibm_SSE_.h.tmp
+#          /bin/sh: 1: ../../bin/mkrename: not found        <- Error 127
+#      "not found" is the shell's report for a missing ELF INTERPRETER, not a
+#      missing file. Measured on the two binaries:
+#          pristine/build/sleef/bin/mkrename  interp /usr/lib/ld-linux-x86-64.so.2
+#                                             (absent on this host) -> rc 127
+#          sleef-native/bin/mkrename          interp /lib64/ld-linux-x86-64.so.2
+#                                             (present) -> runs, prints its usage
+#      CMAKE_CROSSCOMPILING cannot be set from the command line. It is not an
+#      input: project() assigns it as a normal variable, which shadows any cache
+#      entry of the same name. Reproduced with a three-line CMakeLists and this
+#      exact cmake binary:
+#          -DCMAKE_CROSSCOMPILING=TRUE   -> CMAKE_CROSSCOMPILING=[FALSE]
+#          -DCMAKE_SYSTEM_NAME=Linux     -> CMAKE_CROSSCOMPILING=[TRUE]
+#      Supplying CMAKE_SYSTEM_NAME is the documented trigger and is what OE's own
+#      cmake.bbclass does (classes-recipe/cmake.bbclass:135-136 writes
+#      CMAKE_SYSTEM_NAME and CMAKE_SYSTEM_PROCESSOR into its toolchain file). This
+#      recipe simply supplies the same pair by hand, because scikit-build-core
+#      never consumes that toolchain file. torch's own cmake contains no try_run,
+#      so switching to cross mode costs nothing here (only third_party/benchmark
+#      uses try_run, and BUILD_TEST=0).
+export CMAKE_ARGS = "-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DNATIVE_BUILD_DIR=${WORKDIR}/sleef-native"
