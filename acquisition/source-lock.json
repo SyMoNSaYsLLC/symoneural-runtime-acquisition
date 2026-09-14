@@ -419,7 +419,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/modelcontextprotocol/typescript-sdk",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "89d458902dcd08f67b708d3fe1dac2fad9855b22",
+      "pins_path": "Symoneural-CLI/src/mcp/.gitpins/typescript-sdk.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Common/build/devtool-workspace/appends/symoneural-accelerate_git.bbappend",
