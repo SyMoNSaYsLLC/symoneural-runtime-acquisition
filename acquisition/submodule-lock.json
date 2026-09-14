@@ -841,7 +841,7 @@
       "submodule_path": "subprojects/gst-integration-testsuites/medias"
     },
     {
-      "commit_sha": "6f4c898f2255e0c98eb6949cd67381552d5ffea",
+      "commit_sha": "36f4c898f2255e0c98eb6949cd67381552d5ffea",
       "configured_url": "https://github.com/scipy/scipy-mathjax.git",
       "gitmodules_section": "doc/source/_static/scipy-mathjax",
       "identity": "Symoneural-Ravencalc/src/numerics/source/numpy::doc/source/_static/scipy-mathjax",
