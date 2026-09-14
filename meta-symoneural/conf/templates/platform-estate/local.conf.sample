@@ -31,3 +31,11 @@ PARALLEL_MAKE = "-j 12"
 # of the charter; the kernel actually built is read back from kernel-abiversion, never assumed.
 PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
 PREFERRED_VERSION_linux-yocto = "6.18%"
+
+# AWCC (Platform, GPL-3.0 executable): a GLFW/ImGui/OpenGL/X11 application. GL comes from
+# oe-core's libglvnd (vendor-neutral dispatch; virtual/libgl through the glvnd feature) rather
+# than mesa+LLVM - the qemux86-64 baseline proves build/package/staged install, not rendering.
+# libevdev is oe-core's recipe built as shared AND static because AWCC's CMake consumes a
+# static libevdev.a (recipe-level CMake shadow, docs/platform/AWCC.md).
+DISTRO_FEATURES:append = " opengl glvnd"
+EXTRA_OEMESON:append:pn-libevdev = " -Ddefault_library=both"

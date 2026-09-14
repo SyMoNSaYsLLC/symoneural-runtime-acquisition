@@ -165,6 +165,57 @@ python symon_export_pristine() {
             % (pf, verdict, rel, len(ent.get("submodules") or []), dest))
 }
 
+# DEPENDENCY TREES. Some upstreams vendor other projects at configure time (CMake FetchContent /
+# ExternalProject from MOVING branches - AWCC pulls six repositories from GitHub master). The
+# estate acquires each such project as its own pinned, verified component and hands the build a
+# disposable export of it under ${SYMON_DEPS_DIR}/<name>; the recipe then points the build system
+# at that directory (FETCHCONTENT_SOURCE_DIR_<NAME>, ExternalProject shadow, ...) with the network
+# path disabled. Format: "<name>:<component>" pairs; every component must be in source-lock.json
+# with a tree_sha, and is verified with the same tools/ingest-tree verify as SYMON_TREE's.
+SYMON_DEP_TREES ?= ""
+SYMON_DEPS_DIR = "${WORKDIR}/deps"
+# OE's prefix maps cover ${S}, ${B} and the sysroots; sources compiled from the dependency exports
+# would otherwise embed ${WORKDIR}/deps/... in __FILE__ strings and DWARF (buildpaths QA, first
+# AWCC build). Map them beside the main tree's debug sources.
+DEBUG_PREFIX_MAP:append = "${@' -ffile-prefix-map=${SYMON_DEPS_DIR}=${TARGET_DBGSRC_DIR}/deps' if (d.getVar('SYMON_DEP_TREES') or '').strip() else ''}"
+symon_export_dep_trees[cleandirs] = "${SYMON_DEPS_DIR}"
+symon_export_dep_trees[file-checksums] += "${SYMON_REPO}/acquisition/source-lock.json:True"
+do_unpack[prefuncs] += "symon_export_dep_trees"
+
+python symon_export_dep_trees() {
+    import subprocess, os, sys, json
+    pairs = (d.getVar("SYMON_DEP_TREES") or "").split()
+    if not pairs:
+        return
+    repo = d.getVar("SYMON_REPO")
+    pf = d.getVar("PF")
+    base = d.getVar("SYMON_DEPS_DIR")
+    with open(os.path.join(repo, "acquisition", "source-lock.json")) as f:
+        comps = {c["component"]: c for c in json.load(f)["components"]}
+    for pair in pairs:
+        if ":" not in pair:
+            bb.fatal("%s: SYMON_DEP_TREES entry %r is not <name>:<component>" % (pf, pair))
+        name, comp = pair.split(":", 1)
+        ent = comps.get(comp)
+        if ent is None or not ent.get("tree_sha"):
+            bb.fatal("%s: dependency tree %s (%s) is not an ingested component in source-lock.json" % (pf, name, comp))
+        r = subprocess.run([sys.executable, os.path.join(repo, "tools", "ingest-tree"), "verify", comp],
+                           cwd=repo, capture_output=True, text=True)
+        verdict = (r.stdout.strip().splitlines() or [r.stderr.strip()])[-1]
+        if r.returncode != 0 or not (" · VERIFIED" in verdict or " · LISTING-VERIFIED(" in verdict):
+            bb.fatal("%s: PIN MISMATCH for dependency tree %s: %s" % (pf, comp, verdict))
+        dest = os.path.join(base, name)
+        bb.utils.mkdirhier(dest)
+        rc = subprocess.run(["bash", "-o", "pipefail", "-c",
+                             "git -C '%s' archive 'HEAD:%s' | tar -x -C '%s'" % (repo, ent["source_path"], dest)]).returncode
+        if rc:
+            bb.fatal("%s: git archive HEAD:%s failed (rc=%d)" % (pf, ent["source_path"], rc))
+        n = sum(len(fs) for _, _, fs in os.walk(dest))
+        if n == 0:
+            bb.fatal("%s: dependency export %s is EMPTY" % (pf, dest))
+        bb.note("%s: dependency tree %s <- %s (%s, %d files): %s" % (pf, name, comp, ent["commit_sha"][:12], n, verdict))
+}
+
 # The upstream git:// URI is redundant - SYMON_TREE already holds that source,
 # verified against SRCREV. Strip it at parse time so do_fetch has no reason to
 # touch the network for it. Every OTHER SRC_URI entry (crate://, file://, extra
