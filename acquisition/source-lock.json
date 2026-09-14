@@ -714,7 +714,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/scikit-learn/scikit-learn",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "bdaad473740e43efd3e40c6a75399de3aee3feef",
+      "pins_path": "Symoneural-Ravencalc/src/ml/.gitpins/scikit-learn.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Ravencalc/build/devtool-workspace/appends/symoneural-numpy_git.bbappend",
