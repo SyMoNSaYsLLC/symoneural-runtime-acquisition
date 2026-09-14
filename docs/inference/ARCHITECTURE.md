@@ -14,11 +14,14 @@ applications / demos           Claude adapter (POST /v1/messages)     [optional 
                                         libggml   (canonical ggml-org/ggml e91ded11 = v0.23.0)
 ```
 
-State today: the Python layer exists and is tested against `FakeBackend`
-(`Symoneural-LLM/app/symoneural_llm/`, 11 tests); the ABI header is designed
-(`native/include/symoneural/llm.h`); libggml and libllama recipes are written
-library-only with every network fetch unreachable; the C implementation of
-`libsymoneural-llm` (L3) waits for libllama to be built and packaged.
+State today (P9 CPU/native checkpoint, 2026-09-14): every layer of the diagram is
+built, packaged and proven from the package feed in a clean root
+(`tools/llm-clean-root-proof`, evidence in `generated/evidence/llm/`): libggml and
+libllama (L2), `libsymoneural-llm.so.1` implementing the designed ABI (L3, `native/src/llm.c`),
+`symoneural-llm` — the recorded unit `chat` on port 8802 with `SYM_CHAT_TOKEN`, fail-closed,
+over `native.py` (ctypes) — and `symoneural-llm-util` (L4). Generation is BLOCKED on an
+external model (none registered); the tokenize/detokenize path is proven end to end.
+CUDA is deferred to P7. `P9-CHECKPOINT.md` holds the matrix.
 
 Invariants: `llama-server` is a reference/differential target, never the product
 boundary; the product never depends on upstream's bundled WebUI; clients name

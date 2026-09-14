@@ -1,0 +1,15 @@
+{
+ "note": "what the build host/sysroot needs to produce the packages; never installed on the target",
+ "recipes": {
+  "symoneural-llm-python": {
+   "DEPENDS": [],
+   "classification": "BUILD_REQUIRED",
+   "inherit": [
+    "symoneural-firstparty",
+    "python_flit_core"
+   ]
+  }
+ },
+ "runtime": "LLM",
+ "schema": "symoneural-build-closure/1"
+}

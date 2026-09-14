@@ -1,0 +1,7 @@
+bcf2f32e4fa9f838d8aa79bda8106535cda5708e4ee154aff7602de2e348334a  Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.tar.gz
+3e98be9673a739ed589437d004abf6f1a4fda88b52ba8d30b9f3cd6c6deab745  Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.manifest
+53818c8ce27faa129d00135bfb72f2e6b35a11aefb0072395446fd4fdee209bb  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.0.0-r0_x86-64-v3.ipk
+db1ea12e11d414c4ef40fee7463692cdd522d95b44ce6cc4a4c5e1215eebeb45  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.0.0-r0_x86-64-v3.ipk
+4e1b998481be1ac9a5c5632f8f9f3fde11b12d3aa75849b56ca925b5c9c8a1cf  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk
+281682e48ef80c166bbb2ddebfc6df29f3b7c6c2c84890d434f7ab102e60171e  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/libllama0_b10809-r0_x86-64-v3.ipk
+c31786a0ea2d1377624fb196aafc388d85482b0d09b6d934ebf02f6ff9404de9  Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml_0.23.0-r0_x86-64-v3.ipk

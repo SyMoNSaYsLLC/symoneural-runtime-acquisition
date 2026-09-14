@@ -89,8 +89,13 @@ UNPACK = os.path.join(os.environ.get("TMPDIR", "/tmp"), "native-linkage-unpack")
 def unpack(ipk):
     """Extract an .ipk (ar: debian-binary, control.tar.gz, data.tar.<zst|gz|xz>)."""
     d = os.path.join(UNPACK, os.path.basename(ipk)[:-4])
+    # a cached extraction is only valid for the ipk it came from: an ipk rebuilt
+    # under the same name (PR is fixed at r0) is newer than the directory
     if os.path.isdir(d):
-        return d
+        if os.path.getmtime(d) >= os.path.getmtime(ipk):
+            return d
+        import shutil
+        shutil.rmtree(d)
     os.makedirs(d, exist_ok=True)
     members = sh("ar", "t", ipk).split()
     data = next((m for m in members if m.startswith("data.tar")), None)

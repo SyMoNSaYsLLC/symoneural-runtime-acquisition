@@ -1,0 +1,56 @@
+native linkage audit (reconstruction v1.1 §69)
+
+  libsymoneural-api
+      package   Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api_1.0.0-r0_x86-64-v3.ipk
+      soname    libsymoneural-api.so.1   machine Advanced Micro Devices X86-64
+      needed    libc.so.6
+      runpath   -
+      exported  27 symbols
+      built from 898f4decdfc5e549e2a2a5c63477fb76a0380fb5 HEAD:Symoneural-API/app  (== HEAD: True)
+      rule_libc_only           PASS
+  symoneural-api-util
+      package   Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-util_1.0.0-r0_x86-64-v3.ipk
+      soname    -   machine Advanced Micro Devices X86-64
+      needed    libsymoneural-api.so.1 libc.so.6
+      runpath   -
+      exported  1 symbols
+  libsymoneural-llm
+      package   Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.0.0-r0_x86-64-v3.ipk
+      soname    libsymoneural-llm.so.1   machine Advanced Micro Devices X86-64
+      needed    libggml-base.so.0 libllama.so.0 libc.so.6
+      runpath   -
+      exported  16 symbols
+      built from eb4277022e026c1ddfcdeb6b6dfe9104c251d46d HEAD:Symoneural-LLM/app  (== HEAD: True)
+      rule_independent_of_api  PASS
+  symoneural-llm-util
+      package   Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.0.0-r0_x86-64-v3.ipk
+      soname    -   machine Advanced Micro Devices X86-64
+      needed    libsymoneural-llm.so.1 libc.so.6
+      runpath   -
+      exported  2 symbols
+  symoneural-llm
+      package   Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk
+      soname    -   machine ?
+      needed    
+      runpath   -
+      exported  0 symbols
+  libllama
+      package   Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/libllama0_b10809-r0_x86-64-v3.ipk
+      soname    libllama.so.0   machine Advanced Micro Devices X86-64
+      needed    libggml.so.0 libggml-base.so.0 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+      runpath   -
+      exported  2376 symbols
+      ggml_symbols_defined_inside 0
+      ggml_symbols_imported    243
+      rule_no_embedded_ggml    PASS: imports 243 ggml symbols, defines none
+      links_shared_libggml     PASS
+  libggml
+      package   Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-ggml_0.23.0-r0_x86-64-v3.ipk
+      soname    libggml-base.so.0   machine Advanced Micro Devices X86-64
+      needed    libgomp.so.1 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6
+      runpath   -
+      exported  730 symbols
+      defines_ggml_symbols     550
+
+RESULT: PASS
+wrote generated/evidence/llm/NATIVE-LINKAGE.json

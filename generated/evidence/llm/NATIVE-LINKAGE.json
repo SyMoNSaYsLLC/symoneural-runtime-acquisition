@@ -45,7 +45,7 @@
    "needed": [
     "libc.so.6"
    ],
-   "package": "Symoneural-CLI/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api_1.0.0-r0_x86-64-v3.ipk",
+   "package": "Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api_1.0.0-r0_x86-64-v3.ipk",
    "path": "/tmp/claude-1000/native-linkage-unpack/symoneural-api_1.0.0-r0_x86-64-v3/usr/lib/libsymoneural-api.so.1.0.0",
    "rule_libc_only": "PASS",
    "runpath": [],
@@ -55,8 +55,21 @@
    "state": "BUILT"
   },
   "libsymoneural-llm": {
-   "reason": "no package matches symoneural-llm_*.ipk in any feed",
-   "state": "NOT STARTED"
+   "exported_symbols": 16,
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libggml-base.so.0",
+    "libllama.so.0",
+    "libc.so.6"
+   ],
+   "package": "Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm_1.0.0-r0_x86-64-v3.ipk",
+   "path": "/tmp/claude-1000/native-linkage-unpack/symoneural-llm_1.0.0-r0_x86-64-v3/usr/lib/libsymoneural-llm.so.1.0.0",
+   "rule_independent_of_api": "PASS",
+   "runpath": [],
+   "soname": "libsymoneural-llm.so.1",
+   "source_tree": "eb4277022e026c1ddfcdeb6b6dfe9104c251d46d HEAD:Symoneural-LLM/app",
+   "source_tree_is_head": true,
+   "state": "BUILT"
   },
   "symoneural-api-util": {
    "exported_symbols": 1,
@@ -65,20 +78,36 @@
     "libsymoneural-api.so.1",
     "libc.so.6"
    ],
-   "package": "Symoneural-CLI/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-util_1.0.0-r0_x86-64-v3.ipk",
+   "package": "Symoneural-Common/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-util_1.0.0-r0_x86-64-v3.ipk",
    "path": "/tmp/claude-1000/native-linkage-unpack/symoneural-api-util_1.0.0-r0_x86-64-v3/usr/bin/symoneural-api-util",
    "runpath": [],
    "soname": null,
    "state": "BUILT"
   },
   "symoneural-llm": {
-   "reason": "no package matches symoneural-llm-*_*.ipk in any feed",
-   "state": "NOT STARTED"
+   "exported_symbols": 0,
+   "machine": "?",
+   "needed": [],
+   "package": "Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-python_1.0.0-r0_x86-64-v3.ipk",
+   "path": "/tmp/claude-1000/native-linkage-unpack/symoneural-llm-python_1.0.0-r0_x86-64-v3/usr/bin/symoneural-llm",
+   "runpath": [],
+   "soname": null,
+   "state": "BUILT"
+  },
+  "symoneural-llm-util": {
+   "exported_symbols": 2,
+   "machine": "Advanced Micro Devices X86-64",
+   "needed": [
+    "libsymoneural-llm.so.1",
+    "libc.so.6"
+   ],
+   "package": "Symoneural-LLM/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-llm-util_1.0.0-r0_x86-64-v3.ipk",
+   "path": "/tmp/claude-1000/native-linkage-unpack/symoneural-llm-util_1.0.0-r0_x86-64-v3/usr/bin/symoneural-llm-util",
+   "runpath": [],
+   "soname": null,
+   "state": "BUILT"
   }
  },
  "failures": [],
- "not_started": [
-  "libsymoneural-llm",
-  "symoneural-llm"
- ]
+ "not_started": []
 }

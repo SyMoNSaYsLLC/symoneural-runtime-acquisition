@@ -1,0 +1,155 @@
+#!/bin/bash
+# llm-clean-root-proof - the §37/§42 + P9 L6/L7 proof for the LLM runtime: a root
+# filesystem installed by opkg from the package feed (symoneural-image-llm), NO source
+# tree, NO PYTHONPATH, NO pip, NO devtool, NO model weights. Extracts the image tarball
+# and drives the whole native chain through the TARGET loader:
+#
+#   symoneural-llm (Python, ctypes) -> libsymoneural-llm.so.1 -> libllama.so.0 -> libggml*.so.0
+#
+# Generation needs weights the estate does not hold (model-register.json: ABSENT), so
+# the MEANINGFUL CONSUMER row for generation is reported BLOCKED, not faked. The
+# tokenize/detokenize path is proven end to end with llama.cpp's own tensor-free
+# vocabulary fixtures (models/ggml-vocab-*.gguf from the PINNED tree), copied into the
+# throwaway root's registry - test data, never weights, never committed.
+set -uo pipefail
+ROOT=/home/google/SymonSaysLLC
+IMG=$(ls -t $ROOT/Symoneural-LLM/build/devtool-master/tmp/deploy/images/*/symoneural-image-llm-*.rootfs-*.tar.gz 2>/dev/null | head -1)
+[ -n "$IMG" ] || { echo "FAIL: no symoneural-image-llm rootfs tarball; run: tools/symonbake Symoneural-LLM symoneural-image-llm"; exit 1; }
+R=${1:-${TMPDIR:-/tmp/claude-1000}/llm-clean-root}
+rm -rf "$R"; mkdir -p "$R"; tar -xzf "$IMG" -C "$R" 2>/dev/null || tar -xzf "$IMG" -C "$R" --no-same-owner --no-same-permissions
+MANI="${IMG%.tar.gz}.manifest"
+echo "image   : $IMG"; echo "sha256  : $(sha256sum "$IMG" | cut -d' ' -f1)"
+echo "manifest: $MANI ($( [ -f "$MANI" ] && wc -l < "$MANI" || echo '?') packages)"
+echo "root    : $R  ($(find "$R" -type f | wc -l) files)"
+LD=$(ls "$R"/lib/ld-linux-x86-64.so.2 "$R"/lib64/ld-linux-x86-64.so.2 "$R"/usr/lib/ld-linux-x86-64.so.2 2>/dev/null | head -1)
+PY=$(ls "$R"/usr/bin/python3.1[0-9] 2>/dev/null | head -1)
+[ -n "$LD" ] && [ -n "$PY" ] || { echo "FAIL: loader or python missing in root (ld=$LD py=$PY)"; exit 1; }
+PYV=$(basename "$PY" | sed 's/python//')
+LIBPATH="$R/lib:$R/usr/lib:$R/usr/lib/python$PYV/lib-dynload"
+LIB="$R/usr/lib/libsymoneural-llm.so.1"; UTIL="$R/usr/bin/symoneural-llm-util"; CLI="$R/usr/bin/symoneural-llm"
+REG="$R/var/lib/symoneural/models/llm"; mkdir -p "$REG" "$R/tmp"
+fail=0
+run()  { env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_LLM_NATIVE="$LIB" "$@" ; }
+tpy()  { run "$LD" --library-path "$LIBPATH" "$PY" -I "$@"; }
+util() { run "$LD" --library-path "$LIBPATH" "$UTIL" "$@"; }
+
+echo "--- interpreter"
+tpy -c 'import sys; print("  python", sys.version.split()[0], "prefix", sys.prefix); assert not any("SymonSaysLLC/Symoneural-LLM/app" in p for p in sys.path), sys.path' || { echo "FAIL: interpreter"; exit 1; }
+
+echo "--- first-party packages installed from the feed"
+for f in "$LIB" "$UTIL" "$CLI" "$R/usr/lib/python$PYV/site-packages/symoneural_llm/native.py" "$R/usr/share/symoneural-llm/SOURCE-TREE"; do
+  [ -e "$f" ] || { echo "  FAIL: missing ${f#$R}"; fail=1; }; done
+st_pkg=$(awk '{print $1}' "$R/usr/share/symoneural-llm/SOURCE-TREE" 2>/dev/null); st_head=$(git -C "$ROOT" rev-parse HEAD:Symoneural-LLM/app)
+echo "  SOURCE-TREE: $st_pkg  HEAD:Symoneural-LLM/app: $st_head  $([ "$st_pkg" = "$st_head" ] && echo MATCH || echo STALE)"
+[ "$st_pkg" = "$st_head" ] || { echo "  FAIL: packaged subtree != HEAD (STALE PACKAGE)"; fail=1; }
+
+echo "--- native linkage resolves INSIDE the root"
+need_lib=$(readelf -d "$LIB" | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}' | sort | tr '\n' ' ')
+soname=$(readelf -d "$LIB" | awk '/SONAME/ {gsub(/[\[\]]/,"",$5); print $5}')
+echo "  $soname  NEEDED=[$need_lib]"
+[ "$soname" = "libsymoneural-llm.so.1" ] || { echo "  FAIL: SONAME"; fail=1; }
+[ "$need_lib" = "libc.so.6 libggml-base.so.0 libllama.so.0 " ] || { echo "  FAIL: NEEDED is not exactly libc + libggml-base + libllama"; fail=1; }
+for so in $need_lib $(readelf -d "$R/usr/lib/libllama.so.0" | awk '/NEEDED/ {gsub(/[\[\]]/,"",$5); print $5}') libggml-cpu.so.0; do
+  ls "$R/usr/lib/$so" "$R/lib/$so" >/dev/null 2>&1 || { echo "  FAIL: $so not present in the root"; fail=1; }; done
+readelf -d "$LIB" "$R/usr/lib/libllama.so.0" "$R/usr/lib/libggml.so.0" | grep -qE 'RUNPATH|RPATH' && { echo "  FAIL: RUNPATH/RPATH present"; fail=1; } || echo "  no RUNPATH/RPATH in libsymoneural-llm, libllama, libggml"
+grep -c -F "$ROOT" "$LIB" >/dev/null 2>&1 && { echo "  FAIL: build path bytes in the shipped library"; fail=1; } || echo "  no build-path bytes in the shipped library"
+
+echo "--- symoneural-llm-util through the target loader"
+v=$(util version); a=$(util abi); c=$(util capabilities); rc=$?
+echo "  version=$v abi=$a capabilities=[$c] (rc=$rc)"
+[ "$v" = "1.0.0" ] && [ "$a" = "65536" ] && [ $rc -eq 0 ] && [[ "$c" == *tokenize* ]] && [[ "$c" == *streaming* ]] || { echo "  FAIL: util version/abi/capabilities"; fail=1; }
+[[ "$c" == *" cpu"* ]] && echo "  backend: cpu (no GPU offload compiled in - CUDA variant is P7's)" || echo "  backend: $c"
+n=$(util models "$REG" | wc -l); [ "$n" -eq 0 ] && echo "  empty registry -> 0 models, rc ok" || { echo "  FAIL: empty registry listed $n"; fail=1; }
+
+echo "--- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)"
+SRC=$ROOT/Symoneural-LLM/src/inference/source/llama.cpp/models
+cp "$SRC/ggml-vocab-qwen2.gguf" "$REG/vocab-qwen2.gguf"; cp "$SRC/ggml-vocab-llama-bpe.gguf" "$REG/vocab-llama-bpe.gguf"
+echo "  registry: $(util models "$REG" | tr '\n' ' ')"
+info=$(util info "$REG" vocab-qwen2); rc=$?; echo "  info: $info (rc=$rc)"
+[ $rc -eq 0 ] && [[ "$info" == *'"vocab_only":true'* ]] && [[ "$info" == *'"arch":"qwen2"'* ]] || { echo "  FAIL: model_info on the vocabulary fixture"; fail=1; }
+TEXT="SyMoNeuRaL builds its runtimes from pristine upstream source."
+tok=$(util tokenize "$REG" vocab-qwen2 "$TEXT"); rc=$?
+python3 - "$tok" "$TEXT" "$rc" <<'PY' || fail=1
+import json, sys
+out, text, rc = sys.argv[1], sys.argv[2], int(sys.argv[3])
+j = json.loads(out)
+ok = rc == 0 and j["n_tokens"] > 0 and j["detokenize_status"] == 0 and j["round_trip"] == text
+print("  tokenize: %d tokens, detokenize_status %d, round_trip %s  -> %s" % (j["n_tokens"], j["detokenize_status"], "== input" if j["round_trip"] == text else repr(j["round_trip"]), "PASS" if ok else "FAIL"))
+sys.exit(0 if ok else 1)
+PY
+tok2=$(util tokenize "$REG" vocab-llama-bpe "$TEXT"); python3 -c "import json,sys; j=json.loads(sys.argv[1]); assert j['round_trip']==sys.argv[2] and j['n_tokens']>0; print('  tokenize (llama-bpe): %d tokens, round trip == input' % j['n_tokens'])" "$tok2" "$TEXT" || { echo "  FAIL: llama-bpe tokenize"; fail=1; }
+gen_err=$(util generate "$REG" vocab-qwen2 "hello" 4 2>&1 >/dev/null); rc=$?
+[[ $rc -ne 0 && "$gen_err" == *"session_open: invalid argument"* ]] && echo "  generate on a vocabulary: refused as designed ($gen_err)" || { echo "  FAIL: generate on a vocabulary should be refused (rc=$rc: $gen_err)"; fail=1; }
+
+echo "--- symoneural-llm (Python) in the root: ctypes -> the shipped library"
+out=$(tpy "$CLI" request --fake --model fake-1 --prompt "hello brave new world" --max-tokens 8); rc=$?
+python3 -c "import json,sys; j=json.loads(sys.argv[1]); assert j['type']=='message' and 'olleh evarb wen dlrow' in j['content'][0]['text']; print('  request --fake: message via the packaged adapter (rc=%s)' % sys.argv[2])" "$out" "$rc" || { echo "  FAIL: request --fake: $out"; fail=1; }
+caps=$(tpy "$CLI" capabilities --registry-root "$REG"); rc=$?
+python3 - "$caps" "$rc" <<'PY' || fail=1
+import json, sys
+j = json.loads(sys.argv[1]); rc = int(sys.argv[2])
+ids = sorted(m["model_id"] for m in j["models"])
+ok = rc == 0 and j["native"]["version"] == "1.0.0" and j["native"]["abi"] == 65536 and "tokenize" in j["native"]["capabilities"] and ids == ["vocab-llama-bpe", "vocab-qwen2"] and j["unit"] == "chat"
+print("  capabilities: native %s abi %d %s; registry models %s; unit %s -> %s" % (j["native"]["version"], j["native"]["abi"], j["native"]["capabilities"], ids, j["unit"], "PASS" if ok else "FAIL"))
+sys.exit(0 if ok else 1)
+PY
+err=$(tpy "$CLI" request --registry-root "$REG" --model vocab-qwen2 --prompt "hi"); rc=$?
+python3 -c "
+import json,sys; j=json.loads(sys.argv[1]); root=sys.argv[3]
+assert int(sys.argv[2])==1 and j['type']=='error' and j['error']['type']=='api_error' and root not in sys.argv[1], sys.argv[1]
+print('  request on a vocabulary model: %s (no path in the error)' % j['error']['message'])" "$err" "$rc" "$R" || { echo "  FAIL: request error shape: $err"; fail=1; }
+
+echo "--- the chat unit: HTTP on 127.0.0.1, bearer token, fail-closed"
+noconf=$(run "$LD" --library-path "$LIBPATH" "$PY" -I "$CLI" serve --fake --port 0 2>&1); rc=$?
+[ $rc -eq 78 ] && echo "  serve without SYM_CHAT_TOKEN: refused, exit 78 ($noconf)" || { echo "  FAIL: unconfigured unit came up (rc=$rc)"; fail=1; }
+PORT=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
+TOKEN="proof-$$-$(date +%s)"
+env -i HOME="$R" TMPDIR="$R/tmp" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 SYM_LLM_NATIVE="$LIB" SYM_CHAT_TOKEN="$TOKEN" \
+  "$LD" --library-path "$LIBPATH" "$PY" -I "$CLI" serve --host 127.0.0.1 --port "$PORT" --registry-root "$REG" >"$R/tmp/serve.log" 2>&1 &
+SPID=$!
+python3 - "$PORT" "$TOKEN" "$R" <<'PY' || fail=1
+import json, sys, time, urllib.request, urllib.error
+port, token, root = sys.argv[1], sys.argv[2], sys.argv[3]
+base = "http://127.0.0.1:%s" % port
+def call(path, method="GET", body=None, auth=None):
+    req = urllib.request.Request(base + path, method=method, data=json.dumps(body).encode() if body is not None else None)
+    if body is not None: req.add_header("Content-Type", "application/json")
+    if auth: req.add_header("Authorization", "Bearer " + auth)
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r: return r.status, json.loads(r.read() or b"{}")
+    except urllib.error.HTTPError as e: return e.code, json.loads(e.read() or b"{}")
+for _ in range(60):
+    try:
+        st, h = call("/api/health"); break
+    except Exception: time.sleep(0.25)
+else:
+    print("  FAIL: unit never answered /api/health"); sys.exit(1)
+ok = True
+def check(cond, msg):
+    global ok; print("  %s %s" % ("ok  " if cond else "FAIL", msg)); ok = ok and cond
+check(st == 200 and h["status"] == "ready" and h["unit"] == "chat", "/api/health -> %d %s" % (st, h))
+st, b = call("/v1/models"); check(st == 401 and b["error"]["type"] == "authentication_error", "/v1/models without token -> %d" % st)
+st, b = call("/v1/models", auth="wrong-" + token); check(st == 401, "/v1/models wrong token -> %d" % st)
+st, b = call("/v1/models", auth=token); ids = sorted(m["id"] for m in b.get("data", []))
+check(st == 200 and ids == ["vocab-llama-bpe", "vocab-qwen2"], "/v1/models -> %d %s" % (st, ids))
+st, b = call("/v1/capabilities", auth=token); check(st == 200 and b["native"]["version"] == "1.0.0", "/v1/capabilities -> %d native %s" % (st, b.get("native", {}).get("version")))
+req = {"model": "vocab-qwen2", "max_tokens": 8, "messages": [{"role": "user", "content": "hello"}]}
+st, b = call("/v1/messages", "POST", req, auth=token)
+check(st == 502 and b["error"]["type"] == "api_error" and root not in json.dumps(b), "/v1/messages on a vocabulary model -> %d %s (no path)" % (st, b["error"]["message"]))
+st, b = call("/v1/messages", "POST", req); check(st == 401, "/v1/messages without token -> %d" % st)
+st, b = call("/v1/messages", "POST", {"model": "not-registered", "max_tokens": 8, "messages": [{"role": "user", "content": "x"}]}, auth=token)
+check(st == 404, "/v1/messages unknown model -> %d %s" % (st, b["error"]["type"]))
+sys.exit(0 if ok else 1)
+PY
+kill -TERM $SPID 2>/dev/null; wait $SPID; src=$?
+echo "  SIGTERM -> unit exited $src; log: $(grep -c . "$R/tmp/serve.log") lines, paths in log: $(grep -c -F "$R" "$R/tmp/serve.log")"
+[ $src -eq 0 ] || { echo "  FAIL: unit did not exit cleanly on SIGTERM"; fail=1; }
+
+echo "--- result"
+if [ $fail -ne 0 ]; then echo "LLM CLEAN ROOT PROOF: FAIL"; exit 1; fi
+echo "  CLEAN INSTALL PASS: packages from the feed only; every NEEDED resolves inside the root; subtree == HEAD"
+echo "  RUNTIME PASS: symoneural-llm-util and symoneural-llm (ctypes) drive libsymoneural-llm -> libllama -> libggml in the root"
+echo "  UNIT PASS: chat unit serves /api/health, /v1/models, /v1/capabilities, /v1/messages with bearer auth, refuses unconfigured, stops on SIGTERM"
+echo "  TOKENIZE PATH PASS: qwen2 and llama-bpe vocabularies load through gguf/libllama; tokenize/detokenize round-trip == input"
+echo "  MEANINGFUL CONSUMER (generation): BLOCKED - compatible external model unavailable (model-register.json: LLM row ABSENT; registry holds tensor-free fixtures only)"
+echo "LLM CLEAN ROOT PROOF: PASS (generation BLOCKED on external model availability)"

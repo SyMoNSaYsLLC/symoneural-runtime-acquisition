@@ -1,0 +1,44 @@
+image   : /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.tar.gz
+sha256  : bcf2f32e4fa9f838d8aa79bda8106535cda5708e4ee154aff7602de2e348334a
+manifest: /home/google/SymonSaysLLC/Symoneural-LLM/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-llm-qemux86-64.rootfs-20260914111643.manifest (40 packages)
+root    : /tmp/claude-1000/llm-clean-root  (841 files)
+--- interpreter
+  python 3.14.7 prefix /tmp/claude-1000/llm-clean-root/usr
+--- first-party packages installed from the feed
+  SOURCE-TREE: eb4277022e026c1ddfcdeb6b6dfe9104c251d46d  HEAD:Symoneural-LLM/app: eb4277022e026c1ddfcdeb6b6dfe9104c251d46d  MATCH
+--- native linkage resolves INSIDE the root
+  libsymoneural-llm.so.1  NEEDED=[libc.so.6 libggml-base.so.0 libllama.so.0 ]
+  no RUNPATH/RPATH in libsymoneural-llm, libllama, libggml
+  no build-path bytes in the shipped library
+--- symoneural-llm-util through the target loader
+  version=1.0.0 abi=65536 capabilities=[text streaming cancellation tokenize cpu] (rc=0)
+  backend: cpu (no GPU offload compiled in - CUDA variant is P7's)
+  empty registry -> 0 models, rc ok
+--- vocabulary fixtures (tensor-free GGUF from the PINNED llama.cpp tree; test data, not weights)
+  registry: vocab-llama-bpe vocab-qwen2 
+  info: {"id":"vocab-qwen2","arch":"qwen2","name":"qwen2","desc":"","n_ctx_train":0,"n_vocab":151936,"n_params":0,"vocab_only":true} (rc=0)
+  tokenize: 15 tokens, detokenize_status 0, round_trip == input  -> PASS
+  tokenize (llama-bpe): 16 tokens, round trip == input
+  generate on a vocabulary: refused as designed (symoneural-llm-util: session_open: invalid argument (-1))
+--- symoneural-llm (Python) in the root: ctypes -> the shipped library
+  request --fake: message via the packaged adapter (rc=0)
+  capabilities: native 1.0.0 abi 65536 ['text', 'streaming', 'cancellation', 'tokenize', 'cpu']; registry models ['vocab-llama-bpe', 'vocab-qwen2']; unit chat -> PASS
+  request on a vocabulary model: RuntimeError: vocab-qwen2 is vocabulary-only; it cannot generate (no path in the error)
+--- the chat unit: HTTP on 127.0.0.1, bearer token, fail-closed
+  serve without SYM_CHAT_TOKEN: refused, exit 78 (symoneural-llm: unconfigured: SYM_CHAT_TOKEN is not provisioned; refusing to serve)
+  ok   /api/health -> 200 {'status': 'ready', 'unit': 'chat', 'runtime': 'symoneural-llm', 'version': '1.0.0'}
+  ok   /v1/models without token -> 401
+  ok   /v1/models wrong token -> 401
+  ok   /v1/models -> 200 ['vocab-llama-bpe', 'vocab-qwen2']
+  ok   /v1/capabilities -> 200 native 1.0.0
+  ok   /v1/messages on a vocabulary model -> 502 RuntimeError: backend failure (no path)
+  ok   /v1/messages without token -> 401
+  ok   /v1/messages unknown model -> 404 not_found_error
+  SIGTERM -> unit exited 0; log: 9 lines, paths in log: 0
+--- result
+  CLEAN INSTALL PASS: packages from the feed only; every NEEDED resolves inside the root; subtree == HEAD
+  RUNTIME PASS: symoneural-llm-util and symoneural-llm (ctypes) drive libsymoneural-llm -> libllama -> libggml in the root
+  UNIT PASS: chat unit serves /api/health, /v1/models, /v1/capabilities, /v1/messages with bearer auth, refuses unconfigured, stops on SIGTERM
+  TOKENIZE PATH PASS: qwen2 and llama-bpe vocabularies load through gguf/libllama; tokenize/detokenize round-trip == input
+  MEANINGFUL CONSUMER (generation): BLOCKED - compatible external model unavailable (model-register.json: LLM row ABSENT; registry holds tensor-free fixtures only)
+LLM CLEAN ROOT PROOF: PASS (generation BLOCKED on external model availability)

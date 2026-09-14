@@ -1,0 +1,7 @@
+RUNTIME   CONSUMER                          DISTRIBUTION            SPEC           PROVIDER  RDEP  BUILT VER  STATUS
+
+extras selected by consumers (evaluated as RUNTIME REQUIRED): pyjwt[crypto]
+not required for the target (extras not selected / marker false): 0
+LLM: 1 direct wheels, 0 distinct runtime requirements -> 1 upstream runtime sources (direct + transitive first level)
+closure manifests written to generated/evidence/llm
+RESULT: PASS
