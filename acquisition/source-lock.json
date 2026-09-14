@@ -751,7 +751,61 @@
       "submodule_count": 7,
       "upstream_url": "https://github.com/numpy/numpy",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "75838ada0efcf95a4f698c7627a4282cf795779b",
+      "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git",
+      "submodules": [
+        {
+          "path": "doc/source/_static/scipy-mathjax",
+          "commit_sha": "36f4c898f2255e0c98eb6949cd67381552d5ffea",
+          "tree_sha": "ff1a608e98f8a2b30e6d3fe1525a7c673aa5550f",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/doc/source/_static/scipy-mathjax",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "numpy/_core/src/common/pythoncapi-compat",
+          "commit_sha": "8636bccf29adfa23463f810b3c2830f7cff1e933",
+          "tree_sha": "7ed921cb24b191ca97f499e356c9ec38a611909d",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/numpy/_core/src/common/pythoncapi-compat",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "numpy/_core/src/highway",
+          "commit_sha": "ee36c837129310be19c17c9108c6dc3f6ae06942",
+          "tree_sha": "c845531fc4e26e41b1f20b04575365f8423b4eea",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/numpy/_core/src/highway",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "numpy/_core/src/npysort/x86-simd-sort",
+          "commit_sha": "fa944efbea1a33426b3f8a9a21e23794ab8aa300",
+          "tree_sha": "f2709598edadacdf1940a76499aabf8b5b4332ae",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/numpy/_core/src/npysort/x86-simd-sort",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "numpy/_core/src/umath/svml",
+          "commit_sha": "bd9d46e0c627ab16f3d2641f7cdb1bc15d303ba4",
+          "tree_sha": "a28706809e28a88c4daa55c799902ba57d35d654",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/numpy/_core/src/umath/svml",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "numpy/fft/pocketfft",
+          "commit_sha": "33ae5dc94c9cdc7f1c78346504a85de87cadaa12",
+          "tree_sha": "c1062bfae812d10dfafb872dc1912dc89c0eb321",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/numpy/fft/pocketfft",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        },
+        {
+          "path": "vendored-meson/meson",
+          "commit_sha": "983fca5b39b62060c733a58fd8ecd276591bdf12",
+          "tree_sha": "bce166a533e9ade4ad25a06ac2e8fe0453edf1e3",
+          "pins_path": "Symoneural-Ravencalc/src/numerics/.gitpins/numpy.git/modules/vendored-meson/meson",
+          "provenance": "CONTENT-ONLY (no local pin; tree not verified against commit)"
+        }
+      ],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Ravencalc/build/devtool-workspace/appends/symoneural-scipy_git.bbappend",
