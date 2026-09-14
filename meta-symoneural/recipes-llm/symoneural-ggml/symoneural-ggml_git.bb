@@ -26,6 +26,26 @@ SRCREV = "e91ded11bdcd78c42f9c8d3978ff6686eb4c1226"
 
 inherit cmake pkgconfig
 
+# CUDA arrives ONLY through the estate authority (P7: symoneural-cuda.bbclass ->
+# cuda-toolkit-bin 13.4.1, sm_120). The CPU-only build stays selectable
+# (PACKAGECONFIG = "") and is what the accepted P9 CPU/native checkpoint proved.
+# GGML_CUDA_CUB_3DOT2 stays OFF: it is a FetchContent download, and CUDA 13.4's own
+# cccl (CUB 3.3) already satisfies ggml.
+PACKAGECONFIG ??= "cuda"
+PACKAGECONFIG[cuda] = "-DGGML_CUDA=ON -DGGML_CUDA_CUB_3DOT2=OFF,-DGGML_CUDA=OFF,,"
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'cuda', 'symoneural-cuda', '', d)}
+
+# Backends are dlopen'ed MODULES (GGML_BACKEND_DL), not DT_NEEDED libraries. With a
+# statically registered CUDA backend libggml.so.0 NEEDs libggml-cuda.so.0, which NEEDs
+# libcuda.so.1, and the whole native LLM stack refuses to load on a machine without
+# the driver (P7 C6: rc=127 under the target loader with the host cache inhibited).
+# As modules under ${libdir}/ggml the CPU backend always loads, the CUDA backend loads
+# when the driver's libcuda.so.1 is present, and libsymoneural-llm reports which did.
+# GGML_BACKEND_DIR is the install destination and ggml's compiled-in default search
+# directory; libsymoneural-llm loads from <its own directory>/ggml first, so ggml's
+# executable-directory and cwd fallbacks never run while the packages are intact.
+EXTRA_OECMAKE += "-DGGML_BACKEND_DL=ON -DGGML_BACKEND_DIR=${libdir}/ggml"
+
 # Library-only, CPU backend, no build-time network:
 #  GGML_NATIVE=OFF        never bake the build host's CPU into a cross artefact
 #  GGML_CCACHE=OFF        no host ccache probing
@@ -46,5 +66,15 @@ EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON \
 # option defaults follow GGML_NATIVE and would otherwise pick a baseline CPU.
 EXTRA_OECMAKE += "-DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON"
 
-FILES:${PN} += "${libdir}/libggml*.so ${libdir}/libggml*.so.*"
+# The CUDA backend module is its own package: the S2 boundary (libcuda.so.1 from the
+# host driver) and the cuda-toolkit-bin dependency stop at symoneural-ggml-cuda, and
+# the CPU composition is the same image minus that one package. libcuda.so.1 has no
+# package provider, so the generic file-rdeps check cannot pass; the class's
+# symon_cuda_qa_s2 is the check that stays on (it fails on any other unresolved NEEDED).
+PACKAGES =+ "${PN}-cuda"
+FILES:${PN}-cuda = "${libdir}/ggml/libggml-cuda*"
+RDEPENDS:${PN}-cuda += "${PN}"
+INSANE_SKIP:${PN}-cuda += "file-rdeps"
+PRIVATE_LIBS:${PN}-cuda += "${SYMON_CUDA_S2_LIBS}"
+FILES:${PN} += "${libdir}/libggml*.so ${libdir}/libggml*.so.* ${libdir}/ggml/libggml-cpu*"
 FILES:${PN}-dev += "${libdir}/cmake ${libdir}/pkgconfig ${includedir}"
