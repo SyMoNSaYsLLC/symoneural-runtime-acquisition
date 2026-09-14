@@ -12,17 +12,19 @@
  *
  * Copyright (c) 2026 SyMoNeuRaL. SPDX-License-Identifier: MIT
  */
-#define _XOPEN_SOURCE 700   /* realpath(3); implies _POSIX_C_SOURCE 200809L */
+#define _GNU_SOURCE         /* realpath(3) and dladdr(3); a superset of _XOPEN_SOURCE 700 */
 #include "symoneural/llm.h"
 
 #include <llama.h>
 #include <gguf.h>
 #include <ggml-backend.h>
 
+#include <dlfcn.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,6 +55,33 @@ struct sym_llm_session {
     atomic_int            busy;     /* one generate at a time per session   */
 };
 
+/* ---- ggml backends: dlopen'ed modules next to this library ------------------ */
+
+/* libggml is built with GGML_BACKEND_DL: every backend (cpu, cuda) is a module under
+ * <libdir>/ggml/ that the registry dlopens, so libggml itself never NEEDs the driver.
+ * The modules are looked up next to THIS library (dladdr -> <dir>/ggml), once per
+ * process, before anything asks the registry. Doing it here first means llama's own
+ * fallback (ggml_backend_load_all: the compiled-in directory, then the executable's
+ * directory, then the current directory) never runs while the packages are intact.
+ * A module whose own dependencies are missing - libggml-cuda without the driver's
+ * libcuda.so.1 - fails to dlopen and that backend is simply absent. */
+static pthread_once_t g_backends_once = PTHREAD_ONCE_INIT;
+
+static void backends_load(void)
+{
+    Dl_info info;
+    char lib[PATH_MAX], dir[PATH_MAX];
+    if (dladdr((void *)(uintptr_t)sym_llm_capabilities, &info) == 0 || info.dli_fname == NULL) return;
+    if (realpath(info.dli_fname, lib) == NULL) return;
+    char *slash = strrchr(lib, '/');
+    if (slash == NULL) return;
+    *slash = '\0';
+    if (snprintf(dir, sizeof dir, "%s/ggml", lib) >= (int)sizeof dir) return;
+    ggml_backend_load_all_from_path(dir);
+}
+
+static void backends_ensure(void) { pthread_once(&g_backends_once, backends_load); }
+
 /* ---- backend lifetime: one llama_backend_init per process ------------------ */
 
 static pthread_mutex_t g_backend_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -81,6 +110,7 @@ static void backend_acquire(void)
     pthread_mutex_lock(&g_backend_lock);
     if (g_backend_refs++ == 0) {
         llama_log_set(quiet_log, NULL);
+        backends_ensure();
         llama_backend_init();
     }
     pthread_mutex_unlock(&g_backend_lock);
@@ -131,23 +161,27 @@ static int put(char *buf, size_t cap, const char *s)
 }
 
 /* "gpu:<backend>" names the ggml backend of the first GPU device the registry can
- * see at call time - which needs the driver's libcuda.so.1 to be loadable - and
- * "cpu" is reported when no GPU device is enumerable, whether or not a GPU backend
- * was compiled in. So the token is a statement about this process on this machine,
- * not about the build. ABI 1.1.0: the token set grew; nothing was removed. */
+ * see at call time - the cuda module dlopens only when the driver's libcuda.so.1 is
+ * loadable - "cpu" says only the CPU backend module loaded, and "backend:none" says
+ * no module loaded at all (<libdir>/ggml missing or the library misplaced). So the
+ * token is a statement about this process on this machine, not about the build.
+ * 1.1.0 added gpu:<backend>; 1.1.1 added backend:none; nothing was removed. */
 int sym_llm_capabilities(char *buf, size_t cap)
 {
+    backends_ensure();
     const char *gpu = NULL;
+    bool cpu = false;
     for (size_t i = 0; i < ggml_backend_dev_count(); i++) {
         ggml_backend_dev_t dev = ggml_backend_dev_get(i);
-        if (ggml_backend_dev_type(dev) == GGML_BACKEND_DEVICE_TYPE_GPU) {
+        enum ggml_backend_dev_type t = ggml_backend_dev_type(dev);
+        if (t == GGML_BACKEND_DEVICE_TYPE_GPU && gpu == NULL)
             gpu = ggml_backend_reg_name(ggml_backend_dev_backend_reg(dev));
-            break;
-        }
+        else if (t == GGML_BACKEND_DEVICE_TYPE_CPU)
+            cpu = true;
     }
     char s[256];
     snprintf(s, sizeof s, "text streaming cancellation tokenize %s%s",
-             gpu ? "gpu:" : "cpu", gpu ? gpu : "");
+             gpu ? "gpu:" : (cpu ? "cpu" : "backend:none"), gpu ? gpu : "");
     return put(buf, cap, s);
 }
 
@@ -165,7 +199,8 @@ int sym_llm_runtime_open(const sym_llm_runtime_params *p, sym_llm_runtime **out)
     struct stat st;
     if (stat(p->registry_root, &st) != 0) return SYM_LLM_ENOENT;
     if (!S_ISDIR(st.st_mode)) return SYM_LLM_EINVAL;
-    /* GPU layers need a GPU backend compiled into libggml; this build says so itself */
+    /* GPU layers need a loaded GPU backend module; the registry says so itself */
+    backends_ensure();
     if (p->gpu_layers != 0 && !llama_supports_gpu_offload()) return SYM_LLM_EBACKEND;
 
     sym_llm_runtime *rt = calloc(1, sizeof *rt);

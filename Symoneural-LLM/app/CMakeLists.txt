@@ -5,7 +5,7 @@
 # reaches a build tree or a host toolkit. Built by the recipe symoneural-llm
 # (symoneural-firstparty) from the committed tree.
 cmake_minimum_required(VERSION 3.20)
-project(symoneural-llm VERSION 1.1.0 LANGUAGES C)
+project(symoneural-llm VERSION 1.1.1 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -23,7 +23,7 @@ set_target_properties(symoneural-llm PROPERTIES VERSION ${PROJECT_VERSION} SOVER
 set_target_properties(symoneural-llm-static PROPERTIES OUTPUT_NAME symoneural-llm)
 foreach(t symoneural-llm symoneural-llm-static)
   target_include_directories(${t} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/native/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-  target_link_libraries(${t} PRIVATE PkgConfig::LLAMA Threads::Threads)
+  target_link_libraries(${t} PRIVATE PkgConfig::LLAMA Threads::Threads ${CMAKE_DL_LIBS})
 endforeach()
 
 add_executable(symoneural-llm-util native/src/util-main.c)

@@ -23,7 +23,7 @@ extern "C" {
 
 #define SYM_LLM_ABI_MAJOR 1
 #define SYM_LLM_ABI_MINOR 1
-#define SYM_LLM_ABI_PATCH 0
+#define SYM_LLM_ABI_PATCH 1
 #define SYM_LLM_ABI_VERSION ((SYM_LLM_ABI_MAJOR << 16) | (SYM_LLM_ABI_MINOR << 8) | SYM_LLM_ABI_PATCH)
 
 typedef enum {
@@ -68,8 +68,10 @@ typedef int (*sym_llm_token_cb)(const char *piece, size_t len, void *user);
 uint32_t    sym_llm_abi_version(void);
 const char *sym_llm_version_string(void);
 const char *sym_llm_strerror(int status);
-/* space-separated: "text streaming cancellation tokenize gpu:<backend>|cpu";
- * gpu:<backend> only when a GPU device is enumerable in this process (1.1.0) */
+/* space-separated: "text streaming cancellation tokenize gpu:<backend>|cpu|backend:none";
+ * gpu:<backend> only when a GPU device is enumerable in this process (1.1.0); the ggml
+ * backends are dlopen'ed modules found next to this library (<libdir>/ggml), and
+ * backend:none means none loaded (1.1.1) */
 int         sym_llm_capabilities(char *buf, size_t cap);
 
 int  sym_llm_runtime_open(const sym_llm_runtime_params *p, sym_llm_runtime **out);
