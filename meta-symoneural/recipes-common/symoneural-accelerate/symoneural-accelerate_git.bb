@@ -56,7 +56,23 @@ inherit setuptools3
 # accepted. RDEPENDS is RUNTIME, so by "own what you ship" they should eventually
 # be estate-owned too.
 RDEPENDS:${PN} += "symoneural-huggingface-hub symoneural-numpy symoneural-safetensors symoneural-pytorch"
-RDEPENDS:${PN} += "python3-packaging python3-psutil python3-pyyaml"
+# 2026-09-14: the three remaining edges moved from layer borrows to the estate's
+# own providers. packaging and pyyaml were acquired for the Common closure; psutil
+# was acquired for exactly this edge. Layer python3-* copies are build tooling at
+# most, never the shipped provider ("own what you ship"). Checked by
+# tools/check-python-runtime-closures.py --runtime Common.
+RDEPENDS:${PN} += "symoneural-packaging symoneural-psutil symoneural-pyyaml"
+
+# BLOCKED 2026-09-14 - packaged (QA clean, ipk emitted) but NOT SHIPPED. In the
+# clean-root proof, Accelerator(cpu=True).prepare(model) fails on this estate's torch:
+#   accelerator.py:prepare -> _prepare_one -> prepare_model
+#   -> utils/other.py:243 model_has_dtensor -> from torch.distributed.tensor import DTensor
+#   ModuleNotFoundError: No module named 'torch._C._distributed_c10d'
+# symoneural-pytorch is built USE_DISTRIBUTED=0 (its recipe records why); upstream
+# accelerate guards that import on torch VERSION only, not on
+# torch.distributed.is_available(). Not carried in packagegroup-symoneural-common
+# until torch is built with distributed (upstream's Linux default) or a ruling
+# defers accelerate. Pristine source is not patched.
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.
