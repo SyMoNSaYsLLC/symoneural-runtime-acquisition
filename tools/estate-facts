@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""estate-facts - ground truth about the estate, read from disk.
+
+The single source for any number that describes this repository. Every fact
+carries the command or path it came from, so a reader can check it without
+trusting this script.
+
+  tools/estate-facts            human readable, with provenance
+  tools/estate-facts --json     machine readable, for check-artifact-drift
+
+Facts only. Never status. This script cannot establish that a phase is complete
+or that a consumer exercised an artifact (R16), so it does not report either.
+"""
+import json, subprocess, sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def _json(rel):
+    p = ROOT / rel
+    if not p.is_file():
+        return None
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return None
+
+
+def collect():
+    f = {}
+
+    bb = sorted(ROOT.glob("meta-symoneural/**/*.bb"))
+    f["recipes"] = {
+        "value": len(bb),
+        "source": "count of meta-symoneural/**/*.bb",
+    }
+
+    app = sorted(ROOT.glob("meta-symoneural/**/*.bbappend"))
+    f["bbappends"] = {"value": len(app), "source": "count of meta-symoneural/**/*.bbappend"}
+
+    sm = _json("acquisition/source-manifest.json")
+    if sm is not None:
+        entries = sm.get("entries", [])
+        f["declared_sources"] = {
+            "value": len(entries),
+            "source": "acquisition/source-manifest.json :: entries",
+        }
+        at = [e for e in entries
+              if str(e.get("acquisition_state", "")).lower() in ("acquired", "at_intended_revision")]
+        f["sources_acquired"] = {
+            "value": len(at),
+            "source": "acquisition/source-manifest.json :: entries[acquisition_state acquired]",
+        }
+
+    un = _json("acquisition/unresolved.json")
+    if un is not None:
+        counts = un.get("counts", {})
+        if isinstance(counts, dict):
+            for k, v in counts.items():
+                if isinstance(v, int):
+                    f[f"unresolved_{k}"] = {
+                        "value": v,
+                        "source": f"acquisition/unresolved.json :: counts.{k}",
+                    }
+
+    reports = sorted(ROOT.glob("generated/phase-*.md"))
+    f["phase_reports"] = {"value": len(reports), "source": "count of generated/phase-*.md"}
+
+    runtimes = sorted(p.name for p in ROOT.glob("Symoneural-*") if p.is_dir())
+    f["runtime_dirs"] = {
+        "value": len(runtimes),
+        "source": "count of Symoneural-*/ directories",
+        "detail": runtimes,
+    }
+
+    try:
+        rev = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"],
+                             capture_output=True, text=True, timeout=10)
+        if rev.returncode == 0:
+            f["commit"] = {"value": rev.stdout.strip(), "source": "git rev-parse --short HEAD"}
+    except Exception:
+        pass
+
+    return f
+
+
+def main():
+    facts = collect()
+    if "--json" in sys.argv:
+        print(json.dumps(facts, indent=2, sort_keys=True))
+        return 0
+    print("\nestate facts - read from disk\n")
+    width = max(len(k) for k in facts)
+    for k in sorted(facts):
+        d = facts[k]
+        print(f"  {k:<{width}}  {str(d['value']):>6}   {d['source']}")
+        if d.get("detail"):
+            print(f"  {'':<{width}}          {', '.join(d['detail'])}")
+    print()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
