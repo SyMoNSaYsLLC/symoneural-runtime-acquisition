@@ -22,6 +22,12 @@ class MainTest(unittest.TestCase):
             rc = m.main(["request", "--fake", "--allowed-models", "other", "--model", "fake-1", "--prompt", "x"])
         self.assertEqual(rc, 1); self.assertEqual(json.loads(buf.getvalue())["error"]["type"], "invalid_request_error")
 
+    def test_request_unknown_model_is_json_not_traceback(self):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = m.main(["request", "--fake", "--model", "nope", "--prompt", "x"])
+        self.assertEqual(rc, 1); self.assertEqual(json.loads(buf.getvalue())["error"]["type"], "not_found_error")
+
     def test_capabilities(self):
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):

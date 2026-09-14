@@ -184,6 +184,10 @@ def request(args: argparse.Namespace) -> int:
             out = adapter.messages(req)
         except ProtocolError as e:
             print(json.dumps(_error(e.status, "invalid_request_error", str(e))[1])); return 1
+        except KeyError as e:
+            print(json.dumps(_error(404, "not_found_error", f"unknown model {e}")[1])); return 1
+        except Exception as e:   # native/backend failure: type and status text only, never a path
+            print(json.dumps(_error(502, "api_error", type(e).__name__ + ": " + getattr(e, "strerror", str(e)))[1])); return 1
         print(json.dumps(out))
         return 0
     finally:

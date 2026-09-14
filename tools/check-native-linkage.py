@@ -76,7 +76,10 @@ TARGETS = [
     ("libsymoneural-api",   "symoneural-api_*.ipk",        "usr/lib/libsymoneural-api.so.*.*.*"),
     ("symoneural-api-util", "symoneural-api-util_*.ipk",   "usr/bin/symoneural-api-util"),
     ("libsymoneural-llm",   "symoneural-llm_*.ipk",        "usr/lib/libsymoneural-llm.so.*.*.*"),
-    ("symoneural-llm",      "symoneural-llm-*_*.ipk",      "usr/bin/symoneural-llm*"),
+    # two runtime packages carry the executables; a "symoneural-llm-*" glob would pick
+    # whichever -dev/-dbg/-src ipk is newest and report the runtime as missing
+    ("symoneural-llm-util",   "symoneural-llm-util_*.ipk",   "usr/bin/symoneural-llm-util"),
+    ("symoneural-llm",        "symoneural-llm-python_*.ipk", "usr/bin/symoneural-llm"),
     ("libllama",            "libllama[0-9]_*.ipk",         "usr/lib/libllama.so.*.*.*"),
     ("libggml",             "symoneural-ggml_*.ipk",       "usr/lib/libggml-base.so.*.*.*"),
 ]
