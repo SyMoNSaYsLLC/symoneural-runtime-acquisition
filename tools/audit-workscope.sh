@@ -89,7 +89,9 @@ for bb in glob.glob(os.path.join(ROOT, "meta-symoneural/recipes-*/*/*.bb")):
     srcrev = (re.findall(r'^SRCREV\s*=\s*"([^"]+)"', s, re.M) or [""])[0]
     pv     = (re.findall(r'^PV\s*=\s*"([^"]+)"', s, re.M) or [""])[0]
     tree   = (re.findall(r'^SYMON_TREE\s*=\s*"([^"]+)"', s, re.M) or [""])[0]
-    recipes[pn] = dict(path=bb, inherit=inh, srcrev=srcrev, pv=pv, tree=tree)
+    # components compiled INTO this recipe's output (symoneural-pristine SYMON_DEP_TREES "<name>:<component>")
+    deptrees = [tok.split(":", 1)[-1] for m in re.findall(r'^SYMON_DEP_TREES\s*=\s*"([^"]+)"', s, re.M) for tok in m.split()]
+    recipes[pn] = dict(path=bb, inherit=inh, srcrev=srcrev, pv=pv, tree=tree, deptrees=deptrees)
 
 def git_head(gitdir=None, worktree=None):
     cmd = ["git"]
@@ -155,10 +157,19 @@ def add_row(runtime, comp, sp, in_lock):
         for k, v in recipes.items():
             if v["tree"] and os.path.realpath(v["tree"]) == os.path.realpath(os.path.join(ROOT, sp)):
                 pn = k; break
+    via_dep = None
+    if pn is None:
+        for k, v in recipes.items():
+            if comp in v.get("deptrees", []):
+                pn = k; via_dep = k; break
     r = recipes.get(pn, {}) if pn else {}
     has_class = any(c in r.get("inherit", "") for c in BUILD_CLASSES)
     is_stub = bool(r) and not has_class
-    pinok = "?" if not (head and r.get("srcrev")) else ("ok" if head == r["srcrev"] else "MISMATCH")
+    if via_dep:
+        # a dependency tree's pin is the lock entry, verified at the consumer's do_unpack
+        pinok = "dep" if acquired else "MISMATCH"
+    else:
+        pinok = "?" if not (head and r.get("srcrev")) else ("ok" if head == r["srcrev"] else "MISMATCH")
 
     packaged = bool(pn) and pn in pkgdata
     n_pkg = packages_of(pn) if packaged else 0
@@ -171,9 +182,11 @@ def add_row(runtime, comp, sp, in_lock):
     elif is_ref:             status = cstate[comp]["state"] + (" -> " + cstate[comp]["provider"] if cstate[comp].get("provider") else "")
     elif is_stub:            status = "STUB — no build class"
     elif not r:              status = "NO RECIPE"
-    elif "symoneural-pristine" not in r.get("inherit", "") or pinok != "ok":
+    elif "symoneural-pristine" not in r.get("inherit", "") or pinok not in ("ok", "dep"):
         status = "FAIL: RECIPE CONTRACT"
         failures.append(comp + ": recipe contract")
+    elif via_dep and packaged: status = "BUILT INTO %s; NOT QA" % via_dep
+    elif via_dep:            status = "DEP TREE OF %s, NEVER PACKAGED" % via_dep
     elif packaged:           status = "PKGDATA EXISTS; NOT QA"
     else:                    status = "RECIPE, NEVER PACKAGED"
     if not is_ref and (is_stub or not r):
@@ -196,7 +209,7 @@ if csv:
     print("runtime,component,committed,head,acquired,recorded,recipe,pin,build_class,packages,status")
     for r in rows: print(",".join(r))
 else:
-    w = [10, 26, 36, 10, 4, 4, 32, 9, 6, 4, 24]
+    w = [10, 26, 36, 10, 4, 4, 32, 9, 6, 4, 34]
     hdr = ("RUNTIME","COMPONENT","COMMITTED","HEAD","ACQ","REC","RECIPE","PIN","CLASS","PKGS","STATUS")
     print("  ".join(h.ljust(x) for h, x in zip(hdr, w)))
     print("  ".join("-"*x for x in w))

@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""awcc-proof - isolated staged-install and executable proof for symoneural-awcc (Platform runtime).
+
+  tools/awcc-proof [--root /abs/NEW/dir] [--keep]
+
+A disposable root outside the estate is populated by the estate's own opkg from an indexed copy of
+the Platform package feed (dependency closure resolved by opkg), then the awcc executable is run
+THROUGH THE ROOT'S OWN LOADER with an empty environment: --version and --help are the meaningful
+operations available without Alienware hardware, the acpi_call module or a display. Every NEEDED
+library must resolve inside the root; no host library may be mapped. Exit 0 only when every check
+passes.
+"""
+import argparse
+import glob
+import hashlib
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from proof_support import new_root  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+PLATFORM = ROOT / "Symoneural-Platform"
+FAILS = []
+
+
+def say(line=""):
+    print(line, flush=True)
+
+
+def check(ok, what, detail=""):
+    say("  [%s] %s%s" % ("PASS" if ok else "FAIL", what, (" - " + detail) if detail else ""))
+    if not ok:
+        FAILS.append(what)
+    return ok
+
+
+def run(cmd, **kw):
+    kw.setdefault("capture_output", True)
+    kw.setdefault("text", True)
+    return subprocess.run(cmd, **kw)
+
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def ipk_control(ipk):
+    return subprocess.run("ar p '%s' control.tar.gz | tar -xzO ./control" % ipk, shell=True, capture_output=True, text=True).stdout
+
+
+def ipk_files(ipk):
+    r = subprocess.run("ar p '%s' data.tar.zst | zstd -dc | tar -t" % ipk, shell=True, capture_output=True, text=True)
+    return [l for l in r.stdout.splitlines() if l and not l.endswith("/")]
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--root")
+    ap.add_argument("--keep", action="store_true")
+    args = ap.parse_args()
+    bd = PLATFORM / "build" / "devtool-master"
+    tmpdir = str(bd / "tmp")
+    deploy = bd / "tmp/deploy/ipk"
+    say("# symoneural-awcc :: staged-install and executable proof (Platform, qemux86-64 / x86-64-v3)")
+    say("date      : %s" % time.strftime("%Y-%m-%d %H:%M:%S %z"))
+    say("host      : %s (%s); no Alienware hardware, acpi_call module or display is used" % (os.uname().release, os.uname().nodename and "hostname withheld"))
+
+    say("\n## 1. Source identity")
+    for comp in ("AWCC", "loguru", "json", "glfw", "imgui", "libusb-cmake", "stb"):
+        r = run([sys.executable, str(ROOT / "tools/ingest-tree"), "verify", comp], cwd=ROOT)
+        line = (r.stdout.strip().splitlines() or ["?"])[-1]
+        check(r.returncode == 0 and "VERIFIED" in line, "tools/ingest-tree verify %s" % comp, line.split("·")[1].strip() if "·" in line else line)
+
+    say("\n## 2. Package identity and contents")
+    pk = sorted(deploy.glob("*/symoneural-awcc_1.19.0-r*_*.ipk"))
+    if not check(len(pk) == 1, "exactly one symoneural-awcc ipk in the feed", pk[0].name if pk else "none"):
+        return finish()
+    ipk = pk[0]
+    say("    %s  %d B  sha256 %s" % (ipk.relative_to(ROOT), ipk.stat().st_size, sha256(ipk)))
+    ctrl = ipk_control(ipk)
+    for line in ctrl.splitlines():
+        if re.match(r"^(Package|Version|Architecture|License|Depends|Recommends|Source):", line):
+            say("    " + line)
+    check("License: GPL-3.0-only" in ctrl, "package declares GPL-3.0-only")
+    dep = re.search(r"^Depends: (.*)$", ctrl, re.M)
+    check(dep is not None and "libglvnd" in dep.group(1) and "libx11" in dep.group(1), "runtime dependencies name the estate GL dispatch and X11 libraries", dep.group(1) if dep else "-")
+    files = ipk_files(ipk)
+    for f in files:
+        say("    " + f)
+    check("./usr/bin/awcc" in files, "ships /usr/bin/awcc")
+    check("./etc/udev/rules.d/70-awcc.rules" in files and "./etc/awcc/database.json" in files, "ships the udev rules and the device database")
+    check(not any(re.search(r"\.a$|\.so(\.|$)|/include/|cmake", f) for f in files), "no static archive, shared library, header or cmake file leaks into the runtime package (vendored deps are inside the executable)")
+
+    say("\n## 3. Disposable root installed by the estate's opkg from an indexed copy of the feed")
+    root = new_root("Platform", args.root)
+    say("    root: %s" % root)
+    (root / "usr/lib").mkdir(parents=True)
+    os.symlink("usr/lib", root / "lib")
+    os.symlink("usr/bin", root / "bin") if not (root / "bin").exists() else None
+    (root / "usr/bin").mkdir(parents=True, exist_ok=True)
+    common = ROOT / "Symoneural-Common/build/devtool-master/tmp/sysroots-components/x86_64"
+    opkg = common / "opkg-native/usr/bin/opkg"
+    env = dict(os.environ, LD_LIBRARY_PATH="%s:%s" % (common / "opkg-native/usr/lib", common / "libsolv-native/usr/lib"))
+    feed = root / "tmp/feed"
+    feed.mkdir(parents=True)
+    index = []
+    for f in sorted(deploy.glob("*/*.ipk")):
+        os.symlink(f, feed / f.name)
+        index.append(ipk_control(f).strip() + "\nFilename: %s\nSize: %d\nSHA256sum: %s\n" % (f.name, f.stat().st_size, sha256(f)))
+    (feed / "Packages").write_text("\n".join(index) + "\n")
+    say("    feed: %d packages indexed from %s" % (len(index), deploy.relative_to(ROOT)))
+    conf = root / "tmp/opkg.conf"
+    conf.write_text("arch all 1\narch qemux86_64 9\narch x86-64-v3 5\narch x86_64 3\narch noarch 2\nsrc feed file://%s\n" % feed)
+    r = run([str(opkg), "-o", str(root), "-f", str(conf), "--volatile-cache", "update"], env=env)
+    check(r.returncode == 0, "opkg update")
+    r = run([str(opkg), "-o", str(root), "-f", str(conf), "--volatile-cache", "install", "symoneural-awcc"], env=env)
+    installing = [l for l in (r.stdout + r.stderr).splitlines() if l.startswith("Installing")]
+    say("    $ opkg -o <root> install symoneural-awcc -> rc=%d; %d packages installed" % (r.returncode, len(installing)))
+    for l in installing[:40]:
+        say("    | " + l)
+    bad = [l for l in (r.stdout + r.stderr).splitlines() if "problem" in l.lower() or "nothing provides" in l or "error" in l.lower()]
+    for l in bad[:8]:
+        say("    ! " + l)
+    check(r.returncode == 0, "opkg install rc=0 (dependency closure resolved from the feed)")
+    exe = root / "usr/bin/awcc"
+    check(exe.exists(), "awcc present in the root")
+    if not exe.exists():
+        return finish(root, args)
+
+    say("\n## 4. Executable: ELF facts, NEEDED closure inside the root, leakage")
+    h = run(["readelf", "-h", str(exe)]).stdout
+    check("Advanced Micro Devices X86-64" in h and "ELF64" in h, "ELF64 x86-64 executable")
+    dyn = run(["readelf", "-d", str(exe)]).stdout
+    needed = re.findall(r"Shared library: \[([^\]]+)\]", dyn)
+    say("    NEEDED: %s" % " ".join(needed))
+    interp = re.search(r"interpreter: (\S+)\]", run(["readelf", "-l", str(exe)]).stdout)
+    check(interp is not None, "program interpreter recorded", interp.group(1) if interp else "-")
+    check("libevdev" not in " ".join(needed) and "libusb" not in " ".join(needed) and "libglfw" not in " ".join(needed),
+          "libevdev, libusb and glfw are inside the executable (no NEEDED on them)")
+    runpath = re.search(r"\((RUNPATH|RPATH)\)\s+Library r\w+path: \[([^\]]+)\]", dyn)
+    check(runpath is None, "no RPATH/RUNPATH", runpath.group(2) if runpath else "none")
+    needles = [tmpdir, str(ROOT), "/home/google", "https://github.com/tr1xem"]
+    strings = run(["strings", "-a", str(exe)]).stdout.splitlines()
+    for n in needles[:3]:
+        hits = [l for l in strings if n in l]
+        check(not hits, "no string contains %r" % n, ("%d hit(s), e.g. %s" % (len(hits), hits[0][:100])) if hits else "0 hits")
+    for what, word in (("hostname", os.uname().nodename), ("login", os.environ.get("USER") or "google")):
+        rx = re.compile(r"(?<![A-Za-z0-9_])%s(?![A-Za-z0-9_-])" % re.escape(word))
+        hits = [l for l in strings if rx.search(l)]
+        check(not hits, "no whole-word occurrence of the %s" % what, ("%d hit(s), e.g. %s" % (len(hits), hits[0][:100])) if hits else "0 hits")
+    # every NEEDED library must resolve inside the root through the root's own loader
+    ld = root / interp.group(1).lstrip("/") if interp else None
+    libpath = "%s:%s:%s" % (root / "usr/lib", root / "lib", root / "usr/lib/x86_64-linux-gnu")
+    if check(ld is not None and ld.exists(), "root's loader present at %s" % (interp.group(1) if interp else "?")):
+        r = run([str(ld), "--library-path", libpath, "--list", str(exe)], env={})
+        maps = [l.strip() for l in r.stdout.splitlines() if "=>" in l]
+        outside = [l for l in maps if "=> /" in l and not l.split("=>")[1].strip().startswith(str(root))]
+        for l in maps:
+            say("    " + l.replace(str(root), "<root>"))
+        check(r.returncode == 0 and maps and not outside and "not found" not in r.stdout, "every NEEDED library resolves inside the root", "%d outside" % len(outside))
+
+    say("\n## 5. The executable runs from the root (no hardware, no /proc/acpi/call, no display)")
+    say("    upstream design: awcc resolves its devices (libusb scan, /etc/awcc/database.json, acpi_call) BEFORE it")
+    say("    parses --version/--help, so without Alienware hardware every invocation exits 1 after logging. The")
+    say("    proof is therefore: the binary starts through the root's loader, reaches AWCC's own code (its loguru")
+    say("    lines name LightFX.cpp / AcpiUtils.cpp), and fails only at device resolution - never at loading.")
+    for label, cmd, env in (
+        ("root loader, empty environment", [str(ld), "--library-path", libpath, str(exe), "--version"], {"PATH": str(root / "usr/bin"), "HOME": str(root)}),
+        ("chroot into the root (unshare -Ur), packaged /etc/awcc read", ["unshare", "-Ur", "/usr/sbin/chroot", str(root), "/usr/bin/awcc", "--version"], {"PATH": "/usr/bin:/bin", "HOME": "/"})):
+        r = run(cmd, env=env, timeout=60)
+        out = (r.stdout + r.stderr).strip()
+        say("    $ awcc --version [%s] -> rc=%d" % (label, r.returncode))
+        for l in out.splitlines()[:8]:
+            say("    | " + l[:150])
+        check("cannot open shared object" not in out and "No such file or directory" not in out.split("\n")[0] and "Segmentation" not in out and "Illegal instruction" not in out,
+              "%s: no loader, missing-library or crash message" % label)
+        check(re.search(r"(LightFX|AcpiUtils|Daemon|helper|Thermals)\.cpp:\d+", out) is not None,
+              "%s: AWCC's own code ran (loguru lines from its sources)" % label)
+        if "chroot" in label:
+            check(r.returncode != 127 and "Failed to find database.json" not in out,
+                  "chroot: the packaged /etc/awcc/database.json is found (config read from the root, not the host)", "rc=%d" % r.returncode)
+    say("    daemon (-d), GUI, thermal/lighting control and a successful --help: NOT TESTED / not reachable without the acpi_call")
+    say("    kernel module, Alienware USB devices (vendor 187c) and a display - recorded boundaries (docs/platform/AWCC.md section 5)")
+    return finish(root, args)
+
+
+def finish(root=None, args=None):
+    say("\n## Result")
+    for f in FAILS:
+        say("  - FAILED: " + f)
+    if root is not None:
+        if args is not None and args.keep:
+            say("root kept at %s" % root)
+        else:
+            shutil.rmtree(root, ignore_errors=True)
+            say("root removed: %s" % root)
+    say("RESULT: %s" % ("FAIL" if FAILS else "PASS"))
+    return 1 if FAILS else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

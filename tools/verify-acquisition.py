@@ -75,7 +75,9 @@ def source_failures(records):
         if rec.get("worktree") != "clean":
             errors.append("acquired worktree is not clean: " + path)
         revision = rec.get("recipe_SRCREV")
-        if revision not in (None, "NOT-APPLICABLE") and revision != rec.get("commit_sha"):
+        # "SYMON_DEP_TREES:<consumer>": the tree has no recipe of its own; it is compiled into the
+        # consumer, whose do_unpack verifies THIS lock entry (symoneural-pristine). The pin is the lock.
+        if revision not in (None, "NOT-APPLICABLE") and not str(revision).startswith("SYMON_DEP_TREES:") and revision != rec.get("commit_sha"):
             errors.append("recipe SRCREV differs from pin: " + path)
         for sub in rec.get("submodules", []):
             if sub.get("content_check") != "AT-RECORDED-TREE" or sub.get("gitlink_check") != "GITLINK-VERIFIED":

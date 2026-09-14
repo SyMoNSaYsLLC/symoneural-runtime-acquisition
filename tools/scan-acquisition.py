@@ -32,6 +32,20 @@ def recipe_for(abspath):
             if m and m.group(1).rstrip("/") == want:
                 return os.path.basename(rp).split("_")[0], rp, retired
     return None, None, False
+def dep_consumer_for(component):
+    """The meta-symoneural recipe that consumes this component as a DEPENDENCY TREE
+    (symoneural-pristine SYMON_DEP_TREES = "<name>:<component> ..."): such a tree has no recipe
+    of its own - it is compiled into the consumer - and its declared pin IS the lock entry,
+    enforced at the consumer's do_unpack by tools/ingest-tree verify. Returns (pn, path, retired)."""
+    for pattern, retired in (("meta-symoneural/recipes-*/*/*.bb", False),
+                             ("meta-symoneural/retired/*/*.bb", True)):
+        for rp in sorted(glob.glob(os.path.join(ROOT, pattern))):
+            try: txt = open(rp, encoding="utf-8", errors="ignore").read()
+            except OSError: continue
+            m = re.search(r'^SYMON_DEP_TREES\s*=\s*"([^"]+)"', txt, re.M)
+            if m and any(tok.split(":", 1)[-1] == component for tok in m.group(1).split()):
+                return os.path.basename(rp).split("_")[0], rp, retired
+    return None, None, False
 
 def fields(rp):
     if not rp: return {}
@@ -89,14 +103,25 @@ sub = {"schema": "symoneural-submodule-lock/3",
 for c in COMPS:
     p, rel = c["abspath"], c["source_path"]
     rec, rp, retired = recipe_for(p)
+    via_dep = False
+    if rec is None:
+        rec, rp, retired = dep_consumer_for(c["component"])
+        via_dep = rec is not None
     f = fields(rp)
     head = git_at(p, "rev-parse", "HEAD")
     tree = git_at(p, "rev-parse", head + "^{tree}") if head else ""
     dirty = git(p, "status", "--short").splitlines() if has_intree_git(p) else estate_dirty(rel)
-    decl = f.get("SRCREV")
-    state = ("UNKNOWN" if not head else
-             "MISMATCH" if (decl and decl != head) else
-             "VERIFIED" if decl == head else "UNRESOLVED")
+    if via_dep:
+        # the consumer's SRCREV is ITS tree's pin; this tree is pinned by the lock entry, which
+        # the consumer's build verifies (symoneural-pristine symon_export_dep_trees)
+        decl = "SYMON_DEP_TREES:" + rec
+        f = {}   # the consumer's PV/LICENSE are its own, not this tree's
+        state = "UNKNOWN" if not head else "VERIFIED"
+    else:
+        decl = f.get("SRCREV")
+        state = ("UNKNOWN" if not head else
+                 "MISMATCH" if (decl and decl != head) else
+                 "VERIFIED" if decl == head else "UNRESOLVED")
     pin = pin_path(rel)
     pins_path = os.path.relpath(pin, ROOT) if pin and os.path.isdir(pin) else "IN-TREE"
     prev = AUTH.get(rel, {})
