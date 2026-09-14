@@ -6,11 +6,18 @@
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 comp=$1
+sp=$(python3 -c "import json,sys; print([c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]['source_path'])" "$comp") || exit 1
 out=$(python3 tools/ingest-tree ingest "$comp" 2>&1); rc=$?
 printf '%s\n' "$out"
-[ $rc -eq 0 ] || { echo "INGEST FAILED rc=$rc - nothing committed"; exit $rc; }
+if [ $rc -ne 0 ]; then
+    # a failed ingest may have left the index with the path removed (rm --cached) or
+    # half read; put the index back to HEAD for that path so no later commit can
+    # record the failure as a deletion. Lock files are not saved on failure.
+    git reset -q -- "$sp" 2>/dev/null
+    echo "INGEST FAILED rc=$rc - index restored to HEAD for $sp, nothing committed"
+    exit $rc
+fi
 line=$(printf '%s\n' "$out" | tail -1)               # "<comp> · <sha12> · N files · STATUS"
-sp=$(python3 -c "import json,sys; print([c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]['source_path'])" "$comp")
 excl=$(python3 -c "import json,sys; e=[c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]; print(' · '.join('EXCLUDED '+x['path'] for x in e.get('excluded',[])))" "$comp")
 git add acquisition/source-lock.json acquisition/submodule-lock.json || exit 1
 msg="acquired source: $line"

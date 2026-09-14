@@ -54,7 +54,10 @@ class Fail(Exception):
 def git(*args, cwd=None, gitdir=None, env=None, check=True, index=None):
     cmd = ["git"]
     if gitdir:
-        cmd.append("--git-dir=" + str(gitdir))
+        # a submodule repo moved out from under its parent keeps a RELATIVE
+        # core.worktree that now points nowhere, and git refuses to start ("cannot
+        # chdir"). Nothing here touches a work tree, so name one that exists.
+        cmd += ["--git-dir=" + str(gitdir), "--work-tree=/"]
     cmd += ["-c", "gc.auto=0"] + list(args)
     e = dict(os.environ)
     if env:
@@ -93,29 +96,41 @@ def pins_dir(source_path):
 
 
 def obj_exists(sha, gitdir=None):
-    return subprocess.run(["git"] + (["--git-dir=" + str(gitdir)] if gitdir else []) + ["cat-file", "-e", sha],
+    return subprocess.run(["git"] + (["--git-dir=" + str(gitdir), "--work-tree=/"] if gitdir else []) + ["cat-file", "-e", sha],
                           cwd=ROOT, capture_output=True).returncode == 0
 
 
 def import_tree(pin, commit):
-    """Bring <commit>'s tree and blobs from a pin repository into this one, without
-    its history. An orphan commit wrapping the tree is fetched by ref; only what it
-    reaches crosses over, and nothing under refs/ is created here."""
+    """Bring <commit>'s tree and every blob under it from a pin repository into this
+    one - objects only, no history, no refs, and nothing written into the pin.
+    rev-list enumerates the tree's closure, pack-objects streams it, index-pack
+    stores it here. All three exit codes are checked; a pipeline's last status
+    alone would hide a failure in the first two."""
     tree = git("rev-parse", commit + "^{tree}", gitdir=pin)
     if obj_exists(tree):
         return tree
-    orphan = git("commit-tree", tree, "-m", "symoneural pin %s" % commit, gitdir=pin, env=PIN_ENV)
-    ref = "refs/symoneural/pin-" + commit
-    git("update-ref", ref, orphan, gitdir=pin)
-    git("fetch", "--quiet", "--no-tags", "--no-write-fetch-head", str(ROOT / pin), ref)
+    base = ["git", "--git-dir=" + str(ROOT / pin), "--work-tree=/", "-c", "gc.auto=0"]
+    p1 = subprocess.Popen(base + ["rev-list", "--objects", tree], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=ROOT)
+    p2 = subprocess.Popen(base + ["pack-objects", "--stdout", "-q"], stdin=p1.stdout, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, cwd=ROOT)
+    p3 = subprocess.Popen(["git", "-c", "gc.auto=0", "index-pack", "--stdin", "--fix-thin"], stdin=p2.stdout,
+                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=ROOT)
+    p1.stdout.close(); p2.stdout.close()
+    _out3, err3 = p3.communicate()
+    err1 = p1.stderr.read(); p1.wait()
+    err2 = p2.stderr.read(); p2.wait()
+    if p1.returncode or p2.returncode or p3.returncode:
+        raise Fail("object transfer from %s failed: rev-list rc=%d %s | pack-objects rc=%d %s | index-pack rc=%d %s"
+                   % (pin, p1.returncode, err1.decode()[-300:], p2.returncode, err2.decode()[-300:],
+                      p3.returncode, err3.decode()[-300:]))
     if not obj_exists(tree):
-        raise Fail("fetched %s from %s but tree %s is still absent" % (ref, pin, tree))
+        raise Fail("transferred objects from %s but tree %s is still absent" % (pin, tree))
     return tree
 
 
 def gitmodules_map(gitdir, commit):
     """path -> (section name, url) from the .gitmodules AT THAT COMMIT."""
-    out = subprocess.run(["git", "--git-dir=" + str(gitdir), "show", commit + ":.gitmodules"],
+    out = subprocess.run(["git", "--git-dir=" + str(gitdir), "--work-tree=/", "show", commit + ":.gitmodules"],
                          cwd=ROOT, capture_output=True, text=True)
     m = {}
     if out.returncode:
@@ -287,14 +302,21 @@ def cmd_ingest(comp):
                 findings.append("%s: no local pin for %s; committed content kept unverified" % (rel, sha[:12]))
             rec = next((e for e in sub_lock["entries"] if e["owner_component"] == comp and e["submodule_path"] == rel), None)
             if rec and rec["commit_sha"] != sha:
-                findings.append("%s: submodule-lock says %s, upstream gitlink says %s" % (rel, rec["commit_sha"][:12], sha[:12]))
+                if len(rec["commit_sha"]) == 39 and sha.endswith(rec["commit_sha"]):
+                    # the earlier scanner dropped the first character of `git submodule
+                    # status` output (state prefix + sha, stripped one too many)
+                    findings.append("%s: submodule-lock held a 39-char sha %s; repaired to %s from the gitlink"
+                                    % (rel, rec["commit_sha"][:11], sha[:12]))
+                    rec["commit_sha"] = sha
+                else:
+                    findings.append("%s: submodule-lock says %s, upstream gitlink says %s" % (rel, rec["commit_sha"][:12], sha[:12]))
             if not rec:
                 sub_lock["entries"].append({
                     "commit_sha": sha, "configured_url": url, "gitmodules_section": name,
                     "identity": "%s::%s" % (sp, rel), "init_state": "AT-RECORDED-COMMIT",
                     "owner_component": comp, "owner_runtime": ent.get("runtime", ""),
                     "owner_source_path": sp, "status": "RECORDED-AT-INGEST", "submodule_path": rel})
-            git("rm", "-r", "--cached", "-q", "--", path)
+            git("rm", "-r", "--cached", "-q", "-f", "--", path)
             git("read-tree", "--prefix=%s/" % path, sub_tree)
             subs.append({"path": rel, "commit_sha": sha, "tree_sha": sub_tree,
                          "pins_path": os.path.relpath(subpin, ROOT) if subpin and os.path.isabs(subpin) else subpin,
@@ -320,25 +342,42 @@ def cmd_ingest(comp):
     # working tree must equal the index: nothing to check out if it already does
     # porcelain v1: column X is index-vs-HEAD (every file is "A" here, that is the
     # point), column Y is WORKTREE-vs-index - the only column this check is about.
+    # Y can be a false positive: a file upstream stores with CRLF under `text
+    # eol=crlf` is normalised on the way in and never compares equal, although the
+    # bytes on disk ARE the blob. So the decision is made on raw bytes
+    # (hash-object --no-filters), never on status alone.
+    def raw_mismatches(paths):
+        if not paths:
+            return []
+        idx = {}
+        for l in git("ls-files", "-s", "-z", "--", *paths).split("\0"):
+            if l:
+                meta, _, pth = l.partition("\t")
+                idx[pth] = meta.split()[1]
+        got = git("hash-object", "--no-filters", "--", *paths).splitlines()
+        return [pth for pth, h in zip(paths, got) if idx.get(pth) != h]
+
     st = git("status", "--porcelain", "--untracked-files=all", "--", sp)
     lines = [l for l in st.splitlines() if l.startswith("??") or l[1:2] != " "]
     if lines:
         tracked = [l[3:] for l in lines if not l.startswith("??")]
         untracked = [l[3:] for l in lines if l.startswith("??")]
-        report.append("WT    %d tracked path(s) differ from upstream's tree, %d untracked file(s) present"
-                      % (len(tracked), len(untracked)))
-        for l in lines[:10]:
-            report.append("        " + l)
-        if tracked:
-            git("checkout", "--", *tracked)
-            report.append("WT    checked out %d path(s) from the index so the tree equals upstream" % len(tracked))
         if untracked:
             raise Fail("%d untracked file(s) inside %s - the acquired tree is not clean:\n%s"
                        % (len(untracked), sp, "\n".join(untracked[:20])))
-        st2 = [l for l in git("status", "--porcelain", "--untracked-files=all", "--", sp).splitlines()
-               if l.startswith("??") or l[1:2] != " "]
-        if st2:
-            raise Fail("working tree still differs from index under %s:\n%s" % (sp, "\n".join(st2[:20])))
+        bad = raw_mismatches(tracked)
+        same = len(tracked) - len(bad)
+        if same:
+            report.append("WT    %d path(s) flagged by status are byte-identical to upstream's blobs "
+                          "(eol/attribute normalisation); left untouched" % same)
+        if bad:
+            report.append("WT    %d path(s) differ from upstream's blobs in raw bytes; checking out from the index:" % len(bad))
+            for b in bad[:10]:
+                report.append("        " + b)
+            git("checkout", "--", *bad)
+            still = raw_mismatches(bad)
+            if still:
+                raise Fail("working tree still differs from upstream's blobs under %s:\n%s" % (sp, "\n".join(still[:20])))
 
     # h  RECORD ---------------------------------------------------------------
     save(LOCK, lock)
