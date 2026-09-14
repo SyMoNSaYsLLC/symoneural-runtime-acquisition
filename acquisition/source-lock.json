@@ -328,7 +328,7 @@
       "declared_version_PV": "8.5.0",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/web/.gitpins/click.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "BSD-3-Clause",
       "recipe_SRCREV": "8b19813f2bfca99f1018a587a8cf54fc959f2e5d",
