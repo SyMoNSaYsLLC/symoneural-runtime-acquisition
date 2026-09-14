@@ -311,6 +311,17 @@ export MAX_JOBS = "12"
 # python sources, and might not be 100% accurate.
 RDEPENDS:${PN} += "python3-core"
 
+# torch 2.14 wheel Requires-Dist, evaluated for the target - all seven are
+# unconditional (no marker): filelock, typing-extensions>=4.10.0,
+# setuptools>=77.0.3, sympy>=1.13.3, networkx>=2.5.1, jinja2, fsspec>=0.8.5.
+# OE does not derive RDEPENDS from wheel metadata; the recipe must. Every
+# provider is estate-owned ("own what you ship"): setuptools, networkx and jinja2
+# were acquired 2026-09-14 for exactly this edge rather than borrowed from a
+# layer. Checked by tools/check-python-runtime-closures.py --runtime Common.
+RDEPENDS:${PN} += "symoneural-typing-extensions symoneural-sympy \
+    symoneural-filelock symoneural-fsspec \
+    symoneural-setuptools symoneural-networkx symoneural-jinja2"
+
 # WARNING: We were unable to map the following python package/module
 # dependencies to the bitbake packages which include them:
 #    PIL
