@@ -1,0 +1,41 @@
+name: Tests for TPCH Queries
+
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - .github/workflows/check_tpch_queries.yml
+      - pyproject.toml
+      - uv.lock
+
+env:
+  PY_COLORS: 1
+  UV_LOCKED: 1
+  UV_NO_DEV: 1
+
+permissions:
+  contents: read
+
+jobs:
+  validate-queries:
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: "true"
+          cache-suffix: ${{ matrix.python-version }}
+          cache-dependency-glob: "pyproject.toml"
+      - name: generate-data
+        run: make run-ci DEPS="--extra dask --extra pandas --group core-tests" CMD="--module tpch.generate_data --debug"
+      - name: tpch-tests
+        run: make run-ci DEPS="--extra dask --extra pandas --group core-tests" CMD="pytest tpch/tests -s"

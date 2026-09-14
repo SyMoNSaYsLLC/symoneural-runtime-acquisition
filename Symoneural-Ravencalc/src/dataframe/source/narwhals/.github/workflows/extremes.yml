@@ -1,0 +1,143 @@
+name: Min, old, and nightly versions
+
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - .github/workflows/extremes.yml
+      - pyproject.toml
+      - uv.lock
+
+env:
+  PY_COLORS: 1
+  PYTEST_ADDOPTS: "--numprocesses=logical"
+  UV_LOCKED: 1
+  UV_NO_DEV: 1
+
+permissions:
+  contents: read
+
+jobs:
+  minimum_versions:
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: "true"
+          cache-suffix: min-versions-${{ matrix.python-version }}
+          cache-dependency-glob: "pyproject.toml"
+      - name: Run pytest
+        run: make run-ci DEPS="--group extreme-minimum-versions --group plugins" CMD="pytest tests --cov=src --cov=tests --cov-fail-under=50 --runslow --constructors=pandas,pyarrow,polars[eager],polars[lazy],duckdb"
+
+  pretty_old_versions:
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: "true"
+          cache-suffix: pretty-old-versions-${{ matrix.python-version }}
+          cache-dependency-glob: "pyproject.toml"
+      - name: Run pytest
+        run: make run-ci DEPS="--group extreme-pretty-old-versions --group plugins" CMD="pytest tests --cov=src --cov=tests --cov-fail-under=50 --runslow --constructors=pandas,pyarrow,polars[eager],polars[lazy],duckdb"
+
+  not_so_old_versions:
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: "true"
+          cache-suffix: not-so-old-versions-${{ matrix.python-version }}
+          cache-dependency-glob: "pyproject.toml"
+      - name: Run pytest
+        run: make run-ci DEPS="--group extreme-not-so-old-versions --group plugins" CMD="pytest tests --cov=src --cov=tests --cov-fail-under=50 --runslow --constructors=pandas,pyarrow,polars[eager],polars[lazy],dask,duckdb"
+
+  nightlies:
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      UV_LOCKED: 0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: "true"
+          cache-suffix: nightlies-${{ matrix.python-version }}
+          cache-dependency-glob: "pyproject.toml"
+      # Manually install pre-releases as it's not possible to specify pre-releases per index
+      # See: https://github.com/astral-sh/uv/issues/15780
+      - name: Create venv
+        run: uv venv --python ${{ matrix.python-version }}
+      - name: install-reqs
+        run: uv pip install -e . --group tests --group plugins
+      - name: install polars pre-release
+        run: |
+          uv pip uninstall polars
+          uv pip install -U --pre polars
+      - name: install-pandas-nightly
+        run: |
+          uv pip uninstall pandas
+          uv pip install pandas --pre --index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple -U
+      - name: install pyarrow nightly
+        run: |
+          uv pip uninstall pyarrow
+          uv pip install pyarrow --pre --index https://pypi.fury.io/arrow-nightlies/ -U
+      - name: install numpy nightly
+        run: |
+          uv pip uninstall numpy
+          uv pip install numpy --pre --index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple -U
+      - name: install dask
+        run: |
+          uv pip uninstall dask dask-expr
+          uv pip install "git+https://github.com/dask/dask[dataframe]"
+      - name: install duckdb nightly
+        run: |
+          uv pip uninstall duckdb
+          uv pip install -U --pre duckdb
+      - name: show-deps
+        run: uv pip freeze
+      - name: Assert nightlies dependencies
+        run: |
+          DEPS=$(uv pip freeze)
+          echo "$DEPS" | grep -E 'pandas.*(dev|rc|\+)'
+          echo "$DEPS" | grep 'pyarrow.*dev'
+          echo "$DEPS" | grep 'numpy.*dev'
+          echo "$DEPS" | grep 'dask.*@'
+      - name: Run pytest
+        run: |
+          uv run --no-sync pytest tests --cov=src --cov=tests --cov-fail-under=50 --runslow \
+          --constructors="pandas,pandas[nullable],pandas[pyarrow],pyarrow,polars[eager],polars[lazy],dask,duckdb"
