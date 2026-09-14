@@ -16,3 +16,10 @@ PV = "3.00"
 SRCREV = "77de509f0268f44ee587b5a4d9f0d680e269fcae"
 
 inherit python_setuptools_build_meta
+# pycparser 3.00 declares [build-system] requires = ["setuptools>=69", "wheel"];
+# python_setuptools_build_meta stages only python3-setuptools-native, so
+# pyproject-build --no-isolation aborted its dependency check with
+#   ERROR Unmet dependencies ... wheel  wanted: any  found: not installed
+# wheel is BUILD tooling, never shipped, so the estate rule "own what you ship;
+# borrow what you only build with" makes the OE-Core copy the correct provider.
+DEPENDS += "python3-wheel-native"

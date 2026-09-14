@@ -36,7 +36,10 @@ from packaging.utils import canonicalize_name
 
 ROOT = "/home/google/SymonSaysLLC"
 BOOT = os.path.expanduser("~/symoneural-bootstrap-master")
-RUNTIMES = sorted(d.replace("Symoneural-", "") for d in os.listdir(ROOT) if d.startswith("Symoneural-"))
+# isdir matters: Symoneural-Runtime-Aquisition.md is a generated FILE at the repo
+# root and was being enumerated as a thirteenth runtime.
+RUNTIMES = sorted(d.replace("Symoneural-", "") for d in os.listdir(ROOT)
+                  if d.startswith("Symoneural-") and os.path.isdir(os.path.join(ROOT, d)))
 
 STATUS_FATAL = ("MISSING RDEPENDS", "MISSING PACKAGE", "WRONG VERSION", "UNKNOWN PROVIDER",
                 "DUPLICATE PROVIDER", "UNRESOLVED SOURCE OWNERSHIP")
@@ -306,12 +309,23 @@ def main():
                 inst_ok = None
                 if a.root:
                     inst_ok = bool(inst) and (not req.specifier or req.specifier.contains(Version(inst), prereleases=True))
+                # Two packages in the FEED can supply this distribution. That is only a
+                # defect when nothing settles which one ships. A layer copy is routinely
+                # built as borrowed build tooling for another runtime (python3-attrs is
+                # pulled in by hatch-vcs in the API and Ravencalc trees) while the estate
+                # ships its own - exactly the "own what you ship; borrow what you only
+                # build with" rule. So a recorded SYMONEURAL-OWNED decision plus an estate
+                # recipe resolves it, and the duplicate stays fatal only when unrecorded.
                 dup = len({c[1] for c in cands if feeds.get(c[1])}) > 1
+                dup_ruled = dup and bool(sym) and decision == "SYMONEURAL-OWNED"
+                if dup_ruled:
+                    others = sorted({c[1] for c in cands if feeds.get(c[1])} - {package})
+                    authority += " (feed also holds %s as build tooling; ruled)" % ", ".join(others)
                 if provider == "UNKNOWN":
                     status = "UNKNOWN PROVIDER"
                 elif authority.startswith("UNRESOLVED"):
                     status = "UNRESOLVED SOURCE OWNERSHIP"
-                elif dup:
+                elif dup and not dup_ruled:
                     status = "DUPLICATE PROVIDER"
                 elif not in_rdepends:
                     status = "MISSING RDEPENDS"
