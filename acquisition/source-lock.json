@@ -2236,7 +2236,7 @@
    "declared_version_PV": "3.6.1",
    "excluded": [],
    "lock_state": "VERIFIED",
-   "pins_path": "IN-TREE",
+   "pins_path": "Symoneural-Common/src/util/.gitpins/networkx.git",
    "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
    "recipe_LICENSE": "BSD-3-Clause",
    "recipe_SRCREV": "7530809bfa1ea7ed6fdf918a4d1431488953cb1f",
