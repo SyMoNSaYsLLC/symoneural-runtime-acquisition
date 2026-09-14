@@ -1171,7 +1171,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/vllm-project/vllm",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "d105bc357a256379b4132d47e4ed477d83c27977",
+      "pins_path": "Symoneural-LLM/src/inference/.gitpins/vllm.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Live/build/devtool-workspace/appends/symoneural-gstreamer_git.bbappend",
