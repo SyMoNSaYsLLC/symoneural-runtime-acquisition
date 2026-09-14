@@ -80,6 +80,10 @@ add runs this repository's ignore rules and upstream's own `.gitignore` over the
 files and silently drops them (10 of the first 13 trees went in short that way;
 pytorch alone lost 151 files, all `.pt` fixtures and other ignore-pattern hits).
 
+Seven upstream `.bat` files are stored with CRLF *and* marked `text eol=crlf`, so
+`git status` flags them although their bytes equal the blob; after a fresh clone run
+`cat tools/worktree-attributes >> .git/info/attributes` to silence exactly those.
+
 Tools: `tools/ingest-tree {ingest|verify|pins} <component>` ·
 `tools/ingest-and-commit <component>` · `tools/audit-workscope.sh` (stage 0 COMMITTED).
 

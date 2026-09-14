@@ -1,0 +1,7 @@
+# worktree-attributes - local attribute overrides for a clone of this repository.
+# Upstream marks these files 'text eol=crlf' and ALSO stores them with CRLF, so git
+# status reports them modified forever although the bytes on disk equal the blob
+# (verified: hash-object --no-filters == index sha). A root .gitattributes cannot
+# win over upstream's nearer one; .git/info/attributes can, but is not cloned.
+# After a fresh clone:   cat tools/worktree-attributes >> .git/info/attributes
+# Regenerate the list only from a byte-identical worktree (tools/ingest-tree).
