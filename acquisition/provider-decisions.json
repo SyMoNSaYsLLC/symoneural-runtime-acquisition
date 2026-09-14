@@ -137,12 +137,36 @@
       "source": "Symoneural-CLI/src/text/source/docstring-parser @ 0.18.0"
     },
     {
+      "consumers": "huggingface-hub >=3.10.0",
+      "distribution": "filelock",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 3.32.6; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/filelock @ 3.32.6"
+    },
+    {
+      "consumers": "huggingface-hub >=2023.5.0",
+      "distribution": "fsspec",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 2026.7.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/fsspec @ 2026.7.0"
+    },
+    {
       "consumers": "httpcore >=0.16; uvicorn >=0.8",
       "distribution": "h11",
       "rationale": "Runtime-shipped by API wheels; acquired at v0.16.0; layer copies are not the provider.",
       "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
       "selected_provider": "SYMONEURAL-OWNED",
       "source": "Symoneural-API/src/http/source/h11 @ v0.16.0"
+    },
+    {
+      "consumers": "huggingface-hub <2.0.0,>=1.5.2",
+      "distribution": "hf-xet",
+      "rationale": "Runtime-shipped by Common wheels; acquired at v1.6.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/ml/source/hf-xet (hf_xet/) @ v1.6.0"
     },
     {
       "consumers": "httpx2",
@@ -225,6 +249,14 @@
       "source": "Symoneural-CLI/src/telemetry/source/opentelemetry-python (opentelemetry-api/) @ v1.44.0"
     },
     {
+      "consumers": "huggingface-hub >=20.9; transformers >=20.0",
+      "distribution": "packaging",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 26.3; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/packaging @ 26.3"
+    },
+    {
       "consumers": "cffi",
       "distribution": "pycparser",
       "rationale": "Runtime-shipped by CLI wheels; acquired at release_v3.00; layer copies are not the provider. Layer oe-core copy is not the provider.",
@@ -257,12 +289,28 @@
       "source": "Symoneural-CLI/src/http/source/python-multipart @ 0.0.32"
     },
     {
+      "consumers": "huggingface-hub >=5.1; transformers >=5.1",
+      "distribution": "pyyaml",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 6.0.3; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/data/source/pyyaml @ 6.0.3"
+    },
+    {
       "consumers": "jsonschema >=0.28.4; jsonschema-specifications >=0.31.0",
       "distribution": "referencing",
       "rationale": "Runtime-shipped by CLI wheels; acquired at v0.37.0; layer copies are not the provider. Layer oe-core copy is not the provider.",
       "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
       "selected_provider": "SYMONEURAL-OWNED",
       "source": "Symoneural-CLI/src/json/source/referencing @ v0.37.0"
+    },
+    {
+      "consumers": "transformers >=2025.10.22",
+      "distribution": "regex",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 2026.9.10; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/text/source/regex @ 2026.9.10"
     },
     {
       "consumers": "jsonschema >=0.25.0; referencing >=0.7.0",
@@ -297,12 +345,28 @@
       "source": "Symoneural-Ravencalc/src/*/source/threadpoolctl"
     },
     {
+      "consumers": "huggingface-hub >=4.42.1; transformers >=4.60",
+      "distribution": "tqdm",
+      "rationale": "Runtime-shipped by Common wheels; acquired at v4.70.1; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/tqdm @ v4.70.1"
+    },
+    {
       "consumers": "httpx2 >=0.10; httpcore2 >=0.10",
       "distribution": "truststore",
       "rationale": "Runtime-shipped by CLI wheels; acquired at v0.10.4; no layer copy exists.",
       "ruling": "provider-decisions.json rule 'own what you ship'",
       "selected_provider": "SYMONEURAL-OWNED",
       "source": "Symoneural-CLI/src/tls/source/truststore @ v0.10.4"
+    },
+    {
+      "consumers": "transformers",
+      "distribution": "typer",
+      "rationale": "Runtime-shipped by Common wheels; acquired at 0.27.2; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/typer @ 0.27.2"
     },
     {
       "consumers": "fastapi >=4.8.0; pydantic >=4.14.1; anthropic-sdk-python <5,>=4.14; mcp >=4.13.0; huggingface-hub >=4.1.0; pydantic-core >=4.14.1; typing-inspection; annotated-types",

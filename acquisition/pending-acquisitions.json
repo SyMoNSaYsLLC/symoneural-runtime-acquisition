@@ -306,6 +306,7 @@
       "upstream_url": "https://github.com/Kludex/python-multipart"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "storage",
       "component": "hf-xet",
       "licence_expected": "Apache-2.0 (characterise)",
@@ -319,6 +320,7 @@
       "upstream_url": "https://github.com/huggingface/xet-core"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "util",
       "component": "filelock",
       "licence_expected": "Unlicense (characterise)",
@@ -332,6 +334,7 @@
       "upstream_url": "https://github.com/tox-dev/filelock"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "storage",
       "component": "fsspec",
       "licence_expected": "BSD-3-Clause (characterise)",
@@ -339,12 +342,15 @@
       "recorded": "2026-09-13 (reconstruction v1.1, control-plane-first)",
       "required_by": "Common: huggingface-hub fsspec>=2023.5.0",
       "runtime": "Common",
-      "sha": "e8b1b7932bd3",
+      "sha": "9e22b60ea6e9",
+      "sha_note": "2026-09-14: the recorded sha was the ANNOTATED TAG OBJECT (git cat-file -t = tag); corrected to the commit it points to (tag^{commit}). Same defect as the four CLI rows.",
       "tag": "2026.7.0",
       "tag_kind": "RELEASE",
+      "tag_object_sha": "e8b1b7932bd3",
       "upstream_url": "https://github.com/fsspec/filesystem_spec"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "util",
       "component": "packaging",
       "licence_expected": "Apache-2.0 OR BSD-2-Clause (characterise)",
@@ -352,12 +358,15 @@
       "recorded": "2026-09-13 (reconstruction v1.1, control-plane-first)",
       "required_by": "Common: huggingface-hub packaging>=20.9; transformers packaging>=20.0; accelerate",
       "runtime": "Common",
-      "sha": "93792a2d17ce",
+      "sha": "929fd4b1410a",
+      "sha_note": "2026-09-14: the recorded sha was the ANNOTATED TAG OBJECT (git cat-file -t = tag); corrected to the commit it points to (tag^{commit}). Same defect as the four CLI rows.",
       "tag": "26.3",
       "tag_kind": "RELEASE",
+      "tag_object_sha": "93792a2d17ce",
       "upstream_url": "https://github.com/pypa/packaging"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "util",
       "component": "pyyaml",
       "licence_expected": "MIT (characterise)",
@@ -371,6 +380,7 @@
       "upstream_url": "https://github.com/yaml/pyyaml"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "util",
       "component": "tqdm",
       "licence_expected": "MPL-2.0 AND MIT (characterise)",
@@ -384,6 +394,7 @@
       "upstream_url": "https://github.com/tqdm/tqdm"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "text",
       "component": "regex",
       "licence_expected": "Apache-2.0 (characterise)",
@@ -397,6 +408,7 @@
       "upstream_url": "https://github.com/mrabarnett/mrab-regex"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "cli",
       "component": "typer",
       "licence_expected": "MIT (characterise)",
@@ -642,6 +654,32 @@
       "tag": "v27.2.0",
       "tag_kind": "RELEASE",
       "upstream_url": "https://github.com/zeromq/pyzmq"
+    },
+    {
+      "category": "util",
+      "component": "shellingham",
+      "licence_expected": "characterise from tree",
+      "notes": "Discovered 2026-09-14 while characterising typer for the Common closure; not previously registered.",
+      "recorded": "2026-09-14",
+      "required_by": "Common: typer 0.27.2 Requires-Dist shellingham>=1.3.0",
+      "runtime": "Common",
+      "sha": "UNRESOLVED",
+      "tag": "UNRESOLVED",
+      "tag_kind": "UNRESOLVED",
+      "upstream_url": "https://github.com/sarugaku/shellingham"
+    },
+    {
+      "category": "util",
+      "component": "rich",
+      "licence_expected": "characterise from tree",
+      "notes": "Discovered 2026-09-14 while characterising typer for the Common closure; not previously registered.",
+      "recorded": "2026-09-14",
+      "required_by": "Common: typer 0.27.2 Requires-Dist rich>=13.8.0 (rich pulls markdown-it-py and pygments; characterise on acquisition)",
+      "runtime": "Common",
+      "sha": "UNRESOLVED",
+      "tag": "UNRESOLVED",
+      "tag_kind": "UNRESOLVED",
+      "upstream_url": "https://github.com/Textualize/rich"
     }
   ],
   "schema": "symoneural-pending-acquisitions/1"

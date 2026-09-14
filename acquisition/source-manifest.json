@@ -589,6 +589,42 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "filelock",
+      "intended_revision": "4efd93e0482e8095a0b6949fb337206e7f67495d",
+      "intended_tag_version": "3.32.6",
+      "notes": "Licence MIT (LICENSE md5 2c6acbdf7bb74caa37512c3a5ca6857b). hatchling, no runtime deps. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub wheel Requires-Dist filelock>=3.10.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/tox-dev/filelock"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "fsspec",
+      "intended_revision": "9e22b60ea6e96fbe8635e88cc71909bdd2850e60",
+      "intended_tag_version": "2026.7.0",
+      "notes": "Licence BSD-3-Clause (LICENSE md5 b38a11bf4dcdfc66307f8515ce1fbaa6). hatchling, no runtime deps. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub wheel Requires-Dist fsspec>=2023.5.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/fsspec/filesystem_spec"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "ml",
+      "component": "hf-xet",
+      "intended_revision": "de71453d952bd8b806edaa997c72313051a49050",
+      "intended_tag_version": "v1.6.0",
+      "notes": "Licence Apache-2.0 (LICENSE md5 86d3f3a95c324c9479bd8986968f4327). Rust monorepo (xet-core); the Python distribution hf-xet is the hf_xet/ subdirectory, maturin backend, no runtime deps. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub wheel Requires-Dist hf-xet<2.0.0,>=1.5.2 (x86_64)",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/huggingface/xet-core"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "ml",
       "component": "huggingface-hub",
       "intended_revision": "495b17c8529614759ae0f1ccf1ebe9a61c148b7c",
@@ -602,6 +638,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "packaging",
+      "intended_revision": "929fd4b1410ac7ef61ef3f45b2f5d7e87711a9b5",
+      "intended_tag_version": "26.3",
+      "notes": "Licence Apache-2.0 OR BSD-2-Clause (LICENSE md5 faadaedca9251a90b205c9167578ce91, LICENSE.APACHE 2ee41112a44fe7014dce33e26468ba93, LICENSE.BSD 7bef9bf4a8e4263634d0597e7ba100b8). flit_core, no runtime deps. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub packaging>=20.9; transformers packaging>=20.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/pypa/packaging"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "ml",
       "component": "pytorch",
       "intended_revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
@@ -612,6 +660,30 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Common",
       "upstream_url": "https://github.com/pytorch/pytorch"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "data",
+      "component": "pyyaml",
+      "intended_revision": "49790e73684bebad1df05ef8d828fa12f685bffb",
+      "intended_tag_version": "6.0.3",
+      "notes": "Licence MIT (LICENSE md5 6d8242660a8371add5fe547adf083079). Custom PEP 517 backend _pyyaml_pep517; C extension over libyaml. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub pyyaml>=5.1; transformers pyyaml>=5.1",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/yaml/pyyaml"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "regex",
+      "intended_revision": "7dd71c15c4fb5c94206bed1763abd4c2bd2f1b33",
+      "intended_tag_version": "2026.9.10",
+      "notes": "Licence Apache-2.0 AND CNRI-Python (LICENSE.txt md5 7b5751ddd6b643203c31ff873051d069). setuptools; C extension. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: transformers wheel Requires-Dist regex>=2025.10.22",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/mrabarnett/mrab-regex"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -642,6 +714,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "tqdm",
+      "intended_revision": "9cf5a12b1f955468a17f0ba3c59092b23e4258ac",
+      "intended_tag_version": "v4.70.1",
+      "notes": "Licence MPL-2.0 AND MIT (LICENCE md5 9a9bed097dea538bf341c8623c8f8852). setuptools. Its only dependency, colorama, is gated on platform_system == Windows and is false for this target. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: huggingface-hub tqdm>=4.42.1; transformers tqdm>=4.60",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/tqdm/tqdm"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "ml",
       "component": "transformers",
       "intended_revision": "856157a2f3e9594954310df18fdccc31ffddebe9",
@@ -651,6 +735,18 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Common",
       "upstream_url": "https://github.com/huggingface/transformers"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "typer",
+      "intended_revision": "99eb220df7c69a0f14a0b69214042677e0760b9d",
+      "intended_tag_version": "0.27.2",
+      "notes": "Licence MIT (LICENSE md5 173d405eb704b1499218013178722617). pdm.backend. Declares shellingham>=1.3.0, rich>=13.8.0 and annotated-doc>=0.0.2 at runtime; annotated-doc is already SYMONEURAL-OWNED by the API, shellingham and rich are NOT yet acquired and are recorded as pending. Version rule: the tag already recorded in pending-acquisitions.json, which was chosen as the newest release satisfying every recorded consumer constraint.",
+      "required_by": "Common: transformers wheel Requires-Dist typer",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/fastapi/typer"
     },
     {
       "acquisition_state": "ACQUIRED",
