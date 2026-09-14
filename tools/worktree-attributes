@@ -5,3 +5,10 @@
 # win over upstream's nearer one; .git/info/attributes can, but is not cloned.
 # After a fresh clone:   cat tools/worktree-attributes >> .git/info/attributes
 # Regenerate the list only from a byte-identical worktree (tools/ingest-tree).
+Symoneural-Common/src/ml/source/pytorch/android/libs/fbjni/gradlew.bat -text
+Symoneural-Common/src/ml/source/pytorch/third_party/NVTX/python/docs/make.bat -text
+Symoneural-Common/src/ml/source/pytorch/third_party/protobuf/python/docs/make.bat -text
+Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/libuv/docs/make.bat -text
+Symoneural-Common/src/ml/source/pytorch/third_party/VulkanMemoryAllocator/src/Shaders/CompileShaders.bat -text
+Symoneural-Ravencalc/src/numerics/source/numpy/numpy/_core/src/common/pythoncapi-compat/docs/make.bat -text
+Symoneural-Ravencalc/src/numerics/source/numpy/numpy/_core/src/highway/docs/make.bat -text
