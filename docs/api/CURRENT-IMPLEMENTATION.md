@@ -117,15 +117,30 @@ Facts from disk; the proofs are `tools/api-clean-root-proof` and `tools/api-evid
 | 5. `threads_total` unset; `restart_count` unused | threads_total RESOLVED (5th field of `/proc/loadavg`, in the JSON); `restart_count` still never incremented (no restart policy exists yet — NOT STARTED) | `test_rack` asserts `threads_total >= procs_running`. |
 | 6. Application/unit conflation | RESOLVED | `applications.py` registry, `/api/apps`, `/api/apps/{id}`, `/api/apps/{id}/status`; DispatchOS is `apps/dispatchos.py`, page `/demo/dispatchos.html`. |
 
-Packaging and clean-root proof (rootfs `symoneural-image-api-qemux86-64.rootfs-20260914041440`, 98 packages):
+Packaging and clean-root proof (rootfs `symoneural-image-api-qemux86-64.rootfs-20260914061826`, rebuilt after the rack.c change; the earlier `...041440` rootfs predated it):
 `symoneural-api 1.0.0-r0` (library: NEEDED = `libc.so.6` only), `symoneural-api-util`,
 `symoneural-api-python 1.0.0-r0` (flit_core; RDEPENDS fastapi pydantic uvicorn symoneural-api).
 In the extracted root through the target `ld.so` with `env -i`: 17 upstream imports PASS,
 `pydantic_core 2.46.5`, util `version/abi/capabilities/selftest` PASS, ctypes lock
 acquire/release PASS, `GET /api/apps` 200, `GET /api/apps/dispatchos/status` 200 →
 `BLOCKED` (ravencalc absent, the honest answer for an API-only root). Artefacts:
-`generated/evidence/api/` (§44). The rack.c change in this section post-dates that
-rootfs; the next API cooker rebuilds `symoneural-api` from the new tree id.
+`generated/evidence/api/` (§44).
+
+The rack.c change was initially recorded here while only the SOURCE was fixed; the
+packaged library still carried the old code. That gap is now closed and asserted
+rather than described. `tools/api-clean-root-proof` reads the claim out of the
+shipped library on every run:
+
+| Assertion on the packaged artifact | Value |
+|---|---|
+| `SOURCE-TREE` shipped in the package equals `git rev-parse HEAD:Symoneural-API/app` | `898f4decdfc5…` — equal |
+| `popen`/`pclose` imported by `libsymoneural-api.so.1` | **0** (required 0) |
+| `posix_spawn*` imported | **6** (required > 0) |
+
+A stale package now fails the proof by name instead of passing quietly. One item is
+recorded NOT TESTED rather than claimed: `threads_total` is exercised by the C test
+`tests/native/test_rack` on the host, but `symoneural-api-util` has no `rack`
+subcommand, so it is not read back out of the shipped binary.
 
 Still open for the API runtime: LICENSE for first-party code is undeclared (`CLOSED`);
 clean A/B rebuild reproducibility NOT TESTED; `restart_count`/restart policy NOT STARTED.

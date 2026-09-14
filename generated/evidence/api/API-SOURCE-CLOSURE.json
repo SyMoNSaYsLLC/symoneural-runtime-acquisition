@@ -47,6 +47,7 @@
   "tests": [
    "Symoneural-API/app/tests/native/Makefile",
    "Symoneural-API/app/tests/native/check.h",
+   "Symoneural-API/app/tests/native/test_api",
    "Symoneural-API/app/tests/native/test_api.c",
    "Symoneural-API/app/tests/native/test_gpulock",
    "Symoneural-API/app/tests/native/test_gpulock.c",
@@ -64,7 +65,7 @@
    "Symoneural-API/app/tests/python/test_units.py"
   ]
  },
- "head": "5e79dc2bd",
+ "head": "3c9c7cd26",
  "packaged": [
   "symoneural-annotated-doc",
   "symoneural-annotated-types",
@@ -89,10 +90,12 @@
  "recipes_services_packagegroups": {
   "images": [
    "symoneural-image-api",
+   "symoneural-image-cli",
    "symoneural-image-ravencalc"
   ],
   "packagegroups": [
    "packagegroup-symoneural-api",
+   "packagegroup-symoneural-cli",
    "packagegroup-symoneural-ravencalc"
   ],
   "recipes": [
@@ -279,20 +282,20 @@
  ],
  "tier_b_shared_providers": [
   {
-   "consumers": "pydantic ==2.46.5",
-   "distribution": "pydantic-core",
-   "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
-   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
-   "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
-   "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
-  },
-  {
    "consumers": "mcp ==2.2.0",
    "distribution": "mcp-types",
    "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
    "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
    "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
    "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+  },
+  {
+   "consumers": "pydantic ==2.46.5",
+   "distribution": "pydantic-core",
+   "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+   "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
   }
  ],
  "tier_c_build_only": {

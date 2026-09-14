@@ -1,5 +1,5 @@
 # API-SHA256SUMS - the rootfs tarball and every package its manifest names (from the ipk feed)
-80a1c980bbee221fe778c6220bc24be578e0eb20c1f38f09a592a94da1fefa4a  Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914041440.tar.gz
+2a900a7a88d4a79915f6bb59cebf36bfad07839fcadc0b72326a9ce8b1bdd647  Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914061826.tar.gz
 654355edd1b3070122743aa0cad528c58856c305c6423380871681d6cfac5a9c  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/libbz2-1_1.0.8-r0_x86-64-v3.ipk
 f5932c5c73b413f14c8dc8cf962ddaa28cdea977c95371c22ec46257ad3e6b38  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/libc6_2.44+git0+5c479454d1-r0_x86-64-v3.ipk
 237d40dc862cd687af0ab9db500a938d6a78ddaf0e443d55cc0358cccca2641c  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/libcrypto4_4.0.2-r0_x86-64-v3.ipk
@@ -79,9 +79,9 @@ e175a181b0588d2396836e8b6d1ecff26dca97a10c355828edf9c4fdb2694f3c  Symoneural-API
 280fa39a890abd48b79d53f5295c19742947f6cd2968294baafe98bdd5d406e2  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-annotated-doc_0.0.5-r0_x86-64-v3.ipk
 d590f793058a71a421f081f94c92046e5701cf772e59282c5198a1757e8c52f8  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-annotated-types_0.8.0-r0_x86-64-v3.ipk
 24d8285812bd15891d3979888c297f8dace6bb1924a7319625a7e3b9bcc624bb  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-anyio_4.15.1-r0_x86-64-v3.ipk
-612e4051f588ee11d5fb195f1be5d422bc19d3a6428f33e086a0874da2f093de  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api_1.0.0-r0_x86-64-v3.ipk
-b026c3b2514989fe52b009781a7a1411dad08cec9af7bfa441215bbd65dd2ddf  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-python_1.0.0-r0_x86-64-v3.ipk
-5d740a27a2b6db467916cfb13be5eaef0bf3e7886e5d83907bff9efb6695fdc7  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-util_1.0.0-r0_x86-64-v3.ipk
+52cac3be247f4712fac4797d9aff8288f2579132065da4941770d99e1bbd3aef  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api_1.0.0-r0_x86-64-v3.ipk
+d9b738dc2d1b62e8d4b2b7c2cdc91ef1e8f47e39a47e21d96595e80504adfcaf  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-python_1.0.0-r0_x86-64-v3.ipk
+de00044a0d96737fd572cf3155a76d2bba28612e09794edb81312fe850ec6a9b  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-api-util_1.0.0-r0_x86-64-v3.ipk
 fe8c206e8e4bce6580a00fd9353c72a9dc031c5f1001cebf2de06db7bb05490e  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-certifi_2026.07.22-r0_x86-64-v3.ipk
 93a809ebd2601fa793655e99f23071000cf2cb8d99db943e76e6f302733ff1d4  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-click_8.5.0-r0_x86-64-v3.ipk
 bec8fcfc04da25ea1b557135e4e3e50a68aeca91d092ea5185b42c79fc05aadd  Symoneural-API/build/devtool-master/tmp/deploy/ipk/x86-64-v3/symoneural-fastapi_0.141.1-r0_x86-64-v3.ipk

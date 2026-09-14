@@ -1,7 +1,7 @@
-# API-INSTALL-MANIFEST - symoneural-image-api rootfs 20260914041440
-# image    Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914041440.tar.gz
-# sha256   80a1c980bbee221fe778c6220bc24be578e0eb20c1f38f09a592a94da1fefa4a
-# manifest Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914041440.manifest
+# API-INSTALL-MANIFEST - symoneural-image-api rootfs 20260914061826
+# image    Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914061826.tar.gz
+# sha256   2a900a7a88d4a79915f6bb59cebf36bfad07839fcadc0b72326a9ce8b1bdd647
+# manifest Symoneural-API/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-api-qemux86-64.rootfs-20260914061826.manifest
 # packages 98 (name arch version), from the image manifest
 libbz2-1 x86-64-v3 1.0.8-r0
 libc6 x86-64-v3 2.44+git0+5c479454d1-r0
@@ -105,7 +105,7 @@ util-linux-flock x86-64-v3 2.42.3-r0
 # first-party installed files (path relative to /, sha256), read from the extracted root
 b0d1822165e78e2ab9628cf0269645d9fe13b36974edd3bd794309a97322e93c /usr/bin/symoneural-api
 d961e9b238e8b2be61552b20bff84541b48cb9daed92a91426fb5ba0597290e2 /usr/bin/symoneural-api-util
-0637fb997eab6e17ceac3529c266021b66c2902bc626d7dd8de8decbde61f5c9 /usr/lib/libsymoneural-api.so.1.0.0
+3f189928deb15997b0113fa1bc528c382449f8928e3baf77cb77a97e246bb66e /usr/lib/libsymoneural-api.so.1.0.0
 fa7cf2e2c4f33784aafb32dd1c018caa2eb99ccb4bae8505a98a1a2829334cf7 /usr/lib/python3.14/site-packages/symoneural_api-1.0.0.dist-info/METADATA
 1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db /usr/lib/python3.14/site-packages/symoneural_api-1.0.0.dist-info/WHEEL
 c4017c5b750798bb5cfef883cc264636fa49c00f33d8358e740b4af525bf3d81 /usr/lib/python3.14/site-packages/symoneural_api-1.0.0.dist-info/entry_points.txt
@@ -118,8 +118,8 @@ e88c6b5bac2f5e0cb001ed2b4203c7978c0863d4949ff8e9637b514469a1c826 /usr/lib/python
 ffad6ea09e14d3e7b420ef961ad523c13efe03c234c1f89a2b9b873421c7f575 /usr/lib/python3.14/site-packages/symoneural_api/native.py
 92e4e21d16d94f799351723fa2b5e49e17886d671f6723619100e1ebfaa7f9aa /usr/lib/python3.14/site-packages/symoneural_api/routeclass.py
 885a36a5b01e948af02be9a5e387b385866391a06591822ea89786f7d637e32f /usr/lib/python3.14/site-packages/symoneural_api/units.py
-63cb02ead2602a612f1622f41ffe29d3edb641bffcbe246efd14114296984ce2 /usr/share/symoneural-api/SOURCE-TREE
+91a784d1468030afa32232c3b519d9f79b982cfd1a27f5a669662961c24dae6d /usr/share/symoneural-api/SOURCE-TREE
 symlink /usr/lib/libsymoneural-api.so.1 -> libsymoneural-api.so.1.0.0
 
 # SOURCE-TREE (the committed subtree this build exported)
-b1130376c117f6b6417f5c6892c4a4f494d4db02 HEAD:Symoneural-API/app
+898f4decdfc5e549e2a2a5c63477fb76a0380fb5 HEAD:Symoneural-API/app

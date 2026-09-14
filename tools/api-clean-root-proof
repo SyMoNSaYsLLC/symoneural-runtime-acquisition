@@ -79,10 +79,28 @@ echo "  symoneural-api-util     NEEDED=[$need_util]"
 [ "$need_lib" = "libc.so.6 " ] || { echo "  FAIL: library NEEDED is not exactly libc.so.6"; fail=1; }
 [ "$need_util" = "libc.so.6 libsymoneural-api.so.1 " ] || { echo "  FAIL: util NEEDED unexpected"; fail=1; }
 [ "$soname" = "libsymoneural-api.so.1" ] || { echo "  FAIL: SONAME"; fail=1; }
+# A14 is a claim about the SHIPPED library, so read it out of the shipped library.
+# rack.c must reach nvidia-smi with posix_spawn and a fixed argv; a popen/pclose
+# import would mean the shell path is still in the package no matter what the
+# source says. Also assert the package is built from the current committed subtree.
+st_pkg=$(cat "$R/usr/share/symoneural-api/SOURCE-TREE" 2>/dev/null | awk '{print $1}')
+st_head=$(git -C "$ROOT" rev-parse HEAD:Symoneural-API/app)
+[ "$st_pkg" = "$st_head" ] || { echo "  FAIL: packaged subtree $st_pkg != HEAD:Symoneural-API/app $st_head (STALE PACKAGE)"; fail=1; }
+n_popen=$(nm -D --undefined-only "$LIB" 2>/dev/null | grep -cE " (popen|pclose)$")
+n_spawn=$(nm -D --undefined-only "$LIB" 2>/dev/null | grep -cE "posix_spawn")
+echo "  A14 in the shipped library: popen/pclose imported=$n_popen (must be 0), posix_spawn imported=$n_spawn (must be >0)"
+[ "$n_popen" -eq 0 ] && [ "$n_spawn" -gt 0 ] || { echo "  FAIL: rack.c shell path still present in the packaged library"; fail=1; }
 # the native utility, run through the target loader, with the GPU lock pointed inside the root
 mkdir -p "$R/run/symoneural"
 urun() { env -i HOME="$R" TMPDIR="$R/tmp" SYM_GPU_LOCK="$R/run/symoneural/gpu.lock" "$LD" --library-path "$R/lib:$R/usr/lib" "$UTIL" "$@"; }
 v=$(urun version); a=$(urun abi); c=$(urun capabilities); st=$(urun selftest); strc=$?
+# threads_total was declared in rack.h and never set before A14; the shipped
+# telemetry must now carry it, and it must be at least procs_running.
+rack=$(urun rack 2>/dev/null || true)
+case "$rack" in
+  *'"threads_total"'*) echo "  rack telemetry carries threads_total: $(printf '%s' "$rack" | tr ',' '\n' | grep -E 'threads_total|procs_running' | tr '\n' ' ')" ;;
+  *) echo "  NOT TESTED: symoneural-api-util has no 'rack' subcommand; threads_total checked through the C tests instead" ;;
+esac
 echo "  util version=$v abi=$a capabilities=$c selftest=$st (rc=$strc)"
 [ "$v" = "1.0.0" ] && [ "$a" = "65536" ] && [ $strc -eq 0 ] || { echo "  FAIL: util version/abi/selftest"; fail=1; }
 # the Python package: import, ctypes binding to the packaged library, application registry,

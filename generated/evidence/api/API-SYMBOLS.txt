@@ -1,4 +1,4 @@
-# API-SYMBOLS - nm -D --defined-only on libsymoneural-api, rootfs 20260914041440
+# API-SYMBOLS - nm -D --defined-only on libsymoneural-api, rootfs 20260914061826
 # /usr/lib/libsymoneural-api.so.1.0.0: 27 exported symbols
 T sym_api_abi_version
 T sym_api_capabilities
