@@ -1050,7 +1050,7 @@
       "declared_version_PV": "UNKNOWN",
       "excluded": [],
       "lock_state": "UNRESOLVED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-CLI/src/json/.gitpins/rpds-py.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "NOT-APPLICABLE",
       "recipe_SRCREV": "NOT-APPLICABLE",

@@ -1,0 +1,16 @@
+[package]
+name = "rpds-py"
+version = "2026.6.3"
+edition = "2021"
+
+[lib]
+name = "rpds"
+crate-type = ["cdylib"]
+
+[dependencies]
+rpds = "1.2.1"
+archery = "1.2.2"
+
+[dependencies.pyo3]
+version = "0.29.0"
+features = ["extension-module"]
