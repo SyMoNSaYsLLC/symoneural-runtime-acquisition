@@ -225,12 +225,28 @@
       "source": "Symoneural-CLI/src/json/source/jsonschema-specifications @ v2025.9.1"
     },
     {
+      "consumers": "rich >=2.2.0",
+      "distribution": "markdown-it-py",
+      "rationale": "Runtime-shipped by the Common closure; acquired at v4.2.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/text/source/markdown-it-py @ v4.2.0"
+    },
+    {
       "consumers": "mcp ==2.2.0",
       "distribution": "mcp-types",
       "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
       "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
       "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
       "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+    },
+    {
+      "consumers": "markdown-it-py ~=0.1",
+      "distribution": "mdurl",
+      "rationale": "Runtime-shipped by the Common closure; acquired at 0.1.2; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/text/source/mdurl @ 0.1.2"
     },
     {
       "consumers": "scikit-learn >=2.0.1",
@@ -273,6 +289,14 @@
       "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
     },
     {
+      "consumers": "rich >=2.13.0",
+      "distribution": "pygments",
+      "rationale": "Runtime-shipped by the Common closure; acquired at 2.21.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/text/source/pygments @ 2.21.0"
+    },
+    {
       "consumers": "mcp pyjwt[crypto]>=2.10.1",
       "distribution": "pyjwt",
       "rationale": "Runtime-shipped by CLI wheels; acquired at 2.14.0; layer copies are not the provider. [crypto] extra selected by mcp -> cryptography is RUNTIME REQUIRED. Layer meta-python copy is not the provider.",
@@ -313,12 +337,28 @@
       "source": "Symoneural-Common/src/text/source/regex @ 2026.9.10"
     },
     {
+      "consumers": "typer >=13.8.0",
+      "distribution": "rich",
+      "rationale": "Runtime-shipped by the Common closure; acquired at v15.0.0; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/text/source/rich @ v15.0.0"
+    },
+    {
       "consumers": "jsonschema >=0.25.0; referencing >=0.7.0",
       "distribution": "rpds-py",
       "rationale": "Runtime-shipped by CLI wheels; acquired at v2026.6.3; layer copies are not the provider. Rust/maturin extension. Layer oe-core copy is not the provider.",
       "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
       "selected_provider": "SYMONEURAL-OWNED",
       "source": "Symoneural-CLI/src/json/source/rpds-py @ v2026.6.3"
+    },
+    {
+      "consumers": "typer >=1.3.0",
+      "distribution": "shellingham",
+      "rationale": "Runtime-shipped by the Common closure; acquired at 1.5.4; layer copies are not the provider.",
+      "ruling": "provider-decisions.json rule 'own what you ship' (layer copies are build tooling at most; the shipped provider is the acquired tree)",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-Common/src/util/source/shellingham @ 1.5.4"
     },
     {
       "consumers": "anyio; anthropic-sdk-python <2,>=1",

@@ -638,6 +638,30 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "markdown-it-py",
+      "intended_revision": "36c5f547144df2d01970a5792d68c71a3380b227",
+      "intended_tag_version": "v4.2.0",
+      "notes": "Licence MIT (LICENSE md5 a38a1697260a7ad7bf29f44b362db1fc). flit_core. Runtime dep mdurl~=0.1. Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "Common: rich 15.0.0 Requires-Dist markdown-it-py>=2.2.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/executablebooks/markdown-it-py"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "mdurl",
+      "intended_revision": "596bf1c8752de45fa576a52c315d6d8cc5bb1a4e",
+      "intended_tag_version": "0.1.2",
+      "notes": "Licence MIT (LICENSE md5 aca1dc6b9088f1dda81c89cad2c77ad1). flit_core. No runtime deps - this closes the transformers -> typer -> rich -> markdown-it-py chain. Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "Common: markdown-it-py 4.2.0 Requires-Dist mdurl~=0.1",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/executablebooks/mdurl"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "util",
       "component": "packaging",
       "intended_revision": "929fd4b1410ac7ef61ef3f45b2f5d7e87711a9b5",
@@ -647,6 +671,18 @@
       "revision_authority": "same",
       "runtime": "Common",
       "upstream_url": "https://github.com/pypa/packaging"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "pygments",
+      "intended_revision": "a43b45dcf081b6010c6ab4428f149f7f6d2499c4",
+      "intended_tag_version": "2.21.0",
+      "notes": "Licence BSD-2-Clause (LICENSE md5 36a13c90514e2899f1eba7f41c3ee592). hatchling. No runtime deps. Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "Common: rich 15.0.0 Requires-Dist pygments>=2.13.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/pygments/pygments"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -687,6 +723,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "text",
+      "component": "rich",
+      "intended_revision": "6ac483cbea39cab124dfd3483bba70ffafb71050",
+      "intended_tag_version": "v15.0.0",
+      "notes": "Licence MIT (LICENSE md5 b5f0b94fbc94f5ad9ae4efcf8a778303). poetry-core backend. Runtime deps pygments^2.13.0 and markdown-it-py>=2.2.0. ipywidgets is marked optional=true and belongs to the jupyter extra only, so the Jupyter stack is NOT pulled into this closure. Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "Common: typer 0.27.2 Requires-Dist rich>=13.8.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/Textualize/rich"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "ml",
       "component": "safetensors",
       "intended_revision": "a406ca3e7a90598be0cd05a50069cb9bf5ef6ba6",
@@ -698,6 +746,18 @@
       "revision_authority": "session selection - approved plan (latest upstream stable)",
       "runtime": "Common",
       "upstream_url": "https://github.com/huggingface/safetensors"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "util",
+      "component": "shellingham",
+      "intended_revision": "cba059e7f29f731c2fdf9c8c3ea7921182b7d6c3",
+      "intended_tag_version": "1.5.4",
+      "notes": "Licence ISC (LICENSE md5 78e1c0248051c32a38a7f820c30bd7a5). No build-backend declared (requires setuptools+wheel), so PEP 517 falls back to setuptools.build_meta:__legacy__ and the recipe must stage python3-wheel-native, as pycparser did. No runtime deps. Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "Common: typer 0.27.2 Requires-Dist shellingham>=1.3.0",
+      "revision_authority": "same",
+      "runtime": "Common",
+      "upstream_url": "https://github.com/sarugaku/shellingham"
     },
     {
       "acquisition_state": "ACQUIRED",
