@@ -103,3 +103,29 @@ start/STARTING→READY/stop/unconfigured/exec-failure-127/GPU-lock-before-exec/j
 non-truncation; rack host fields/JSON parse/non-truncation.
 `Symoneural-API/app/tests/python/` (unittest): gpulock protocol incl. the C↔Python
 file contract; registry invariants; route classes; FastAPI routes via TestClient.
+
+## Status after A7–A13 (2026-09-14) — what changed since the A0 capture
+
+Facts from disk; the proofs are `tools/api-clean-root-proof` and `tools/api-evidence`.
+
+| A0 deviation | State | Evidence |
+|---|---|---|
+| 1. `popen()` in `rack.c` | RESOLVED | `spawn_first_line()`: fixed argv through `posix_spawnp`, stderr to `/dev/null`, reaped with `waitpid`; `grep popen src/` finds only the comment. `tests/native/test_rack` 11 checks. |
+| 2. Priority table in two languages | RESOLVED | one table in C (`sym_gpulock_priority_table`), Python reads it through `symoneural_api.native` (`_load_priority()`), fallback only when the library is absent. |
+| 3. `unit.c/unit.h` untracked | RESOLVED | committed; `tests/native/test_unit` 21 checks. |
+| 4. No library, no build file, no ABI version | RESOLVED | `CMakeLists.txt`; `libsymoneural-api.so.1` (ABI 1.0.0 = 65536), `symoneural-api-util`; packaged by `meta-symoneural/recipes-api/symoneural-api` (symoneural-firstparty). |
+| 5. `threads_total` unset; `restart_count` unused | threads_total RESOLVED (5th field of `/proc/loadavg`, in the JSON); `restart_count` still never incremented (no restart policy exists yet — NOT STARTED) | `test_rack` asserts `threads_total >= procs_running`. |
+| 6. Application/unit conflation | RESOLVED | `applications.py` registry, `/api/apps`, `/api/apps/{id}`, `/api/apps/{id}/status`; DispatchOS is `apps/dispatchos.py`, page `/demo/dispatchos.html`. |
+
+Packaging and clean-root proof (rootfs `symoneural-image-api-qemux86-64.rootfs-20260914041440`, 98 packages):
+`symoneural-api 1.0.0-r0` (library: NEEDED = `libc.so.6` only), `symoneural-api-util`,
+`symoneural-api-python 1.0.0-r0` (flit_core; RDEPENDS fastapi pydantic uvicorn symoneural-api).
+In the extracted root through the target `ld.so` with `env -i`: 17 upstream imports PASS,
+`pydantic_core 2.46.5`, util `version/abi/capabilities/selftest` PASS, ctypes lock
+acquire/release PASS, `GET /api/apps` 200, `GET /api/apps/dispatchos/status` 200 →
+`BLOCKED` (ravencalc absent, the honest answer for an API-only root). Artefacts:
+`generated/evidence/api/` (§44). The rack.c change in this section post-dates that
+rootfs; the next API cooker rebuilds `symoneural-api` from the new tree id.
+
+Still open for the API runtime: LICENSE for first-party code is undeclared (`CLOSED`);
+clean A/B rebuild reproducibility NOT TESTED; `restart_count`/restart policy NOT STARTED.

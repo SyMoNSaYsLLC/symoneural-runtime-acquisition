@@ -13,9 +13,15 @@
 #include "symoneural/rack.h"
 
 #include <ctype.h>
+#include <fcntl.h>
+#include <spawn.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+extern char **environ;
 
 /* Read one long from a "key: value" line in a procfs file. */
 static bool proc_long(const char *path, const char *key, long *out)
@@ -57,13 +63,17 @@ int sym_rack_host(sym_host_state *out)
         long running = 0, total = 0;
         if (fscanf(fh, "%lf %lf %lf %ld/%ld",
                    &out->load_1, &out->load_5, &out->load_15,
-                   &running, &total) >= 3) {
+                   &running, &total) >= 5) {
             out->procs_running = running;
+            /* the fifth field counts kernel scheduling entities: threads, not
+             * processes - exactly the number the header promises */
+            out->threads_total = total;
         }
         fclose(fh);
     }
 
-    /* Thread count is the number that actually predicts the desktop lockups on
+    /* procs_running from /proc/stat is authoritative when present; the thread
+     * total above is the number that actually predicted the desktop lockups on
      * this box: 814 threads on 20 cores starved the compositor, while memory
      * sat at 8%. Memory pressure was never the signal. */
     fh = fopen("/proc/stat", "re");
@@ -80,6 +90,55 @@ int sym_rack_host(sym_host_state *out)
     return 0;
 }
 
+/* Run argv with stdout on a pipe and stderr discarded; copy the first line of
+ * output into line (NUL-terminated, newline stripped), drain the rest so the
+ * child can exit, reap it. 0 only if it exited 0 and printed something. */
+static int spawn_first_line(char *const argv[], char *line, size_t cap)
+{
+    int fds[2];
+    if (cap == 0 || pipe(fds) != 0)
+        return -1;
+
+    posix_spawn_file_actions_t fa;
+    posix_spawn_file_actions_init(&fa);
+    posix_spawn_file_actions_adddup2(&fa, fds[1], STDOUT_FILENO);
+    posix_spawn_file_actions_addopen(&fa, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
+    posix_spawn_file_actions_addclose(&fa, fds[0]);
+    posix_spawn_file_actions_addclose(&fa, fds[1]);
+
+    pid_t pid = 0;
+    int rc = posix_spawnp(&pid, argv[0], &fa, NULL, argv, environ);
+    posix_spawn_file_actions_destroy(&fa);
+    close(fds[1]);
+    if (rc != 0) {
+        close(fds[0]);
+        return -1;
+    }
+
+    size_t n = 0;
+    bool eol = false;
+    char c;
+    for (;;) {
+        ssize_t r = read(fds[0], &c, 1);
+        if (r <= 0)
+            break;
+        if (eol)
+            continue;                      /* drain, so the child is not blocked */
+        if (c == '\n') { eol = true; continue; }
+        if (n + 1 < cap)
+            line[n++] = c;
+    }
+    close(fds[0]);
+    line[n] = '\0';
+
+    int status = 0;
+    if (waitpid(pid, &status, 0) != pid)
+        return -1;
+    if (!WIFEXITED(status) || WEXITSTATUS(status) != 0 || n == 0)
+        return -1;
+    return 0;
+}
+
 /* nvidia-smi, queried for exactly the fields we report. One invocation, CSV,
  * no units - anything else means a driver we do not understand, and we say so
  * by returning -1 rather than reporting a guess. */
@@ -90,19 +149,18 @@ int sym_rack_gpu(sym_gpu_state *out)
     memset(out, 0, sizeof(*out));
     out->present = false;
 
-    const char *cmd =
-        "nvidia-smi --query-gpu=name,memory.total,memory.used,memory.free,"
-        "temperature.gpu,power.draw,power.limit,utilization.gpu "
-        "--format=csv,noheader,nounits 2>/dev/null";
-
-    FILE *pipe = popen(cmd, "re");
-    if (pipe == NULL)
-        return -1;
+    /* A fixed argv through posix_spawnp: no /bin/sh, no string a caller could
+     * shape. The reconstruction forbids a shell anywhere in the native API. */
+    char *const argv[] = {
+        "nvidia-smi",
+        "--query-gpu=name,memory.total,memory.used,memory.free,"
+        "temperature.gpu,power.draw,power.limit,utilization.gpu",
+        "--format=csv,noheader,nounits",
+        NULL
+    };
 
     char line[512];
-    char *got = fgets(line, sizeof(line), pipe);
-    int rc = pclose(pipe);
-    if (got == NULL || rc != 0)
+    if (spawn_first_line(argv, line, sizeof(line)) != 0)
         return -1;
 
     /* name may contain commas in principle; take the first field up to the
@@ -155,7 +213,7 @@ int sym_rack_json(char *buf, size_t cap)
         "\"host\":{\"mem_total_kb\":%ld,\"mem_available_kb\":%ld,"
         "\"swap_total_kb\":%ld,\"swap_free_kb\":%ld,"
         "\"load_1\":%.2f,\"load_5\":%.2f,\"load_15\":%.2f,"
-        "\"procs_running\":%ld}"
+        "\"procs_running\":%ld,\"threads_total\":%ld}"
         "}",
         gpu.present ? "true" : "false", gpu.name,
         gpu.vram_total_mib, gpu.vram_used_mib, gpu.vram_free_mib,
@@ -163,7 +221,8 @@ int sym_rack_json(char *buf, size_t cap)
         gpu.utilisation_pct,
         host.mem_total_kb, host.mem_available_kb,
         host.swap_total_kb, host.swap_free_kb,
-        host.load_1, host.load_5, host.load_15, host.procs_running);
+        host.load_1, host.load_5, host.load_15, host.procs_running,
+        host.threads_total);
 
     /* snprintf truncates silently and the result would still PARSE as JSON
      * while being wrong. Refuse instead. */
