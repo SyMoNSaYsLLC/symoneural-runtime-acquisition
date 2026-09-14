@@ -289,6 +289,14 @@
       "source": "Symoneural-Ravencalc/src/*/source/threadpoolctl"
     },
     {
+      "consumers": "httpx2 >=0.10; httpcore2 >=0.10",
+      "distribution": "truststore",
+      "rationale": "Runtime-shipped by CLI wheels; acquired at v0.10.4; no layer copy exists.",
+      "ruling": "provider-decisions.json rule 'own what you ship'",
+      "selected_provider": "SYMONEURAL-OWNED",
+      "source": "Symoneural-CLI/src/tls/source/truststore @ v0.10.4"
+    },
+    {
       "consumers": "fastapi >=4.8.0; pydantic >=4.14.1; anthropic-sdk-python <5,>=4.14; mcp >=4.13.0; huggingface-hub >=4.1.0; pydantic-core >=4.14.1; typing-inspection; annotated-types",
       "distribution": "typing-extensions",
       "rationale": "Runtime-shipped by API wheels; acquired at 4.16.0; layer copies are not the provider.",

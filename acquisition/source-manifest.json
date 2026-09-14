@@ -553,6 +553,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "tls",
+      "component": "truststore",
+      "intended_revision": "0714f72a739d182cdb8502f4e1bb4cf7ebfe4eb5",
+      "intended_tag_version": "v0.10.4",
+      "notes": "Licence MIT (LICENSE in tree). Pure Python (flit_core). Version rule: newest release tag at acquisition (2026-09-14) satisfying every recorded consumer constraint.",
+      "required_by": "CLI: httpx2 truststore>=0.10; httpcore2 truststore>=0.10",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/sethmlarson/truststore"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "mcp",
       "component": "typescript-sdk",
       "intended_revision": "cc4b41617ce3601b1290d67216ea0b194a3cd9ac",
