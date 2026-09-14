@@ -360,6 +360,42 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "data",
+      "component": "attrs",
+      "intended_revision": "7bfc49e9b22d5ba25b6e429524c3d49fee27cb36",
+      "intended_tag_version": "26.1.0",
+      "notes": "Licence MIT (LICENSE in tree). Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: jsonschema attrs>=22.2.0; referencing attrs>=22.2.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/python-attrs/attrs"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "ffi",
+      "component": "cffi",
+      "intended_revision": "fd33e7700f0ebafe6f30bd5053f13327221b77a2",
+      "intended_tag_version": "v2.1.1",
+      "notes": "Licence MIT-0 (LICENSE in tree). C extension. Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: cryptography cffi>=2.0.0 (platform_python_implementation != PyPy)",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/python-cffi/cffi"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "auth",
+      "component": "cryptography",
+      "intended_revision": "ffde75a2b594822c740a2e4748b56c00548302bf",
+      "intended_tag_version": "50.0.1",
+      "notes": "Licence Apache-2.0 OR BSD-3-Clause (LICENSE, LICENSE.APACHE, LICENSE.BSD in tree). Rust/maturin extension linking the target OpenSSL. Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: pyjwt[crypto] cryptography>=3.4.0 (the [crypto] extra is selected by mcp)",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/pyca/cryptography"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "text",
       "component": "docstring-parser",
       "intended_revision": "87dca55a7b5bdc854ad1d190f1c461015ba5f008",
@@ -369,6 +405,18 @@
       "revision_authority": "same",
       "runtime": "CLI",
       "upstream_url": "https://github.com/rr-/docstring_parser"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "http",
+      "component": "httpx2",
+      "intended_revision": "71ae23be5448f859c2b4e21d9972ddfa7b8d759d",
+      "intended_tag_version": "v2.12.0",
+      "notes": "Licence BSD-3-Clause (LICENSE.md in tree). uv workspace: src/httpx2 and src/httpcore2 are two distributions built from this one tree (two recipes, PEP517_SOURCE_PATH). Canonical upstream per PyPI metadata; encode/httpx has no 2.x tags.",
+      "required_by": "CLI: anthropic-sdk-python httpx2<3,>=2.0.0; mcp httpx2>=2.5.0; starlette 1.6 testclient prefers httpx2",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/pydantic/httpx2"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -396,6 +444,18 @@
     },
     {
       "acquisition_state": "ACQUIRED",
+      "category": "json",
+      "component": "jsonschema-specifications",
+      "intended_revision": "3b846010c34ce254d8ced23023451d1d64de37f5",
+      "intended_tag_version": "v2025.9.1",
+      "notes": "Licence MIT (COPYING in tree). Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: jsonschema jsonschema-specifications>=2023.03.6",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/python-jsonschema/jsonschema-specifications"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
       "category": "telemetry",
       "component": "opentelemetry-python",
       "intended_revision": "53a5a40c9604583c501bcf13970a635f00e62df4",
@@ -405,6 +465,18 @@
       "revision_authority": "same",
       "runtime": "CLI",
       "upstream_url": "https://github.com/open-telemetry/opentelemetry-python"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "ffi",
+      "component": "pycparser",
+      "intended_revision": "77de509f0268f44ee587b5a4d9f0d680e269fcae",
+      "intended_tag_version": "release_v3.00",
+      "notes": "Licence BSD-3-Clause (LICENSE in tree). Pure Python. Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: cffi pycparser (implementation_name != PyPy)",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/eliben/pycparser"
     },
     {
       "acquisition_state": "ACQUIRED",
@@ -442,6 +514,30 @@
       "revision_authority": "release decision",
       "runtime": "CLI",
       "upstream_url": "https://github.com/modelcontextprotocol/python-sdk"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "json",
+      "component": "referencing",
+      "intended_revision": "944ed5a20bc5125f2349156cbdc365daac0e67e6",
+      "intended_tag_version": "v0.37.0",
+      "notes": "Licence MIT (COPYING in tree). Submodule suite = referencing-suite 792cb7f98ac2 (test suite), committed as a tree. Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: jsonschema referencing>=0.28.4; jsonschema-specifications referencing>=0.31.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/python-jsonschema/referencing"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "json",
+      "component": "rpds-py",
+      "intended_revision": "7277eb681f6efd67eca1bbaa32f78d78bdc044a5",
+      "intended_tag_version": "v2026.6.3",
+      "notes": "Licence MIT (LICENSE in tree). Rust/maturin extension; Cargo closure via cargo-update-recipe-crates. Version rule: newest release tag at acquisition (2026-09-14) that satisfies every recorded consumer constraint; chosen and recorded here, never implied.",
+      "required_by": "CLI: jsonschema rpds-py>=0.25.0; referencing rpds-py>=0.7.0",
+      "revision_authority": "same",
+      "runtime": "CLI",
+      "upstream_url": "https://github.com/crate-py/rpds"
     },
     {
       "acquisition_state": "ACQUIRED",

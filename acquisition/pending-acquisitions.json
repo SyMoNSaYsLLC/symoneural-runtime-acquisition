@@ -217,17 +217,18 @@
       "upstream_url": "https://github.com/rr-/docstring_parser"
     },
     {
+      "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
       "category": "http",
       "component": "httpx2",
       "licence_expected": "BSD-3-Clause (characterise)",
-      "notes": "Canonical upstream must be confirmed before acquisition: PyPI name httpx2, layer recipe exists, git tag not found under encode/httpx.",
+      "notes": "Canonical upstream RESOLVED 2026-09-14 from PyPI project metadata: pydantic/httpx2 (2.12.0). encode/httpx and encode/httpx2 carry no 2.x tags.",
       "recorded": "2026-09-13 (reconstruction v1.1, control-plane-first)",
       "required_by": "CLI: anthropic-sdk-python httpx2<3,>=2.0.0; mcp httpx2>=2.5.0. meta-python carries python3-httpx2_2.12.0 (pypi sdist). NOT the estate's httpx 0.28.1.",
       "runtime": "CLI",
-      "sha": "UNRESOLVED",
-      "tag": "(confirm: httpx2 is a distinct distribution name; canonical repo/tag to be confirmed - encode/httpx tags stop at 0.28.1)",
-      "tag_kind": "UNRESOLVED",
-      "upstream_url": "https://github.com/encode/httpx"
+      "sha": "71ae23be5448",
+      "tag": "v2.12.0",
+      "tag_kind": "RELEASE",
+      "upstream_url": "https://github.com/pydantic/httpx2"
     },
     {
       "acquired": "2026-09-14: cloned at tag, manifest entry added, ingested via tools/ingest-and-commit",
