@@ -1,0 +1,25 @@
+#!/bin/bash
+# ingest-and-commit <component> - S2 steps a-h for one tree: ingest (tools/ingest-tree),
+# then ONE commit carrying the tree and the lock records. Never `git add`s the source
+# path: the tree is already in the index from upstream's tree object, and add would
+# re-run ignore rules over it. Push is separate and deliberate (pre-publish-audit first).
+set -uo pipefail
+cd "$(dirname "$0")/.." || exit 1
+comp=$1
+out=$(python3 tools/ingest-tree ingest "$comp" 2>&1); rc=$?
+printf '%s\n' "$out"
+[ $rc -eq 0 ] || { echo "INGEST FAILED rc=$rc - nothing committed"; exit $rc; }
+line=$(printf '%s\n' "$out" | tail -1)               # "<comp> · <sha12> · N files · STATUS"
+sp=$(python3 -c "import json,sys; print([c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]['source_path'])" "$comp")
+excl=$(python3 -c "import json,sys; e=[c for c in json.load(open('acquisition/source-lock.json'))['components'] if c['component']==sys.argv[1]][0]; print(' · '.join('EXCLUDED '+x['path'] for x in e.get('excluded',[])))" "$comp")
+git add acquisition/source-lock.json acquisition/submodule-lock.json || exit 1
+msg="acquired source: $line"
+[ -n "$excl" ] && msg="$msg · $excl"
+git commit -q -m "$msg
+
+Ingested from the pin's tree object (tools/ingest-tree), not git add. Verifiable
+from a clone: tools/ingest-tree verify $comp.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"; rc=$?
+[ $rc -eq 0 ] || { echo "COMMIT FAILED rc=$rc"; exit $rc; }
+echo "COMMITTED $(git log -1 --format=%h) $line"

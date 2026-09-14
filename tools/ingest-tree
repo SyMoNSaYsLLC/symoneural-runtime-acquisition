@@ -277,7 +277,7 @@ def cmd_ingest(comp):
             else:
                 # no pin holds this commit: keep the content this repository already has,
                 # say so, and let S4 verify it against a fresh bare clone
-                existing = git("rev-parse", "HEAD:%s" % path, check=False)
+                existing = git("rev-parse", "HEAD:%s" % path) if obj_exists("HEAD:%s" % path) else ""
                 if not existing:
                     raise Fail("submodule %s at %s: no pin holds commit %s and nothing is committed at that path"
                                % (rel, path, sha))
@@ -318,9 +318,11 @@ def cmd_ingest(comp):
     if status.startswith("DIFFERS"):
         raise Fail("%s %s: %s" % (comp, status, detail))
     # working tree must equal the index: nothing to check out if it already does
+    # porcelain v1: column X is index-vs-HEAD (every file is "A" here, that is the
+    # point), column Y is WORKTREE-vs-index - the only column this check is about.
     st = git("status", "--porcelain", "--untracked-files=all", "--", sp)
-    if st:
-        lines = st.splitlines()
+    lines = [l for l in st.splitlines() if l.startswith("??") or l[1:2] != " "]
+    if lines:
         tracked = [l[3:] for l in lines if not l.startswith("??")]
         untracked = [l[3:] for l in lines if l.startswith("??")]
         report.append("WT    %d tracked path(s) differ from upstream's tree, %d untracked file(s) present"
@@ -333,9 +335,10 @@ def cmd_ingest(comp):
         if untracked:
             raise Fail("%d untracked file(s) inside %s - the acquired tree is not clean:\n%s"
                        % (len(untracked), sp, "\n".join(untracked[:20])))
-        st2 = git("status", "--porcelain", "--untracked-files=all", "--", sp)
+        st2 = [l for l in git("status", "--porcelain", "--untracked-files=all", "--", sp).splitlines()
+               if l.startswith("??") or l[1:2] != " "]
         if st2:
-            raise Fail("working tree still differs from index under %s:\n%s" % (sp, st2[:1000]))
+            raise Fail("working tree still differs from index under %s:\n%s" % (sp, "\n".join(st2[:20])))
 
     # h  RECORD ---------------------------------------------------------------
     save(LOCK, lock)
@@ -389,9 +392,10 @@ def verify_entry(ent, treeish="HEAD"):
     sp = ent["source_path"]
     if "tree_sha" not in ent:
         return "UNRECORDED", "no tree_sha in the lock; not ingested by this model"
-    ours = git("rev-parse", "%s:%s" % (treeish, sp), check=False)
-    if not ours:
+    # rev-parse echoes an unresolvable name to stdout with rc 128; test existence first
+    if not obj_exists("%s:%s" % (treeish, sp)):
         return "NOT-COMMITTED", "nothing at %s:%s" % (treeish, sp)
+    ours = git("rev-parse", "%s:%s" % (treeish, sp))
     gl = [l for l in git("ls-tree", "-r", "%s:%s" % (treeish, sp)).splitlines() if l.startswith("160000")]
     if gl:
         return "DIFFERS(%d gitlinks)" % len(gl), "gitlinks present: %s" % [l.split("\t")[-1] for l in gl[:5]]
