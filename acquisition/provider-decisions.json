@@ -54,6 +54,105 @@
   }
  ],
  "provenance": "CURATED - Garrett decision D2. Scanners MERGE from here; never hand-edit the scanner-derived records.",
+ "python_runtime_providers": [
+  {
+   "consumers": "fastapi >=4.8.0; pydantic >=4.14.1; anthropic-sdk-python <5,>=4.14; mcp >=4.13.0; huggingface-hub >=4.1.0; pydantic-core >=4.14.1; typing-inspection; annotated-types",
+   "distribution": "typing-extensions",
+   "rationale": "Runtime-shipped by API wheels; acquired at 4.16.0; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/model/source/typing-extensions @ 4.16.0"
+  },
+  {
+   "consumers": "fastapi >=0.4.2; pydantic >=0.4.2; mcp >=0.4.1",
+   "distribution": "typing-inspection",
+   "rationale": "Runtime-shipped by API wheels; acquired at v0.4.4; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/model/source/typing-inspection @ v0.4.4"
+  },
+  {
+   "consumers": "pydantic >=0.6.0",
+   "distribution": "annotated-types",
+   "rationale": "Runtime-shipped by API wheels; acquired at v0.8.0; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/model/source/annotated-types @ v0.8.0"
+  },
+  {
+   "consumers": "fastapi >=0.0.2",
+   "distribution": "annotated-doc",
+   "rationale": "Runtime-shipped by API wheels; acquired at 0.0.5; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/model/source/annotated-doc @ 0.0.5"
+  },
+  {
+   "consumers": "starlette <5,>=3.6.2; httpx any; anthropic-sdk-python <5,>=3.5.0; mcp >=4.10",
+   "distribution": "anyio",
+   "rationale": "Runtime-shipped by API wheels; acquired at 4.15.1; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/http/source/anyio @ 4.15.1"
+  },
+  {
+   "consumers": "anyio; anthropic-sdk-python <2,>=1",
+   "distribution": "sniffio",
+   "rationale": "Runtime-shipped by API wheels; acquired at v1.3.1; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/http/source/sniffio @ v1.3.1"
+  },
+  {
+   "consumers": "httpx any; anyio",
+   "distribution": "idna",
+   "rationale": "Runtime-shipped by API wheels; acquired at v3.19; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/http/source/idna @ v3.19"
+  },
+  {
+   "consumers": "httpx any; httpcore any",
+   "distribution": "certifi",
+   "rationale": "Runtime-shipped by API wheels; acquired at 2026.07.22; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/http/source/certifi @ 2026.07.22"
+  },
+  {
+   "consumers": "httpcore >=0.16; uvicorn >=0.8",
+   "distribution": "h11",
+   "rationale": "Runtime-shipped by API wheels; acquired at v0.16.0; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/http/source/h11 @ v0.16.0"
+  },
+  {
+   "consumers": "uvicorn >=7.0; huggingface-hub <9.0.0,>=8.4.2",
+   "distribution": "click",
+   "rationale": "Runtime-shipped by API wheels; acquired at 8.5.0; layer copies are not the provider.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED",
+   "source": "Symoneural-API/src/web/source/click @ 8.5.0"
+  },
+  {
+   "consumers": "pydantic ==2.46.5",
+   "distribution": "pydantic-core",
+   "rationale": "The Rust core was merged into the pydantic monorepo; github.com/pydantic/pydantic-core's newest tag is v2.41.5 and cannot supply 2.46.5. The estate already owns the exact source. Layer 2.46.4 does not satisfy ==2.46.5 and is not used.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED (shared provider: pydantic tree, subdirectory pydantic-core/)",
+   "source": "Symoneural-API/src/model/source/pydantic/pydantic-core @ core-v2.46.5 (= pydantic commit 001dea020e08)"
+  },
+  {
+   "consumers": "mcp ==2.2.0",
+   "distribution": "mcp-types",
+   "rationale": "Same monorepo, same commit; a second wheel from an owned tree, not a second source authority.",
+   "ruling": "provider-decisions.json rule 'own what you ship' + unresolved.json:pydantic-core-ownership (RESOLVED-OWN)",
+   "selected_provider": "SYMONEURAL-OWNED (shared provider: python-sdk tree, subdirectory src/mcp-types/)",
+   "source": "Symoneural-CLI/src/mcp/source/python-sdk/src/mcp-types @ v2.2.0 (= python-sdk commit 9972c21aa420)"
+  }
+ ],
+ "python_runtime_providers_note": "Per-distribution provider decisions for Python runtime dependencies discovered from built wheel METADATA (tools/check-python-runtime-closures.py). A distribution shipped on the target is SYMONEURAL-OWNED; layer recipes (oe-core / meta-python) provide BUILD-time tooling only (maturin, hatchling, flit-core, setuptools, pdm-backend, setuptools-scm).",
  "rule": "Own what you ship; borrow what you only build with.",
  "schema": "symoneural-provider-decisions/1"
 }

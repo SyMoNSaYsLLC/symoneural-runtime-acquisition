@@ -8,7 +8,7 @@ URL is WORKSPACE-LOCAL - never DIRECT.
 """
 import os, re, sys, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib_acq import ROOT, components, dump, md5_file, sha256_file, SKIP_NAMES
+from lib_acq import ROOT, components, dump, md5_file, sha256_file, SKIP_NAMES, is_component_submodule
 
 VENDOR_DIRS = {"vendor","vendored","third_party","thirdparty","3rdparty","external",
                "externals","extern","deps","subprojects","contrib","bundled","_vendor"}
@@ -191,14 +191,14 @@ for c in components():
                 # vendored copy. It already has its own lock entry, upstream URL
                 # and SHA; recording it again under VENDORED double-counts one
                 # source copy under two classifications.
-                if os.path.exists(os.path.join(cp, ".git")):
+                if is_component_submodule(cp):
                     reclassified_submodule.append({
                         "owning_upstream": "%s/%s" % (rt, comp),
                         "owner_source_path": c["source_path"],
                         "location": os.path.relpath(cp, ROOT), "relpath": lr,
                         "name": ch, "reclassified_from": "VENDORED",
                         "reclassified_to": "SUBMODULE",
-                        "reason": "path is a git work tree; see submodule-lock.json"})
+                        "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json"})
                     continue
                 vend.append({"owning_upstream": "%s/%s" % (rt, comp),
                     "owner_source_path": c["source_path"],
@@ -208,7 +208,7 @@ for c in components():
                     "licence_evidence": sorted(x for x in os.listdir(cp) if LIC.match(x)) or [],
                     "decision": "UNRESOLVED"})
         elif base.lower() in INLINE and dp not in _vend_seen \
-             and not os.path.exists(os.path.join(dp, ".git")) and (
+             and not is_component_submodule(dp) and (
              any(x == "__init__.py" for x in fn)
              or any(x.endswith((".h",".hpp",".c",".cpp")) for x in fn)):
             _vend_seen.add(dp)

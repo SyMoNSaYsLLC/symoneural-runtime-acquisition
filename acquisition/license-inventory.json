@@ -253,6 +253,26 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "b0e83e7c087d515d8bfa8c03a5083c4d",
+   "owner_component": "cython",
+   "owner_runtime": "Ravencalc",
+   "path": "COPYING.txt",
+   "sha256": "e1eb1c49a8508e8173dac30157e4a6439a44ad8846194746c424fbc3fc2b95d7",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "61c3ee8961575861fa86c7e62bc9f69c",
+   "owner_component": "cython",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE.txt",
+   "sha256": "9568a2b155e66ac3e0ba1fd80b52b827b9460e6cf6f233125e7cbca8e206ddc3",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "95792ff3fe8e11aa49ceb247e66e4810",
    "owner_component": "fastapi",
    "owner_runtime": "API",
@@ -1828,6 +1848,16 @@
    "owner_runtime": "Build",
    "path": "scripts/pybootchartgui/COPYING",
    "sha256": "54e1afa760fa3649fa47c7838ac937771e74af695d4cf7d907bc61c107c83dc9",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "774f65abd8a7fe3124be2cdf766cd06f",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "path": "LICENSE",
+   "sha256": "83965b843b98f670d3a85bd041ed4b372c8ec50d7b4a5995a83ac697ba675dcb",
    "status": "UNRESOLVED"
   },
   {

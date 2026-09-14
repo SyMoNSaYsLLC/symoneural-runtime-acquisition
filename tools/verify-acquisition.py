@@ -86,7 +86,9 @@ def main():
         # Ignored residue is still residue. oe-workdir / oe-logs / __pycache__ /
         # build/ inside an acquired tree means something wrote into pristine
         # source and .gitignore merely hid it. A FINDING, never a silent pass.
-        ig = [l[3:] for l in git(p, "status", "--short", "--ignored").splitlines()
+        # the tree's files are tracked by the ESTATE repository now, so ask it
+        # about this path only; without the pathspec git reports the whole estate
+        ig = [l[3:] for l in git(p, "status", "--short", "--ignored", "--", ".").splitlines()
               if l.startswith("!!")]
         if ig:
             RESIDUE.append((c["source_path"], ig))

@@ -362,6 +362,29 @@
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
+   "component": "cython",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE"
+   ],
+   "native_source_files": 1523,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/devtools/source/cython",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
+   "component": "pybind11",
+   "declared_capabilities": [
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 99,
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/devtools/source/pybind11",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
    "component": "scikit-learn",
    "declared_capabilities": [
     "PYTHON-EXTENSION",

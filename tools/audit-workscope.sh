@@ -53,19 +53,12 @@ lock_l = jload("source-lock.json").get("components", [])
 lock = {c.get("component"): c for c in lock_l}
 man  = {e.get("component"): e for e in jload("source-manifest.json").get("entries", [])}
 
-# REFERENCE-ONLY rulings, as recorded: unresolved.json rows with state REFERENCE-ONLY
-# (identifier normalised to a component name) plus any manifest state saying so.
-refonly = set()
-for row in jload("unresolved.json").get("resolved", []):
-    if row.get("state") == "REFERENCE-ONLY":
-        ident = str(row.get("identifier", ""))
-        for pre in ("symoneural-", "mcp-"):
-            if ident.startswith(pre):
-                ident = ident[len(pre):]
-        refonly.add(ident)
-for comp, m in man.items():
-    if "REFERENCE" in (str(m.get("acquisition_state", "")) + str(m.get("kind", ""))).upper():
-        refonly.add(comp)
+# component state: the ONE machine-readable record of TARGET / REFERENCE_ONLY /
+# RETIRED_TO_PROVIDER / DEFERRED (acquisition/component-state.json). Non-TARGET
+# rows are exempt from package proof BY RECORDED RULING; the audit never
+# special-cases a name.
+cstate = {r["component"]: r for r in jload("component-state.json").get("components", [])}
+refonly = {c for c, r in cstate.items() if r.get("state") != "TARGET"}
 
 # stage 0 results
 committed = {}
@@ -166,7 +159,7 @@ def add_row(runtime, comp, sp, in_lock):
     n_pkg = packages_of(pn) if packaged else 0
     if packaged: st["packaged"] += 1
 
-    if is_ref:               status = "REFERENCE-ONLY"
+    if is_ref:               status = cstate[comp]["state"] + (" -> " + cstate[comp]["provider"] if cstate[comp].get("provider") else "")
     elif packaged:           status = "DONE"
     elif is_stub:            status = "STUB — no build class"
     elif not r:              status = "NO RECIPE"
@@ -216,7 +209,7 @@ exempt = sum(s["exempt"] for s in per_rt.values())
 print()
 print("=" * 78)
 print("sources committed  : %d of %d   (verified %d · listing-verified %d · pending %d)" % (ver + lst, tot, ver, lst, pend))
-print("components packaged: %d of %d   (%d REFERENCE-ONLY exempt: %s)" % (pkg, tot - exempt, exempt, ", ".join(sorted(refonly)) or "none"))
+print("components packaged: %d of %d   (%d exempt by recorded ruling: %s)" % (pkg, tot - exempt, exempt, ", ".join(sorted(refonly)) or "none"))
 print("=" * 78)
 PY
 rm -f "$AUD"

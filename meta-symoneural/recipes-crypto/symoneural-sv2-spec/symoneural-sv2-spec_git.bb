@@ -19,7 +19,8 @@ SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Crypto/src/stratum/source/sv2
 # License/CC0-1.0. CLOSED would have been a false statement about a dual-permissive
 # spec. The files sit in a License/ DIRECTORY, which is why scanners miss them.
 LICENSE = "BSD-3-Clause OR CC0-1.0"
-LIC_FILES_CHKSUM = ""
+LIC_FILES_CHKSUM = "file://License/BSD-3-Clause;md5=bd3412dad92085eb3afc5bf9d701adf0 \
+                    file://License/CC0-1.0;md5=65d3616852dbf7b1a6d4b53b00626032"
 
 SRC_URI = "git://github.com/stratum-mining/sv2-spec;protocol=https;branch=main"
 

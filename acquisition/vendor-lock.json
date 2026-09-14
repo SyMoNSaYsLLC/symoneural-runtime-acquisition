@@ -6,7 +6,7 @@
    "name": "FP16",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/FP16"
@@ -16,7 +16,7 @@
    "name": "FXdiv",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/FXdiv"
@@ -26,7 +26,7 @@
    "name": "NNPACK",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/NNPACK"
@@ -36,7 +36,7 @@
    "name": "NVTX",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/NVTX"
@@ -46,7 +46,7 @@
    "name": "VulkanMemoryAllocator",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/VulkanMemoryAllocator"
@@ -56,7 +56,7 @@
    "name": "XNNPACK",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/XNNPACK"
@@ -66,7 +66,7 @@
    "name": "aiter",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/aiter"
@@ -76,7 +76,7 @@
    "name": "composable_kernel",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/aiter/3rdparty/composable_kernel"
@@ -86,7 +86,7 @@
    "name": "benchmark",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/benchmark"
@@ -96,7 +96,7 @@
    "name": "composable_kernel",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/composable_kernel"
@@ -106,7 +106,7 @@
    "name": "cpp-httplib",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/cpp-httplib"
@@ -116,7 +116,7 @@
    "name": "cpuinfo",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/cpuinfo"
@@ -126,7 +126,7 @@
    "name": "cudnn_frontend",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/cudnn_frontend"
@@ -136,7 +136,7 @@
    "name": "cutlass",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/cutlass"
@@ -146,7 +146,7 @@
    "name": "fbgemm",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm"
@@ -156,7 +156,7 @@
    "name": "asmjit",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/asmjit"
@@ -166,7 +166,7 @@
    "name": "composable_kernel",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/composable_kernel"
@@ -176,7 +176,7 @@
    "name": "cpuinfo",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/cpuinfo"
@@ -186,7 +186,7 @@
    "name": "cutlass",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/cutlass"
@@ -196,7 +196,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/googletest"
@@ -206,7 +206,7 @@
    "name": "hipify_torch",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/hipify_torch"
@@ -216,7 +216,7 @@
    "name": "json",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fbgemm/external/json"
@@ -226,7 +226,7 @@
    "name": "flash-attention",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/flash-attention"
@@ -236,7 +236,7 @@
    "name": "aiter",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/flash-attention/third_party/aiter"
@@ -246,7 +246,7 @@
    "name": "composable_kernel",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/flash-attention/third_party/aiter/3rdparty/composable_kernel"
@@ -256,7 +256,7 @@
    "name": "flatbuffers",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/flatbuffers"
@@ -266,7 +266,7 @@
    "name": "fmt",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/fmt"
@@ -276,7 +276,7 @@
    "name": "gloo",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/gloo"
@@ -286,7 +286,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/googletest"
@@ -296,7 +296,7 @@
    "name": "ideep",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/ideep"
@@ -306,7 +306,7 @@
    "name": "ittapi",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/ittapi"
@@ -316,7 +316,7 @@
    "name": "kineto",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/kineto"
@@ -326,7 +326,7 @@
    "name": "fmt",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/kineto/libkineto/third_party/fmt"
@@ -336,7 +336,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/kineto/libkineto/third_party/googletest"
@@ -346,7 +346,7 @@
    "name": "json",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/kineto/libkineto/third_party/json"
@@ -356,7 +356,7 @@
    "name": "kleidiai",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/kleidiai"
@@ -366,7 +366,7 @@
    "name": "mimalloc",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mimalloc"
@@ -376,7 +376,7 @@
    "name": "mslk",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mslk"
@@ -386,7 +386,7 @@
    "name": "composable_kernel",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mslk/external/composable_kernel"
@@ -396,7 +396,7 @@
    "name": "cutlass",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mslk/external/cutlass"
@@ -406,7 +406,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mslk/external/googletest"
@@ -416,7 +416,7 @@
    "name": "hipify_torch",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/mslk/external/hipify_torch"
@@ -426,7 +426,7 @@
    "name": "nlohmann",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/nlohmann"
@@ -436,7 +436,7 @@
    "name": "onnx",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/onnx"
@@ -446,7 +446,7 @@
    "name": "pybind11",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/onnx/third_party/pybind11"
@@ -456,7 +456,7 @@
    "name": "pocketfft",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/pocketfft"
@@ -466,7 +466,7 @@
    "name": "protobuf",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/protobuf"
@@ -476,7 +476,7 @@
    "name": "benchmark",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/protobuf/third_party/benchmark"
@@ -486,7 +486,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/protobuf/third_party/googletest"
@@ -496,7 +496,7 @@
    "name": "psimd",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/psimd"
@@ -506,7 +506,7 @@
    "name": "pthreadpool",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/pthreadpool"
@@ -516,7 +516,7 @@
    "name": "pybind11",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/pybind11"
@@ -526,7 +526,7 @@
    "name": "python-peachpy",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/python-peachpy"
@@ -536,7 +536,7 @@
    "name": "sleef",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/sleef"
@@ -546,7 +546,7 @@
    "name": "tensorpipe",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/tensorpipe"
@@ -556,7 +556,7 @@
    "name": "googletest",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/tensorpipe/third_party/googletest"
@@ -566,7 +566,7 @@
    "name": "libnop",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/tensorpipe/third_party/libnop"
@@ -576,7 +576,7 @@
    "name": "libuv",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/tensorpipe/third_party/libuv"
@@ -586,7 +586,7 @@
    "name": "pybind11",
    "owner_source_path": "Symoneural-Common/src/ml/source/pytorch",
    "owning_upstream": "Common/pytorch",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "third_party/tensorpipe/third_party/pybind11"
@@ -596,7 +596,7 @@
    "name": "array_api_extra",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
    "owning_upstream": "Ravencalc/scipy",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "subprojects/array_api_extra"
@@ -606,7 +606,7 @@
    "name": "cobyqa",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
    "owning_upstream": "Ravencalc/scipy",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "subprojects/cobyqa"
@@ -616,7 +616,7 @@
    "name": "highs",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
    "owning_upstream": "Ravencalc/scipy",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "subprojects/highs"
@@ -626,7 +626,7 @@
    "name": "unuran",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
    "owning_upstream": "Ravencalc/scipy",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "subprojects/unuran"
@@ -636,7 +636,7 @@
    "name": "xsf",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
    "owning_upstream": "Ravencalc/scipy",
-   "reason": "path is a git work tree; see submodule-lock.json",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
    "reclassified_from": "VENDORED",
    "reclassified_to": "SUBMODULE",
    "relpath": "subprojects/xsf"

@@ -1,0 +1,305 @@
+{
+ "components": [
+  {
+   "component": "fastapi",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/fastapi",
+   "state": "TARGET"
+  },
+  {
+   "component": "httpcore",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/httpcore",
+   "state": "TARGET"
+  },
+  {
+   "component": "httpx",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/http/source/httpx",
+   "state": "TARGET"
+  },
+  {
+   "component": "pydantic",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/model/source/pydantic",
+   "state": "TARGET"
+  },
+  {
+   "component": "starlette",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/starlette",
+   "state": "TARGET"
+  },
+  {
+   "component": "uvicorn",
+   "runtime": "API",
+   "source_path": "Symoneural-API/src/web/source/uvicorn",
+   "state": "TARGET"
+  },
+  {
+   "component": "FreeToken",
+   "open_ruling": "unresolved.json:FreeToken/torch (OPEN-OWNED-BY-PHASE-19)",
+   "runtime": "Adaptive-Fabric",
+   "source_path": "Symoneural-Adaptive-Fabric/src/freetoken/source/FreeToken",
+   "state": "TARGET"
+  },
+  {
+   "component": "autoconf",
+   "provider": "OE-CORE",
+   "reason": "Build tool, never shipped; OE-Core provides the identical version. Recipe moved to meta-symoneural/retired/, tree stays pinned.",
+   "ruling": "acquisition/provider-decisions.json (D2) + unresolved.json:direct-vs-oe-core",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/autoconf",
+   "state": "RETIRED_TO_PROVIDER"
+  },
+  {
+   "component": "automake",
+   "provider": "OE-CORE",
+   "reason": "Build tool, never shipped; OE-Core provides the identical version. Recipe moved to meta-symoneural/retired/, tree stays pinned.",
+   "ruling": "acquisition/provider-decisions.json (D2) + unresolved.json:direct-vs-oe-core",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/automake",
+   "state": "RETIRED_TO_PROVIDER"
+  },
+  {
+   "component": "bitbake",
+   "reason": "The build stack is run from ~/symoneural-bootstrap-master at the same pin; the tree is held as source authority, never packaged for a target.",
+   "ruling": "acquisition/source-manifest.json (notes) + DECISIONS D3",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/bitbake/source",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "libtool",
+   "provider": "OE-CORE",
+   "reason": "Build tool, never shipped; OE-Core provides the identical version. Recipe moved to meta-symoneural/retired/, tree stays pinned.",
+   "ruling": "acquisition/provider-decisions.json (D2) + unresolved.json:direct-vs-oe-core",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/libtool",
+   "state": "RETIRED_TO_PROVIDER"
+  },
+  {
+   "component": "m4",
+   "provider": "OE-CORE",
+   "reason": "Build tool, never shipped; OE-Core provides the identical version. Recipe moved to meta-symoneural/retired/, tree stays pinned.",
+   "ruling": "acquisition/provider-decisions.json (D2) + unresolved.json:direct-vs-oe-core",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/autotools/source/m4",
+   "state": "RETIRED_TO_PROVIDER"
+  },
+  {
+   "component": "ninja",
+   "provider": "OE-CORE",
+   "reason": "Build tool, never shipped; OE-Core provides the identical version. Recipe moved to meta-symoneural/retired/, tree stays pinned.",
+   "ruling": "acquisition/provider-decisions.json (D2) + unresolved.json:direct-vs-oe-core",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/ninja/source/ninja",
+   "state": "RETIRED_TO_PROVIDER"
+  },
+  {
+   "component": "openembedded-core",
+   "reason": "Same role as bitbake: the estate's own copy of the build stack, pinned identically to the bootstrap.",
+   "ruling": "acquisition/source-manifest.json + DECISIONS D3",
+   "runtime": "Build",
+   "source_path": "Symoneural-Build/src/devtools/source/openembedded-core",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "anthropic-sdk-python",
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/anthropic/source/anthropic-sdk-python",
+   "state": "TARGET"
+  },
+  {
+   "component": "anthropic-sdk-typescript",
+   "reason": "No consumer; building it forces Node onto the target. Recipe retired.",
+   "ruling": "unresolved.json:anthropic-sdk-typescript",
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/anthropic/source/anthropic-sdk-typescript",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "python-sdk",
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/mcp/source/python-sdk",
+   "state": "TARGET"
+  },
+  {
+   "component": "typescript-sdk",
+   "reason": "pnpm catalog: protocol unsupported by npm / OE npm class. Coder and Studio run on the Python SDK.",
+   "ruling": "unresolved.json:mcp-typescript-sdk",
+   "runtime": "CLI",
+   "source_path": "Symoneural-CLI/src/mcp/source/typescript-sdk",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "accelerate",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/accelerate",
+   "state": "TARGET"
+  },
+  {
+   "component": "huggingface-hub",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/huggingface-hub",
+   "state": "TARGET"
+  },
+  {
+   "component": "pytorch",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/pytorch",
+   "state": "TARGET"
+  },
+  {
+   "component": "safetensors",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/safetensors",
+   "state": "TARGET"
+  },
+  {
+   "component": "tokenizers",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/tokenizers",
+   "state": "TARGET"
+  },
+  {
+   "component": "transformers",
+   "runtime": "Common",
+   "source_path": "Symoneural-Common/src/ml/source/transformers",
+   "state": "TARGET"
+  },
+  {
+   "component": "stratum",
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/stratum",
+   "state": "TARGET"
+  },
+  {
+   "component": "sv2-apps",
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/sv2-apps",
+   "state": "TARGET"
+  },
+  {
+   "component": "sv2-spec",
+   "reason": "A specification (markdown), not software; BSD-3-Clause OR CC0-1.0 per its License/ directory.",
+   "ruling": "acquisition/source-manifest.json required_by ('REFERENCE-ONLY')",
+   "runtime": "Crypto",
+   "source_path": "Symoneural-Crypto/src/stratum/source/sv2-spec",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "llama.cpp",
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/llama.cpp",
+   "state": "TARGET"
+  },
+  {
+   "component": "triton",
+   "reason": "Arrives via torch at build time; not a target package of its own until Phase 13 decides otherwise.",
+   "ruling": "generated/PHASE-INDEX.md 'Reference-only components' (Phase 13 S2)",
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/triton",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "vllm",
+   "reason": "Inference server held as reference; Chat is served through the native LLM path.",
+   "ruling": "generated/PHASE-INDEX.md 'Reference-only components' (Phase 13 S2)",
+   "runtime": "LLM",
+   "source_path": "Symoneural-LLM/src/inference/source/vllm",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "gstreamer",
+   "runtime": "Live",
+   "source_path": "Symoneural-Live/src/gstreamer/source/gstreamer",
+   "state": "TARGET"
+  },
+  {
+   "component": "cython",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/devtools/source/cython",
+   "state": "TARGET"
+  },
+  {
+   "component": "mpmath",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/symbolic/source/mpmath",
+   "state": "TARGET"
+  },
+  {
+   "component": "numpy",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/numerics/source/numpy",
+   "state": "TARGET"
+  },
+  {
+   "component": "openblas",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/blas/source/openblas",
+   "state": "TARGET"
+  },
+  {
+   "component": "pybind11",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/devtools/source/pybind11",
+   "state": "TARGET"
+  },
+  {
+   "component": "scikit-learn",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/ml/source/scikit-learn",
+   "state": "TARGET"
+  },
+  {
+   "component": "scipy",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
+   "state": "TARGET"
+  },
+  {
+   "component": "sympy",
+   "runtime": "Ravencalc",
+   "source_path": "Symoneural-Ravencalc/src/symbolic/source/sympy",
+   "state": "TARGET"
+  },
+  {
+   "component": "librespot",
+   "runtime": "Remix",
+   "source_path": "Symoneural-Remix/src/librespot/source/librespot",
+   "state": "TARGET"
+  },
+  {
+   "component": "hls.js",
+   "runtime": "Streamer",
+   "source_path": "Symoneural-Streamer/src/hls/source/hls.js",
+   "state": "TARGET"
+  },
+  {
+   "component": "workerd",
+   "reason": "REFERENCE-ONLY as a SOURCE BUILD (Bazel/V8/capnproto). Edge belongs to the planned Gateway runtime.",
+   "ruling": "unresolved.json:symoneural-workerd",
+   "runtime": "Web",
+   "source_path": "Symoneural-Web/src/runtime/source/workerd",
+   "state": "REFERENCE_ONLY"
+  },
+  {
+   "component": "workers-sdk",
+   "reason": "pnpm catalog: protocol; wrangler consumed as the published npm package wrangler@4.131.1 (kind PACKAGE) in Phase 15.",
+   "ruling": "unresolved.json:symoneural-workerd (same row)",
+   "runtime": "Web",
+   "source_path": "Symoneural-Web/src/tooling/source/workers-sdk",
+   "state": "REFERENCE_ONLY"
+  }
+ ],
+ "provenance": "CURATED. The one machine-readable place a component's TARGET / REFERENCE_ONLY / RETIRED_TO_PROVIDER / DEFERRED state lives. tools/audit-workscope.sh reads it; nothing else special-cases names. Every non-TARGET row cites the ruling it comes from.",
+ "rule": "Own what you ship; borrow what you only build with. (provider-decisions.json)",
+ "schema": "symoneural-component-state/1",
+ "states": {
+  "DEFERRED": "a target in principle whose build is deferred by a recorded ruling; exempt until the ruling changes",
+  "REFERENCE_ONLY": "acquired, pinned, committed; never built for a target; exempt from package proof BY RECORDED RULING",
+  "RETIRED_TO_PROVIDER": "acquired, pinned, committed; a layer provides the identical component; recipe retired; exempt BY RECORDED RULING",
+  "TARGET": "owed as a symoneural-* package on the target; counted by the audit"
+ }
+}

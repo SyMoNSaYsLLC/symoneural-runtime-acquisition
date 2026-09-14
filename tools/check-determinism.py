@@ -48,7 +48,8 @@ open(os.path.join(ACQ, "SHA256SUMS"), "w").write("\n".join(lines) + "\n")
 CURATED = ["source-manifest.json", "unresolved.json", "exceptions.json",
            "provider-decisions.json",
            "pending-acquisitions.json",
-           "model-register.json"]
+           "model-register.json",
+           "component-state.json"]
 cp = {"schema": "symoneural-control-plane/1.2",
       "build_stack": dict(sorted(LOCKED_STACK.items())),
       # emitted from lib_acq.HOST_DESIGNATION every run. Do NOT hand-edit

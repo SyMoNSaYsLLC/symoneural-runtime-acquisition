@@ -1,23 +1,37 @@
 #!/usr/bin/env python3
-"""scan-acquisition.py - source lock + submodule lock. READ-ONLY, deterministic."""
-import os, re, sys
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib_acq import (ROOT, git, components, census_a, census_b, dump, LOCKED_STACK, BOOT)
+"""scan-acquisition.py - source lock + submodule lock. READ-ONLY, deterministic.
 
-def recipe_for(rt, abspath):
-    wsa = os.path.join(ROOT, "Symoneural-"+rt, "build", "devtool-workspace", "appends")
-    wsr = os.path.join(ROOT, "Symoneural-"+rt, "build", "devtool-workspace", "recipes")
-    if not os.path.isdir(wsa):
-        return None, None, None
-    for a in sorted(os.listdir(wsa)):
-        ap = os.path.join(wsa, a)
-        try: txt = open(ap, encoding="utf-8", errors="ignore").read()
-        except OSError: continue
-        if re.search(r'EXTERNALSRC\s*=\s*"%s"' % re.escape(abspath), txt):
-            n = a.replace("_git.bbappend", "")
-            rp = os.path.join(wsr, n, n + "_git.bb")
-            return n, (rp if os.path.isfile(rp) else None), ap
-    return None, None, None
+A component's HISTORY lives in its pin store (or, before ingest, its in-tree
+.git); its FILES live in the estate repository. So:
+
+  commit_sha / tree_sha / upstream_url / branch   <- the pin (or in-tree .git)
+  worktree cleanliness                            <- the estate repository
+  recipe fields                                   <- meta-symoneural (SYMON_TREE match)
+  submodules / excluded                           <- recorded by tools/ingest-tree at
+                                                     ingest, carried from the
+                                                     authoritative lock and RE-VERIFIED
+                                                     here against the pin's gitlinks
+                                                     and the committed content
+"""
+import os, re, sys, glob, subprocess
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib_acq import (ROOT, AUTH_ACQ, git, git_pin, git_at, gitdir_for, pin_path,
+                     has_intree_git, components, census_a, census_b, dump, load, rebuilt_tree)
+
+def recipe_for(abspath):
+    """The meta-symoneural recipe whose SYMON_TREE is this tree. Retired recipes
+    are found too and flagged, so a retired component keeps its pin/SRCREV
+    agreement visible without counting as an active recipe."""
+    want = abspath.rstrip("/")
+    for pattern, retired in (("meta-symoneural/recipes-*/*/*.bb", False),
+                             ("meta-symoneural/retired/*/*.bb", True)):
+        for rp in sorted(glob.glob(os.path.join(ROOT, pattern))):
+            try: txt = open(rp, encoding="utf-8", errors="ignore").read()
+            except OSError: continue
+            m = re.search(r'^SYMON_TREE\s*=\s*"([^"]+)"', txt, re.M)
+            if m and m.group(1).rstrip("/") == want:
+                return os.path.basename(rp).split("_")[0], rp, retired
+    return None, None, False
 
 def fields(rp):
     if not rp: return {}
@@ -26,94 +40,140 @@ def fields(rp):
     return {"SRCREV": one("SRCREV"), "PV": one("PV"), "LICENSE": one("LICENSE")}
 
 def gitmodules(path):
-    """name -> (path, url). The .gitmodules SECTION NAME is not required to equal
-    the submodule path, so the relationship is resolved through git config rather
-    than assumed."""
+    """name -> (path, url) from a .gitmodules FILE in the (committed) work tree.
+    The section name is not required to equal the submodule path, so the
+    relationship is read through git config -f rather than assumed."""
     out = {}
     gm = os.path.join(path, ".gitmodules")
     if not os.path.isfile(gm): return out
-    for line in git(path, "config", "-f", ".gitmodules",
-                    "--get-regexp", r"submodule\..*\.path").splitlines():
+    def cfg(*a):
+        r = subprocess.run(["git", "config", "-f", gm, *a], capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else ""
+    for line in cfg("--get-regexp", r"submodule\..*\.path").splitlines():
         k, _, v = line.partition(" ")
         name = k[len("submodule."):-len(".path")]
-        url = git(path, "config", "-f", ".gitmodules", "--get",
-                  "submodule.%s.url" % name)
+        url = cfg("--get", "submodule.%s.url" % name)
         out[v.strip()] = (name, url or "UNKNOWN")
     return out
+
+def estate_dirty(rel):
+    """Paths under rel whose WORKING TREE differs from the estate index, or that
+    are untracked. Column X (index vs HEAD) is irrelevant here; column Y and '??'
+    are the question 'was anything written into the acquired tree?'."""
+    out = []
+    for l in git(ROOT, "status", "--porcelain", "--untracked-files=all", "--", rel).splitlines():
+        if l.startswith("??") or l[1:2] != " ":
+            out.append(l)
+    return out
+
+try:
+    AUTH = {c["source_path"]: c for c in load("source-lock.json", base=AUTH_ACQ)["components"]}
+except Exception:
+    AUTH = {}
 
 COMPS = components()
 A, B = census_a(), census_b()
 
-src = {"schema": "symoneural-source-lock/2",
+src = {"schema": "symoneural-source-lock/3",
        "census": {"method_a_count": len(A), "method_b_count": len(B),
                   "sets_identical": A == B,
                   "only_in_a": sorted(A - B), "only_in_b": sorted(B - A)},
-       "note": "Exact commit SHA is authoritative; branch is context only.",
+       "note": ("Exact commit SHA is authoritative; branch is context only. tree_sha is "
+                "the upstream commit's tree; HEAD:<source_path> in the estate repository "
+                "must equal it (or, with submodules, rebuild to it - tools/ingest-tree verify)."),
        "components": []}
-sub = {"schema": "symoneural-submodule-lock/2",
+sub = {"schema": "symoneural-submodule-lock/3",
        "identity_key": "owner_source_path + submodule_path",
        "entries": []}
 
 for c in COMPS:
-    p = c["abspath"]
-    rec, rp, ap = recipe_for(c["runtime"], p)
+    p, rel = c["abspath"], c["source_path"]
+    rec, rp, retired = recipe_for(p)
     f = fields(rp)
-    head = git(p, "rev-parse", "HEAD")
-    st = git(p, "status", "--short")
+    head = git_at(p, "rev-parse", "HEAD")
+    tree = git_at(p, "rev-parse", head + "^{tree}") if head else ""
+    dirty = git(p, "status", "--short").splitlines() if has_intree_git(p) else estate_dirty(rel)
     decl = f.get("SRCREV")
     state = ("UNKNOWN" if not head else
              "MISMATCH" if (decl and decl != head) else
              "VERIFIED" if decl == head else "UNRESOLVED")
-    gm = gitmodules(p)
-    smlines = [l for l in git(p, "submodule", "status", "--recursive").splitlines() if l.strip()]
+    pin = pin_path(rel)
+    pins_path = os.path.relpath(pin, ROOT) if pin and os.path.isdir(pin) else "IN-TREE"
+    prev = AUTH.get(rel, {})
+    subs = [dict(s) for s in prev.get("submodules", [])]
+    excluded = prev.get("excluded", [])
+
+    # re-verify every recorded submodule against the pin's gitlink and the
+    # committed content, so a carried-forward record cannot silently rot
+    for s in subs:
+        owner_rel, owner_pin, owner_commit = "", (pin if pins_path != "IN-TREE" else None), head
+        for o in subs:
+            if o is not s and s["path"].startswith(o["path"] + "/") and len(o["path"]) > len(owner_rel):
+                owner_rel, owner_pin, owner_commit = o["path"], os.path.join(ROOT, o["pins_path"]) if o.get("pins_path") else None, o["commit_sha"]
+        in_owner = os.path.relpath(s["path"], owner_rel) if owner_rel else s["path"]
+        # --full-tree: with --work-tree=/ git would otherwise prefix the path with the cwd
+        link = git_pin(owner_pin, "ls-tree", "--full-tree", owner_commit, "--", in_owner) if owner_pin and os.path.isdir(owner_pin) else ""
+        parts = link.split()
+        s["gitlink_check"] = ("GITLINK-VERIFIED" if len(parts) >= 3 and parts[0] == "160000" and parts[2] == s["commit_sha"]
+                              else "GITLINK-MISMATCH" if parts else "GITLINK-UNAVAILABLE")
+        # committed content vs the recorded tree. A submodule that itself has
+        # submodules holds their CONTENT here where upstream holds gitlinks, so
+        # rebuild upstream's shape (direct children -> gitlinks) before comparing.
+        direct = []
+        for o in subs:
+            if o is s or not o["path"].startswith(s["path"] + "/"):
+                continue
+            between = o["path"][len(s["path"]) + 1:]
+            if not any(x is not o and x is not s and o["path"].startswith(x["path"] + "/")
+                       and x["path"].startswith(s["path"] + "/") for x in subs):
+                direct.append((between, o["commit_sha"]))
+        node = "HEAD:%s/%s" % (rel, s["path"])
+        committed = rebuilt_tree(node, direct) if direct else git(ROOT, "rev-parse", node)
+        s["content_check"] = "AT-RECORDED-TREE" if committed == s.get("tree_sha") else "CONTENT-DRIFTED"
+
     src["components"].append({
         "runtime": c["runtime"], "category": c["category"], "component": c["component"],
-        "source_path": c["source_path"],
-        "upstream_url": git(p, "remote", "get-url", "origin") or "UNKNOWN",
+        "source_path": rel,
+        "upstream_url": git_at(p, "remote", "get-url", "origin") or "UNKNOWN",
         "declared_version_PV": f.get("PV") or "UNKNOWN",
         "requested_tag": "UNKNOWN",
-        "branch_context": git(p, "rev-parse", "--abbrev-ref", "HEAD") or "UNKNOWN",
+        "branch_context": git_at(p, "rev-parse", "--abbrev-ref", "HEAD") or "UNKNOWN",
         "commit_sha": head or "UNKNOWN",
+        "tree_sha": tree or "UNKNOWN",
+        "pins_path": pins_path,
         "recipe_SRCREV": decl or "NOT-APPLICABLE",
         "recipe_LICENSE": f.get("LICENSE") or "NOT-APPLICABLE",
         "lock_state": state,
-        "worktree": "clean" if st == "" else "DIRTY",
-        "worktree_detail": sorted(st.splitlines())[:5],
-        "submodule_count": len(smlines),
+        "worktree": "clean" if not dirty else "DIRTY",
+        "worktree_detail": sorted(dirty)[:5],
+        "submodule_count": len(subs),
+        "submodules": subs,
+        "excluded": excluded,
         "recipe_name": rec or "NOT-APPLICABLE",
         "recipe_path": os.path.relpath(rp, ROOT) if rp else "NOT-APPLICABLE",
-        "bbappend_path": os.path.relpath(ap, ROOT) if ap else "NOT-APPLICABLE",
+        "recipe_retired": bool(retired),
+        "bbappend_path": "NOT-APPLICABLE",
         "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
     })
-    for line in smlines:
-        flag = line[0] if line[0] in "-+U" else " "
-        parts = line[1:].split()
-        if len(parts) < 2: continue
-        sha, sp = parts[0], parts[1]
-        name, url = gm.get(sp, (None, None))
-        if url is None:
-            # Nested submodule: its .gitmodules lives in the INTERMEDIATE repo,
-            # not the top-level component. Ask git which superproject owns it,
-            # then read that superproject's .gitmodules for the relative path.
-            full = os.path.join(p, sp)
-            sup = git(full, "rev-parse", "--show-superproject-working-tree")
-            if sup and os.path.isdir(sup):
-                rel = os.path.relpath(full, sup)
-                for k, (n2, u2) in gitmodules(sup).items():
-                    if k == rel:
-                        name, url = n2, u2
-                        break
-            if url is None:
-                name, url = "UNKNOWN", "UNKNOWN"
+    for s in subs:
+        owner_rel = ""
+        for o in subs:
+            if o is not s and s["path"].startswith(o["path"] + "/") and len(o["path"]) > len(owner_rel):
+                owner_rel = o["path"]
+        owner_dir = os.path.join(p, owner_rel) if owner_rel else p
+        in_owner = os.path.relpath(s["path"], owner_rel) if owner_rel else s["path"]
+        name, url = gitmodules(owner_dir).get(in_owner, ("UNKNOWN", "UNKNOWN"))
         sub["entries"].append({
-            "identity": "%s::%s" % (c["source_path"], sp),
+            "identity": "%s::%s" % (rel, s["path"]),
             "owner_runtime": c["runtime"], "owner_component": c["component"],
-            "owner_source_path": c["source_path"],
-            "submodule_path": sp, "gitmodules_section": name,
-            "configured_url": url, "commit_sha": sha,
-            "init_state": {"-": "NOT-INITIALISED", "+": "DRIFTED",
-                           "U": "MERGE-CONFLICT", " ": "AT-RECORDED-COMMIT"}[flag],
-            "status": "VERIFIED" if flag == " " else "UNRESOLVED"})
+            "owner_source_path": rel,
+            "submodule_path": s["path"], "gitmodules_section": name,
+            "configured_url": url, "commit_sha": s["commit_sha"],
+            "tree_sha": s.get("tree_sha", "UNKNOWN"),
+            "pins_path": s.get("pins_path", ""),
+            "init_state": "AT-RECORDED-COMMIT" if s["content_check"] == "AT-RECORDED-TREE" else "DRIFTED",
+            "status": "VERIFIED" if (s["content_check"] == "AT-RECORDED-TREE"
+                                     and s["gitlink_check"] == "GITLINK-VERIFIED") else "UNRESOLVED"})
 
 src["components"].sort(key=lambda x: x["source_path"])
 sub["entries"].sort(key=lambda x: x["identity"])
@@ -121,7 +181,8 @@ dump(src, "source-lock.json"); dump(sub, "submodule-lock.json")
 
 unk = sum(1 for e in sub["entries"] if e["configured_url"] == "UNKNOWN")
 dupe = len(sub["entries"]) - len({e["identity"] for e in sub["entries"]})
+unres = sum(1 for e in sub["entries"] if e["status"] != "VERIFIED")
 print("census A=%d B=%d identical=%s" % (len(A), len(B), A == B))
 print("source-lock    : %d components" % len(src["components"]))
-print("submodule-lock : %d entries, %d unknown URL, %d identity collisions"
-      % (len(sub["entries"]), unk, dupe))
+print("submodule-lock : %d entries, %d unknown URL, %d identity collisions, %d not verified"
+      % (len(sub["entries"]), unk, dupe, unres))

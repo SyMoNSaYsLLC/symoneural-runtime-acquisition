@@ -263,6 +263,61 @@
   },
   {
    "consumers": [
+    "Common/pytorch",
+    "Ravencalc/pybind11",
+    "python3-pybind11"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "pybind11",
+   "provider_count": 5,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/pybind11",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Ravencalc/src/devtools/source/pybind11",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-pybind11",
+     "kind": "OE-CORE-RECIPE",
+     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-pybind11_3.0.4.bb",
+     "state": "AVAILABLE",
+     "version": "3.0.4"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/onnx/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "a2e59f0e7065"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "97bf890db679"
+    },
+    {
+     "identity": "Common/pytorch",
+     "kind": "SUBMODULE",
+     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11",
+     "state": "AVAILABLE",
+     "version": "a23996fce38f"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
     "Ravencalc/scikit-learn",
     "Ravencalc/scipy"
    ],
@@ -303,52 +358,6 @@
      "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_compat/array_api_compat/array_api_compat",
      "state": "AVAILABLE",
      "version": "UNKNOWN"
-    }
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "consumers": [
-    "Common/pytorch",
-    "python3-pybind11"
-   ],
-   "decision": "UNRESOLVED",
-   "evidence": "tools/scan-oe-providers.py",
-   "link_scope": "UNKNOWN",
-   "logical_dependency": "pybind11",
-   "provider_count": 4,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "SUBMODULE"
-   ],
-   "providers": [
-    {
-     "identity": "python3-pybind11",
-     "kind": "OE-CORE-RECIPE",
-     "location": "meta-openembedded/meta-python/recipes-devtools/python/python3-pybind11_3.0.4.bb",
-     "state": "AVAILABLE",
-     "version": "3.0.4"
-    },
-    {
-     "identity": "Common/pytorch",
-     "kind": "SUBMODULE",
-     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/onnx/third_party/pybind11",
-     "state": "AVAILABLE",
-     "version": "a2e59f0e7065"
-    },
-    {
-     "identity": "Common/pytorch",
-     "kind": "SUBMODULE",
-     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/pybind11",
-     "state": "AVAILABLE",
-     "version": "97bf890db679"
-    },
-    {
-     "identity": "Common/pytorch",
-     "kind": "SUBMODULE",
-     "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11",
-     "state": "AVAILABLE",
-     "version": "a23996fce38f"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -834,14 +843,14 @@
      "kind": "SUBMODULE",
      "location": "Symoneural-Build/src/autotools/source/libtool/gl-mod/bootstrap",
      "state": "AVAILABLE",
-     "version": "fdcc277cd237"
+     "version": "bfdcc277cd23"
     },
     {
      "identity": "Build/m4",
      "kind": "SUBMODULE",
      "location": "Symoneural-Build/src/autotools/source/m4/gl-mod/bootstrap",
      "state": "AVAILABLE",
-     "version": "42785aaa63db"
+     "version": "a42785aaa63d"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -874,6 +883,38 @@
      "location": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11/tools/clang",
      "state": "AVAILABLE",
      "version": "6a00cbc4a9b8"
+    }
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "consumers": [
+    "Ravencalc/cython",
+    "python3-cython"
+   ],
+   "decision": "UNRESOLVED",
+   "evidence": "tools/scan-oe-providers.py",
+   "link_scope": "UNKNOWN",
+   "logical_dependency": "cython",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "identity": "Ravencalc/cython",
+     "kind": "DIRECT-ACQUISITION",
+     "location": "Symoneural-Ravencalc/src/devtools/source/cython",
+     "state": "AVAILABLE",
+     "version": "see source-lock"
+    },
+    {
+     "identity": "python3-cython",
+     "kind": "OE-CORE-RECIPE",
+     "location": "openembedded-core/meta/recipes-devtools/python/python3-cython_3.2.9.bb",
+     "state": "AVAILABLE",
+     "version": "3.2.9"
     }
    ],
    "selected_provider": "UNRESOLVED"
@@ -1599,14 +1640,14 @@
      "kind": "SUBMODULE",
      "location": "Symoneural-Ravencalc/src/numerics/source/numpy/doc/source/_static/scipy-mathjax",
      "state": "AVAILABLE",
-     "version": "6f4c898f2255"
+     "version": "36f4c898f225"
     },
     {
      "identity": "Ravencalc/scipy",
      "kind": "SUBMODULE",
      "location": "Symoneural-Ravencalc/src/numerics/source/scipy/doc/source/_static/scipy-mathjax",
      "state": "AVAILABLE",
-     "version": "d21c58225c09"
+     "version": "3d21c58225c0"
     }
    ],
    "selected_provider": "UNRESOLVED"

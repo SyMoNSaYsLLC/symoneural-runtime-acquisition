@@ -7,6 +7,7 @@
  "census_note": "METHOD A and METHOD B differ in discovery but BOTH call is_submodule(), which depends on `git rev-parse --show-superproject-working-tree`. The methods are therefore NOT fully independent. Their agreement remains meaningful evidence about discovery, but must not be read as two wholly independent confirmations.",
  "census_shared_primitive": "lib_acq.is_submodule -> git rev-parse --show-superproject-working-tree",
  "determinism_curated_declared": [
+  "component-state.json",
   "exceptions.json",
   "model-register.json",
   "pending-acquisitions.json",
@@ -35,6 +36,7 @@
  },
  "record_provenance": {
   "artifact-plan.json": "SCANNER-DERIVED",
+  "component-state.json": "CURATED",
   "dependency-graph.json": "SCANNER-DERIVED",
   "exceptions.json": "CURATED",
   "license-inventory.json": "SCANNER-DERIVED",
@@ -51,6 +53,7 @@
  },
  "record_schemas": {
   "artifact-plan.json": "symoneural-artifact-plan/2",
+  "component-state.json": "symoneural-component-state/1",
   "dependency-graph.json": "symoneural-dependency-graph/2",
   "exceptions.json": "symoneural-exceptions/1",
   "license-inventory.json": "symoneural-license-inventory/2",
@@ -59,9 +62,9 @@
   "provider-collisions.json": "symoneural-provider-collisions/2",
   "provider-decisions.json": "symoneural-provider-decisions/1",
   "source-collisions.json": "symoneural-source-collisions/1",
-  "source-lock.json": "symoneural-source-lock/2",
+  "source-lock.json": "symoneural-source-lock/3",
   "source-manifest.json": "symoneural-source-manifest/1",
-  "submodule-lock.json": "symoneural-submodule-lock/2",
+  "submodule-lock.json": "symoneural-submodule-lock/3",
   "unresolved.json": "symoneural-unresolved/2",
   "vendor-lock.json": "symoneural-vendor-lock/3"
  },
@@ -89,13 +92,16 @@
   }
  },
  "tool_sha256": {
-  "check-determinism.py": "65ac8bd99acc0a3cd04766181a14b5a75fcecdd283dd6503ca89d8015696af64",
+  "check-api-closure.py": "5a2293957828bce10871c2f82d5f505f72c1c7b9644329257195ed6c233ba1e9",
+  "check-api-python-closure.py": "5a2293957828bce10871c2f82d5f505f72c1c7b9644329257195ed6c233ba1e9",
+  "check-determinism.py": "7f8f84a28799a0e352cc96105765183f4d9c8b0ec954925384b8034c5b9da8ab",
+  "check-python-runtime-closures.py": "0c03f9bd1bbaddee466868e68ebec21d569cba46473ea6d930ec76c12c12736a",
   "generate-runtime-acquisition.py": "af1f441b777d6ac99d5fa4f5592ac31c9fd634c1383b11d1cab53ca3817b8fc3",
-  "lib_acq.py": "ee1775b55ca94711875e123471c5f5875ac3f70ec5cd1e429c95774620ca6c7e",
-  "scan-acquisition.py": "ae2811347fd2c7f6a0432e7dfdf25bec606604923da29c7b67604941ca227433",
-  "scan-dependencies.py": "81e0041c7f251a8b568070e58996bc4ff6fc5536fca052fa762c5a319a9589e9",
+  "lib_acq.py": "2c818a79a676f0a18434e33ebf5af0a178af1b0c01262ea80322b098c2a6b700",
+  "scan-acquisition.py": "8fc51a4917247b27c00f8fc2f81c46f62f95a8d29ae8adb2af629e13113a9e50",
+  "scan-dependencies.py": "163f137408fec52d11214e206362ec90c0a9a8fa79c9a91fc37a159b190061be",
   "scan-oe-providers.py": "fcf8d107e0b22fbe458721b5a87fa34cbc032beca098da04af0c200ced52e043",
   "scan-source-collisions.py": "690d939d3950c74804d0d7e3b9452839d0f1805630c5bbc7ed8ceb3ca4606565",
-  "verify-acquisition.py": "f4bc2206e1f3ab5bd12e6a99a1f63f7d8fd92eb179ce0b0e8ba678294d042f3c"
+  "verify-acquisition.py": "4e03de4411ee44356bb4397007166b7a60b3668051690cb4f1d71b5b3f3348a8"
  }
 }

@@ -1289,6 +1289,68 @@
    "selected_provider": "UNRESOLVED"
   },
   {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "CROSS-RUNTIME-DUPLICATE",
+    "DIRECT-VERSUS-OE-CORE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "pybind11",
+   "provider_count": 5,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE",
+    "SUBMODULE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "pybind11",
+     "path": "Symoneural-Ravencalc/src/devtools/source/pybind11",
+     "resolved_revision": "d03662f0984f652b60e7ddce53d3868002275197",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/pybind/pybind11"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-pybind11",
+     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-pybind11_3.0.4.bb",
+     "resolved_revision": "3.0.4",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    },
+    {
+     "kind": "SUBMODULE",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/onnx/third_party/pybind11",
+     "resolved_revision": "a2e59f0e7065404b44dfe92a28aca47ba1378dc4",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pybind/pybind11.git"
+    },
+    {
+     "kind": "SUBMODULE",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/pybind11",
+     "resolved_revision": "97bf890db679505a14dfe547a5e77bb2bd05dc90",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pybind/pybind11.git"
+    },
+    {
+     "kind": "SUBMODULE",
+     "owning_component": "pytorch",
+     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11",
+     "resolved_revision": "a23996fce38ff6ccfbcdc09f1e63f2c4be5ea2ef",
+     "runtime": "Common",
+     "upstream_url": "https://github.com/pybind/pybind11.git"
+    }
+   ],
+   "runtimes": [
+    "Common",
+    "Ravencalc"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
    "classification": "CROSS-COMPONENT-DUPLICATE",
    "classification_flags": [
     "CROSS-COMPONENT-DUPLICATE"
@@ -1432,57 +1494,6 @@
      "resolved_revision": "571edeb2d0ac872a8392fc49285b156b07884b4e",
      "runtime": "Common",
      "upstream_url": "https://github.com/jwfromm/cutlass.git"
-    }
-   ],
-   "runtimes": [
-    "Common"
-   ],
-   "selected_provider": "UNRESOLVED"
-  },
-  {
-   "classification": "INTRA-COMPONENT-DUPLICATE",
-   "classification_flags": [
-    "INTRA-COMPONENT-DUPLICATE"
-   ],
-   "decision": "UNRESOLVED",
-   "logical_source": "pybind11",
-   "provider_count": 4,
-   "provider_kinds": [
-    "OE-CORE-RECIPE",
-    "SUBMODULE"
-   ],
-   "providers": [
-    {
-     "kind": "OE-CORE-RECIPE",
-     "owning_component": "python3-pybind11",
-     "path": "meta-openembedded/meta-python/recipes-devtools/python/python3-pybind11_3.0.4.bb",
-     "resolved_revision": "3.0.4",
-     "runtime": "<build-stack>",
-     "upstream_url": "openembedded-core"
-    },
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/onnx/third_party/pybind11",
-     "resolved_revision": "a2e59f0e7065404b44dfe92a28aca47ba1378dc4",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/pybind/pybind11.git"
-    },
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/pybind11",
-     "resolved_revision": "97bf890db679505a14dfe547a5e77bb2bd05dc90",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/pybind/pybind11.git"
-    },
-    {
-     "kind": "SUBMODULE",
-     "owning_component": "pytorch",
-     "path": "Symoneural-Common/src/ml/source/pytorch/third_party/tensorpipe/third_party/pybind11",
-     "resolved_revision": "a23996fce38ff6ccfbcdc09f1e63f2c4be5ea2ef",
-     "runtime": "Common",
-     "upstream_url": "https://github.com/pybind/pybind11.git"
     }
    ],
    "runtimes": [
@@ -2627,7 +2638,7 @@
      "kind": "SUBMODULE",
      "owning_component": "libtool",
      "path": "Symoneural-Build/src/autotools/source/libtool/gl-mod/bootstrap",
-     "resolved_revision": "fdcc277cd237fde115d3aa972add7608d348b90",
+     "resolved_revision": "bfdcc277cd237fde115d3aa972add7608d348b90",
      "runtime": "Build",
      "upstream_url": "https://github.com/gnulib-modules/bootstrap.git"
     },
@@ -2635,7 +2646,7 @@
      "kind": "SUBMODULE",
      "owning_component": "m4",
      "path": "Symoneural-Build/src/autotools/source/m4/gl-mod/bootstrap",
-     "resolved_revision": "42785aaa63db8a824292f87bc1a3f8863942601",
+     "resolved_revision": "a42785aaa63db8a824292f87bc1a3f8863942601",
      "runtime": "Build",
      "upstream_url": "https://github.com/gnulib-modules/bootstrap.git"
     }
@@ -2813,6 +2824,42 @@
    ],
    "runtimes": [
     "Common"
+   ],
+   "selected_provider": "UNRESOLVED"
+  },
+  {
+   "classification": "DIRECT-VERSUS-OE-CORE",
+   "classification_flags": [
+    "DIRECT-VERSUS-OE-CORE",
+    "INTRA-COMPONENT-DUPLICATE"
+   ],
+   "decision": "UNRESOLVED",
+   "logical_source": "cython",
+   "provider_count": 2,
+   "provider_kinds": [
+    "DIRECT-ACQUISITION",
+    "OE-CORE-RECIPE"
+   ],
+   "providers": [
+    {
+     "kind": "DIRECT-ACQUISITION",
+     "owning_component": "cython",
+     "path": "Symoneural-Ravencalc/src/devtools/source/cython",
+     "resolved_revision": "ec152091ca7c535e04b5da96e5bedfc9b33def22",
+     "runtime": "Ravencalc",
+     "upstream_url": "https://github.com/cython/cython"
+    },
+    {
+     "kind": "OE-CORE-RECIPE",
+     "owning_component": "python3-cython",
+     "path": "openembedded-core/meta/recipes-devtools/python/python3-cython_3.2.9.bb",
+     "resolved_revision": "3.2.9",
+     "runtime": "<build-stack>",
+     "upstream_url": "openembedded-core"
+    }
+   ],
+   "runtimes": [
+    "Ravencalc"
    ],
    "selected_provider": "UNRESOLVED"
   },
@@ -3845,7 +3892,7 @@
      "kind": "SUBMODULE",
      "owning_component": "numpy",
      "path": "Symoneural-Ravencalc/src/numerics/source/numpy/doc/source/_static/scipy-mathjax",
-     "resolved_revision": "6f4c898f2255e0c98eb6949cd67381552d5ffea",
+     "resolved_revision": "36f4c898f2255e0c98eb6949cd67381552d5ffea",
      "runtime": "Ravencalc",
      "upstream_url": "https://github.com/scipy/scipy-mathjax.git"
     },
@@ -3853,7 +3900,7 @@
      "kind": "SUBMODULE",
      "owning_component": "scipy",
      "path": "Symoneural-Ravencalc/src/numerics/source/scipy/doc/source/_static/scipy-mathjax",
-     "resolved_revision": "d21c58225c09243d5a088b1557654d280925e02",
+     "resolved_revision": "3d21c58225c09243d5a088b1557654d280925e02",
      "runtime": "Ravencalc",
      "upstream_url": "https://github.com/scipy/scipy-mathjax.git"
     }
@@ -5309,7 +5356,7 @@
      "kind": "SUBMODULE",
      "owning_component": "pytorch",
      "path": "Symoneural-Common/src/ml/source/pytorch/android/libs/fbjni",
-     "resolved_revision": "e1e1fe3858c63c251c637ae41a20de425dde96f",
+     "resolved_revision": "7e1e1fe3858c63c251c637ae41a20de425dde96f",
      "runtime": "Common",
      "upstream_url": "https://github.com/facebookincubator/fbjni.git"
     }
@@ -6601,7 +6648,7 @@
      "kind": "SUBMODULE",
      "owning_component": "gstreamer",
      "path": "Symoneural-Live/src/gstreamer/source/gstreamer/subprojects/gst-integration-testsuites/medias",
-     "resolved_revision": "850d668e87752c863b3fb01954464b0d1fffe4c",
+     "resolved_revision": "8850d668e87752c863b3fb01954464b0d1fffe4c",
      "runtime": "Live",
      "upstream_url": "https://gitlab.freedesktop.org/gstreamer/gst-integration-testsuites.git"
     }

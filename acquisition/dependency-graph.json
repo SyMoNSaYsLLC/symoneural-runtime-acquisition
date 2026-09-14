@@ -105781,6 +105781,18 @@
    "upstream_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
   },
   {
+   "classification": "DIRECT-DECLARED",
+   "declaration_path": "setuptools",
+   "declaration_source": "pyproject.toml [build-system]",
+   "declared_version": "UNKNOWN",
+   "dependency": "setuptools",
+   "owner_component": "cython",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "BUILD-ONLY",
+   "upstream_url": "UNKNOWN"
+  },
+  {
    "classification": "SUBMODULE",
    "declaration_path": "doc/source/_static/scipy-mathjax",
    "declaration_source": ".gitmodules",
@@ -106990,6 +107002,66 @@
    "owner_runtime": "Ravencalc",
    "resolved_identity": "UNKNOWN",
    "scope": "UNKNOWN",
+   "upstream_url": "UNKNOWN"
+  },
+  {
+   "classification": "DIRECT-DECLARED",
+   "declaration_path": "scikit-build-core >=0.11.2",
+   "declaration_source": "pyproject.toml [build-system]",
+   "declared_version": "UNKNOWN",
+   "dependency": "scikit-build-core >=0.11.2",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "BUILD-ONLY",
+   "upstream_url": "UNKNOWN"
+  },
+  {
+   "classification": "BUILD-FETCH",
+   "declaration_path": "eigen#0",
+   "declaration_source": "tests/CMakeLists.txt [FetchContent_Declare]",
+   "declared_version": "UNKNOWN",
+   "dependency": "eigen",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "TEST-ONLY",
+   "upstream_url": "UNKNOWN"
+  },
+  {
+   "classification": "DIRECT-DECLARED",
+   "declaration_path": "scikit-build-core",
+   "declaration_source": "tests/pyproject.toml [build-system]",
+   "declared_version": "UNKNOWN",
+   "dependency": "scikit-build-core",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "BUILD-ONLY",
+   "upstream_url": "UNKNOWN"
+  },
+  {
+   "classification": "DIRECT-DECLARED",
+   "declaration_path": "pytest",
+   "declaration_source": "tests/pyproject.toml [project.dependencies]",
+   "declared_version": "UNKNOWN",
+   "dependency": "pytest",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "RUNTIME/SHIP",
+   "upstream_url": "UNKNOWN"
+  },
+  {
+   "classification": "DIRECT-DECLARED",
+   "declaration_path": "pytest-timeout",
+   "declaration_source": "tests/pyproject.toml [project.dependencies]",
+   "declared_version": "UNKNOWN",
+   "dependency": "pytest-timeout",
+   "owner_component": "pybind11",
+   "owner_runtime": "Ravencalc",
+   "resolved_identity": "UNKNOWN",
+   "scope": "RUNTIME/SHIP",
    "upstream_url": "UNKNOWN"
   },
   {

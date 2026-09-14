@@ -6,13 +6,13 @@
 
 | | |
 |---|---|
-| Parent HEAD | `c172a413ec79276f3129ac5e2fc7ab5465bed4c0` |
+| Parent HEAD | `7bba8aca54751b629fa2a93b69ab181a28a98484` |
 | Working tree | modified, uncommitted |
-| Records | `acquisition/` (14 JSON + SHA256SUMS) |
-| Scanner identity | `acquisition/control-plane.json` (8 tools hashed) |
+| Records | `acquisition/` (15 JSON + SHA256SUMS) |
+| Scanner identity | `acquisition/control-plane.json` (11 tools hashed) |
 | Determinism verified | YES |
-| Tree inventory | `generated/runtime-tree.txt` (28644 dirs) |
-| Tree SHA-256 | `f7bf4c57aef868e7360881e3f2d3051560ab86e143ae8ba55e87bf5dc488a7ae` |
+| Tree inventory | `generated/runtime-tree.txt` (28657 dirs) |
+| Tree SHA-256 | `b15ce4a95240abd9bbe7cdc377659599eabde4f13452d73df2eb4df3f4b2fbbc` |
 | Report self-validation | PASS (10/10 totals re-derived) |
 
 ## Verdicts
@@ -27,10 +27,10 @@ before its description of the estate means anything.
 
 Acquisition FAIL reasons:
 
-- 41 provider collision(s) unresolved (15 direct-vs-OE-Core)
+- 42 provider collision(s) unresolved (17 direct-vs-OE-Core)
 - 366 vendored decision(s) unresolved
 - 429 licence file(s) without an established identifier
-- 9 explicit control-plane decisions open
+- 1 explicit control-plane decisions open
 
 This FAIL is expected and is a statement of open decisions, not a defect.
 
@@ -39,8 +39,8 @@ This FAIL is expected and is a statement of open decisions, not a defect.
 
 | Method | Count |
 |---|---|
-| A — filesystem candidate + `git rev-parse` validation | 41 |
-| B — independent git work-tree-top census | 41 |
+| A — filesystem candidate + `git rev-parse` validation | 43 |
+| B — independent git work-tree-top census | 43 |
 | **Sets identical** | **YES** |
 
 `.git` is accepted as a file or a directory; submodules are excluded from the
@@ -65,16 +65,16 @@ This locks the **build stack only**, never the application sources.
 | API | 6 | 6 | 6 |
 | Adaptive-Fabric | 1 | 1 | 1 |
 | Build | 7 | 7 | 7 |
-| CLI | 4 | 2 | 4 |
+| CLI | 4 | 3 | 4 |
 | Common | 6 | 6 | 6 |
 | Crypto | 3 | 3 | 3 |
 | LLM | 3 | 3 | 3 |
 | Live | 1 | 1 | 1 |
-| Ravencalc | 6 | 6 | 6 |
+| Ravencalc | 8 | 8 | 8 |
 | Remix | 1 | 1 | 1 |
 | Streamer | 1 | 1 | 1 |
 | Web | 2 | 1 | 2 |
-| **TOTAL** | **41** | **38** | **41** |
+| **TOTAL** | **43** | **41** | **43** |
 
 ## Top-level source lock
 
@@ -95,7 +95,7 @@ This locks the **build stack only**, never the application sources.
 | Build | openembedded-core | `fe7a24bc6711` | VERIFIED | 0 | yes |
 | Build | ninja | `3441b633c2fe` | VERIFIED | 0 | yes |
 | CLI | anthropic-sdk-python | `eb21a4352015` | VERIFIED | 0 | yes |
-| CLI | anthropic-sdk-typescript | `135f71e92976` | UNRESOLVED | 0 | **none** |
+| CLI | anthropic-sdk-typescript | `135f71e92976` | VERIFIED | 0 | yes |
 | CLI | python-sdk | `9972c21aa420` | VERIFIED | 0 | yes |
 | CLI | typescript-sdk | `cc4b41617ce3` | UNRESOLVED | 0 | **none** |
 | Common | accelerate | `6afc1e5ee217` | VERIFIED | 0 | yes |
@@ -112,6 +112,8 @@ This locks the **build stack only**, never the application sources.
 | LLM | vllm | `98dff2a81d74` | VERIFIED | 0 | yes |
 | Live | gstreamer | `070125524a84` | VERIFIED | 1 | yes |
 | Ravencalc | openblas | `e0166008be8e` | VERIFIED | 0 | yes |
+| Ravencalc | cython | `ec152091ca7c` | VERIFIED | 0 | yes |
+| Ravencalc | pybind11 | `d03662f0984f` | VERIFIED | 0 | yes |
 | Ravencalc | scikit-learn | `866c0f51e756` | VERIFIED | 0 | yes |
 | Ravencalc | numpy | `dd88c0c19b54` | VERIFIED | 7 | yes |
 | Ravencalc | scipy | `e4e854eaa8f1` | VERIFIED | 8 | yes |
@@ -130,13 +132,13 @@ Entries: **85** · identity key `owner_source_path + submodule_path` · unknown 
 
 ## Dependency graph
 
-Declarations discovered from on-disk manifests: **12825**. No depth limit; nothing fetched.
+Declarations discovered from on-disk manifests: **12831**. No depth limit; nothing fetched.
 
 | Classification | Count |
 |---|---|
 | PACKAGE-MANAGED | 8692 |
-| DIRECT-DECLARED | 3722 |
-| BUILD-FETCH | 227 |
+| DIRECT-DECLARED | 3727 |
+| BUILD-FETCH | 228 |
 | WORKSPACE-LOCAL | 99 |
 | SUBMODULE | 85 |
 
@@ -144,9 +146,9 @@ Declarations discovered from on-disk manifests: **12825**. No depth limit; nothi
 |---|---|
 | DEV-ONLY | 6160 |
 | UNKNOWN | 5188 |
-| RUNTIME/SHIP | 1267 |
-| BUILD-ONLY | 188 |
-| TEST-ONLY | 19 |
+| RUNTIME/SHIP | 1269 |
+| BUILD-ONLY | 191 |
+| TEST-ONLY | 20 |
 | DOC-ONLY | 3 |
 
 A lockfile establishes resolution, not directness: a `Cargo.lock` entry with no
@@ -187,15 +189,17 @@ OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**
 |---|---|
 | OE-Core recipes inspected | 2760 |
 | Providers indexed | 2823 |
-| Collisions | 48 |
-| Direct-acquisition vs OE-Core | **15** |
+| Collisions | 49 |
+| Direct-acquisition vs OE-Core | **17** |
 
 | Logical dependency | Direct | OE-Core recipe |
 |---|---|---|
+| pybind11 | Ravencalc/pybind11 | python3-pybind11 3.0.4 |
 | gstreamer | Live/gstreamer | gstreamer1.0 1.28.7 |
 | ninja | Build/ninja | ninja 1.13.2 |
 | autoconf | Build/autoconf | autoconf 2.73 |
 | automake | Build/automake | automake 1.19 |
+| cython | Ravencalc/cython | python3-cython 3.2.9 |
 | fastapi | API/fastapi | python3-fastapi 0.141.1 |
 | httpcore | API/httpcore | python3-httpcore 1.0.9 |
 | httpx | API/httpx | python3-httpx 0.28.1 |
@@ -218,12 +222,12 @@ Provider kinds indexed: DIRECT-ACQUISITION, OE-CORE-RECIPE, SUBMODULE, VENDORED
 
 | | |
 |---|---|
-| Logical sources indexed | 314 |
-| With more than one provider | **88** |
+| Logical sources indexed | 315 |
+| With more than one provider | **89** |
 | INTRA-COMPONENT-DUPLICATE | 77 |
 | CROSS-COMPONENT-DUPLICATE | 7 |
-| CROSS-RUNTIME-DUPLICATE | 4 |
-| DIRECT-VERSUS-OE-CORE | 14 |
+| CROSS-RUNTIME-DUPLICATE | 5 |
+| DIRECT-VERSUS-OE-CORE | 16 |
 | Vendor entries reclassified as SUBMODULE | 64 |
 | Duplicate top-level upstream URLs | 0 (invariant) |
 
@@ -241,10 +245,10 @@ no copy is collapsed, deleted or rewritten; every entry is `UNRESOLVED`.
 
 ## Licence inventory
 
-Licence-bearing files: **430**
+Licence-bearing files: **433**
 
 - NESTED/DEPENDENCY: 378
-- TOP-LEVEL: 52
+- TOP-LEVEL: 55
 
 **LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts.**
 This inventory is drift evidence, not a licensing conclusion.
@@ -256,29 +260,21 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 
 | Capability | Components |
 |---|---|
-| PYTHON-PACKAGE | 27 |
-| PYTHON-EXTENSION | 13 |
+| PYTHON-PACKAGE | 29 |
+| PYTHON-EXTENSION | 15 |
 | EXECUTABLE | 13 |
 | NODE-BUNDLE | 12 |
 | RUST-RLIB | 11 |
 | RUST-CDYLIB | 7 |
 | SHARED-LIBRARY | 6 |
+| STATIC-LIBRARY|SHARED-LIBRARY | 6 |
 | UNKNOWN | 5 |
-| STATIC-LIBRARY|SHARED-LIBRARY | 5 |
 
 ## Unresolved decisions
 
 | Category | Identifier | Blocks |
 |---|---|---|
-| ACQUISITION | mcp-typescript-sdk | Symoneural-CLI source lock |
-| ACQUISITION | symoneural-workerd | Symoneural-Web source lock |
 | ARCHITECTURE | FreeToken/torch | Adaptive-Fabric build design |
-| BUILD-DESIGN | pydantic-core-ownership | Symoneural-API release posture |
-| BUILD-DESIGN | scipy-fortran | Ravencalc scipy and scikit-learn (transitively) |
-| LICENCE | symoneural-openblas | release licensing claim |
-| PROVENANCE | all recipes | audit of SyMoNeuRaL modifications |
-| PROVIDER | direct-vs-oe-core | build design for Build, Ravencalc and Live |
-| PROVIDER | nodejs | Node/TypeScript acquisition |
 
 - artifact decisions pending: **41**
 - licence files unresolved: **429**
@@ -299,21 +295,5 @@ Recorded as history. Neither build is authoritative for release.
 
 ## Generated to-do tasks
 
-1. **[ACQUISITION] mcp-typescript-sdk** — Not acquired. Release decision specifies v2 GA 2.0.0 at cc4b41617ce3601b1290d67216ea0b194a3cd9ac; tag-to-commit unverified and mixed MIT / Apache-2.0 / CC-BY-4.0 treatment uncharacterised.
-
-2. **[ACQUISITION] symoneural-workerd** — On disk at 909e388c (v1.20260912.1); release decision specifies 925464ba (v1.20260911.1) paired with Wrangler 4.131.1.
-
-3. **[ARCHITECTURE] FreeToken/torch** — FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.
-
-4. **[BUILD-DESIGN] pydantic-core-ownership** — pydantic requires pydantic-core (Rust/maturin). meta-python supplies python3-pydantic-core 2.46.4 and it is BORROWED tonight so the API stack can build. But D2's rule is 'own what you ship, borrow what you only build with', and pydantic-core is linked into the shipped runtime, not merely used to build it. Under D2 it should be SyMoNeuRaL-owned, which means acquiring it as a source component. Recorded, not decided.
-
-5. **[BUILD-DESIGN] scipy-fortran** — scipy requires a Fortran compiler. The OE cross toolchain is built LANGUAGES="c,c++" with FORTRAN="", so x86_64-oe-linux-gfortran does not exist. Evidence: scipy meson.build:91 'Unknown compiler(s): x86_64-oe-linux-gfortran', log tmp/work/x86-64-v3-oe-linux/symoneural-scipy/1.18.1/temp/log.do_compile.2878019. TOOLCHAIN decision, not a recipe fix: either rebuild gcc-cross with fortran enabled (FORTRAN:forcevariable = ",fortran"), or accept scipy/scikit-learn as unbuildable on this toolchain. Not resolvable by guessing.
-
-6. **[LICENCE] symoneural-openblas** — 8 licence-bearing files (OpenBLAS BSD-3, GotoBLAS, LAPACK modified-BSD, LAPACKE, ReLAPACK, netlib BLAS reference whose grant is non-OSI 'requests proper credit'). Recipe LICENSE expression is still the single token BSD-3-Clause. Retained UNRESOLVED.
-
-7. **[PROVENANCE] all recipes** — RAW-GENERATED-BASELINE NOT PRESERVED. recipetool output was edited in place. Historical absence is not reconstructable and is not fabricated. STANDING REQUIREMENT: before editing any newly generated recipe, preserve its raw generated form or deterministic hash in acquisition evidence first.
-
-8. **[PROVIDER] direct-vs-oe-core** — The master re-baseline made 7 directly-acquired components duplicate an OE-Core recipe at the SAME version: gstreamer(1.28.7), autoconf(2.73), automake(1.19), libtool(2.6.2), m4(1.4.21), ninja(1.13.2), numpy(2.5.3). Each needs a provider selection. Provider graph now indexes SUBMODULE as a provider kind; the cross-runtime map is acquisition/source-collisions.json.
-
-9. **[PROVIDER] nodejs** — No nodejs provider in OE-Core at the locked SHA; npm.bbclass DEPENDS on nodejs-native and cites openembedded-meta.
+1. **[ARCHITECTURE] FreeToken/torch** — FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.
 
