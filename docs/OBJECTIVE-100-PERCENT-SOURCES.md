@@ -42,6 +42,63 @@ Every source in `acquisition/source-manifest.json` is either:
 4. Group B acquisitions: packaging, psutil, pyyaml, pyparsing, setuptools
 5. Decisions for Garrett only — do not decide these alone
 
+## SOURCES-100 — what "100% sources" means (added 2026-09-13, removes nothing above)
+
+**The source code itself is in this repository.** Every one of the 43 acquired
+upstream trees in `acquisition/source-lock.json` is committed as files under
+`Symoneural-<Runtime>/src/<category>/source/<component>/`, each at its pinned
+commit, pushed to GitHub. That is what SyMoNeuRaL is: its own copy of every
+runtime's source, in its own repository, built by its own recipes into
+`symoneural-*` packages. The earlier `.gitignore` rule excluding source, and the
+"source never enters git" gate, were agent choices — withdrawn. Packaging
+(every component → a `symoneural-*` ipk) is the second half of the same
+objective, not a substitute for the first; the audit reports both numbers.
+REFERENCE-ONLY exempts a component from *packaging*; it never exempted its
+*source* — all 43 count.
+
+### The pin model (S1) — content-addressed, verifiable from a clone alone
+
+Per component in `source-lock.json` (existing fields kept; four added):
+
+| field | meaning |
+|---|---|
+| `commit_sha` | the upstream commit (= SRCREV) |
+| `tree_sha` | `git --git-dir=<pins_path> rev-parse <commit_sha>^{tree}` |
+| `source_path` | where the files sit in this repository |
+| `pins_path` | the tree's moved `.git`, in `.gitpins/` beside `source/` — local provenance, ignored, never pushed |
+| `submodules` | `[{path, commit_sha, tree_sha, pins_path, provenance}]` |
+| `excluded` | `[{path, sha256, reason}]` — only files over GitHub's 100 MB limit; normally empty |
+
+The assertion: `git rev-parse HEAD:<source_path> == tree_sha`. One equality
+proves every path, mode and blob equals the upstream commit, with no upstream
+access. Where a tree has submodules the top-level hash cannot match (upstream
+holds gitlinks where we hold content), so `tools/ingest-tree verify` rebuilds
+upstream's tree from ours — each recorded submodule path replaced by its gitlink —
+and compares that; then recurses into each submodule against its own `tree_sha`.
+Trees go in through `git read-tree` of upstream's tree object, never `git add`:
+add runs this repository's ignore rules and upstream's own `.gitignore` over the
+files and silently drops them (10 of the first 13 trees went in short that way;
+pytorch alone lost 151 files, all `.pt` fixtures and other ignore-pattern hits).
+
+Tools: `tools/ingest-tree {ingest|verify|pins} <component>` ·
+`tools/ingest-and-commit <component>` · `tools/audit-workscope.sh` (stage 0 COMMITTED).
+
+### The two-line summary (from `tools/audit-workscope.sh`, both lines from disk)
+
+```
+sources committed  : N of 43   (verified V · listing-verified L · pending P)
+components packaged: M of <non-exempt>
+```
+
+### Named, not done
+
+- **Publishing `.gitpins` as mirror repositories under the SyMoNSaYsLLC org** —
+  provenance that survives this disk — is the natural next step. Not started.
+- **meta-openembedded** is pinned at `43b79d8e` in `~/symoneural-bootstrap-master`
+  and is not one of the 43. It is the third leg of the build stack, and the same
+  REFERENCE-ONLY ruling as bitbake and openembedded-core would apply if Garrett
+  wants it held as source later. Recorded here; not acted on.
+
 ---
 
 # SyMoNeuRaL Runtime Acquisition

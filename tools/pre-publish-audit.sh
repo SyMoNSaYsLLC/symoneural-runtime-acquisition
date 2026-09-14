@@ -22,9 +22,11 @@ NOT_SRC=':(exclude,glob)Symoneural-*/src/*/source/**'
 
 # 1. no secret-bearing filenames tracked, now or ever
 hits=$(git log --all --pretty=format: --name-only --diff-filter=A 2>/dev/null \
-       | sort -u | grep -iE '\.env$|\.pem$|\.key$|\.p12$|id_rsa|id_ed25519|\.netrc|credentials\.' || true)
-[ -n "$hits" ] && { say "secret filenames in history" "FAIL"; echo "$hits"; fail=1; } \
-               || say "secret filenames in history" "clean"
+       | sort -u | grep -vE "$SRC_RE" | grep -iE '\.env$|\.pem$|\.key$|\.p12$|id_rsa|id_ed25519|\.netrc|credentials\.' || true)
+[ -n "$hits" ] && { say "secret filenames in history (outside source)" "FAIL"; echo "$hits"; fail=1; } \
+               || say "secret filenames in history (outside source)" "clean"
+n=$(git ls-files | grep -E "$SRC_RE" | grep -ciE '\.env$|\.pem$|\.key$|\.p12$|id_rsa|id_ed25519|\.netrc|credentials\.' || true)
+say "secret-shaped filenames inside verified source" "${n:-0} (upstream fixtures, informational)"
 
 # 2. no secret-shaped assignments in the working tree
 hits=$(git grep -nE '(SMTP_PASS|SYM_[A-Z_]*TOKEN|TUNNEL_TOKEN|CLIENT_SECRET|ACCOUNTS_SECRET)[[:space:]]*=[[:space:]]*["'"'"']?[A-Za-z0-9+/_-]{12,}' -- . "$NOT_SRC" 2>/dev/null || true)

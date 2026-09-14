@@ -1,0 +1,20 @@
+#!/bin/bash
+# ingest-publish <component>... - S2 for each component IN ORDER, one commit and one
+# push each, pre-publish audit before every push, stop at the first failure so a
+# failure is one component and not the batch. Prints the tool's report line and
+# the push's old..new line for each.
+set -uo pipefail
+cd "$(dirname "$0")/.." || exit 1
+for comp in "$@"; do
+    echo "################ $comp"
+    bash tools/ingest-and-commit "$comp" 2>&1 | grep -v "^  PIN \|^  SUB   moved gitfile"
+    rc=${PIPESTATUS[0]}
+    [ $rc -eq 0 ] || { echo "STOP: ingest-and-commit $comp rc=$rc"; exit $rc; }
+    bash tools/pre-publish-audit.sh > "${TMPDIR:-/tmp}/prepub.$$" 2>&1; rc=$?
+    if [ $rc -ne 0 ]; then cat "${TMPDIR:-/tmp}/prepub.$$"; echo "STOP: pre-publish audit rc=$rc after $comp - committed, NOT pushed"; exit $rc; fi
+    git push origin HEAD > "${TMPDIR:-/tmp}/push.$$" 2>&1; rc=$?
+    grep -E "HEAD -> main|error|fatal|rejected" "${TMPDIR:-/tmp}/push.$$" | sed 's/^/  PUSH  /'
+    [ $rc -eq 0 ] || { echo "STOP: push rc=$rc after $comp"; exit $rc; }
+done
+rm -f "${TMPDIR:-/tmp}/prepub.$$" "${TMPDIR:-/tmp}/push.$$"
+echo "batch complete: $*"
