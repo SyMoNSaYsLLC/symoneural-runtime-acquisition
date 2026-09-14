@@ -176,7 +176,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/FlashML-org/FreeToken",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "ff3ff1de70209467631a63a8f441c239d03ff6d0",
+      "pins_path": "Symoneural-Adaptive-Fabric/src/freetoken/.gitpins/FreeToken.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Build/build/devtool-workspace/appends/symoneural-autoconf_git.bbappend",
