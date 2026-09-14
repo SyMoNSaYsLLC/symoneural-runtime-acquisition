@@ -928,7 +928,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/pybind/pybind11",
       "worktree": "clean",
-      "worktree_detail": ""
+      "worktree_detail": "",
+      "tree_sha": "2a968b9d6a9bf9684630bf40c4113e28767b8caa",
+      "pins_path": "Symoneural-Ravencalc/src/devtools/.gitpins/pybind11.git",
+      "submodules": [],
+      "excluded": []
     }
   ],
   "note": "Exact commit SHA is authoritative; branch is context only.",
