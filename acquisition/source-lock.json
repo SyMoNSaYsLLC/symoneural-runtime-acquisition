@@ -394,7 +394,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/modelcontextprotocol/python-sdk",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "21f658247310298e06d382124eb83137efddf5fd",
+      "pins_path": "Symoneural-CLI/src/mcp/.gitpins/python-sdk.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "NOT-APPLICABLE",
