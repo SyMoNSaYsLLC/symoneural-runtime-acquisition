@@ -1,0 +1,218 @@
+# symoneural-nvidia-open-kernel :: ESTATE linux-yocto 6.18.48-yocto-standard (qemux86-64) staged-install proof
+date      : 2026-09-14 18:15:26 -0400
+host      : kernel 6.12.107+deb13-amd64 (the host kernel is NOT the target; nothing here is loaded or booted)
+build dir : Symoneural-Platform/build/devtool-master
+NOTE      : a qemux86-64 build/package/staged-install result - not a boot, module-load or RTX 5070 Ti result.
+
+## 1. Source identity (SOURCES-100 verification from HEAD)
+    open-gpu-kernel-modules    Platform         61dcc93722ec ·    4005 files · VERIFIED
+  [PASS] tools/ingest-tree verify open-gpu-kernel-modules
+
+## 2. Estate kernel identity (what the modules were built against)
+    kernel-abiversion: 6.18.48-yocto-standard
+  [PASS] kernel-abiversion is 6.18.48-yocto-standard
+  [PASS] kernel base package present in the feed - kernel-6.18.48-yocto-standard_6.18.48+git0+c8484925c8_ad9d5e4518-r0_qemux86_64.ipk
+    kernel package version: 6.18.48+git0+c8484925c8_ad9d5e4518  (linux-yocto SRCREV_meta c8484925c8, SRCREV_machine ad9d5e4518)
+  [PASS] kernel version string carries the pinned linux-yocto 6.18 SRCREVs (meta c8484925c8, machine ad9d5e4518)
+    CONFIG_CC_VERSION_TEXT="x86_64-oe-linux-gcc (GCC) 16.2.0"
+    CONFIG_MODULES=y
+    CONFIG_MODVERSIONS=unset
+    CONFIG_MODULE_SIG=unset
+    CONFIG_MODULE_SIG_ALL=unset
+    CONFIG_MODULE_COMPRESS_XZ=unset
+    CONFIG_MODULE_COMPRESS_ZSTD=unset
+    CONFIG_DEBUG_INFO_BTF_MODULES=unset
+    CONFIG_DRM=y
+    CONFIG_DRM_KMS_HELPER=y
+    CONFIG_DRM_DISPLAY_HELPER=m
+    CONFIG_PREEMPT=y
+    CONFIG_SMP=y
+    CONFIG_LOCALVERSION="-yocto-standard"
+  [PASS] kernel compiled by the estate cross compiler (CONFIG_CC_VERSION_TEXT)
+  [PASS] kernel has CONFIG_MODULES and CONFIG_DRM (nvidia-drm buildable)
+    -> MODVERSIONS not enabled: symbol CRC checking is NOT APPLICABLE (vermagic-only ABI) for this kernel
+    -> MODULE_SIG not enabled; MODULE_COMPRESS not enabled
+
+## 3. Package identities (feed) and control fields
+  [PASS] exactly one symoneural-nvidia-open-kernel ipk - symoneural-nvidia-open-kernel_615.71.09-r0_qemux86_64.ipk
+    symoneural-nvidia-open-kernel_615.71.09-r0_qemux86_64.ipk  888 B  sha256 d486297d579a8e32ee0589f4408cdc23e325dec4e079852fc2cf3db87bda2687
+  [PASS] exactly one symoneural-nvidia-open-kernel-dev ipk - symoneural-nvidia-open-kernel-dev_615.71.09-r0_qemux86_64.ipk
+    symoneural-nvidia-open-kernel-dev_615.71.09-r0_qemux86_64.ipk  2138 B  sha256 a30c99a0c1c59cc018ba6d94a9c18e741210d064c635982a0f6dd14040ea566b
+  [PASS] exactly one symoneural-nvidia-open-kernel-dbg ipk - symoneural-nvidia-open-kernel-dbg_615.71.09-r0_qemux86_64.ipk
+    symoneural-nvidia-open-kernel-dbg_615.71.09-r0_qemux86_64.ipk  2036518 B  sha256 71934cf5d5d198e3aa7a7faeb06914132e97fccacb4121c83e0706fc9d5ef03e
+  [PASS] exactly one kernel-module-nvidia-6.18.48-yocto-standard ipk - kernel-module-nvidia-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk
+    kernel-module-nvidia-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  11644856 B  sha256 5bddaec11f661be759e7e0c7212a790cf832b91913354d45e1706a992949a5d5
+  [PASS] exactly one kernel-module-nvidia-uvm-6.18.48-yocto-standard ipk - kernel-module-nvidia-uvm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk
+    kernel-module-nvidia-uvm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  700682 B  sha256 8ee8972aba1384fbfa6402dff8b2b4cb051dfbe8cf88f9290dfefc020ca34377
+  [PASS] exactly one kernel-module-nvidia-modeset-6.18.48-yocto-standard ipk - kernel-module-nvidia-modeset-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk
+    kernel-module-nvidia-modeset-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  837478 B  sha256 98569c61cc5b98ce4cdc9ac20ab3f84798d7a663281306439907f4b6b896c053
+  [PASS] exactly one kernel-module-nvidia-drm-6.18.48-yocto-standard ipk - kernel-module-nvidia-drm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk
+    kernel-module-nvidia-drm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  73300 B  sha256 6e3a9850495a515af081b40340b848d3621f741ad6fa03ab9632758e149b3af8
+    kernel-module-nvidia-6.18.48-yocto-standard: Architecture=qemux86_64 Depends=kernel-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-6.18.48-yocto-standard: machine-specific architecture qemux86_64
+  [PASS] kernel-module-nvidia-6.18.48-yocto-standard: depends on the estate kernel package kernel-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-6.18.48-yocto-standard: ownership recorded (Source: symoneural-nvidia-open-kernel_615.71.09.bb)
+       files: ./usr/lib/modules/6.18.48-yocto-standard/kernel/drivers/video/nvidia.ko
+  [PASS] kernel-module-nvidia-6.18.48-yocto-standard: exactly one file, under /usr/lib/modules/6.18.48-yocto-standard/
+    kernel-module-nvidia-uvm-6.18.48-yocto-standard: Architecture=qemux86_64 Depends=kernel-6.18.48-yocto-standard, kernel-module-nvidia-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-uvm-6.18.48-yocto-standard: machine-specific architecture qemux86_64
+  [PASS] kernel-module-nvidia-uvm-6.18.48-yocto-standard: depends on the estate kernel package kernel-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-uvm-6.18.48-yocto-standard: ownership recorded (Source: symoneural-nvidia-open-kernel_615.71.09.bb)
+       files: ./usr/lib/modules/6.18.48-yocto-standard/kernel/drivers/video/nvidia-uvm.ko
+  [PASS] kernel-module-nvidia-uvm-6.18.48-yocto-standard: exactly one file, under /usr/lib/modules/6.18.48-yocto-standard/
+    kernel-module-nvidia-modeset-6.18.48-yocto-standard: Architecture=qemux86_64 Depends=kernel-6.18.48-yocto-standard, kernel-module-backlight-6.18.48-yocto-standard, kernel-module-nvidia-6.18.48-yocto-standard, kernel-module-video-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-modeset-6.18.48-yocto-standard: machine-specific architecture qemux86_64
+  [PASS] kernel-module-nvidia-modeset-6.18.48-yocto-standard: depends on the estate kernel package kernel-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-modeset-6.18.48-yocto-standard: ownership recorded (Source: symoneural-nvidia-open-kernel_615.71.09.bb)
+       files: ./usr/lib/modules/6.18.48-yocto-standard/kernel/drivers/video/nvidia-modeset.ko
+  [PASS] kernel-module-nvidia-modeset-6.18.48-yocto-standard: exactly one file, under /usr/lib/modules/6.18.48-yocto-standard/
+    kernel-module-nvidia-drm-6.18.48-yocto-standard: Architecture=qemux86_64 Depends=kernel-6.18.48-yocto-standard, kernel-module-drm-display-helper-6.18.48-yocto-standard, kernel-module-nvidia-modeset-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-drm-6.18.48-yocto-standard: machine-specific architecture qemux86_64
+  [PASS] kernel-module-nvidia-drm-6.18.48-yocto-standard: depends on the estate kernel package kernel-6.18.48-yocto-standard
+  [PASS] kernel-module-nvidia-drm-6.18.48-yocto-standard: ownership recorded (Source: symoneural-nvidia-open-kernel_615.71.09.bb)
+       files: ./usr/lib/modules/6.18.48-yocto-standard/kernel/drivers/video/nvidia-drm.ko
+  [PASS] kernel-module-nvidia-drm-6.18.48-yocto-standard: exactly one file, under /usr/lib/modules/6.18.48-yocto-standard/
+  [PASS] meta package depends on all four module packages - kernel-module-nvidia-6.18.48-yocto-standard, kernel-module-nvidia-drm-6.18.48-yocto-standard, kernel-module-nvidia-modeset-6.18.48-yocto-standard, kernel-module-nvidia-uvm-6.18.48-yocto-standard
+  [PASS] no nvidia-peermem anywhere
+  [PASS] -dev holds exactly the NVIDIA Module.symvers - ./usr/include/symoneural-nvidia-open-kernel/Module.symvers
+
+## 4. Disposable root, installed from the package feed with the estate's own opkg
+    root: /tmp/claude-1000/symoneural-platform-proof-wnofet89
+    opkg: Symoneural-Common/build/devtool-master/tmp/sysroots-components/x86_64/opkg-native/usr/bin/opkg (opkg version 0.10.0 (libsolv 0.7.39))
+    feed: 527 packages indexed from Symoneural-Platform/build/devtool-master/tmp/deploy/ipk/qemux86_64
+  [PASS] opkg update (feed index read) - Updated source 'feed'.
+    $ opkg -o <root> -f <conf> --volatile-cache install symoneural-nvidia-open-kernel symoneural-nvidia-open-kernel-dev symoneural-nvidia-open-kernel-dbg kernel-dev  -> rc=0
+    | Installing symoneural-nvidia-open-kernel-dbg (615.71.09) on root
+    | Installing kernel-dev (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-image-bzimage-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-image-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-module-wmi-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-module-backlight-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-module-drm-display-helper-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-module-nvidia-6.18.48-yocto-standard (615.71.09) on root
+    | Installing kernel-module-video-6.18.48-yocto-standard (6.18.48+git0+c8484925c8_ad9d5e4518) on root
+    | Installing kernel-module-nvidia-uvm-6.18.48-yocto-standard (615.71.09) on root
+    | Installing kernel-module-nvidia-modeset-6.18.48-yocto-standard (615.71.09) on root
+    | Installing kernel-module-nvidia-drm-6.18.48-yocto-standard (615.71.09) on root
+    | Installing symoneural-nvidia-open-kernel (615.71.09) on root
+    | Installing symoneural-nvidia-open-kernel-dev (615.71.09) on root
+  [PASS] opkg install rc=0 (dependency closure resolved by opkg from the feed)
+    installed: kernel-6.18.48-yocto-standard, kernel-dev, kernel-image-6.18.48-yocto-standard, kernel-image-bzimage-6.18.48-yocto-standard, kernel-module-backlight-6.18.48-yocto-standard, kernel-module-drm-display-helper-6.18.48-yocto-standard, kernel-module-nvidia-6.18.48-yocto-standard, kernel-module-nvidia-drm-6.18.48-yocto-standard, kernel-module-nvidia-modeset-6.18.48-yocto-standard, kernel-module-nvidia-uvm-6.18.48-yocto-standard, kernel-module-video-6.18.48-yocto-standard, kernel-module-wmi-6.18.48-yocto-standard, symoneural-nvidia-open-kernel, symoneural-nvidia-open-kernel-dbg, symoneural-nvidia-open-kernel-dev
+  [PASS] symoneural-nvidia-open-kernel recorded as installed
+  [PASS] symoneural-nvidia-open-kernel-dev recorded as installed
+  [PASS] symoneural-nvidia-open-kernel-dbg recorded as installed
+  [PASS] kernel-module-nvidia-6.18.48-yocto-standard recorded as installed
+  [PASS] kernel-module-nvidia-uvm-6.18.48-yocto-standard recorded as installed
+  [PASS] kernel-module-nvidia-modeset-6.18.48-yocto-standard recorded as installed
+  [PASS] kernel-module-nvidia-drm-6.18.48-yocto-standard recorded as installed
+  [PASS] four modules present under /usr/lib/modules/6.18.48-yocto-standard/kernel/drivers/video - nvidia-drm.ko nvidia-modeset.ko nvidia-uvm.ko nvidia.ko
+  [PASS] no nvidia-peermem in the root
+  [PASS] in-tree modules uncompressed or compressed as the kernel config dictates (informational)
+  [PASS] no Debian DKMS path in the root
+  [PASS] no NVIDIA userspace library or firmware blob was pulled into the root
+
+## 5. depmod in the staged root against the kernel's own Module.symvers (from kernel-dev)
+  [PASS] root has Module.symvers-6.18.48-yocto-standard (kernel-dev) and modules.builtin (kernel-6.18.48-yocto-standard)
+    $ depmod -b <root> -e -E <root>/boot/Module.symvers-6.18.48-yocto-standard 6.18.48-yocto-standard  -> rc=0; diagnostics: 0 ours / 0 total
+  [PASS] depmod rc=0
+  [PASS] depmod -e -E: no unresolved symbol in the four modules against the estate kernel's Module.symvers
+    modules.dep: kernel/drivers/video/nvidia-modeset.ko: nvidia.ko video.ko wmi.ko backlight.ko
+    modules.dep: kernel/drivers/video/nvidia-drm.ko: drm_display_helper.ko nvidia-modeset.ko nvidia.ko video.ko wmi.ko backlight.ko
+    modules.dep: kernel/drivers/video/nvidia-uvm.ko: nvidia.ko
+    modules.dep: kernel/drivers/video/nvidia.ko: 
+  [PASS] modules.dep indexes all four modules
+  [PASS] nvidia-uvm and nvidia-modeset resolve to this root's nvidia.ko
+  [PASS] PCI vendor 10DE alias registered - 11 alias lines
+
+## 6. Module metadata
+    nvidia-drm: version=615.71.09 license=Dual MIT/GPL vermagic=6.18.48-yocto-standard SMP preempt mod_unload depends=drm_display_helper,nvidia-modeset srcversion=D2F81AEE3A9B0BF1DED722C signature=none (UNSIGNED)
+  [PASS] nvidia-drm vermagic is the estate kernel's
+  [PASS] nvidia-drm vermagic modversions flag consistent with the kernel config
+  [PASS] nvidia-drm license/version strings
+  [PASS] nvidia-drm unsigned (no signing key exists or is used)
+    nvidia-modeset: version=615.71.09 license=Dual MIT/GPL vermagic=6.18.48-yocto-standard SMP preempt mod_unload depends=backlight,video,nvidia srcversion=7BA28538668890946505DA9 signature=none (UNSIGNED)
+  [PASS] nvidia-modeset vermagic is the estate kernel's
+  [PASS] nvidia-modeset vermagic modversions flag consistent with the kernel config
+  [PASS] nvidia-modeset license/version strings
+  [PASS] nvidia-modeset unsigned (no signing key exists or is used)
+    nvidia-uvm: version=615.71.09 license=Dual MIT/GPL vermagic=6.18.48-yocto-standard SMP preempt mod_unload depends=nvidia srcversion=227990773C08E287A9225CC signature=none (UNSIGNED)
+  [PASS] nvidia-uvm vermagic is the estate kernel's
+  [PASS] nvidia-uvm vermagic modversions flag consistent with the kernel config
+  [PASS] nvidia-uvm license/version strings
+  [PASS] nvidia-uvm unsigned (no signing key exists or is used)
+    nvidia: version=615.71.09 license=Dual MIT/GPL vermagic=6.18.48-yocto-standard SMP preempt mod_unload depends= srcversion=040E903CBCB6AA48C223679 signature=none (UNSIGNED)
+  [PASS] nvidia vermagic is the estate kernel's
+  [PASS] nvidia vermagic modversions flag consistent with the kernel config
+  [PASS] nvidia license/version strings
+  [PASS] nvidia unsigned (no signing key exists or is used)
+       firmware requested: nvidia/615.71.09/ucodes_tu10x.bin, nvidia/615.71.09/ucodes_ga10x.bin, nvidia/615.71.09/gsp_tu10x.bin, nvidia/615.71.09/gsp_ga10x.bin
+  [PASS] nvidia requests GSP/ucode firmware under nvidia/615.71.09/ (NOT provided by any estate package - recorded blocker)
+    modprobe --dump-modversions -> rc=1 (andard/kernel/drivers/video/nvidia-drm.ko: No data available): NOT APPLICABLE, the estate kernel has no CONFIG_MODVERSIONS
+
+## 7. ELF, sections, and leakage (shipped modules)
+  [PASS] nvidia-drm: ELF64 relocatable x86-64
+       sections: .modinfo=True __versions=False (n/a without MODVERSIONS) .BTF=False .debug*=0
+  [PASS] nvidia-drm: carries .modinfo
+  [PASS] nvidia-drm: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/devtool-master/tmp' - 0 hits
+  [PASS] nvidia-drm: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-drm: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-drm: no string contains '/usr/src/linux-headers' - 0 hits
+  [PASS] nvidia-drm: no string contains '/lib/modules/6.12.107' - 0 hits
+  [PASS] nvidia-drm: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-drm: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-drm: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia-modeset: ELF64 relocatable x86-64
+       sections: .modinfo=True __versions=False (n/a without MODVERSIONS) .BTF=False .debug*=0
+  [PASS] nvidia-modeset: carries .modinfo
+  [PASS] nvidia-modeset: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/devtool-master/tmp' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/usr/src/linux-headers' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/lib/modules/6.12.107' - 0 hits
+  [PASS] nvidia-modeset: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-modeset: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-modeset: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia-uvm: ELF64 relocatable x86-64
+       sections: .modinfo=True __versions=False (n/a without MODVERSIONS) .BTF=False .debug*=0
+  [PASS] nvidia-uvm: carries .modinfo
+  [PASS] nvidia-uvm: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/devtool-master/tmp' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/home/google' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/usr/src/linux-headers' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/lib/modules/6.12.107' - 0 hits
+  [PASS] nvidia-uvm: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia-uvm: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia-uvm: no whole-word occurrence of the login 'google' - 0 hits
+  [PASS] nvidia: ELF64 relocatable x86-64
+       sections: .modinfo=True __versions=False (n/a without MODVERSIONS) .BTF=False .debug*=0
+  [PASS] nvidia: carries .modinfo
+  [PASS] nvidia: no string contains '/home/google/SymonSaysLLC/Symoneural-Platform/build/devtool-master/tmp' - 0 hits
+  [PASS] nvidia: no string contains '/home/google/SymonSaysLLC' - 0 hits
+  [PASS] nvidia: no string contains '/home/google' - 0 hits
+  [PASS] nvidia: no string contains '/usr/src/linux-headers' - 0 hits
+  [PASS] nvidia: no string contains '/lib/modules/6.12.107' - 0 hits
+  [PASS] nvidia: no string contains '/usr/src/nvidia-615.71.09' - 0 hits
+  [PASS] nvidia: no whole-word occurrence of the hostname 'symon' - 0 hits
+  [PASS] nvidia: no whole-word occurrence of the login 'google' - 0 hits
+    build string: nvidia id: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (symoneural@symoneural)  Mon Sep 14 10:07:34 PM UTC 2026
+  [PASS] nv-kernel.o build string carries the fixed identity (symoneural@symoneural)
+
+## 8. Build log: explicit kernel inputs, estate cross toolchain, no host kernel
+  [PASS] one do_compile log - /home/google/SymonSaysLLC/Symoneural-Platform/build/devtool-master/tmp/work/qemux86_64-oe-linux/symoneural-nvidia-open-kernel/615.71.09/temp/log.do_compile
+  [PASS] make invoked with explicit SYSSRC/SYSOUT/KERNEL_UNAME
+    SYSSRC = Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-source
+    SYSOUT = Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-build-artifacts
+    KERNEL_UNAME = 6.18.48-yocto-standard
+  [PASS] inputs are the estate kernel's shared source and build-artifact trees
+    compiler invocations: x86_64-oe-linux-gcc 1488; host gcc 0; conftest probes 248; [M] compiles 202; MODPOST yes
+  [PASS] only the estate cross compiler compiled the modules
+  [PASS] no host kernel path, host header tree or DKMS source referenced in the build log
+
+## 9. Not exercised (by design of this baseline)
+    BOOT: NOT TESTED   MODULE LOAD: NOT TESTED   GPU CONSUMER: NOT TESTED   SIGNING: not applicable to the QEMU baseline (unsigned)
+    Userspace driver and GSP firmware providers for the estate profile: none - deployment BLOCKED (docs/platform/NVIDIA-OPEN-KERNEL.md section 4)
+
+## Result
+root removed: /tmp/claude-1000/symoneural-platform-proof-wnofet89
+RESULT: PASS

@@ -1,0 +1,56 @@
+# NVIDIA open GPU kernel modules 615.71.09 - TARGET B: estate linux-yocto 6.18.48 qemux86-64 build
+generated : 2026-09-14 18:14 EDT
+build dir : Symoneural-Platform/build/devtool-master (template meta-symoneural/conf/templates/platform-estate; PREFERRED_VERSION_linux-yocto = 6.18% - without it the pinned metadata selects 7.2.4)
+recipes   : linux-yocto_6.18.bb (oe-core fe7a24bc67) ; symoneural-nvidia-open-kernel_615.71.09.bb (require symoneural-nvidia-open-kernel.inc; inherit symoneural-pristine module)
+
+## Kernel (built by this run; bitbake virtual/kernel rc=0, Attempted 1072 tasks of which 1039 didn't need to be rerun and all succeeded)
+  recipe identity : linux-yocto-6.18.48+git-r0 ; SRCREV_machine:qemux86-64 ad9d5e451874e64e4e51093f3c9c6ca4426d3b0a (v6.18/standard/base) ; SRCREV_meta c8484925c85ec1e6510c75d9e1b36e01d6e2e904 (yocto-6.18)
+  kernel-abiversion: 6.18.48-yocto-standard ; kernel.release: 6.18.48-yocto-standard
+  kernel package  : kernel-6.18.48-yocto-standard_6.18.48+git0+c8484925c8_ad9d5e4518-r0_qemux86_64.ipk sha256 ae60b691fc4cfa5d49b5d90440cee9556d25c03dd1455e1dabffa1804c066de9
+  .config facts   : CONFIG_CC_VERSION_TEXT="x86_64-oe-linux-gcc (GCC) 16.2.0" CONFIG_PREEMPT=y CONFIG_SMP=y CONFIG_X86_KERNEL_IBT=y CONFIG_MITIGATION_RETPOLINE=y CONFIG_MODULES=y CONFIG_MODULE_UNLOAD=y CONFIG_VIDEO=y CONFIG_DRM=y CONFIG_DRM_KMS_HELPER=y CONFIG_DRM_DISPLAY_HELPER=m CONFIG_DRM_TTM_HELPER=y CONFIG_OBJTOOL=y 
+  not set         : CONFIG_MODVERSIONS (vermagic-only ABI), CONFIG_MODULE_SIG, CONFIG_MODULE_COMPRESS_*, CONFIG_DEBUG_INFO_BTF (0 of them set)
+  kernel sources  : Symoneural-Platform/downloads/git2/git.yoctoproject.org.{linux-yocto.git,yocto-kernel-cache} - seeded by local mirror clone from Symoneural-Ravencalc/downloads/git2 (same pinned repositories; both SRCREVs present before the build)
+
+## Cross toolchain (estate, from the shared sstate)
+  binutils-cross-x86_64 gcc-cross-x86_64 
+  kernel CC: x86_64-oe-linux-gcc (GCC) 16.2.0
+
+## make invocation (log.do_compile line 2)
+  NOTE: make -j 12 KERNEL_SRC=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-source SYSSRC=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-source S
+  YSOUT=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-build-artifacts KERNEL_UNAME=6.18.48-yocto-standard ARCH=x86_64 TARGET_ARCH=x86_64 TARGET_OS=Linux NV_EXCLUDE_KERNEL_MO
+  DULES=nvidia-peermem NV_BUILD_USER=symoneural NV_BUILD_HOST=symoneural NV_VERBOSE=1 KERNEL_PATH=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-source KERNEL_VERSION=6.18.48
+  -yocto-standard CC=x86_64-oe-linux-gcc   -fuse-ld=bfd -fcanon-prefix-map  -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/qemux86_64-oe-linux/symoneural-nvidia-open-kernel/615.71.0
+  9/pristine=/usr/src/debug/symoneural-nvidia-open-kernel/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/qemux86_64-oe-linux/symoneural-nvidia-open-kernel/615.71.09/prist
+  ine=/usr/src/debug/symoneural-nvidia-open-kernel/615.71.09  -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/qemux86_64-oe-linux/symoneural-nvidia-open-kernel/615.71.09/recipe-sysro
+  ot=  -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work/qemux86_64-oe-linux/symoneural-nvidia-open-kernel/615.71.09/recipe-sysroot-native=   -ffile-prefix-map=Symoneural-Platform/buil
+  d/devtool-master/tmp/work-shared/qemux86-64/kernel-source=/usr/src/kernel  -ffile-prefix-map=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-build-artifacts=/usr/src/kernel 
+   LD=x86_64-oe-linux-ld.bfd  AR=x86_64-oe-linux-ar  OBJCOPY=x86_64-oe-linux-objcopy  STRIP=x86_64-oe-linux-strip O=Symoneural-Platform/build/devtool-master/tmp/work-shared/qemux86-64/kernel-build-artif
+  acts KBUILD_EXTRA_SYMBOLS= modules
+  compiler invocations: x86_64-oe-linux-gcc 1488; host gcc 0; conftest probes 248; [M] compiles 202; MODPOST 1; 'uname -r' 0; /usr/src/linux-headers refs 0
+
+## Package QA
+  do_package_qa: 0 issues
+
+## Packages (ipk, kernel-module-split; PACKAGE_ARCH qemux86_64)
+  kernel-module-nvidia-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  11644856 B  sha256 5bddaec11f661be759e7e0c7212a790cf832b91913354d45e1706a992949a5d5
+  kernel-module-nvidia-drm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  73300 B  sha256 6e3a9850495a515af081b40340b848d3621f741ad6fa03ab9632758e149b3af8
+  kernel-module-nvidia-modeset-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  837478 B  sha256 98569c61cc5b98ce4cdc9ac20ab3f84798d7a663281306439907f4b6b896c053
+  kernel-module-nvidia-uvm-6.18.48-yocto-standard_615.71.09-r0_qemux86_64.ipk  700682 B  sha256 8ee8972aba1384fbfa6402dff8b2b4cb051dfbe8cf88f9290dfefc020ca34377
+  symoneural-nvidia-open-kernel_615.71.09-r0_qemux86_64.ipk  888 B  sha256 d486297d579a8e32ee0589f4408cdc23e325dec4e079852fc2cf3db87bda2687
+  symoneural-nvidia-open-kernel-dbg_615.71.09-r0_qemux86_64.ipk  2036518 B  sha256 71934cf5d5d198e3aa7a7faeb06914132e97fccacb4121c83e0706fc9d5ef03e
+  symoneural-nvidia-open-kernel-dev_615.71.09-r0_qemux86_64.ipk  2138 B  sha256 a30c99a0c1c59cc018ba6d94a9c18e741210d064c635982a0f6dd14040ea566b
+  kernel-module-nvidia-6.18.48-yocto-standard: Depends: kernel-6.18.48-yocto-standard
+  kernel-module-nvidia-uvm-6.18.48-yocto-standard: Depends: kernel-6.18.48-yocto-standard, kernel-module-nvidia-6.18.48-yocto-standard
+  kernel-module-nvidia-modeset-6.18.48-yocto-standard: Depends: kernel-6.18.48-yocto-standard, kernel-module-backlight-6.18.48-yocto-standard, kernel-module-nvidia-6.18.48-yocto-standard, kernel-module-video-6.18.48-yocto-standard
+  kernel-module-nvidia-drm-6.18.48-yocto-standard: Depends: kernel-6.18.48-yocto-standard, kernel-module-drm-display-helper-6.18.48-yocto-standard, kernel-module-nvidia-modeset-6.18.48-yocto-standard
+
+## Module facts (packaged .ko)
+  nvidia: 6.18.48-yocto-standard SMP preempt mod_unload | license=Dual MIT/GPL | depends= | srcversion=040E903CBCB6AA48C223679 | unsigned | 23843000 B
+  nvidia-uvm: 6.18.48-yocto-standard SMP preempt mod_unload | license=Dual MIT/GPL | depends=nvidia | srcversion=227990773C08E287A9225CC | unsigned | 3326880 B
+  nvidia-modeset: 6.18.48-yocto-standard SMP preempt mod_unload | license=Dual MIT/GPL | depends=backlight,video,nvidia | srcversion=7BA28538668890946505DA9 | unsigned | 2666136 B
+  nvidia-drm: 6.18.48-yocto-standard SMP preempt mod_unload | license=Dual MIT/GPL | depends=drm_display_helper,nvidia-modeset | srcversion=D2F81AEE3A9B0BF1DED722C | unsigned | 267032 B
+  nvidia firmware: nvidia/615.71.09/ucodes_tu10x.bin nvidia/615.71.09/ucodes_ga10x.bin nvidia/615.71.09/gsp_tu10x.bin nvidia/615.71.09/gsp_ga10x.bin 
+
+## Statuses
+  KERNEL BUILD PASS ; MODULE BUILD PASS ; PACKAGE/QA PASS ; STAGED INSTALL + depmod PASS (NVIDIA-OPEN-KERNEL-ESTATE-PROOF.txt) ; MODVERSIONS NOT APPLICABLE (kernel config) ; REPRODUCIBILITY NOT TESTED
+  SIGNING not applicable to the QEMU baseline (unsigned) ; BOOT NOT TESTED ; MODULE LOAD NOT TESTED ; GPU CONSUMER NOT TESTED ; userspace driver + GSP firmware providers: none -> deployment BLOCKED
