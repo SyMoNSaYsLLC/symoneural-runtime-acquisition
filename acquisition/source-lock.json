@@ -469,7 +469,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/huggingface/huggingface_hub",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "8c7b52be918884d1ab08a52943de6c78497b9e8f",
+      "pins_path": "Symoneural-Common/src/ml/.gitpins/huggingface-hub.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Common/build/devtool-workspace/appends/symoneural-pytorch_git.bbappend",
