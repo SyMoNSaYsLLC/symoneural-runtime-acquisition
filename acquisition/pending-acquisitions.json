@@ -748,6 +748,20 @@
       "tag": "release-7.2.2",
       "tag_kind": "RELEASE",
       "upstream_url": "https://github.com/giampaolo/psutil"
+    },
+    {
+      "category": "kernel",
+      "component": "open-gpu-kernel-modules",
+      "licence_expected": "MIT (COPYING: 'except where noted'; source SPDX census 2900 MIT, 1 Linux-OpenIB, 1 Apache-2.0 WITH LLVM-exception); the linked kernel modules are dual MIT/GPL-2.0 (COPYING; module license: 'Dual MIT/GPL')",
+      "notes": "NVIDIA open GPU kernel modules for the 615.71.09 driver generation the estate's CUDA authority (13.4.1, S2 boundary) runs on. Built for TWO kernel targets from this one pin: (A) Debian 6.12.107+deb13-amd64, the development machine's external kernel; (B) the estate linux-yocto 6.18.48 qemux86-64 kernel. RTX 5070 Ti is PCI 10de:2c05, listed in README.md's supported-GPU table (a table row, not functional proof). Reference archive /home/google/Desktop/open-gpu-kernel-modules-main.zip sha256 d92c0aa2b8645bca2becf76551a832b58988e412658a3d37d438ed6ba3406445 is supporting evidence only; the canonical Git tag is the authority. Driver userspace (libcuda.so.1, libnvidia-ml.so.1, helpers) and GSP firmware are NOT provided by this component and stay separate, externally provided dependencies.",
+      "recorded": "2026-09-14 (P7 follow-on: NVIDIA open kernel modules, Garrett's charter)",
+      "required_by": "Platform: kernel side of the CUDA S2 dependency graph (CUDA consumers -> CUDA/cuDNN userspace -> NVIDIA driver userspace -> NVIDIA open kernel modules -> GSP firmware -> GPU); Debian-profile module set for the development machine; estate-profile module set for a SyMoNeuRaL kernel",
+      "runtime": "Platform",
+      "sha": "61dcc93722ecb418bb5f2e00923f05b4b8051dd1",
+      "tag": "615.71.09",
+      "tag_kind": "RELEASE",
+      "tag_object_sha": "d2a24f90e843359450ab313a286f43a88d95c6ce",
+      "upstream_url": "https://github.com/NVIDIA/open-gpu-kernel-modules"
     }
   ],
   "schema": "symoneural-pending-acquisitions/1"

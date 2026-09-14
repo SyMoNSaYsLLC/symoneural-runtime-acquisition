@@ -1166,6 +1166,18 @@
       "revision_authority": "release decision",
       "runtime": "Web",
       "upstream_url": "https://github.com/cloudflare/workers-sdk"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "kernel",
+      "component": "open-gpu-kernel-modules",
+      "intended_revision": "61dcc93722ecb418bb5f2e00923f05b4b8051dd1",
+      "intended_tag_version": "615.71.09",
+      "notes": "Kernel modules only (nvidia, nvidia-uvm, nvidia-modeset, nvidia-drm; nvidia-peermem excluded). Provides neither the NVIDIA driver userspace (libcuda.so.1, libnvidia-ml.so.1) nor GSP firmware - those remain external dependencies recorded in docs/platform/NVIDIA-OPEN-KERNEL.md.",
+      "required_by": "Platform: NVIDIA open GPU kernel modules for two kernel targets - Debian 6.12.107+deb13-amd64 (development machine, external kernel) and the estate linux-yocto 6.18.48 qemux86-64 kernel; the kernel side of P7's CUDA S2 boundary.",
+      "revision_authority": "Garrett's charter 2026-09-14: release 615.71.09, the driver generation the host runs (/sys/module/nvidia/version) and CUDA 13.4.1 is proven against; annotated tag d2a24f90e843359450ab313a286f43a88d95c6ce -> commit 61dcc937... (git ls-remote refs/tags/615.71.09^{})",
+      "runtime": "Platform",
+      "upstream_url": "https://github.com/NVIDIA/open-gpu-kernel-modules"
     }
   ],
   "note": "A component on disk with no row here reconciles as EXTRA / INTENT-UNDECLARED.",
