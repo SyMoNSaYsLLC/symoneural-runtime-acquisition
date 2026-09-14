@@ -1,0 +1,21 @@
+# The SyMoNeuRaL LLM runtime Python package. First-party; built by the estate recipe
+# symoneural-llm-python (python_flit_core) from the committed tree. It has NO upstream
+# Python dependencies: the service is the stdlib HTTP server, and inference reaches
+# libsymoneural-llm through ctypes (native.py). tools/check-python-runtime-closures.py
+# reads this list, so it must stay truthful to the imports.
+[build-system]
+requires = ["flit_core>=3.9,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "symoneural-llm"
+version = "1.0.0"
+description = "SyMoNeuRaL LLM runtime - the chat unit over libsymoneural-llm"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+symoneural-llm = "symoneural_llm.main:main"
+
+[tool.flit.module]
+name = "symoneural_llm"
