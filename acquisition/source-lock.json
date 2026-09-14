@@ -1499,7 +1499,11 @@
       "submodule_count": 0,
       "upstream_url": "https://github.com/video-dev/hls.js",
       "worktree": "clean",
-      "worktree_detail": []
+      "worktree_detail": [],
+      "tree_sha": "f157d3cac045962358703fc155f84d5e31827af3",
+      "pins_path": "Symoneural-Streamer/src/hls/.gitpins/hls.js.git",
+      "submodules": [],
+      "excluded": []
     },
     {
       "bbappend_path": "Symoneural-Web/build/devtool-workspace/appends/symoneural-workerd_git.bbappend",
