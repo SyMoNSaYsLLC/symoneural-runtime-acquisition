@@ -172,7 +172,7 @@
       "declared_version_PV": "1.3.1",
       "excluded": [],
       "lock_state": "VERIFIED",
-      "pins_path": "IN-TREE",
+      "pins_path": "Symoneural-API/src/http/.gitpins/sniffio.git",
       "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
       "recipe_LICENSE": "MIT OR Apache-2.0",
       "recipe_SRCREV": "ae020e13b98d276a6558ffc25e82509fd4c288f0",
