@@ -1,0 +1,20 @@
+# symoneural-gstreamer-plugins-base 1.28.7 (subprojects/gst-plugins-base) - first target build (Live), 2026-09-15
+generated : 2026-09-14 20:07 EDT
+source    : gstreamer                  Live             070125524a84 ·   13407 files · LISTING-VERIFIED(1 submodules)
+recipe    : meta-symoneural/recipes-live/symoneural-gstreamer/symoneural-gstreamer-plugins-base_git.bb (symoneural-pristine + meson; DEPENDS symoneural-gstreamer; PACKAGECONFIG orc ogg vorbis theora png jpeg; no X11/GL/ALSA/pango; per-plugin packaging = oe-core gstreamer1.0-plugins-packaging.inc)
+bitbake   : Attempted 1598 tasks of which 1443 didn't need to be rerun and all succeeded (rc=0, first launch)
+meson     : core found via pkg-config from the sysroot (not the subproject fallback): Run-time dependency gstreamer-1.0 found: YES 1.28.7
+  downloads: 0 (0 expected); subprojects executed: 0 (0 expected)
+  codec deps from the sysroot: iso-codes found: YES;libdrm found: NO;ogg found: YES;orc-0.4 found: YES;theoradec found: YES;theoraenc found: YES;vorbisenc found: YES;vorbis found: YES;zlib found: YES;
+QA        : do_package_qa 0 issues; no INSANE_SKIP
+
+## Packages (87 ipks)
+  plugins (26): adder app audioconvert audiomixer audiorate audioresample audiotestsrc basedebug compositor dsd encoding gio ogg overlaycomposition pbtypes playback rawparse subparse tcp theora typefindfunctions videoconvertscale videorate videotestsrc volume vorbis 
+  libraries (11): libgstallocators-1.0-0 libgstapp-1.0-0 libgstaudio-1.0-0 libgstfft-1.0-0 libgstpbutils-1.0-0 libgstriff-1.0-0 libgstrtp-1.0-0 libgstrtsp-1.0-0 libgstsdp-1.0-0 libgsttag-1.0-0 libgstvideo-1.0-0 
+  symoneural-gstreamer-plugins-base-meta_1.28.7-r0_x86-64-v3.ipk  846 B  sha256 3672c8ec4b26769e161141dc8cf92e8d2bec735453cfcc3e6a096340ac0cbce1
+  symoneural-gstreamer-plugins-base-ogg_1.28.7-r0_x86-64-v3.ipk  117466 B  sha256 12a9261453521c4ab28717bb7ae44110ae917899ef61177b2b5b57048a56ee85
+  meta Depends: Depends: libgstallocators-1.0, libgstapp-1.0, libgstaudio-1.0, libgstfft-1.0, libgstpbutils-1.0, libgstriff-1.0, libgstrtp-1.0, libgstrtsp-1.0, libgstsdp-1.0, libgsttag-1.0, libgstvideo-1.0, symoneural-gstreamer-plugins-base-adder, symoneural-gstreamer-plugins-base-app, symoneural-gstreamer-plugins-base-apps, symoneural-gstreamer-plugins-base-audioconvert, symoneural-gstreamer-plugins-base-audiomi
+  build-path strings in libgstvideo-1.0.so: 0
+
+## Status
+  BUILD PASS ; PACKAGE/QA PASS ; runtime/consumer proof NOT TESTED ; REPRODUCIBILITY NOT TESTED ; plugins-good/bad/ugly, libav, rtsp-server: follow-on

@@ -4,16 +4,17 @@
 # Live). The monorepo's other subprojects (plugins-base/good/bad/ugly, libav, rtsp-server ...)
 # are follow-on recipes; nothing is fetched from the monorepo's 66 wrap files (meson runs with
 # --wrap-mode=nodownload and every dependency comes from the sysroot).
+require symoneural-gstreamer.inc
 SUMMARY = "GStreamer 1.0 multimedia framework - core library and tools (Live runtime)"
-HOMEPAGE = "https://gstreamer.freedesktop.org/"
-SECTION = "multimedia"
-LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://subprojects/gstreamer/COPYING;md5=69333daa044cb77e486cc36129f7a770"
 
+# Restated for tools/scan-acquisition.py, which pairs a tree with ONE recipe from the .bb text
+# (the plugin recipes take their identity from the .inc only). Values identical to the .inc.
 SYMON_TREE = "/home/google/SymonSaysLLC/Symoneural-Live/src/gstreamer/source/gstreamer"
 SRC_URI = "gitsm://gitlab.freedesktop.org/gstreamer/gstreamer.git;protocol=https;branch=1.28"
 SRCREV = "070125524a8422e29d3b69a372ed4f62fd343ffa"
 PV = "1.28.7"
+LICENSE = "LGPL-2.1-or-later"
 
 DEPENDS = "glib-2.0 glib-2.0-native libxml2 bison-native flex-native"
 
@@ -30,11 +31,6 @@ PACKAGECONFIG[unwind] = "-Dlibunwind=enabled,-Dlibunwind=disabled,libunwind"
 PACKAGECONFIG[dw] = "-Dlibdw=enabled,-Dlibdw=disabled,elfutils"
 PACKAGECONFIG[bash-completion] = "-Dbash-completion=enabled,-Dbash-completion=disabled,bash-completion"
 PACKAGECONFIG[tools] = "-Dtools=enabled,-Dtools=disabled"
-
-def gettext_oemeson(d):
-    if d.getVar('USE_NLS') == 'no':
-        return '-Dnls=disabled'
-    return '-Dnls=enabled'
 
 EXTRA_OEMESON += " \
     --wrap-mode=nodownload \
