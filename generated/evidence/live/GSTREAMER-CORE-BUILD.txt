@@ -1,0 +1,89 @@
+# symoneural-gstreamer 1.28.7 (CORE subproject of the acquired monorepo) - first target build (Live), 2026-09-14/15
+generated : 2026-09-14 20:00 EDT
+source    : gstreamer                  Live             070125524a84 ·   13407 files · LISTING-VERIFIED(1 submodules)
+recipe    : meta-symoneural/recipes-live/symoneural-gstreamer/symoneural-gstreamer_git.bb (symoneural-pristine + meson; MESON_SOURCEPATH = subprojects/gstreamer; --wrap-mode=nodownload; option set mirrors oe-core gstreamer1.0_1.28.7.bb minus tests/ptest/introspection)
+bitbake   : launch 1 FAILED at meson setup: unknown option installed_tests (defined only with tests enabled) -> removed. launch 2: Attempted 1451 tasks of which 1437 didn't need to be rerun and all succeeded
+meson     : 
+  subprojects downloaded: 0 (0 expected - nodownload); wraps used: 0
+  dependencies from the sysroot: gio-2.0 2.88.3;gio-unix-2.0 2.88.3;glib-2.0 2.88.3;gmodule-no-export-2.0 2.88.3;gobject-2.0 2.88.3;
+QA        : do_package_qa 0 issues; no INSANE_SKIP
+
+## Packages
+  symoneural-gstreamer_1.28.7-r0_x86-64-v3.ipk  1331492 B  sha256 a54d3ae629c2e6a633a1d813329ae8d340b6268adb341ccf450c8c19e9838aa4
+  symoneural-gstreamer-dbg_1.28.7-r0_x86-64-v3.ipk  3749764 B  sha256 0518101c92e1b75f4df6f5e7083ac5febac9c1269ab55ef66c9214c75e6b7f03
+  symoneural-gstreamer-dev_1.28.7-r0_x86-64-v3.ipk  230606 B  sha256 4a93ee0873a190dfdf8a8865892c273a74335c7d75c3adf4dfd537ac7558bfd1
+  symoneural-gstreamer-doc_1.28.7-r0_x86-64-v3.ipk  9656 B  sha256 c986cb667a46a43853ff54091e6ea8abc0e9860477adeeda72981a8976a48e3f
+  symoneural-gstreamer-locale-af_1.28.7-r0_x86-64-v3.ipk  6724 B  sha256 ee0eb02c1d7dad782bf478e777d1281670f29ef096df5388b485c19161f610ea
+  symoneural-gstreamer-locale-ar_1.28.7-r0_x86-64-v3.ipk  17724 B  sha256 0d1a83c01e4d71ab3c771274939f691106564ee0a97340d60c64d7536055caf6
+  symoneural-gstreamer-locale-ast_1.28.7-r0_x86-64-v3.ipk  12242 B  sha256 8e1dba01a936098999de5e3a4afd405ba0baca310a90f97137453b64816afd2f
+  symoneural-gstreamer-locale-az_1.28.7-r0_x86-64-v3.ipk  1912 B  sha256 035ff667cf33fcaf42befaeb65c2c2a8180b97476b550d641f392ed834913659
+  symoneural-gstreamer-locale-be_1.28.7-r0_x86-64-v3.ipk  3220 B  sha256 ec4de6a5be09e98e42cd41a513c5d556030b2bcca69239988c21f5ecfc59e61f
+  symoneural-gstreamer-locale-bg_1.28.7-r0_x86-64-v3.ipk  18754 B  sha256 3e0af35ca22a31a19c1951522e4546da45fd09cad63588515fc93f629f6b1918
+  symoneural-gstreamer-locale-ca_1.28.7-r0_x86-64-v3.ipk  13024 B  sha256 0b44050b8377632ede3bb4249a62bba73abe4c62b1a5b147963c49206aad89a7
+  symoneural-gstreamer-locale-cs_1.28.7-r0_x86-64-v3.ipk  16078 B  sha256 796c004f51a85117603e1b61c3a96b7bd702b443cc7e111e61ea917980c792be
+  symoneural-gstreamer-locale-da_1.28.7-r0_x86-64-v3.ipk  15246 B  sha256 f50481683bffba1c86e282d5b27e7e3d8c773c96be7be7777aaa568c21e4a397
+  symoneural-gstreamer-locale-de_1.28.7-r0_x86-64-v3.ipk  17112 B  sha256 3fe22036050a189e5152bf165f52fc7ff1b433f4502adb20ffe88e5120b8d5f0
+  symoneural-gstreamer-locale-el_1.28.7-r0_x86-64-v3.ipk  15286 B  sha256 af50f268a01ea5a5a0d0a2f3088d20edef6a87ff19d412f2d6a2aca5d0329829
+  symoneural-gstreamer-locale-en-gb_1.28.7-r0_x86-64-v3.ipk  4052 B  sha256 028093b7fabc3ec5f2ca6c852f3f18ae31d7798dd79c8a8bf56ad9d28557e5be
+  symoneural-gstreamer-locale-eo_1.28.7-r0_x86-64-v3.ipk  15940 B  sha256 0a68b6946ed9036a51ed94bbd7c3bb7edde3354adb517901a1afb871f71d75a2
+  symoneural-gstreamer-locale-es_1.28.7-r0_x86-64-v3.ipk  16776 B  sha256 f0236c2d226a9d36e0c74be60e441b8d8ec1e5ccde68fa7caf82c33bb20c0a3d
+  symoneural-gstreamer-locale-eu_1.28.7-r0_x86-64-v3.ipk  12056 B  sha256 a18a0423e9371f52ff6e23cbbbed4783f5f68bcaa1f1741de3860f08d03cc645
+  symoneural-gstreamer-locale-fi_1.28.7-r0_x86-64-v3.ipk  13228 B  sha256 6ab0371aed1e09f6f9a8596b64bdad30c12fc2d02b43ce5a2309d0aa20c1bf6e
+  symoneural-gstreamer-locale-fr_1.28.7-r0_x86-64-v3.ipk  16582 B  sha256 a00c569e2f02a18215b7e2da87e31cb5b55ae6caae36e456192615b245fa4651
+  symoneural-gstreamer-locale-fur_1.28.7-r0_x86-64-v3.ipk  16198 B  sha256 22a2f26398c2ac2c2fd6793a25df31e69a7949a77dc2bf6b96c1162779e5c2e5
+  symoneural-gstreamer-locale-gl_1.28.7-r0_x86-64-v3.ipk  13842 B  sha256 5fa95a78f748587df7fc32917004f03f7478dd8120400e4ba1b800d034a7d934
+  symoneural-gstreamer-locale-hr_1.28.7-r0_x86-64-v3.ipk  16938 B  sha256 94327ca681d38018092628a6e7e1df110296eb8dd83cf27b07366af9143c0bbf
+  symoneural-gstreamer-locale-hu_1.28.7-r0_x86-64-v3.ipk  16826 B  sha256 7b447abfdcdd00d736bc5b202326d3e79e70d67cb6300f6f287fb33a5497efb0
+  symoneural-gstreamer-locale-id_1.28.7-r0_x86-64-v3.ipk  15920 B  sha256 643e5b21374974ff81c2aeac9bd516f88c8a4de69f65c17aaf1fe338b1e6bbd3
+  symoneural-gstreamer-locale-it_1.28.7-r0_x86-64-v3.ipk  15400 B  sha256 8187c1e3f8b02d758ad64fc803c2ac461fe5875e8ea45a73831812afb3148369
+  symoneural-gstreamer-locale-ja_1.28.7-r0_x86-64-v3.ipk  7352 B  sha256 2a1beec34c9c7619e709f5456ce81780dc1af9bf8053d0dd5abbf01199ad4ac2
+  symoneural-gstreamer-locale-ka_1.28.7-r0_x86-64-v3.ipk  9898 B  sha256 ab47786af94a3d425e84c83c12efc45c094c1a7335f762a3ad7613a7155a0309
+  symoneural-gstreamer-locale-kk_1.28.7-r0_x86-64-v3.ipk  18652 B  sha256 3920e31ad33fe4050667e40e3abd7146b8c149a5d65ec2d01e21862caae90ff2
+  symoneural-gstreamer-locale-ko_1.28.7-r0_x86-64-v3.ipk  7252 B  sha256 e96fa051ae2859259b88c11430c3041a8e94b2ec5b365f47a74d5d0e55a0026f
+  symoneural-gstreamer-locale-lt_1.28.7-r0_x86-64-v3.ipk  12818 B  sha256 804c1f507e05b23a67ac42690f470fd7c0446a238557474588e379f7d10ce2b8
+  symoneural-gstreamer-locale-lv_1.28.7-r0_x86-64-v3.ipk  17088 B  sha256 df252ec1afd1e6a5994c677140e2b51ec4ef16a54b845f49d398e93c7593fef6
+  symoneural-gstreamer-locale-nb_1.28.7-r0_x86-64-v3.ipk  16162 B  sha256 6d92032e6936854d59260b55e476ec455c6173ff10d2458552525bf079c39d37
+  symoneural-gstreamer-locale-nl_1.28.7-r0_x86-64-v3.ipk  16576 B  sha256 215098d5d46d9ed58f1e9ae20aa92b340229a712038dc2866cbc7fcce6d9fb4d
+  symoneural-gstreamer-locale-pl_1.28.7-r0_x86-64-v3.ipk  17094 B  sha256 457d5e5b1b9db35524002090ecae33f2e93c3f98a2238d25a6e75c5a208daa5d
+  symoneural-gstreamer-locale-pt-br_1.28.7-r0_x86-64-v3.ipk  16720 B  sha256 02fb5441e4307eb0b3ec9ba137c2ffe6ef257d73502cb69a53dd6e31712b1284
+  symoneural-gstreamer-locale-ro_1.28.7-r0_x86-64-v3.ipk  17532 B  sha256 cdc92317b79627f5c4a4361e027d8486de1c5bac4283783e94e19c879f7d8b5b
+  symoneural-gstreamer-locale-ru_1.28.7-r0_x86-64-v3.ipk  18738 B  sha256 7bd252d6553672484260e73d41ecb8220e06740e38d7796bdfa790e62f7b9a1b
+  symoneural-gstreamer-locale-rw_1.28.7-r0_x86-64-v3.ipk  1280 B  sha256 648d276b78725f136941db2fb0f579c1cb4fde14b0469e5dd57859dafa9a893a
+  symoneural-gstreamer-locale-sk_1.28.7-r0_x86-64-v3.ipk  15554 B  sha256 1c6a4e7bf371967181f0f46f575a1322349756b91ec1e4c0a93a820cd9fec2ff
+  symoneural-gstreamer-locale-sl_1.28.7-r0_x86-64-v3.ipk  16704 B  sha256 5052479c7028f646ad379e30ed25b855deb56fc4b4f7075288b2e8cd19bf1194
+  symoneural-gstreamer-locale-sq_1.28.7-r0_x86-64-v3.ipk  6386 B  sha256 5e0bcbcfd824076713901e3dbd282407bd20b50756893387ca339179c3299c0f
+  symoneural-gstreamer-locale-sr_1.28.7-r0_x86-64-v3.ipk  18902 B  sha256 4bac692e669ef24f0a47003a461787b887233d93fab7d1c536aabfa12c17a222
+  symoneural-gstreamer-locale-sv_1.28.7-r0_x86-64-v3.ipk  16580 B  sha256 4f7644f369e573c782a06b5d107e7bd8372626f4a15421a23f584ed31c4eece8
+  symoneural-gstreamer-locale-tr_1.28.7-r0_x86-64-v3.ipk  16750 B  sha256 5e2589187ffc652a96f5b6dee99042c3b2fdc5b7ffefc51f03a85ec775af77a3
+  symoneural-gstreamer-locale-uk_1.28.7-r0_x86-64-v3.ipk  19428 B  sha256 fdaa931c96d6516d174f802b8705c64e7a2f5bf3d9ef179755766a46ff6518b3
+  symoneural-gstreamer-locale-vi_1.28.7-r0_x86-64-v3.ipk  16418 B  sha256 0c73898b67ae44c450915badbc376a05b09354581363e14b4194df6ebb5305ed
+  symoneural-gstreamer-locale-zh-cn_1.28.7-r0_x86-64-v3.ipk  17196 B  sha256 6ae65931687d4cbe5ea5927c1c1bbf43b4cffda0d1ede07a7e834e890a9feda6
+  symoneural-gstreamer-locale-zh-tw_1.28.7-r0_x86-64-v3.ipk  15398 B  sha256 4a1aa276e179fa3c9e920c14d5fbe30ac46e83f6d9ad077c9954d5e5937d7750
+  symoneural-gstreamer-src_1.28.7-r0_x86-64-v3.ipk  1545468 B  sha256 0358ffdfb4978ab901bf039aadb5acc4448f9ba484437f888e9c7d1adabba9d6
+  control (symoneural-gstreamer):
+    Package: symoneural-gstreamer
+    Version: 1.28.7-r0
+    License: LGPL-2.1-or-later
+    Architecture: x86-64-v3
+    Depends: libc6 (>= 2.44+git0+5c479454d1), libglib-2.0-0 (>= 2.88.3)
+    Source: symoneural-gstreamer_git.bb
+  libraries / tools:
+    ./usr/bin/
+    ./usr/bin/gst-inspect-1.0
+    ./usr/bin/gst-launch-1.0
+    ./usr/bin/gst-stats-1.0
+    ./usr/bin/gst-typefind-1.0
+    ./usr/lib/libgstbase-1.0.so.0
+    ./usr/lib/libgstbase-1.0.so.0.2807.0
+    ./usr/lib/libgstcheck-1.0.so.0
+    ./usr/lib/libgstcheck-1.0.so.0.2807.0
+    ./usr/lib/libgstcontroller-1.0.so.0
+    ./usr/lib/libgstcontroller-1.0.so.0.2807.0
+    ./usr/lib/libgstnet-1.0.so.0
+    ./usr/lib/libgstnet-1.0.so.0.2807.0
+    ./usr/lib/libgstreamer-1.0.so.0
+  build-path strings in libgstreamer-1.0.so: 0
+
+## Status
+  BUILD PASS ; PACKAGE/QA PASS ; runtime/consumer proof NOT TESTED ; REPRODUCIBILITY NOT TESTED
+  scope: CORE only (libgstreamer, libgstbase, libgstcontroller, libgstnet, libgstcheck, coreelements/coretracers plugins, gst-inspect/gst-launch). plugins-base/good/bad/ugly, libav, rtsp-server, devtools: follow-on recipes; the monorepo's 66 wrap files were never fetched
