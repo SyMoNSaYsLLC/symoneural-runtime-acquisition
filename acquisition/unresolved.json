@@ -12,6 +12,7 @@
    "blocks": "Adaptive-Fabric build design",
    "category": "ARCHITECTURE",
    "description": "FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.",
+   "executed": "2026-09-14/15 night (Claude): re-read for the compile-every-original pass - FreeToken's pyproject requires torch>=2.11,<2.12 at BUILD time (setuptools build isolation) and at run time (C++ extensions link libtorch; sglang-kernel 0.4.5 symbols) while the estate torch is 2.14 (Common, CUDA 13.4.1). The recipe has no DEPENDS on symoneural-pytorch and Adaptive-Fabric's build has no torch; an unmodified build cannot satisfy the pin. NOT BUILT tonight; decision remains open (options: try 2.14 unmodified per P19 S3 and record the outcome, or rule FreeToken's torch range as a blocker).",
    "identifier": "FreeToken/torch",
    "resolution": "OWNED BY PHASE 19, deliberately left OPEN. Phase 11's GATE requires \"open decisions at 1 (FreeToken, owned by Phase 19)\", so closing it would make that gate unsatisfiable. Phase 19 S3 tests FreeToken UNMODIFIED on Common's torch 2.14; runs -> Adaptive-Fabric proceeds, does not run -> Adaptive-Fabric DEFERRED WITH EVIDENCE. Outcome recorded either way.",
    "resolved_phase": "10",

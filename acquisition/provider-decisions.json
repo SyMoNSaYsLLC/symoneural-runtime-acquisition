@@ -54,6 +54,11 @@
       "logical": "libevdev",
       "rationale": "System library from oe-core (libevdev 1.13.7), built as shared AND static in the Platform estate build (EXTRA_OEMESON -Ddefault_library=both) because AWCC's CMake consumes a static libevdev.a through an ExternalProject the estate replaces with the sysroot copy (recipe-level ExternalProject.cmake shadow). Statically linked into awcc; same class as libX11 / libglvnd / libudev (OE-provided system libraries), recorded because it ships inside the executable.",
       "selected_provider": "OE-CORE"
+    },
+    {
+      "logical": "capnproto",
+      "rationale": "build tool, never shipped: the Cap'n Proto compiler (capnp) that bitcoin-capnp-types' build script runs when the sv2-apps workspaces compile; meta-oe capnproto 1.5.0 native. Its standard schema import paths are host paths, so symoneural-sv2-apps.inc wraps it with --no-standard-import and the native sysroot include dir.",
+      "selected_provider": "OE-CORE"
     }
   ],
   "not_acquired": [

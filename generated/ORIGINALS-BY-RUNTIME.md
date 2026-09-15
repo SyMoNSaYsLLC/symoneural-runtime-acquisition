@@ -1,6 +1,6 @@
 # SyMoNeuRaL: the ORIGINAL upstream sources, sectioned by future runtime
-Generated 2026-09-14 19:32 EDT by tools/originals-by-runtime.py from acquisition/source-lock.json, source-manifest.json,
-component-state.json, pending-acquisitions.json and a live run of tools/audit-workscope.sh (rc=1). Nothing
+Generated 2026-09-14 20:02 EDT by tools/originals-by-runtime.py from acquisition/source-lock.json, source-manifest.json,
+component-state.json, pending-acquisitions.json and a live run of tools/audit-workscope.sh (rc=0). Nothing
 was renamed or moved: every row is an upstream project committed at its pin under
 `Symoneural-<Runtime>/src/<category>/source/<component>/` and verified byte-identical to upstream.
 
@@ -130,8 +130,8 @@ Image on disk: `symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz`
 ## Symoneural-Crypto  (3 upstream sources)
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
-| stratum | gh:stratum-mining/stratum | v1.11.1 | `c1a799139425` | Apache-2.0 AND MIT | TARGET | RECIPE, NEVER PACKAGED |
-| sv2-apps | gh:stratum-mining/sv2-apps | v0.7.0 | `d7d556d1a3c7` | Apache-2.0 AND MIT | TARGET | STUB — no build class |
+| stratum | gh:stratum-mining/stratum | v1.11.1 | `c1a799139425` | Apache-2.0 AND MIT | TARGET | PKGDATA EXISTS; NOT QA |
+| sv2-apps | gh:stratum-mining/sv2-apps | v0.7.0 | `d7d556d1a3c7` | Apache-2.0 AND MIT | TARGET | PKGDATA EXISTS; NOT QA |
 | sv2-spec | gh:stratum-mining/sv2-spec | UNTAGGED (commit pin 67d2178e12b2) | `67d2178e12b2` | BSD-3-Clause OR CC0-1.0 | REFERENCE_ONLY | REFERENCE_ONLY |
 
 - Pending (NOT ACQUIRED): kawpowminer 1.2.4 `8bd0d598fa29` gh:RavenCommunity/kawpowminer — unresolved.json:kawpowminer-gpl-distribution
@@ -143,7 +143,7 @@ Image on disk: `symoneural-image-common-qemux86-64.rootfs-20260914203500.tar.gz`
 ## Symoneural-Live  (1 upstream source)
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
-| gstreamer | https://gitlab.freedesktop.org/gstreamer/gstreamer.git | 1.28.7 | `070125524a84` | LGPL-2.1-or-later | TARGET | STUB — no build class |
+| gstreamer | https://gitlab.freedesktop.org/gstreamer/gstreamer.git | 1.28.7 | `070125524a84` | LGPL-2.1-or-later | TARGET | PKGDATA EXISTS; NOT QA |
 
 - Pending (NOT ACQUIRED): gst-plugins-rs 0.15.3 `656a1d12ff21` https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git
 
@@ -177,7 +177,7 @@ Image on disk: `symoneural-image-ravencalc-qemux86-64.rootfs-20260914051529.tar.
 | Upstream original | Upstream | Version / tag | Commit | Licence (recipe) | State | Build status |
 |---|---|---|---|---|---|---|
 | cloudpickle | gh:cloudpipe/cloudpickle | v3.1.2 | `7576fff24b97` | BSD-3-Clause | - | PKGDATA EXISTS; NOT QA |
-| cython | gh:cython/cython | 3.2.5 | `ec152091ca7c` | Apache-2.0 | TARGET | RECIPE, NEVER PACKAGED |
+| cython | gh:cython/cython | 3.2.5 | `ec152091ca7c` | Apache-2.0 | TARGET | PKGDATA EXISTS; NOT QA |
 | joblib | gh:joblib/joblib | 1.6.0 | `cd9a6b05fc4f` | BSD-3-Clause | TARGET | PKGDATA EXISTS; NOT QA |
 | mpmath | gh:mpmath/mpmath | 1.3.0 | `b5c04506ef0c` | BSD-3-Clause | TARGET | PKGDATA EXISTS; NOT QA |
 | narwhals | gh:narwhals-dev/narwhals | v2.26.0 | `e34715d1e9e2` | MIT | TARGET | PKGDATA EXISTS; NOT QA |
