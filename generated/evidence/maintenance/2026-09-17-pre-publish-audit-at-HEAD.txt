@@ -1,0 +1,25 @@
+secret filenames in history (outside source)         clean
+secret-shaped filenames inside verified source       843 (upstream fixtures, informational)
+secret content in tree (outside source)              clean
+secret content in history (outside source)           clean
+provisioned env files tracked                        clean
+model weights tracked (outside source)               clean
+weight-extension files inside verified source        1869 (upstream fixtures, informational)
+weight magic bytes in tracked files >1 MB (outside source) none
+tracked source trees without a verified pin          none
+files over 100 MB                                    none
+tracked size                                         4.8G
+commits ahead of origin/main                         37
+pack bytes a push would send                         42M
+.gitignore denies *.env                              yes
+.gitignore denies developer_settings.json            yes
+.gitignore denies *.gguf                             yes
+.gitignore denies **/.gitpins/                       yes
+untracked paths (git add . hazard)                   4 - listed, informational
+    ?? .gitmodules
+    ?? docs/PRODUCTION-VERIFICATION-2026-09-15.md
+    ?? generated/evidence/maintenance/2026-09-17-pre-publish-audit-at-HEAD.txt
+    ?? quarantine/repin-2026-09-14/
+
+AUDIT PASS - safe to push
+AUDIT rc=0
