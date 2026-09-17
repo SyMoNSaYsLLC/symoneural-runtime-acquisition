@@ -1,0 +1,34 @@
+SyMoNeuRaL acquisition verification (read-only)
+  components : 101
+  source drift:                clean (101 identities)
+  submodule drift:             clean (90 identities)
+  dependency drift:            clean (16283 identities)
+  vendor drift:                clean (406 identities)
+  license drift:               clean (574 identities)
+  provider drift:              DRIFT +2/-0
+  artifact-capability drift:   clean (101 identities)
+  source-collision drift:      DRIFT +6/-1
+  build-stack drift:           checked
+  WARN: provider drift: 2 added, 0 removed
+        + ('ggml', ('Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/ggml', 'Symoneural-LLM/src/inference/source/ggml'))
+        + ('libwebp', ('Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/thirdparty/libwebp', 'openembedded-core/meta/recipes-multimedia/webp/libwebp_1.6.0.bb'))
+  WARN: source-collision drift: 6 added, 1 removed
+        + ('frontend', 'SINGLE-PROVIDER', ('Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/examples/server/frontend',))
+        + ('ggml', 'CROSS-RUNTIME-DUPLICATE', ('Symoneural-LLM/src/inference/source/ggml', 'Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/ggml'))
+        - ('ggml', 'SINGLE-PROVIDER', ('Symoneural-LLM/src/inference/source/ggml',))
+  duplicate top-level upstream URLs: 0 (must be 0)
+  acquired trees carrying ignored residue: 0
+  -- completeness reconciliation --
+  PRESENT-AT-INTENDED-REVISION:  102
+  PRESENT-REVISION-MISMATCH:     0
+  MISSING:                       0
+  EXTRA-UNDECLARED:              0
+  INTENT-UNRESOLVED:             0
+  DEFERRED:                      2
+  -- report agreement --
+  source drift:                  report=101    verifier=101    OK
+  dependency drift:              report=16283  verifier=16283  OK
+  submodule drift:               report=90     verifier=90     OK
+  license drift:                 report=574    verifier=574    OK
+  CONTROL-PLANE RESULT:      PASS-WITH-WARNINGS
+  ESTATE-COMPLETENESS RESULT: PASS

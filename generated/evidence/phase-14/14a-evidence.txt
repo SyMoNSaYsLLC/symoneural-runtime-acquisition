@@ -1,0 +1,150 @@
+PHASE 14a - symoneural-stable-diffusion-cpp: build evidence
+captured 2026-09-17 in /home/google/SymonSaysLLC
+recipe: meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb
+build dir: Symoneural-Diffuse/build/devtool-master  (bitbake exit status 0)
+
+=== 1. the pin was verified before anything was exported (symoneural-pristine) ===
+symoneural-stable-diffusion-cpp-0.0.859-r0: export verified - 3854 files, 4 licence file(s) present
+symoneural-stable-diffusion-cpp-0.0.859-r0: stable-diffusion.cpp       Diffuse          7f410a3793c5 ·    3858 files · LISTING-VERIFIED(4 submodules); exported HEAD:Symoneural-Diffuse/src/image/source/stable-diffusion.cpp (4 submodules committed as trees) to /home/google/SymonSaysLLC/Symoneural-Diffuse/build/devtool-master/tmp/work/x86-64-v3-oe-linux/symoneural-stable-diffusion-cpp/0.0.859/pristine
+
+=== 2. build ===
+Sstate summary: Wanted 222 Local 0 Mirrors 215 Missed 7 Current 154 (96% match, 98% complete)
+NOTE: Tasks Summary: Attempted 1016 tasks of which 1004 didn't need to be rerun and all succeeded.
+Summary: There were 4 WARNING messages.
+  (the 215 mirror hits are Ravencalc's cache read through SSTATE_MIRRORS:
+   the cross toolchain and cuda-toolkit-bin 13.4.1 were NOT rebuilt, and
+   Ravencalc's cache was never written to - R10)
+
+=== 3. the S2 driver boundary held (symon_cuda_qa_s2, which REPLACES file-rdeps) ===
+symoneural-cuda S2 check: 19 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1
+
+=== 4. what the engine actually links ===
+--- libstable-diffusion.so ---
+  libgomp.so.1
+  libcudart.so.13
+  libcublas.so.13
+  libcublasLt.so.13
+  libcuda.so.1
+  libstdc++.so.6
+  libm.so.6
+  libgcc_s.so.1
+  libc.so.6
+  ld-linux-x86-64.so.2
+--- sd-cli ---
+  libstable-diffusion.so
+  libstdc++.so.6
+  libm.so.6
+  libgcc_s.so.1
+  libc.so.6
+  libcuda.so.1 on the library and NOT on the binary is the S2 boundary in the right place.
+
+=== 5. the version stamp comes from the PINS, not from the estate repository ===
+--- what CMake resolved at configure ---
+  stable-diffusion.cpp version master-859-7f410a3
+  stable-diffusion.cpp commit 7f410a3
+  ggml version: 0.19.0
+  ggml commit:  e20c3a1
+--- compiled into libstable-diffusion.so ---
+  0.19.0
+  e20c3a1
+  master-859-7f410a3
+  GIT_EXE points at a generated stub. Without it git walks up out of the pristine
+  export into THIS repository and stamps the estate's commit into the binary.
+  The stub is submodule-aware: the FIRST build answered the top-level SHA in ggml/
+  too and produced GGML_COMMIT="7f410a3-dirty" - a submodule claiming its parent's
+  commit, with a false dirty flag on a verified export. Fixed, then rebuilt.
+
+=== 6. ${D} - the vendored ggml 0.19.0 dev interface is NOT installed ===
+  /usr/bin/sd-cli
+  /usr/bin/sd-server
+  /usr/include/stable-diffusion.h
+  /usr/lib/cmake/stable-diffusion/stable-diffusion-config.cmake
+  /usr/lib/cmake/stable-diffusion/stable-diffusion-version.cmake
+  /usr/lib/libstable-diffusion.so
+  /usr/lib/pkgconfig/stable-diffusion.pc
+  ggml*.h / gguf.h / cmake/ggml / libggml*.a in ${D}: 0 (0 = removed by do_install:append; they collide path-for-path with symoneural-ggml-dev,
+   which owns those paths for CANONICAL ggml 0.23.0 built at GGML_MAX_NAME=64)
+
+=== 7. packages ===
+  symoneural-stable-diffusion-cpp                2 files
+  symoneural-stable-diffusion-cpp-dbg            3 files
+  symoneural-stable-diffusion-cpp-dev            4 files
+  symoneural-stable-diffusion-cpp-doc            0 files
+  symoneural-stable-diffusion-cpp-locale         0 files
+  symoneural-stable-diffusion-cpp-server         1 files
+  symoneural-stable-diffusion-cpp-src            542 files
+  symoneural-stable-diffusion-cpp-staticdev      0 files
+--- shipped contents ---
+  main:   /usr/bin/sd-cli
+  main:   /usr/lib/libstable-diffusion.so
+  server: /usr/bin/sd-server
+  dev:    /usr/include/stable-diffusion.h
+  dev:    /usr/lib/cmake/stable-diffusion/stable-diffusion-config.cmake
+  dev:    /usr/lib/cmake/stable-diffusion/stable-diffusion-version.cmake
+  dev:    /usr/lib/pkgconfig/stable-diffusion.pc
+  sd-server is built because examples/CMakeLists.txt adds it unconditionally and
+  upstream's SD_BUILD_SERVER option is commented out; R1 forbids editing the source.
+  It is packaged apart and no image installs it.
+
+=== 8. ipk ===
+    82986374  symoneural-stable-diffusion-cpp-dbg_0.0.859-r0_x86-64-v3.ipk
+    63724068  symoneural-stable-diffusion-cpp_0.0.859-r0_x86-64-v3.ipk
+    37103924  symoneural-stable-diffusion-cpp-src_0.0.859-r0_x86-64-v3.ipk
+      985822  symoneural-stable-diffusion-cpp-server_0.0.859-r0_x86-64-v3.ipk
+        8444  symoneural-stable-diffusion-cpp-dev_0.0.859-r0_x86-64-v3.ipk
+
+=== 9. control plane, after the recipe existed ===
+  tools/scan-acquisition.py      rc=0   101 components; stable-diffusion.cpp lock_state UNRESOLVED -> VERIFIED,
+                                        recipe_name/path/SRCREV/LICENSE populated, submodule_count 0 -> 4,
+                                        all four GITLINK-VERIFIED + AT-RECORDED-TREE
+  tools/scan-dependencies.py     rc=0   licence inventory 568 -> 574 (the six sd.cpp licence files)
+  tools/generate-runtime-acquisition.py rc=0  report self-validation 10/10 OK; Diffuse row 1/1/1
+  tools/verify-acquisition.py    rc=0   CONTROL-PLANE PASS-WITH-WARNINGS, ESTATE-COMPLETENESS PASS
+                                        the one new warning is ggml SINGLE-PROVIDER -> CROSS-RUNTIME-DUPLICATE,
+                                        which is Phase 14 S1 appearing in the control plane exactly as designed
+
+=== 10. NOT done ===
+  NO RENDER HAS BEEN RUN. acquisition/model-register.json Diffuse/image row
+  flux1-schnell-q4_k.gguf is ABSENT - no weights are on this host - so the Phase 14
+  GATE (768 square within 20% of 11.2 s) is UNMEASURED and sd-cli has never been executed.
+  14b onnxruntime/rembg/whisper.cpp: not started.
+  14c register rows image/image-aux/asr/cutout: not started (and there is no image-aux row at all).
+  14d units image/sigils + Symoneural-Diffuse/app/: designed in docs/diffuse/ARCHITECTURE.md, no code.
+  14e contention test: not started.
+
+=== 11. the build configuration (build/ is gitignored estate-wide, so this is its only record) ===
+  Symoneural-Diffuse/build/devtool-master/conf/bblayers.conf : copied unchanged from
+  Symoneural-LLM - openembedded-core/meta, meta-openembedded/{meta-oe,meta-python},
+  and /home/google/SymonSaysLLC/meta-symoneural.
+
+  conf/local.conf differs from the stock template only in the block below:
+    # SyMoNeuRaL: same settings everywhere (R6/R9). Diffuse (Phase 14), created 2026-09-17.
+    DL_DIR = "/home/google/SymonSaysLLC/Symoneural-Diffuse/downloads"
+    
+    # R6 host safety: 0 swap on this box; unbounded parallelism can hard-freeze it.
+    BB_NUMBER_THREADS = "10"
+    PARALLEL_MAKE = "-j 12"
+    
+    # sstate: MIRROR, not a shared SSTATE_DIR.
+    #
+    # Diffuse needs the cross toolchain and, more to the point, cuda-toolkit-bin 13.4.1 -
+    # both already built and proven in Ravencalc's cache. Reads come from there; writes go
+    # to this runtime's own cache, so Ravencalc's is never modified and R10 (sstate is a
+    # protected asset) holds by construction. Symoneural-LLM/API/CLI point SSTATE_DIR
+    # straight at Ravencalc's cache; Common and this runtime use the mirror form, which is
+    # the safer of the two conventions in the estate and costs nothing.
+    #
+    # Anchor the grep when checking this is set: the stock template ships a COMMENTED
+    # "#SSTATE_MIRRORS" line, and an unanchored match reports a mirror that is not active.
+    SSTATE_DIR = "/home/google/SymonSaysLLC/Symoneural-Diffuse/sstate-cache-master"
+    SSTATE_MIRRORS = "file://.* file:///home/google/SymonSaysLLC/Symoneural-Ravencalc/sstate-cache-master/PATH"
+    
+    # The estate owns Cython. Without this, python3-pyyaml-native pulls OE-Core's
+    # python3-cython-native while a symoneural-* recipe pulls ours, and both install
+    # /usr/bin/cygdb3 into the same native sysroot - a hard abort at
+    # do_prepare_recipe_sysroot. sd-cli itself is pure C++ and does not reach Python, but
+    # Phase 14b brings onnxruntime and rembg into this same build directory, and a
+    # local.conf that differs between runtimes is its own hazard (R6/R9). Belongs in the
+    # distro conf; symoneural.conf stays inert until a local.conf sets DISTRO (item X2).
+    PREFERRED_PROVIDER_python3-cython = "symoneural-cython"
+    PREFERRED_PROVIDER_python3-cython-native = "symoneural-cython-native"

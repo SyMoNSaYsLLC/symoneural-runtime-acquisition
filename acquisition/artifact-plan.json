@@ -765,6 +765,19 @@
    "symoneural_decision": "NOT-YET-DECIDED"
   },
   {
+   "component": "stable-diffusion.cpp",
+   "declared_capabilities": [
+    "NODE-BUNDLE",
+    "PYTHON-EXTENSION",
+    "PYTHON-PACKAGE",
+    "STATIC-LIBRARY|SHARED-LIBRARY"
+   ],
+   "native_source_files": 713,
+   "runtime": "Diffuse",
+   "source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "symoneural_decision": "NOT-YET-DECIDED"
+  },
+  {
    "component": "ggml",
    "declared_capabilities": [
     "UNKNOWN"

@@ -6,13 +6,13 @@
 
 | | |
 |---|---|
-| Parent HEAD | `ab252393a9b8f42b5110969c31baa0dd3a6962cb` |
+| Parent HEAD | `6dfbb00b67ce0054096aa2aff5f6ddb1e5757485` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
 | Scanner identity | `acquisition/control-plane.json` (20 tools hashed) |
 | Determinism verified | YES |
-| Tree inventory | `generated/runtime-tree.txt` (32076 dirs) |
-| Tree SHA-256 | `f5603ade8e5ba3bc5954194249b749fadf794f2c11a666519e64979532f01d6f` |
+| Tree inventory | `generated/runtime-tree.txt` (32278 dirs) |
+| Tree SHA-256 | `7bdda07b5003b08feec6371819893814b605740225386954c88ed351dafa8887` |
 | Report self-validation | PASS (10/10 totals re-derived) |
 
 ## Verdicts
@@ -29,7 +29,7 @@ Acquisition FAIL reasons:
 
 - 97 provider collision(s) unresolved (58 direct-vs-OE-Core)
 - 406 vendored decision(s) unresolved
-- 568 licence file(s) without an established identifier
+- 574 licence file(s) without an established identifier
 - 3 explicit control-plane decisions open (FreeToken/torch, nvidia-userspace-driver-provider, nvidia-gsp-firmware-provider)
 
 This FAIL is expected and is a statement of open decisions, not a defect.
@@ -39,8 +39,8 @@ This FAIL is expected and is a statement of open decisions, not a defect.
 
 | Method | Count |
 |---|---|
-| A — filesystem candidate + `git rev-parse` validation | 100 |
-| B — independent git work-tree-top census | 100 |
+| A — filesystem candidate + `git rev-parse` validation | 101 |
+| B — independent git work-tree-top census | 101 |
 | **Sets identical** | **YES** |
 
 `.git` is accepted as a file or a directory; submodules are excluded from the
@@ -68,6 +68,7 @@ This locks the **build stack only**, never the application sources.
 | CLI | 20 | 19 | 20 |
 | Common | 24 | 24 | 24 |
 | Crypto | 3 | 3 | 3 |
+| Diffuse | 1 | 1 | 1 |
 | LLM | 4 | 4 | 4 |
 | Live | 1 | 1 | 1 |
 | Platform | 8 | 8 | 8 |
@@ -75,7 +76,7 @@ This locks the **build stack only**, never the application sources.
 | Remix | 1 | 1 | 1 |
 | Streamer | 1 | 1 | 1 |
 | Web | 2 | 1 | 2 |
-| **TOTAL** | **100** | **98** | **100** |
+| **TOTAL** | **101** | **99** | **101** |
 
 ## Top-level source lock
 
@@ -152,6 +153,7 @@ This locks the **build stack only**, never the application sources.
 | Crypto | stratum | `c1a799139425` | VERIFIED | 0 | yes |
 | Crypto | sv2-apps | `d7d556d1a3c7` | VERIFIED | 0 | yes |
 | Crypto | sv2-spec | `67d2178e12b2` | VERIFIED | 0 | yes |
+| Diffuse | stable-diffusion.cpp | `7f410a3793c5` | VERIFIED | 4 | yes |
 | LLM | ggml | `e91ded11bdcd` | VERIFIED | 0 | yes |
 | LLM | llama.cpp | `5266f24da75d` | VERIFIED | 0 | yes |
 | LLM | triton | `c01b6774b186` | VERIFIED | 0 | yes |
@@ -184,30 +186,30 @@ This locks the **build stack only**, never the application sources.
 
 ## Submodule summary
 
-Entries: **86** · identity key `owner_source_path + submodule_path` · unknown URLs: **0**
+Entries: **90** · identity key `owner_source_path + submodule_path` · unknown URLs: **0**
 
-- AT-RECORDED-COMMIT: 86
+- AT-RECORDED-COMMIT: 90
 
 ## Dependency graph
 
-Declarations discovered from on-disk manifests: **16265**. No depth limit; nothing fetched.
+Declarations discovered from on-disk manifests: **16283**. No depth limit; nothing fetched.
 
 | Classification | Count |
 |---|---|
 | PACKAGE-MANAGED | 11351 |
-| DIRECT-DECLARED | 4437 |
-| BUILD-FETCH | 247 |
+| DIRECT-DECLARED | 4443 |
+| BUILD-FETCH | 255 |
 | WORKSPACE-LOCAL | 144 |
-| SUBMODULE | 86 |
+| SUBMODULE | 90 |
 
 | Scope | Count |
 |---|---|
-| UNKNOWN | 7739 |
-| DEV-ONLY | 6215 |
-| RUNTIME/SHIP | 1631 |
-| DOC-ONLY | 357 |
+| UNKNOWN | 7749 |
+| DEV-ONLY | 6220 |
+| RUNTIME/SHIP | 1632 |
+| DOC-ONLY | 358 |
 | BUILD-ONLY | 300 |
-| TEST-ONLY | 23 |
+| TEST-ONLY | 24 |
 
 A lockfile establishes resolution, not directness: a `Cargo.lock` entry with no
 source URL is `WORKSPACE-LOCAL`, never `DIRECT-DECLARED`.
@@ -328,7 +330,7 @@ Provider kinds indexed: DIRECT-ACQUISITION, OE-CORE-RECIPE, SUBMODULE, VENDORED
 | CROSS-COMPONENT-DUPLICATE | 7 |
 | CROSS-RUNTIME-DUPLICATE | 14 |
 | DIRECT-VERSUS-OE-CORE | 56 |
-| Vendor entries reclassified as SUBMODULE | 64 |
+| Vendor entries reclassified as SUBMODULE | 66 |
 | Duplicate top-level upstream URLs | 0 (invariant) |
 
 | Cross-runtime source | Runtimes | Copies | Kinds |
@@ -353,10 +355,10 @@ no copy is collapsed, deleted or rewritten; every entry is `UNRESOLVED`.
 
 ## Licence inventory
 
-Licence-bearing files: **568**
+Licence-bearing files: **574**
 
-- NESTED/DEPENDENCY: 449
-- TOP-LEVEL: 119
+- NESTED/DEPENDENCY: 454
+- TOP-LEVEL: 120
 
 **LICENSE expression and LIC_FILES_CHKSUM coverage are separate concepts.**
 This inventory is drift evidence, not a licensing conclusion.
@@ -368,14 +370,14 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 
 | Capability | Components |
 |---|---|
-| PYTHON-PACKAGE | 77 |
-| PYTHON-EXTENSION | 30 |
+| PYTHON-PACKAGE | 78 |
+| PYTHON-EXTENSION | 31 |
 | EXECUTABLE | 18 |
-| NODE-BUNDLE | 15 |
+| NODE-BUNDLE | 16 |
 | RUST-RLIB | 15 |
 | RUST-CDYLIB | 11 |
+| STATIC-LIBRARY|SHARED-LIBRARY | 11 |
 | UNKNOWN | 10 |
-| STATIC-LIBRARY|SHARED-LIBRARY | 10 |
 | SHARED-LIBRARY | 7 |
 
 ## Unresolved decisions
@@ -396,10 +398,10 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 
 Derived from the scanner records at render time:
 
-- licence files unresolved: **568**
+- licence files unresolved: **574**
 - provider collisions unresolved: **97**
 - vendored decisions unresolved: **406**
-- vendor entries reclassified as submodule: **64**
+- vendor entries reclassified as submodule: **66**
 
 Curated counts as recorded in `unresolved.json` (hand-maintained; may lag the derived figures above):
 

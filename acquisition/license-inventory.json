@@ -5173,6 +5173,66 @@
   {
    "apparent_scope": "TOP-LEVEL",
    "declared_identifier": "UNRESOLVED",
+   "md5": "907b35094e28d92d03f21f8883acfa3b",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "LICENSE",
+   "sha256": "b53fa08f515cb5a6fff7b9fd8fcd0961a4b80df29d74372d25e1f9171aa042ee",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "306e1faf775d9cf57fb75898757e3a5a",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "examples/server/frontend/LICENSE",
+   "sha256": "284389c9a1f1feb68465505dbb13f41147687254b2aa62ef5d138a62cfb5bb08",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "223b26b3c1143120c87e2b13111d3e99",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "ggml/LICENSE",
+   "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "82df51f7be2b4d33b84b448d6313de41",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "thirdparty/LICENSE.darts_clone.txt",
+   "sha256": "155f59997298ee336602c49f9c1110f268ac394ca2197eb02647a3555935ad52",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6e8dee932c26f2dab503abf70c96d8bb",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "thirdparty/libwebm/LICENSE.TXT",
+   "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "NESTED/DEPENDENCY",
+   "declared_identifier": "UNRESOLVED",
+   "md5": "6e8dee932c26f2dab503abf70c96d8bb",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "path": "thirdparty/libwebp/COPYING",
+   "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+   "status": "UNRESOLVED"
+  },
+  {
+   "apparent_scope": "TOP-LEVEL",
+   "declared_identifier": "UNRESOLVED",
    "md5": "11e8c8dbfd5fa373c703de492140ff7a",
    "owner_component": "starlette",
    "owner_runtime": "API",

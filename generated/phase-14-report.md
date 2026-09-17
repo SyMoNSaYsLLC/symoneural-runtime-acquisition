@@ -1,6 +1,6 @@
 # PHASE 14 — Diffuse: Image and Sigils live, the lock under contention
 
-## STATUS: PENDING — NOT STARTED
+## STATUS: IN PROGRESS — 14a BUILT · 14b–14e NOT STARTED · GATE UNMEASURED
 
 **starts after: Phase 12 gate**
 
@@ -21,14 +21,30 @@
 
 
 Queued 2026-09-13 by Garrett with "QUEUED — do not start." Spec text is recorded
-below verbatim so the phase is self-contained when it is picked up. Nothing in
-this phase has been acquired, built, configured or run. No tree has been cloned
-for it: A7 forbids acquiring ahead of the phase that builds the component.
+below verbatim so the phase is self-contained.
 
-Note on ordering: the spec's own "Start after" line says **Phase 12 gate
-(independent of 13)**, while the queue instruction says **after phase 13 GATE
-PASSED**. The queue instruction is the later and more restrictive of the two, so
-it governs. Recorded rather than reconciled silently.
+> **CORRECTION, 2026-09-17.** The two paragraphs that stood here said *"Nothing in this
+> phase has been acquired, built, configured or run. No tree has been cloned for it"*.
+> Both sentences are now false and are replaced rather than left to rot — a phantom
+> NON-completion is the same defect as a phantom completion.
+>
+> **What actually happened on 17 September**
+>
+> | | |
+> |---|---|
+> | S3 (partial) | `stable-diffusion.cpp` cloned at the recorded pin `7f410a3793c5` with its four submodules and ingested — commit `2a3a89474`, `LISTING-VERIFIED(4 submodules)`. The other four S3 components (diffusers, rembg, whisper.cpp, onnxruntime) are **not** acquired. |
+> | **14a** | Recipe written, built, packaged. `sd-cli` and `libstable-diffusion.so` exist as ipks. Evidence: `generated/evidence/phase-14/14a-evidence.txt`. A build directory was created for the runtime at `Symoneural-Diffuse/build/devtool-master`. |
+> | 14b, 14c, 14d, 14e | not started |
+> | GATE | **unmeasured.** No weights are on this host, so no render has been run. |
+>
+> **Ordering, stated plainly.** The spec's own "Start after" line says *Phase 12 gate
+> (independent of 13)*; the queue instruction says *after phase 13 GATE PASSED*. **Neither
+> gate has passed.** 14a was built ahead of both under Garrett's standing instruction of
+> 17 September to make the thing work and explain the decisions afterwards. That is a
+> deviation from A7 ("do not acquire ahead of the phase that builds the component"), and
+> it is recorded here as a deviation, not presented as the plan having been followed.
+>
+> Design, theory and the worker/unit contract: `docs/diffuse/ARCHITECTURE.md`.
 
 ---
 

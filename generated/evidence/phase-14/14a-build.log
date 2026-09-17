@@ -1,0 +1,99 @@
+No same-user BitBake process observed on the host (point-in-time check; not a lock).
+This is the default build configuration for the openembedded-core layer.
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    core-image-full-cmdline
+    core-image-sato
+    core-image-weston
+    meta-toolchain
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86-64'.
+
+Other commonly useful commands are:
+ - 'devtool' and 'recipetool' handle common recipe tasks
+ - 'bitbake-layers' handles common layer tasks
+ - 'oe-pkgdata-util' handles common target package tasks
+WARNING: You are using a local hash equivalence server but have configured an sstate mirror. This will likely mean no sstate will match from the mirror. You may wish to disable the hash equivalence use (BB_HASHSERVE), or use a hash equivalence server alongside the sstate mirror.
+WARNING: Sstate directory is shared between several builds (it is set via SSTATE_DIR to /home/google/SymonSaysLLC/Symoneural-Diffuse/sstate-cache-master),
+        but hash equivalency database is inside this particular build directory /home/google/SymonSaysLLC/Symoneural-Diffuse/build/devtool-master.
+
+        This will prevent sstate reuse, and it is recommended to set the location for the database to a common path
+        via BB_HASHSERVE_DB_DIR, for example:
+
+        BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"
+Loading cache...done.
+Loaded 5112 entries from dependency cache.
+Parsing recipes...WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb: symoneural-api-python: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+LICENSE = "LicenseRef-symoneural-api-python-CLOSED"
+WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb: symoneural-api: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+LICENSE = "LicenseRef-symoneural-api-CLOSED"
+done.
+Parsing of 2867 .bb files complete (2862 cached, 5 parsed). 5116 targets, 113 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION           = "2.19.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "x86_64-oe-linux"
+MACHINE              = "qemux86-64"
+SDKMACHINE           = "x86_64"
+DISTRO               = "nodistro"
+DISTRO_VERSION       = "nodistro.0"
+TUNE_FEATURES        = "m64 x86-64-v3"
+meta                 = "HEAD:fe7a24bc67118e7e184b5f5247258715e3904e7c"
+meta-oe              
+meta-python          = "HEAD:43b79d8e372c4f69ebab6c85b39d97b41522080f"
+meta-symoneural      = "main:6dfbb00b67ce0054096aa2aff5f6ddb1e5757485"
+
+Initialising tasks...done.
+Checking sstate mirror object availability...done.
+Sstate summary: Wanted 222 Local 0 Mirrors 215 Missed 7 Current 154 (96% match, 98% complete)
+Removing 6 stale sstate objects for arch x86-64-v3...done.
+Removing 1 stale sstate objects for arch qemux86_64...done.
+NOTE: Executing Tasks
+NOTE: Running task 958 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_configure)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_configure: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_configure: Succeeded
+NOTE: Running task 1006 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_compile)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_compile: Started
+Bitbake still alive (no events for 600s). Active tasks:
+/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_compile
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_compile: Succeeded
+NOTE: Running task 1007 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_install)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_install: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_install: Succeeded
+NOTE: Running task 1008 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package)
+NOTE: Running task 1009 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_symon_assert_nonempty_d)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_symon_assert_nonempty_d: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_symon_assert_nonempty_d: Succeeded
+NOTE: Running task 1010 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_populate_sysroot)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_populate_sysroot: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package: Succeeded
+NOTE: Running task 1011 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_packagedata)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_packagedata: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_packagedata: Succeeded
+NOTE: Running task 1012 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_create_spdx)
+NOTE: Running task 1013 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package_write_ipk)
+NOTE: Running task 1014 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package_qa)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_spdx: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_write_ipk: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_qa: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_qa: Succeeded
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_write_ipk: Succeeded
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_spdx: Succeeded
+NOTE: Running task 1015 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_create_package_spdx)
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_package_spdx: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_package_spdx: Succeeded
+NOTE: Running noexec task 1016 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_build)
+NOTE: Tasks Summary: Attempted 1016 tasks of which 1004 didn't need to be rerun and all succeeded.
+
+Summary: There were 4 WARNING messages.

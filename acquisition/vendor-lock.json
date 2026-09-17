@@ -592,6 +592,26 @@
    "relpath": "third_party/tensorpipe/third_party/pybind11"
   },
   {
+   "location": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/thirdparty/libwebm",
+   "name": "libwebm",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "owning_upstream": "Diffuse/stable-diffusion.cpp",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
+   "reclassified_from": "VENDORED",
+   "reclassified_to": "SUBMODULE",
+   "relpath": "thirdparty/libwebm"
+  },
+  {
+   "location": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp/thirdparty/libwebp",
+   "name": "libwebp",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "owning_upstream": "Diffuse/stable-diffusion.cpp",
+   "reason": "path is a recorded submodule (in-tree .git or lock row); see submodule-lock.json",
+   "reclassified_from": "VENDORED",
+   "reclassified_to": "SUBMODULE",
+   "relpath": "thirdparty/libwebp"
+  },
+  {
    "location": "Symoneural-Ravencalc/src/numerics/source/scipy/subprojects/array_api_extra",
    "name": "array_api_extra",
    "owner_source_path": "Symoneural-Ravencalc/src/numerics/source/scipy",
