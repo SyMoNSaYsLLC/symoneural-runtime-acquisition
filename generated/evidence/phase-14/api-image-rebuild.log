@@ -1,0 +1,76 @@
+Parsing recipes...WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb: symoneural-api-python: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb: symoneural-api: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+Parsing of 2869 .bb files complete (2865 cached, 4 parsed). 5118 targets, 113 skipped, 0 masked, 0 errors.
+Build Configuration:
+BB_VERSION           = "2.19.1"
+TARGET_SYS           = "x86_64-oe-linux"
+MACHINE              = "qemux86-64"
+SDKMACHINE           = "x86_64"
+DISTRO               = "nodistro"
+TUNE_FEATURES        = "m64 x86-64-v3"
+meta-symoneural      = "main:a21fa9a168d423fd18b096052b5d65dde35f694a"
+Initialising tasks...Sstate summary: Wanted 118 Local 95 Mirrors 0 Missed 23 Current 2621 (80% match, 99% complete)
+NOTE: Running task 2871 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_unpack)
+NOTE: Running task 3097 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_unpack)
+NOTE: Running task 3190 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_patch)
+NOTE: Running task 3430 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_patch)
+NOTE: Running task 3450 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_deploy_source_date_epoch)
+NOTE: Running task 3451 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_generate_toolchain_file)
+NOTE: Running task 3652 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_deploy_source_date_epoch)
+NOTE: Running task 3766 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_configure)
+NOTE: Running task 3925 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_configure)
+NOTE: Running task 4095 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_populate_lic)
+NOTE: Running task 4099 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_populate_lic)
+NOTE: Running task 4256 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_compile)
+NOTE: Running task 4375 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_compile)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_compile: Started
+NOTE: Running task 5071 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_install)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_compile: Succeeded
+NOTE: Running task 5072 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_install)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_install: Started
+NOTE: Running task 5073 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_package)
+NOTE: Running task 5074 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_populate_sysroot)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_install: Succeeded
+NOTE: Running task 5075 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_package)
+NOTE: Running task 5076 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_populate_sysroot)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package: Started
+NOTE: Running task 5077 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_packagedata)
+NOTE: Running task 5078 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_create_spdx)
+NOTE: Running task 5079 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_package_write_ipk)
+NOTE: Running task 5080 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_package_qa)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package: Succeeded
+NOTE: Running task 5081 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_packagedata)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_packagedata: Started
+NOTE: Running task 5082 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb:do_create_package_spdx)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 5085 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_package_write_ipk)
+NOTE: Running task 5086 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_package_qa)
+NOTE: Running task 5087 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_create_spdx)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package_write_ipk: Started
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package_qa: Started
+NOTE: Running task 5088 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb:do_create_package_spdx)
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package_qa: Succeeded
+NOTE: recipe symoneural-api-python-1.0.0-r0: task do_package_write_ipk: Succeeded
+NOTE: Running task 5090 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_rootfs)
+NOTE: recipe symoneural-image-api-1.0-r0: task do_rootfs: Started
+NOTE: recipe symoneural-image-api-1.0-r0: task do_rootfs: Succeeded
+NOTE: Running task 5091 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_flush_pseudodb)
+NOTE: Running task 5092 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_create_rootfs_spdx)
+NOTE: Running task 5093 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_image_qa)
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_qa: Started
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_qa: Succeeded
+NOTE: Running task 5094 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_image)
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image: Started
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image: Succeeded
+NOTE: Running task 5095 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_image_tar)
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_tar: Started
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_tar: Succeeded
+NOTE: Running task 5096 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_image_complete)
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_complete: Started
+NOTE: recipe symoneural-image-api-1.0-r0: task do_image_complete: Succeeded
+NOTE: Running task 5097 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_create_image_spdx)
+NOTE: Running task 5098 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_populate_lic_deploy)
+NOTE: Running task 5099 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_create_image_sbom_spdx)
+NOTE: Running noexec task 5100 of 5100 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-api.bb:do_build)
+NOTE: Tasks Summary: Attempted 5100 tasks of which 5060 didn't need to be rerun and all succeeded.
+Summary: There were 33 WARNING messages.
