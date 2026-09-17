@@ -1262,6 +1262,18 @@
       "revision_authority": "session selection: latest upstream release tag at acquisition (stb: master head, no tags upstream)",
       "runtime": "Platform",
       "upstream_url": "https://github.com/nothings/stb.git"
+    },
+    {
+      "acquisition_state": "ACQUIRED",
+      "category": "image",
+      "component": "stable-diffusion.cpp",
+      "intended_revision": "7f410a3793c5bba8eb198e962ce7a3d6095f9d89",
+      "intended_tag_version": "master-859-7f410a3",
+      "notes": "Phase 14 item 14a. Built with SD_CUDA through symoneural-cuda.bbclass (CUDA 13.4.1, sm_120); packages sd-cli. Weights are NOT acquired: the register's image row (flux1-schnell-q4_k.gguf) is ABSENT and stays ABSENT until a measured run registers one (Phase 12 S3 / decision D2).",
+      "required_by": "Diffuse: image and sigils units (operator-checklist Phase 14)",
+      "revision_authority": "the SNAPSHOT recorded in docs/operator-checklist.md Phase 14 S3 and in pending-acquisitions.json; re-resolved upstream 2026-09-17 and confirmed as master-859-7f410a3",
+      "runtime": "Diffuse",
+      "upstream_url": "https://github.com/leejet/stable-diffusion.cpp"
     }
   ],
   "note": "A component on disk with no row here reconciles as EXTRA / INTENT-UNDECLARED.",

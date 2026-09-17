@@ -22,13 +22,14 @@
       "category": "image",
       "component": "stable-diffusion.cpp",
       "licence_expected": "MIT",
-      "notes": "PROVENANCE: submodule ggml is leejet/ggml, a PERSONAL FORK of ggml-org/ggml. No stable release line exists upstream - tags are master-<N>-<sha> per commit, so this pin is a commit snapshot, not a release.",
+      "notes": "PROVENANCE: submodule ggml is leejet/ggml, a PERSONAL FORK of ggml-org/ggml. No stable release line exists upstream - tags are master-<N>-<sha> per commit, so this pin is a commit snapshot, not a release. Submodule commits at the pin: ggml e20c3a14 (branch sd.cpp), examples/server/frontend c4bce3d6, thirdparty/libwebm 5bf12267, thirdparty/libwebp 0c9546f7. LICENSE md5 907b35094e28d92d03f21f8883acfa3b (MIT, leejet).",
       "required_by": "Diffuse: CPU/GPU diffusion inference in C++",
       "runtime": "Diffuse",
       "sha": "7f410a3793c5bba8eb198e962ce7a3d6095f9d89",
       "tag": "master-859-7f410a3",
       "tag_kind": "SNAPSHOT",
-      "upstream_url": "https://github.com/leejet/stable-diffusion.cpp"
+      "upstream_url": "https://github.com/leejet/stable-diffusion.cpp",
+      "acquired": "2026-09-17: cloned at this recorded snapshot with all four submodules and ingested via tools/ingest-and-commit. Master that day was cc515a01 (master-872), 13 commits ahead with an identical SD_CUDA/GGML_CUDA block; the 17 September API document cites sd.cpp route file:line at cc515a01, which documents upstream's server rather than this build. Bumping the pin stays a recorded decision."
     },
     {
       "category": "diffusion",
