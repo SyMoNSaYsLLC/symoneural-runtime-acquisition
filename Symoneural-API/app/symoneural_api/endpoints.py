@@ -194,7 +194,9 @@ UNROUTED: dict[str, str] = {
                  "control, not every unit's surface.",
     "coder": "reached on its own port 8803; speaks MCP, not an HTTP dialect the gateway "
              "projects.",
-    "project": "reached on its own port 8804.",
+    "project": "project and task state is reached on its own port 8804. It is not "
+               "inference and not control-plane, so the frozen tree routes neither; if "
+               "it ever needs a gateway surface it gets /symoneural/v1, not /v1.",
     "streamer": "reached on its own port 8805; HLS delivery is not a gateway concern.",
     "remix": "reached on its own port 8806; Spotify Connect is its own protocol.",
     "studio": "fine-tuning is driven through jobs, not a dialect route; the job routes "
