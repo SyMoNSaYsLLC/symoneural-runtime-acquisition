@@ -39,7 +39,7 @@ below verbatim so the phase is self-contained.
 > | **14c** | partly done — the four `image*` rows are PRESENT. `asr` and `cutout` wait on 14b. |
 > | **14d** | units `image` 8809 and `sigils` 8810 registered; **launch line CORRECTED** (below). `Symoneural-Diffuse/app/` not written. |
 > | 14b, 14e | not started. 14e needs a second evictable GPU unit — `chat` — whose weights are still ABSENT. |
-> | **GATE** | **MET. 9.0 s against ≤ 13.44 s**, two runs (9.2 s, 9.0 s), each including a full model load. The 768×768 PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`. |
+> | **GATE** | **MET. 9.0 s against ≤ 13.44 s**, two runs (9.2 s, 9.0 s), each including a full model load. The 768×768 PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`. But read `DECISIONS.md` "Standing constraint" with it: 11.2 s *"was taken on a stack that no longer exists ... targets, not baselines. Re-measure; do not inherit."* Whether it included a model load is **unrecorded**; the prior run's three weeks of routine output reads like a resident server. The number to carry forward is 9.0 s, process per render, 11.79 GiB resident (prior peak was recorded at 14.26 GiB). |
 >
 > **The gate turned on one flag.** This report's 14d line says `--backend te=cpu`. The
 > real flag is `--clip-on-cpu`, and measured on this card it costs 9.9 s a render:

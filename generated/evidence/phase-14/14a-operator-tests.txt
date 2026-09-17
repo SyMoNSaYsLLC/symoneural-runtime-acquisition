@@ -1,4 +1,4 @@
-Preserved isolated fixtures: /tmp/claude-1000/symoneural-operator-regressions-3ok96yt0
+Preserved isolated fixtures: /tmp/claude-1000/symoneural-operator-regressions-8gnyp20k
 test_child_failure_and_per_run_logs (__main__.BuildAll.test_child_failure_and_per_run_logs) ... ok
 test_dry_run_and_missing_runtimes (__main__.BuildAll.test_dry_run_and_missing_runtimes) ... ok
 test_invalid_job_count (__main__.BuildAll.test_invalid_job_count) ... ok
@@ -45,6 +45,6 @@ test_missing_and_duplicate_paths_fail (__main__.TreeIdentity.test_missing_and_du
 test_rebuilt_tree_matches_git_without_writes (__main__.TreeIdentity.test_rebuilt_tree_matches_git_without_writes) ... ok
 
 ----------------------------------------------------------------------
-Ran 44 tests in 1.035s
+Ran 44 tests in 0.848s
 
 OK

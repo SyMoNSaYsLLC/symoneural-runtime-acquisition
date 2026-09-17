@@ -47,11 +47,18 @@ with the unit; the generic registry (A10) must separate them.
 
 `REGISTRY` (insertion order): ravencalc 8801 CPU · chat 8802 GPU · coder 8803 CPU ·
 project 8804 CPU · streamer 8805 NET · remix 8806 NET · studio 8807 GPU · miner 8808
-GPU (height 6). Each carries `backed_by` (estate package names), `token_env`
-(`SYM_<NAME>_TOKEN`), `enabled_variable` (`SYM_<NAME>_ENABLED` unless overridden).
-Names in `DECISIONS.md` §1 not in the registry: live, rack, exp, asic, image, sigils,
-voice, reinforce. `gpu_units()` filters by resource; `backing_packages()` is the
-unit→package graph the API uses to make "offline" checkable.
+GPU (height 6) · **image 8809 GPU · sigils 8810 GPU**. Each carries `backed_by` (estate
+package names), `token_env` (`SYM_<NAME>_TOKEN`), `enabled_variable`
+(`SYM_<NAME>_ENABLED` unless overridden).
+Names in `DECISIONS.md` §1 not in the registry: live, rack, exp, asic, voice, reinforce.
+`gpu_units()` filters by resource; `backing_packages()` is the unit→package graph the API
+uses to make "offline" checkable.
+
+> **2026-09-17.** `image` and `sigils` were added when the Diffuse engine was built; both
+> are backed by `symoneural-stable-diffusion-cpp`, and the priority table below already
+> carried them. Their endpoints — `POST /v1/images/generations` and `/v1/images/edits` for
+> `image`, and deliberately none for `sigils` — are in `docs/api/ENDPOINT-REGISTER.md`,
+> which `tools/proofs/api.py` asserts against this registry inside the clean-root image.
 
 ## GPU lock — the C↔Python contract
 

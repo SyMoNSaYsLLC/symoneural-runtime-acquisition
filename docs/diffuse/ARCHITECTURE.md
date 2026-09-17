@@ -338,7 +338,29 @@ has **one** Diffuse/image row and no `image-aux` row at all. Adding it is checkl
 | **14c** register rows | **partly done** — the four `image*` rows are PRESENT with sha256 and HF revisions (§9). `asr` and `cutout` wait on 14b. |
 | **14d** units, launch lines, `Symoneural-Diffuse/app/` | **units registered** (`image` 8809, `sigils` 8810) and the **launch line corrected against the card** (§8). `Symoneural-Diffuse/app/` — the matte and PNG encoder — is **not written**. |
 | 14e contention test, ten alternations | not started — it needs a second GPU unit that can actually be evicted, i.e. `chat`, whose weights are still ABSENT |
-| **GATE: 768² within 20% of 11.2 s (≤ 13.44 s)** | **MET at 9.0 s.** Two runs, 9.2 s and 9.0 s, each including a full model load; the PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`, 768×768 verified by reading its IHDR. |
+| **GATE: 768² within 20% of 11.2 s (≤ 13.44 s)** | **MET at 9.0 s.** Two runs, 9.2 s and 9.0 s, each including a full model load; the PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`, 768×768 verified by reading its IHDR. **What 11.2 s was measured under is not recorded** — see below. |
+
+**What the gate number actually is.** `DECISIONS.md` "Standing constraint" says it
+plainly: *"Every `measured` figure in the models register — 151 tok/s, 8.2 GiB @64K, 768²
+in 11.2 s, 14.26 GiB peak — was taken on a stack that no longer exists: a different
+llama.cpp build, the host CUDA rather than an estate toolkit, and nothing under
+`symoneural-pristine`. They are **targets, not baselines**. Re-measure; do not inherit."*
+
+So "MET" means *this build beat a target inherited from a deleted estate*, and it should
+be read with two caveats stated rather than buried:
+
+- **Whether the 11.2 s included a model load is unrecorded.** The prior run wrote to
+  `backend/output/gen-<epoch-ms>-<seed>.png` in routine use over three weeks, which reads
+  more like a resident server than a process per render. If that number was measured with
+  the weights already in VRAM, then 9.0 s *including a full 11.8 GB load every time* is a
+  considerably stronger result than the comparison suggests — and if it was not, the
+  comparison is direct. Nobody recorded which, and this document will not guess.
+- The prior peak is recorded as **14.26 GiB**; this build's parameter residency is
+  **11.79 GiB**. Lower, on a stack where every byte is accounted for.
+
+The number worth carrying forward is not "20% of 11.2 s". It is **9.0 s, process per
+render, 11.79 GiB resident, on CUDA 13.4.1 / sm_120 from the estate toolkit** — measured
+here, reproducible by `tools/clean-root-proof Diffuse symoneural-image-diffuse`.
 
 **Ordering, stated rather than glossed.** The phase's own line says *start after the
 Phase 12 gate*; the queue instruction says *after phase 13 GATE PASSED*. Neither gate has
