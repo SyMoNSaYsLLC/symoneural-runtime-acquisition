@@ -59,10 +59,13 @@ __pycache__/
 # SECRETS - deny by pattern, not by discipline.
 #
 # No secret has ever been tracked here: /etc/symoneural/*.env is root-owned 0600
-# and lives OUTSIDE this repository by design (R13), and a full-history scan
-# (231 paths ever added, all commits) found no .env, key, or credential file and
-# no secret-shaped assignment. These rules exist so that stays true by
-# construction rather than by anyone remembering.
+# and lives OUTSIDE this repository by design (R13). The full-history scan that
+# backs that statement is tools/pre-publish-audit.sh (filenames and content, all
+# commits, outside the verified upstream trees) and it is re-run before every
+# push; its last recorded PASS is cited in docs/maintenance/. (The "231 paths ever
+# added" figure that used to sit here predates SOURCES-100 - the repository now
+# tracks ~291,000 files, most of them acquired upstream source at its pin.) These
+# rules exist so the statement stays true by construction rather than by memory.
 #
 # Treat this repository as if it were public even while it is private: a repo
 # that is published once is forked, cached and archived, and making it private
@@ -107,6 +110,19 @@ etc/symoneural/
 *.ckpt
 *.pt
 *.pth
+# Weights that hide behind generic extensions (2026-09-15). `*.bin` as a whole is
+# too broad to deny (firmware blobs, CUDA probes), so the model-shaped names are
+# listed: the register's whisper model is ggml-base.en.bin, and HF checkpoints are
+# pytorch_model*.bin / consolidated*.bin. tools/pre-publish-audit.sh checks the same
+# shapes and, for anything tracked over 1 MB, the GGUF / safetensors magic bytes.
+ggml-*.bin
+pytorch_model*.bin
+consolidated*.bin
+*.h5
+*.tflite
+*.npz
+*.msgpack
+*.engine
 
 # Local operator scratch
 *.local
@@ -133,3 +149,28 @@ Symoneural-API/app/tests/native/test_gpulock
 Symoneural-API/app/tests/native/test_rack
 Symoneural-API/app/tests/native/test_unit
 Symoneural-API/app/tests/native/test_api
+
+# ---------------------------------------------------------------------------
+# LOCAL MODEL STORE AND WORKING TREES (2026-09-17) - deny the DIRECTORY, not the
+# extension.
+#
+# /models/ is not a folder this repository made: it is a mount point. /etc/fstab
+# line 6 mounts UUID=baf9f6dc-... (/dev/nvme0n1p7, 143 GB) there, and it holds
+# 35 GB of weights (gpt-oss-20b, Qwen3.6-35B-A3B-NVFP4). The extension rules above
+# do NOT protect it: a Hugging Face snapshot also carries config.json, README.md,
+# LICENSE and model.safetensors.index.json, and a Hub cache stores its blobs as
+# blobs/<sha256> with no extension at all. One `git add .` would stage third-party
+# model cards and, for the cache shape, the weights themselves. Whether the
+# partition should be re-mounted outside the repository is an fstab decision for
+# Garrett; this line makes the git hazard zero either way.
+/models/
+
+# FreeToken/ is a 6.8 GB working clone of FlashML-org/FreeToken at 0.1.3 with a
+# .venv - NOT the acquired tree (that is Symoneural-Adaptive-Fabric/src/freetoken/
+# source/FreeToken at pin 9db1a39455a3). It is deliberately left in place rather
+# than moved: its console scripts carry absolute shebangs into this path, so a
+# move breaks a tool the 17 Sep test plan (T0) invokes.
+/FreeToken/
+
+# Chat-output archives dropped in the root while moving files between machines.
+/files*.zip

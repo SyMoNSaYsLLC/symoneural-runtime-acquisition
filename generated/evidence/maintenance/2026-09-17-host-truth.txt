@@ -1,0 +1,98 @@
+# Host truth — symon, 2026-09-17 07:13 UTC
+# Read-only. Collected by Claude Code on the host (not a sandbox mount).
+
+## uname / kernel
+6.12.107+deb13-amd64
+rc=0
+
+## GPU driver flavour (estate review §3F)
+driver_version, name, pcie.link.gen.current, pcie.link.gen.max, pcie.link.width.current, pcie.link.width.max, memory.total [MiB]
+615.71.09, NVIDIA GeForce RTX 5070 Ti, 3, 3, 8, 16, 16303 MiB
+nvidia-smi rc=0
+--- /proc/driver/nvidia/version
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@symon)  Tue Sep 15 10:45:45 AM EDT 2026
+GCC version:  gcc version 14.2.0 (Debian 14.2.0-19) 
+rc=0
+--- modinfo nvidia
+rc=127
+--- dkms status
+/bin/bash: line 32: dkms: command not found
+rc=127
+--- /lib/modules/$(uname -r)/updates/dkms/
+total 12556
+drwxr-xr-x 2 root root     4096 Sep 15 10:46 .
+drwxr-xr-x 3 root root     4096 Sep 15 10:46 ..
+-rw-r--r-- 1 root root    83756 Sep 15 10:46 nvidia-drm.ko.xz
+-rw-r--r-- 1 root root 11428136 Sep 15 10:46 nvidia.ko.xz
+-rw-r--r-- 1 root root   721688 Sep 15 10:46 nvidia-modeset.ko.xz
+-rw-r--r-- 1 root root     2304 Sep 15 10:46 nvidia-peermem.ko.xz
+-rw-r--r-- 1 root root   600460 Sep 15 10:46 nvidia-uvm.ko.xz
+rc=0
+--- nvidia dpkg
+ii  libcuda1:amd64          615.71.09-2  amd64        NVIDIA CUDA Driver Library
+ii  libcuda1:i386           615.71.09-2  i386         NVIDIA CUDA Driver Library
+ii  nvidia-kernel-dkms      615.71.09-2  amd64        Transitional dummy package
+ii  nvidia-kernel-open-dkms 615.71.09-2  amd64        NVIDIA binary kernel module DKMS source open flavor
+rc=1
+--- loaded nvidia modules
+nvidia_uvm           1957888  0
+nvidia_drm            159744  17
+nvidia_modeset       1998848  67 nvidia_drm
+nvidia              18489344  784 nvidia_uvm,nvidia_modeset
+rc=0
+
+## CPU shape (gameplan §5: JSON said 4 physical cores)
+CPU(s):                                  20
+Model name:                              Intel(R) Core(TM) i9-10900KF CPU @ 3.70GHz
+Thread(s) per core:                      2
+Core(s) per socket:                      10
+Socket(s):                               1
+CPU(s) scaling MHz:                      15%
+Virtualization:                          VT-x
+rc=0
+--- ISA
+avx2 fma 
+rc=0
+
+## RAM
+               total        used        free      shared  buff/cache   available
+Mem:              94          12           3           4          83          82
+Swap:             31           0          31
+rc=0
+
+## Listeners (ports the documents disagree about)
+grep rc=1 (1 = none of those ports is listening)
+--- all listening TCP ports
+[REDACTED FOR A PUBLIC REPOSITORY] The full inventory of this workstation's listening
+sockets is not committed. The only question the 16/17 September documents asked of it is
+answered above: none of 8081, 8802, 8800, 8000, 7966, 8188, 11434 or 18802 is listening.
+Full output: ~/Desktop/claude/2026-09-17-host-truth-FULL-local-only.txt
+rc=0
+
+## Model roots (gameplan: four claimed; disk says five)
+/home/google/SymonSaysLLC/models         35G
+/mnt/models                              75G
+/home/google/symoneural-models           24K
+/yocto/models                            absent
+/var/lib/symoneural/models               absent
+--- contents
+13G	/home/google/SymonSaysLLC/models/gpt-oss-20b
+22G	/home/google/SymonSaysLLC/models/Qwen3.6-35B-A3B-NVFP4
+23G	/mnt/models/.hf-cache/models--google--gemma-4-26B-A4B-it
+53G	/mnt/models/.hf-cache/models--openai--gpt-oss-120b
+
+## FreeToken versions (two on the box)
+freetoken version 0.1.3
+rc=0
+/home/google/.freetoken/venv
+freetoken version 0.1.3+gcac247a86
+--- acquired pin
+['9db1a39455a3']
+--- working clone HEAD
+cac247a  (HEAD -> main, tag: v0.1.3, tag: nightly, origin/main, origin/HEAD)
+
+## benchbw profile
+total 12
+drwxrwxr-x 2 google google 4096 Sep 17 00:46 .
+drwxrwxr-x 3 google google 4096 Sep 16 23:34 ..
+-rw-rw-r-- 1 google google 2391 Sep 17 00:46 GPU-15e0078a-cb3a-50d1-a40b-94e4d538fc78.json

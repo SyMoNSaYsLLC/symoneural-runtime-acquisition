@@ -1,0 +1,39 @@
+image   : /home/google/SymonSaysLLC/Symoneural-CLI/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-cli-qemux86-64.rootfs-20260914053558.tar.gz
+sha256  : 5bfecdb79b45025b62f967e26c5f68f10a81008feaa783e0b1deaa7f1a775e69
+manifest: /home/google/SymonSaysLLC/Symoneural-CLI/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-cli-qemux86-64.rootfs-20260914053558.manifest (119 packages)
+root    : /tmp/claude-1000/symoneural-cli-proof-7nsnlbxx  (6257 files)
+mode    : self-contained (no host directory on the loader path)
+--- interpreter
+python 3.14.7 prefix /tmp/claude-1000/symoneural-cli-proof-7nsnlbxx/usr
+--- /home/google/SymonSaysLLC/tools/proofs/cli.py
+  anthropic                  1.5.0        PASS
+  mcp                        2.2.0        PASS
+  mcp_types                  2.2.0        PASS
+  httpx2                     2.12.0       PASS
+  httpcore2                  2.12.0       PASS
+  truststore                 0.10.4       PASS
+  docstring_parser           0.18.0       PASS
+  jiter                      0.17.0       PASS
+  sse_starlette              3.4.11       PASS
+  multipart                  0.0.32       PASS
+  jwt                        2.14.0       PASS
+  cryptography               50.0.1       PASS
+  cffi                       2.1.1        PASS
+  pycparser                  3.0          PASS
+  jsonschema                 4.26.0       PASS
+  attrs                      26.1.0       PASS
+  referencing                0.37.0       PASS
+  jsonschema_specifications  2025.9.1     PASS
+  rpds                       2026.6.3     PASS
+  opentelemetry              1.44.0       PASS
+  pydantic                   2.13.5       PASS
+  starlette                  1.6.0        PASS
+  uvicorn                    0.52.4       PASS
+  meaningful ops PASS: jiter parsed nested JSON; jsonschema accepted/rejected against minimum (attrs+referencing+rpds-py); pyjwt RS256 signed and verified over cryptography's Rust/OpenSSL binding via cffi and rejected a tampered token; python-multipart parsed a form part; httpx2 built a POST (unsent); anthropic SDK built a /v1/messages request locally, never sent; mcp InitializeRequest round-tripped through mcp-types/pydantic; opentelemetry span; sse-starlette EventSourceResponse 200; docstring-parser parsed an Args block
+  NO NETWORK: every operation above is local construction, parsing or crypto; no request is sent and no hosted model is contacted.
+CLI CLEAN ROOT PROOF: PASS
+rc=0
+--- host leakage (libraries with loader initialization records, across traced processes)
+  48 distinct target-library initialization paths across 2 traced processes; 0 shell-launcher transitions
+  none: no external library initialization in captured loader traces
+rc=0
