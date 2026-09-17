@@ -1,6 +1,6 @@
 # PHASE 14 — Diffuse: Image and Sigils live, the lock under contention
 
-## STATUS: IN PROGRESS — 14a BUILT · 14b–14e NOT STARTED · GATE UNMEASURED
+## STATUS: IN PROGRESS — 14a BUILT AND PROVEN · **GATE MET at 9.0 s** · 14b/14e NOT STARTED
 
 **starts after: Phase 12 gate**
 
@@ -34,8 +34,29 @@ below verbatim so the phase is self-contained.
 > |---|---|
 > | S3 (partial) | `stable-diffusion.cpp` cloned at the recorded pin `7f410a3793c5` with its four submodules and ingested — commit `2a3a89474`, `LISTING-VERIFIED(4 submodules)`. The other four S3 components (diffusers, rembg, whisper.cpp, onnxruntime) are **not** acquired. |
 > | **14a** | Recipe written, built, packaged. `sd-cli` and `libstable-diffusion.so` exist as ipks. Evidence: `generated/evidence/phase-14/14a-evidence.txt`. A build directory was created for the runtime at `Symoneural-Diffuse/build/devtool-master`. |
-> | 14b, 14c, 14d, 14e | not started |
-> | GATE | **unmeasured.** No weights are on this host, so no render has been run. |
+> | **clean-root proof** | `packagegroup-symoneural-diffuse` + `symoneural-image-diffuse` written and built; `tools/proofs/diffuse.py` runs `sd-cli` under the target loader with the host cache inhibited. **PASS**, host leakage exactly the four S2 driver libraries at 615.71.09. |
+> | **weights** | ACQUIRED 2026-09-17 — four files, pinned by Hugging Face **commit sha**, sha256 recorded: `flux1-schnell-q4_k.gguf` (`image`), `t5xxl-Q8_0.gguf` (`image-aux`), `clip_l.safetensors` (`image-clip`), `ae.safetensors` (`image-vae`). The single `image` row this report assumed was never enough; sd-cli needs four. |
+> | **14c** | partly done — the four `image*` rows are PRESENT. `asr` and `cutout` wait on 14b. |
+> | **14d** | units `image` 8809 and `sigils` 8810 registered; **launch line CORRECTED** (below). `Symoneural-Diffuse/app/` not written. |
+> | 14b, 14e | not started. 14e needs a second evictable GPU unit — `chat` — whose weights are still ABSENT. |
+> | **GATE** | **MET. 9.0 s against ≤ 13.44 s**, two runs (9.2 s, 9.0 s), each including a full model load. The 768×768 PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`. |
+>
+> **The gate turned on one flag.** This report's 14d line says `--backend te=cpu`. The
+> real flag is `--clip-on-cpu`, and measured on this card it costs 9.9 s a render:
+>
+> | text encoder | params | `get_learned_condition` | wall |
+> |---|---|---|---|
+> | on the card | 11 786 MB VRAM | 2.34 s | **9.0 s — MET** |
+> | `--clip-on-cpu` | 6 726 MB VRAM + 5 061 MB RAM | 11.89 s | 18.9 s — missed |
+>
+> Upstream recommends it for 6 GB and 4 GB cards. This one has 15.92 GiB, and the reason
+> to keep the encoder off the card — leaving room for a resident chat model — is something
+> the GPU lock already forbids. Corrected in `docs/operator-checklist.md` 14d and
+> `docs/diffuse/ARCHITECTURE.md` §8.
+>
+> **Endpoints assigned:** `POST /v1/images/generations` and `POST /v1/images/edits` →
+> unit `image`, worker `sd-cli`. `sigils` gets none, deliberately, and the reason is on
+> the record. `docs/api/ENDPOINT-REGISTER.md`.
 >
 > **Ordering, stated plainly.** The spec's own "Start after" line says *Phase 12 gate
 > (independent of 13)*; the queue instruction says *after phase 13 GATE PASSED*. **Neither

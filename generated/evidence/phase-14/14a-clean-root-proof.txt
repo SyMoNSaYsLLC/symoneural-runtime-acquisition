@@ -1,0 +1,63 @@
+image   : /home/google/SymonSaysLLC/Symoneural-Diffuse/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-diffuse-qemux86-64.rootfs-20260917095812.tar.gz
+sha256  : 9c38e1d32c50c565cebc7b1cc8d704ab6fee476bccdb1d13ed17d9e0fe623f8a
+manifest: /home/google/SymonSaysLLC/Symoneural-Diffuse/build/devtool-master/tmp/deploy/images/qemux86-64/symoneural-image-diffuse-qemux86-64.rootfs-20260917095812.manifest (82 packages)
+root    : /tmp/symoneural-diffuse-proof-58dzcnmq  (1509 files)
+mode    : S2 (host driver 615.71.09 reachable on the loader path)
+--- interpreter
+python 3.14.7 prefix /tmp/symoneural-diffuse-proof-58dzcnmq/usr
+--- /home/google/SymonSaysLLC/tools/proofs/diffuse.py
+--- packaged files
+  usr/bin/sd-cli present and executable                                    PASS
+  usr/lib/libstable-diffusion.so present                                   PASS
+  usr/bin/sd-server ABSENT (packaged apart; no image installs a second HTTP listener) PASS
+  no ggml*/gguf* headers in usr/include (would collide with symoneural-ggml-dev) PASS
+  no usr/lib/cmake/ggml (a find_package(ggml) here would resolve to the WRONG ggml) PASS
+  sd-cli --help runs under the target loader (rc=0, 25279 bytes)           PASS
+--- launch flags: checklist 14d vs upstream docs/flux.md, arbitrated by --help
+  flag --diffusion-model exists                                            PASS
+  flag --vae exists                                                        PASS
+  flag --clip_l exists                                                     PASS
+  flag --t5xxl exists                                                      PASS
+  flag --cfg-scale exists                                                  PASS
+  flag --sampling-method exists                                            PASS
+  flag --steps exists                                                      PASS
+  flag -H exists                                                           PASS
+  flag -W exists                                                           PASS
+  flag -o exists                                                           PASS
+  flag -p exists                                                           PASS
+  flag --seed exists                                                       PASS
+  RESOLVED: --backend=True  --clip-on-cpu=True  --vae-tiling=True  --diffusion-fa=True
+  at least one of --backend / --clip-on-cpu exists (the text encoder can be kept off the card) PASS
+--- weights (EXTERNAL; no image installs them)
+  flux1-schnell-q4_k.gguf present at 6884606880 bytes                      PASS
+  t5xxl-Q8_0.gguf present at 5199794784 bytes                              PASS
+  clip_l.safetensors present at 246144152 bytes                            PASS
+  ae.safetensors present at 335304388 bytes                                PASS
+--- render: 768x768, 4 steps, cfg 1.0, euler
+  GPU lock free (no record at /run/symoneural/gpu.lock)                    PASS
+  sd-cli render 1 rc=0 (rc=0, 9.2 s)                                       PASS
+  sd-cli render 2 rc=0 (rc=0, 9.0 s)                                       PASS
+    | params        total params memory size = 11786.80MB (VRAM 11786.80MB, RAM 0.00MB): text_encoders 5061.17MB(VRAM), diffusion_model 6565.62MB(VRAM), vae 160.00MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A)
+    | text encoder  get_learned_condition completed, taking 2.34s
+    | sampling      sampling completed, taking 4.77s
+    | vae decode    decode_first_stage completed, taking 1.07s
+  wrote /tmp/symoneural-diffuse-proof-58dzcnmq/tmp/diffuse-proof-768.png (1040146 bytes) PASS
+  it is a 768x768 PNG (signature ok=True, 768x768)                         PASS
+  RENDER WALL TIME: run1 9.2 s, run2 9.0 s  (each includes a full model load;
+    one process per render is the design, not a benchmarking artefact)
+  PHASE 14 GATE: 768 square within 20% of 11.2 s, i.e. <= 13.44 s -> 9.0 s: MET
+  sd-cli render with --clip-on-cpu rc=0 (18.9 s)                           PASS
+  WITH --clip-on-cpu (the checklist's te=cpu): 18.9 s vs 9.0 s  -> +9.9 s, gate NOT MET
+    | params        total params memory size = 11786.80MB (VRAM 6725.62MB, RAM 5061.17MB): text_encoders 5061.17MB(RAM), diffusion_model 6565.62MB(VRAM), vae 160.00MB(VRAM), controlnet 0.00MB(N/A), extensions 0.00MB(N/A)
+    | text encoder  get_learned_condition completed, taking 11.89s
+  So 14d's launch line is wrong for THIS hardware. Recorded in
+  docs/diffuse/ARCHITECTURE.md section 8; the checklist is a document, the card is not.
+DIFFUSE CLEAN ROOT PROOF: PASS
+rc=0
+--- host leakage (libraries with loader initialization records, across traced processes)
+  20 distinct target-library initialization paths across 6 traced processes; 0 shell-launcher transitions
+  HOST  /usr/lib/x86_64-linux-gnu/libcuda.so.1  (libcuda1 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-gpucomp.so.615.71.09  (libnvidia-gpucomp 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-nvvm70.so.4  (libnvidia-nvvm704 615.71.09-2, S2)
+  HOST  /usr/lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1  (libnvidia-ptxjitcompiler1 615.71.09-2, S2)
+rc=0

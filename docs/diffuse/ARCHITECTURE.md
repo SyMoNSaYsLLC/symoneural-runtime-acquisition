@@ -239,24 +239,44 @@ Unit(name="sigils", resource=Resource.GPU, port=8810,
 8809 and 8810 are the next free ports after `miner` at 8808; `tools/proofs/api.py` already
 asserts no two units share a port, so a collision fails a proof rather than a request.
 
-**Launch line** (checklist 14d):
+**Launch line — corrected against the card, 17 September.**
 
 ```
-sd-cli --backend te=cpu --vae-tiling --diffusion-fa   # 4 steps, cfg 1.0, euler
+sd-cli --diffusion-model <image> --t5xxl <image-aux> --clip_l <image-clip> --vae <image-vae> \
+       --vae-tiling --diffusion-fa --steps 4 --cfg-scale 1.0 --sampling-method euler -W 768 -H 768
 ```
 
-Each flag is a VRAM or latency decision, not a default someone liked:
+Checklist item 14d says `--backend te=cpu`. The flag is really `--clip-on-cpu`
+(`sd-cli --help` at this pin is the arbiter — both spellings appear in documents and only
+one exists), and **it is wrong for this hardware.** Measured inside the clean-root image,
+same seed, same prompt, one variable:
 
-- `te=cpu` — run the **text encoder on the CPU**. It is small, it runs once per prompt, and
-  keeping it off the card leaves that VRAM for the UNet. This is also what lets a render
-  begin while the card is still draining from the previous holder.
-- `--vae-tiling` — decode the latent in tiles. VAE decode is the peak-VRAM moment of a
-  768² render; tiling trades a little time for a much lower peak, which is what decides
-  whether `image` and a resident chat model can ever overlap.
-- `--diffusion-fa` — FlashAttention in the diffusion model. `GGML_CUDA_FA` is ON by default
-  in the vendored ggml, so the kernels are compiled; this turns them on at run time.
-- 4 steps, cfg 1.0, euler — the schnell-family configuration. A distilled model at 4 steps
-  with guidance disabled; more steps and a higher cfg would cost time and change nothing.
+| Text encoder | Params | `get_learned_condition` | Wall |
+|---|---|---|---|
+| **on the card** | 11 786 MB VRAM / 0 MB RAM | **2.34 s** | **9.0 s** |
+| `--clip-on-cpu` | 6 726 MB VRAM / 5 061 MB RAM | 11.89 s | 18.9 s |
+
+Upstream recommends `--clip-on-cpu` for cards "with 6GB or even 4GB" (`docs/flux.md`).
+This card has 15.92 GiB and the full set fits with 4.1 GiB to spare. The argument for
+keeping the encoder off the card was to leave VRAM for a resident chat model — **but the
+lock forbids exactly that.** One GPU unit holds the card at a time; there is no other
+tenant to leave room for. Paying 9.9 s per render for headroom the lock guarantees nobody
+can use is a straight loss, and it is the difference between missing the gate and meeting
+it by 4.4 s.
+
+The remaining flags:
+
+- `--vae-tiling` — decode the latent in tiles, lowering the peak-VRAM moment of a 768²
+  render (VAE decode measured at 1.07 s).
+- `--diffusion-fa` — FlashAttention in the diffusion model. `GGML_CUDA_FA` is ON by
+  default in the vendored ggml so the kernels are compiled; this turns them on.
+- 4 steps, cfg 1.0, euler — the schnell configuration. A distilled model at 4 steps with
+  guidance disabled; more steps and a higher cfg would cost time and change nothing.
+
+Where the 9.0 s goes: text encoder 2.34 s, sampling 4.77 s, VAE decode 1.07 s, and the
+balance is model load. **Every render pays a full load** — that is the process-per-render
+design, not a benchmarking artefact, and run 1 and run 2 came out at 9.2 s and 9.0 s, so
+the cost is the load into VRAM and the compute, not disk I/O.
 
 **Worker contract.** `Symoneural-Diffuse/app/` (14d) holds the matte and PNG encoder and
 wraps the engine. The shape the rest of the estate depends on:
@@ -279,11 +299,26 @@ A crash anywhere in that sequence is survivable: the lock is a file recording a 
 **No weight enters git, in any format, at any size.** `acquisition/model-register.json`
 carries the row and its state; `SYMON_MODELS_DIR` is `/home/google/symoneural-models`.
 
-The image row — `flux1-schnell-q4_k.gguf` — is **ABSENT**, and the register's search result
-records why: the old deployment's `backend/models` is not on this host. It stays ABSENT
-until a measured run registers one by sha256 (Phase 12 S3 / 14c). The recipe deliberately
-knows nothing about weights: it builds an engine, and an engine with no model is a correct
-intermediate state, not a broken one.
+**Acquired 17 September.** Four files, because that is what sd-cli needs — the register's
+single `image` row was never enough:
+
+| Register id | File | Size | Hugging Face repo @ revision |
+|---|---|---:|---|
+| `image` | `flux1-schnell-q4_k.gguf` | 6.88 GB | `leejet/FLUX.1-schnell-gguf` @ `c7f665ddaf9f` |
+| `image-aux` | `t5xxl-Q8_0.gguf` | 5.20 GB | `second-state/FLUX.1-schnell-GGUF` @ `8c45a2ba25e2` |
+| `image-clip` | `clip_l.safetensors` | 246 MB | `second-state/FLUX.1-schnell-GGUF` @ `8c45a2ba25e2` |
+| `image-vae` | `ae.safetensors` | 335 MB | `second-state/FLUX.1-schnell-GGUF` @ `8c45a2ba25e2` |
+
+All Apache-2.0, all ungated, each sha256 recorded in `acquisition/model-register.json`.
+Fetched by `https://huggingface.co/<repo>/resolve/<commit sha>/<file>` — **never by branch
+name.** An estate that pins source by SHA cannot record a weight as `main`.
+
+The q4_k UNet and the Q8_0 T5 are not an arbitrary quantisation pair: they are what the
+prior deployment used (`symoneural-image-unet-q4_k.gguf`, `symoneural-image-t5-q8_0.gguf`
+in `generated/phase-14-report.md`), which is what makes the 11.2 s comparison
+apples-to-apples rather than a coincidence.
+
+The recipe still knows nothing about weights, and no image installs one.
 
 **A gap, named and not filled.** `--backend te=cpu` means the text encoder is a *separate
 file* from the UNet, and `generated/phase-14-report.md` records the prior run using two:
@@ -297,12 +332,13 @@ has **one** Diffuse/image row and no `image-aux` row at all. Adding it is checkl
 | Checklist item | State |
 |---|---|
 | S3 acquire sd.cpp at `7f410a37` | **done** — ingested, LISTING-VERIFIED with 4 submodules |
-| **14a** recipe, `SD_CUDA`, package `sd-cli` | **built.** bitbake rc=0; `sd-cli` 1.7 MB and `libstable-diffusion.so` 114 MB, packaged as a 63.7 MB ipk. S2 check: *"19 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1"*. Evidence: `generated/evidence/phase-14/14a-evidence.txt`. **The binary has never been executed** — see the last row. |
+| **14a** recipe, `SD_CUDA`, package `sd-cli` | **built and run.** bitbake rc=0; `sd-cli` 1.7 MB and `libstable-diffusion.so` 114 MB, 63.7 MB ipk. S2 check: *"19 NEEDED entries resolved by providers; host-driver libraries used: libcuda.so.1"*. |
+| **clean-root proof** | **PASS** — `tools/proofs/diffuse.py` through `tools/clean-root-proof Diffuse symoneural-image-diffuse`, `SYM_CUDA_S2=1`. 82-package image, 1509 files, the target loader with the host `ld.so.cache` inhibited. Host leakage: **four files, all `libnvidia*`/`libcuda` owned by driver packages at 615.71.09** — the declared S2 boundary and nothing else. |
 | 14b onnxruntime CPU → rembg; whisper.cpp CPU | not started |
-| 14c register rows `image`, `image-aux`, `asr`, `cutout` | not started |
-| 14d units, launch lines, `Symoneural-Diffuse/app/` | **designed in §8 above; no code** |
-| 14e contention test, ten alternations | not started |
-| GATE: 768² within 20% of 11.2 s | **not measured — no weights on this host, so `sd-cli` has never been run.** Building an engine is not rendering an image, and this table will not blur the two. |
+| **14c** register rows | **partly done** — the four `image*` rows are PRESENT with sha256 and HF revisions (§9). `asr` and `cutout` wait on 14b. |
+| **14d** units, launch lines, `Symoneural-Diffuse/app/` | **units registered** (`image` 8809, `sigils` 8810) and the **launch line corrected against the card** (§8). `Symoneural-Diffuse/app/` — the matte and PNG encoder — is **not written**. |
+| 14e contention test, ten alternations | not started — it needs a second GPU unit that can actually be evicted, i.e. `chat`, whose weights are still ABSENT |
+| **GATE: 768² within 20% of 11.2 s (≤ 13.44 s)** | **MET at 9.0 s.** Two runs, 9.2 s and 9.0 s, each including a full model load; the PNG is `generated/evidence/phase-14/14a-render-768-20260917.png`, 768×768 verified by reading its IHDR. |
 
 **Ordering, stated rather than glossed.** The phase's own line says *start after the
 Phase 12 gate*; the queue instruction says *after phase 13 GATE PASSED*. Neither gate has
@@ -310,3 +346,14 @@ passed. 14a was built ahead of both under Garrett's standing instruction to make
 work and explain afterwards. That is a deviation from A7 ("do not acquire ahead of the
 phase that builds the component") and it is recorded here as one, not presented as the
 plan having been followed.
+
+## 11. Endpoints
+
+The engine exists, so it has routes: `POST /v1/images/generations` and
+`POST /v1/images/edits`, unit `image`, worker `sd-cli`. `sigils` gets a port and a rank
+and **deliberately no route**, because §1 above says it has no recorded definition.
+
+The full list — every provider surface read from source, every gateway route with its
+unit, credential and state — is `docs/api/ENDPOINT-REGISTER.md`, carried as data in
+`symoneural_api.endpoints` and asserted by `tools/proofs/api.py` so that "nothing is built
+without an assigned endpoint" is executed rather than promised.

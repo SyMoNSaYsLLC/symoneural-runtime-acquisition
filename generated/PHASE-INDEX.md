@@ -28,7 +28,7 @@ begun during 13e would measure the wrong thing.
 | **11-T** | DispatchOS as a template instance (+ accounts) | Phase 11 gate | PENDING |
 | **12** | CUDA in the estate; Chat live; models register | Phase 11 gate | PENDING |
 | **13** | Common: torch with CUDA, Studio proof | Phase 12 gate | PENDING ("its own night") |
-| **14** | Diffuse: Image and Sigils; lock under contention | Phase 12 gate | **IN PROGRESS** — 14a built (`sd-cli`); 14b–14e not started; gate unmeasured, no weights on host. Built ahead of its gate, 17 Sep; see the CORRECTION in `phase-14-report.md`. |
+| **14** | Diffuse: Image and Sigils; lock under contention | Phase 12 gate | **IN PROGRESS — GATE MET (9.0 s ≤ 13.44 s)**. 14a built and proven in the clean-root harness; weights acquired and pinned; units `image`/`sigils` registered; 14b and 14e not started. Built ahead of its gate, 17 Sep — see the CORRECTION in `phase-14-report.md`. |
 | **15** | Gateway and cutover; symoneural.com from the estate | Phase 14 gate | PENDING |
 | **16** | Studio and Reinforce as a live unit | Phase 13 gate | PENDING |
 | **17** | Crypto and Miner: Stratum V2; GPU miner yields | Phase 12 gate | PENDING |

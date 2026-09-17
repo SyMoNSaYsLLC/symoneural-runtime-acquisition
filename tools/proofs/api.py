@@ -180,6 +180,44 @@ if not bad:
     ports = sorted((x.name, x.port) for x in units.REGISTRY.values())
     assert len({p for _, p in ports}) == len(ports), "two units share a port: %r" % (ports,)
 
+    # ---------------------------------------------------- the endpoint register
+    # "Nothing is built without an assigned endpoint, and no endpoint is listed without
+    # a state." docs/api/ENDPOINT-REGISTER.md is the prose; endpoints.py is the same
+    # register as data so the rule can be EXECUTED. Three checks, each one a defect this
+    # estate has already met in another form:
+    from symoneural_api import endpoints as ep
+
+    #  (a) an endpoint naming a unit that does not exist is a route nothing can answer
+    assert ep.unknown_units() == [], ep.unknown_units()
+    #  (b) a unit with neither a route nor a RECORDED REASON is the gap that let the
+    #      image engine get built with no way to reach it. UNROUTED is the only
+    #      permitted answer, and it must say why.
+    assert ep.unassigned_units() == [], ep.unassigned_units()
+    for name, why in ep.UNROUTED.items():
+        assert name in units.REGISTRY, name
+        assert len(why) > 30, (name, why)
+    #  (c) rule 2 - one canonical path per operation, no aliases
+    assert ep.duplicate_paths() == [], ep.duplicate_paths()
+
+    # every endpoint carries a real RouteClass: rule 3's default is deny, and an
+    # unclassified route is a bug rather than a public one
+    for e in ep.REGISTRY:
+        assert e.route_class in set(RouteClass), e
+        assert e.state in set(ep.EndpointState), e
+        assert e.path.startswith("/"), e
+
+    # the image engine, built 17 September, has its assigned endpoints
+    image_routes = {e.key for e in ep.for_unit("image")}
+    assert image_routes == {"POST /v1/images/generations", "POST /v1/images/edits"}, image_routes
+    assert all(e.worker == "sd-cli" for e in ep.for_unit("image"))
+    # ...and sigils deliberately does not, with the reason on the record
+    assert ep.for_unit("sigils") == () and "no recorded definition" in ep.UNROUTED["sigils"]
+
+    # the eight routes served today are all in the namespace reserved for Ollama
+    assert {e.namespace for e in ep.built()} == {ep.Namespace.RESERVED}, \
+        "a BUILT route escaped /api/*: %r" % ({e.key: str(e.namespace) for e in ep.built()},)
+    n_built, n_total = len(ep.built()), len(ep.REGISTRY)
+
     # the estate's own FastAPI application imports and answers on this runtime
     from symoneural_api.main import app as estate_app
     paths = sorted({r.path for r in estate_app.routes if hasattr(r, "path")})
@@ -202,8 +240,10 @@ if not bad:
           "from %d registered routes; routeclass enforced all five classes - 401 with no "
           "token, 401 with a wrong one, 404 (not 403) for OPERATOR_ONLY against a unit "
           "token, 403 for ENTITLEMENT_REQUIRED; units.unit('chat').port == 8802 and no two "
-          "units share a port"
-          % (version("fastapi"), len(paths)))
+          "units share a port; the endpoint register holds %d routes of which %d are built, "
+          "every one of them naming a real unit or the gateway, no duplicate path, and "
+          "every unit either routed or carrying a recorded reason not to be"
+          % (version("fastapi"), len(paths), n_total, n_built))
     print("  NO NETWORK, NO SOCKET: every request above went through httpx.ASGITransport "
           "in-process; nothing was bound, nothing was contacted, :8800 was not touched.")
 

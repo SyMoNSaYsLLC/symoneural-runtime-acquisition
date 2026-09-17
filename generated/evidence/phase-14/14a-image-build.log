@@ -1,0 +1,60 @@
+Parsing recipes...WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api-python/symoneural-api-python_1.0.0.bb: symoneural-api-python: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+WARNING: /home/google/SymonSaysLLC/meta-symoneural/recipes-api/symoneural-api/symoneural-api_1.0.0.bb: symoneural-api: LICENSE is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.
+Parsing of 2869 .bb files complete (2863 cached, 6 parsed). 5118 targets, 113 skipped, 0 masked, 0 errors.
+Build Configuration:
+BB_VERSION           = "2.19.1"
+TARGET_SYS           = "x86_64-oe-linux"
+MACHINE              = "qemux86-64"
+SDKMACHINE           = "x86_64"
+DISTRO               = "nodistro"
+TUNE_FEATURES        = "m64 x86-64-v3"
+meta-symoneural      = "main:08331b19bfc4599ca7a8ffeab7ab338ebb00a008"
+Sstate summary: Wanted 2391 Local 0 Mirrors 2370 Missed 21 Current 161 (99% match, 99% complete)
+NOTE: Running setscene task 295 of 2552 (/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_create_package_spdx_setscene)
+NOTE: Running setscene task 589 of 2552 (/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_package_write_ipk_setscene)
+NOTE: Running setscene task 729 of 2552 (virtual:native:/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_create_package_spdx_setscene)
+NOTE: Running setscene task 893 of 2552 (/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_populate_lic_setscene)
+NOTE: Running setscene task 908 of 2552 (/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_package_qa_setscene)
+NOTE: Running setscene task 1118 of 2552 (virtual:native:/home/google/SymonSaysLLC/meta-symoneural/recipes-cuda/cuda-toolkit-bin/cuda-toolkit-bin_13.4.1.bb:do_populate_lic_setscene)
+NOTE: Running task 1176 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_recipe_qa)
+NOTE: Running task 1188 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_deploy_source_date_epoch)
+NOTE: Running task 1210 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_create_recipe_spdx)
+NOTE: Running task 1302 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_populate_lic)
+NOTE: Running task 1303 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_recipe_qa)
+NOTE: Running noexec task 1361 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_fetch)
+NOTE: Running noexec task 1362 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_unpack)
+NOTE: Running task 3711 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_package)
+NOTE: Running noexec task 3884 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_patch)
+NOTE: Running task 4361 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_prepare_recipe_sysroot)
+NOTE: Running task 4362 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_recipe_spdx)
+NOTE: Running task 4437 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_deploy_source_date_epoch)
+NOTE: Running task 4726 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_spdx)
+NOTE: Running task 4727 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_packagedata)
+NOTE: Running task 4728 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_package_write_ipk)
+NOTE: Running task 4729 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_package_qa)
+NOTE: Running task 4730 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_create_spdx)
+NOTE: Running task 4731 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_package_spdx)
+NOTE: Running task 4732 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/packagegroups/packagegroup-symoneural-diffuse.bb:do_create_package_spdx)
+NOTE: Running task 4733 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_rootfs)
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_rootfs: Started
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_rootfs: Succeeded
+NOTE: Running task 4734 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_flush_pseudodb)
+NOTE: Running task 4735 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_rootfs_spdx)
+NOTE: Running task 4736 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_image_qa)
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_qa: Started
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_qa: Succeeded
+NOTE: Running task 4737 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_image)
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image: Started
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image: Succeeded
+NOTE: Running task 4738 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_image_tar)
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_tar: Started
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_tar: Succeeded
+NOTE: Running task 4739 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_image_complete)
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_complete: Started
+NOTE: recipe symoneural-image-diffuse-1.0-r0: task do_image_complete: Succeeded
+NOTE: Running task 4740 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_image_spdx)
+NOTE: Running task 4741 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_populate_lic_deploy)
+NOTE: Running task 4742 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_create_image_sbom_spdx)
+NOTE: Running noexec task 4743 of 4743 (/home/google/SymonSaysLLC/meta-symoneural/recipes-core/images/symoneural-image-diffuse.bb:do_build)
+NOTE: Tasks Summary: Attempted 4743 tasks of which 4713 didn't need to be rerun and all succeeded.
+Summary: There were 4 WARNING messages.

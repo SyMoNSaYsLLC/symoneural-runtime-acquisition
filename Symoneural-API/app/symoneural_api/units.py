@@ -119,6 +119,27 @@ REGISTRY: dict[str, Unit] = {
             description="Stratum V2 mining. Yields the lock to any interactive "
                         "unit - revenue never outranks a waiting user.",
         ),
+        Unit(
+            name="image",
+            resource=Resource.GPU,
+            port=8809,
+            backed_by=("symoneural-stable-diffusion-cpp",),
+            token_env="SYM_IMAGE_TOKEN",
+            description="Diffusion rendering via sd-cli. Ties with chat at "
+                        "priority 100: someone waiting on a picture is as "
+                        "interactive as someone waiting on a sentence.",
+        ),
+        Unit(
+            name="sigils",
+            resource=Resource.GPU,
+            port=8810,
+            backed_by=("symoneural-stable-diffusion-cpp",),
+            token_env="SYM_SIGILS_TOKEN",
+            description="Second surface on the same engine at priority 90. What "
+                        "it renders has no recorded definition anywhere in this "
+                        "repository; see docs/diffuse/ARCHITECTURE.md section 1. "
+                        "It has a port and a rank, and deliberately no route.",
+        ),
     )
 }
 

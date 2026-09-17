@@ -400,9 +400,23 @@ ITEMS
   14b onnxruntime CPU; then rembg. whisper.cpp CPU; package whisper-cli.
   14c Register rows image, image-aux, asr, cutout: FOUND/FETCHED/ABSENT by sha256
       per Phase 12 S3.
-  14d Register image and sigils units with launch lines (sd-cli --backend te=cpu
-      --vae-tiling --diffusion-fa, 4 steps, cfg 1.0, euler); matte and PNG encoder
+  14d Register image and sigils units with launch lines; matte and PNG encoder
       in Symoneural-Diffuse/app/.
+      CORRECTED 2026-09-17, by measurement inside the clean-root image: the flag is
+      --clip-on-cpu (not "--backend te=cpu"; sd-cli --help at the pin is the arbiter)
+      and it MUST NOT be used on this card. Same seed, one variable:
+        text encoder on the card   11786 MB VRAM  cond 2.34 s   wall  9.0 s  GATE MET
+        --clip-on-cpu               6726 MB VRAM  cond 11.89 s  wall 18.9 s  GATE MISSED
+      Upstream recommends it for cards with 6 GB or 4 GB (docs/flux.md); this card has
+      15.92 GiB and the whole set fits with 4.1 GiB spare. The reason to keep the encoder
+      off the card would be leaving room for a resident chat model - which the GPU LOCK
+      already forbids, since one GPU unit holds the card at a time. Launch line is now:
+        sd-cli --diffusion-model <image> --t5xxl <image-aux> --clip_l <image-clip>
+               --vae <image-vae> --vae-tiling --diffusion-fa
+               --steps 4 --cfg-scale 1.0 --sampling-method euler -W 768 -H 768
+      Units registered: image 8809, sigils 8810 (Symoneural-API/app/symoneural_api/units.py).
+      Endpoints assigned: POST /v1/images/generations and /v1/images/edits for image;
+      sigils deliberately none - docs/api/ENDPOINT-REGISTER.md section 5.
   14e Contention: alternate POST /api/chat and POST /api/image ten times; log each
       eviction with drain time and VRAM before/after.
 

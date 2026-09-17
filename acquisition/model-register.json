@@ -1,17 +1,81 @@
 {
  "SYMON_MODELS_DIR": "/home/google/symoneural-models",
- "consolidation": "NOT PERFORMED - nothing to move. No files were copied or moved.",
- "note": "Per D3: if nothing is found, report ABSENT for all and stop looking. The full table is inline in Phase 12, which has not been pasted; rows below are the three probes only. Garrett answers where the weights are.",
+ "consolidation": "2026-09-17: nothing moved. The four new files were downloaded directly into SYMON_MODELS_DIR/image; /home went from 89 GB to 77 GB free. Observed and NOT acted on: /mnt/models (916 GB, /dev/sdb1) holds 75 GB of abandoned Hugging Face partials under .hf-cache - 12 complete shards plus 3 .part of openai/gpt-oss-120b and a 22 GB .part of google/gemma-4-26B-A4B-it. That drive is NOT in /etc/fstab and is mounted rw,relatime by hand, so nothing was pointed at it; a register that named a path which vanishes on reboot would be worse than a full /home.",
+ "note": "Per D3: if nothing is found, report ABSENT and stop looking. Weights NEVER enter git - /home/google/symoneural-models is outside the repository, and .gitignore denies *.gguf regardless. The four image rows were fetched by https://huggingface.co/<repo>/resolve/<commit sha>/<file>: an estate that pins source by SHA cannot record a weight as 'main'. The image set is what sd-cli needs to render - diffusion model + t5xxl + clip_l + vae, FOUR files, not one.",
  "provenance": "CURATED. Weights NEVER enter git.",
  "rows": [
   {
+   "acquired": "2026-09-17",
+   "file": "ae.safetensors",
+   "hf_repo": "second-state/FLUX.1-schnell-GGUF",
+   "hf_revision": "8c45a2ba25e2d02bd34230989fb54983f39e44ec",
+   "model_card_url": "https://huggingface.co/second-state/FLUX.1-schnell-GGUF",
+   "previous_path": "UNKNOWN",
+   "register_id": "image-vae",
+   "role": "VAE / autoencoder (--vae)",
+   "runtime": "Diffuse",
+   "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+   "size_bytes": 335304388,
+   "state": "PRESENT",
+   "subfolder": "image",
+   "weight_licence": "apache-2.0"
+  },
+  {
+   "acquired": "2026-09-17",
+   "file": "clip_l.safetensors",
+   "hf_repo": "second-state/FLUX.1-schnell-GGUF",
+   "hf_revision": "8c45a2ba25e2d02bd34230989fb54983f39e44ec",
+   "model_card_url": "https://huggingface.co/second-state/FLUX.1-schnell-GGUF",
+   "previous_path": "UNKNOWN",
+   "register_id": "image-clip",
+   "role": "text encoder, CLIP-L (--clip_l)",
+   "runtime": "Diffuse",
+   "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+   "size_bytes": 246144152,
+   "state": "PRESENT",
+   "subfolder": "image",
+   "weight_licence": "apache-2.0"
+  },
+  {
+   "acquired": "2026-09-17",
    "file": "flux1-schnell-q4_k.gguf",
+   "hf_repo": "leejet/FLUX.1-schnell-gguf",
+   "hf_revision": "c7f665ddaf9f197ff493f41fc211f5480f5f19ac",
+   "model_card_url": "https://huggingface.co/leejet/FLUX.1-schnell-gguf",
+   "previous_path": "UNKNOWN",
+   "register_id": "image",
+   "role": "diffusion model (--diffusion-model)",
+   "runtime": "Diffuse",
+   "sha256": "619697cc4c2bf587416aa1afa98d474a44c80eb4e3a3f64ea8f99ab0ed9adb7a",
+   "size_bytes": 6884606880,
+   "state": "PRESENT",
+   "subfolder": "image",
+   "weight_licence": "apache-2.0"
+  },
+  {
+   "acquired": "2026-09-17",
+   "file": "t5xxl-Q8_0.gguf",
+   "hf_repo": "second-state/FLUX.1-schnell-GGUF",
+   "hf_revision": "8c45a2ba25e2d02bd34230989fb54983f39e44ec",
+   "model_card_url": "https://huggingface.co/second-state/FLUX.1-schnell-GGUF",
+   "previous_path": "UNKNOWN",
+   "register_id": "image-aux",
+   "role": "text encoder, T5-XXL (--t5xxl)",
+   "runtime": "Diffuse",
+   "sha256": "fc07757bf7ad40eaf612acc7ed0c0a7ab71189979e0b8b4d14601017baca22de",
+   "size_bytes": 5199794784,
+   "state": "PRESENT",
+   "subfolder": "image",
+   "weight_licence": "apache-2.0"
+  },
+  {
+   "file": "ggml-base.en.bin",
    "model_card_url": "UNRESOLVED",
    "previous_path": "UNKNOWN",
    "runtime": "Diffuse",
    "sha256": "UNKNOWN",
    "state": "ABSENT",
-   "subfolder": "image",
+   "subfolder": "whisper",
    "weight_licence": "UNRESOLVED"
   },
   {
@@ -23,19 +87,9 @@
    "state": "ABSENT",
    "subfolder": "llm",
    "weight_licence": "UNRESOLVED"
-  },
-  {
-   "file": "ggml-base.en.bin",
-   "model_card_url": "UNRESOLVED",
-   "previous_path": "UNKNOWN",
-   "runtime": "Diffuse",
-   "sha256": "UNKNOWN",
-   "state": "ABSENT",
-   "subfolder": "whisper",
-   "weight_licence": "UNRESOLVED"
   }
  ],
  "schema": "symoneural-model-register/1",
  "search_performed": "find /home/google -xdev for flux1-schnell-q4_k.gguf, Qwen2.5-7B-Instruct-Q4_K_M.gguf, ggml-base.en.bin",
- "search_result": "NO MATCHES. The old deployment's backend/models is not on this host."
+ "search_result": "2026-09-13: NO MATCHES for the three probes - the old deployment's backend/models is not on this host. 2026-09-17: the four FLUX.1-schnell files were ACQUIRED from Hugging Face at pinned repo revisions (never a branch name) and are PRESENT with recorded sha256. The LLM and whisper rows are still ABSENT."
 }
