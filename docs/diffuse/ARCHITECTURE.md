@@ -187,10 +187,29 @@ was built, and the truthful answer was available.
 |---|---|---|
 | `symoneural-stable-diffusion-cpp` | `sd-cli`, `libstable-diffusion.so` | yes — this is the unit's engine |
 | `symoneural-stable-diffusion-cpp-server` | `sd-server` | **no** |
-| `symoneural-stable-diffusion-cpp-dev` | headers, CMake config, pkg-config | no |
+| `symoneural-stable-diffusion-cpp-dev` | **one file: `stable-diffusion.h`** | no |
 
 `-staticdev` ends up **empty** and no `-staticdev` ipk is produced: the four `libggml*.a`
 that would have filled it are the vendored fork's, removed at install (§4).
+
+**`-dev` ships a header and nothing else, deliberately.** sd.cpp generates two files for
+consumers and both point at the ggml that §4 removed:
+
+```
+cmake/stable-diffusion-config.cmake.in:12   find_dependency(ggml REQUIRED HINTS "${SD_LIB_DIR}/cmake")
+cmake/stable-diffusion.pc.in                Libs.private: -lggml -lggml-base
+```
+
+With `${libdir}/cmake/ggml` gone the CMake config cannot resolve — and if
+`symoneural-ggml-dev` happens to be installed, it resolves to **canonical 0.23.0**, handing
+the consumer 0.23.0 headers for a library compiled at `GGML_MAX_NAME=160`. The `.pc` does
+the same thing through `-lggml`. **A config that silently finds the wrong ggml is worse
+than no config**, so both are removed too.
+
+What is left is honest and usable: `stable-diffusion.h` includes only `stdbool.h`,
+`stddef.h`, `stdint.h` and `string.h`, so a consumer compiles against it and links
+`-lstable-diffusion`. There is no `find_package(stable-diffusion)` on this runtime, by
+decision rather than by omission.
 
 `libstable-diffusion.so` has no `VERSION`/`SOVERSION` upstream, so OE's default rules would
 file the unversioned `.so` into `-dev` and leave `sd-cli` in the main package with an

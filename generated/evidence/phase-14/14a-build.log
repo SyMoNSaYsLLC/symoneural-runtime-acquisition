@@ -50,29 +50,21 @@ TUNE_FEATURES        = "m64 x86-64-v3"
 meta                 = "HEAD:fe7a24bc67118e7e184b5f5247258715e3904e7c"
 meta-oe              
 meta-python          = "HEAD:43b79d8e372c4f69ebab6c85b39d97b41522080f"
-meta-symoneural      = "main:6dfbb00b67ce0054096aa2aff5f6ddb1e5757485"
+meta-symoneural      = "main:c00905936dc2e236a148b74596796557ce4c8f37"
 
 Initialising tasks...done.
 Checking sstate mirror object availability...done.
 Sstate summary: Wanted 222 Local 0 Mirrors 215 Missed 7 Current 154 (96% match, 98% complete)
-Removing 6 stale sstate objects for arch x86-64-v3...done.
 Removing 1 stale sstate objects for arch qemux86_64...done.
+Removing 6 stale sstate objects for arch x86-64-v3...done.
 NOTE: Executing Tasks
-NOTE: Running task 958 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_configure)
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_configure: Started
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_configure: Succeeded
-NOTE: Running task 1006 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_compile)
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_compile: Started
-Bitbake still alive (no events for 600s). Active tasks:
-/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_compile
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_compile: Succeeded
-NOTE: Running task 1007 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_install)
+NOTE: Running task 963 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_install)
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_install: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_install: Succeeded
 NOTE: Running task 1008 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package)
 NOTE: Running task 1009 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_symon_assert_nonempty_d)
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_symon_assert_nonempty_d: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_symon_assert_nonempty_d: Succeeded
 NOTE: Running task 1010 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_populate_sysroot)
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_populate_sysroot: Started
@@ -85,8 +77,8 @@ NOTE: Running task 1012 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recip
 NOTE: Running task 1013 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package_write_ipk)
 NOTE: Running task 1014 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_package_qa)
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_spdx: Started
-NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_write_ipk: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_qa: Started
+NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_write_ipk: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_qa: Succeeded
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_package_write_ipk: Succeeded
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_spdx: Succeeded
@@ -94,6 +86,6 @@ NOTE: Running task 1015 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recip
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_package_spdx: Started
 NOTE: recipe symoneural-stable-diffusion-cpp-0.0.859-r0: task do_create_package_spdx: Succeeded
 NOTE: Running noexec task 1016 of 1016 (/home/google/SymonSaysLLC/meta-symoneural/recipes-diffuse/symoneural-stable-diffusion-cpp/symoneural-stable-diffusion-cpp_git.bb:do_build)
-NOTE: Tasks Summary: Attempted 1016 tasks of which 1004 didn't need to be rerun and all succeeded.
+NOTE: Tasks Summary: Attempted 1016 tasks of which 1006 didn't need to be rerun and all succeeded.
 
 Summary: There were 4 WARNING messages.

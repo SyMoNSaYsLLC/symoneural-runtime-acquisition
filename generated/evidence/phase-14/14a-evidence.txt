@@ -54,21 +54,32 @@ symoneural-cuda S2 check: 19 NEEDED entries resolved by providers; host-driver l
   too and produced GGML_COMMIT="7f410a3-dirty" - a submodule claiming its parent's
   commit, with a false dirty flag on a verified export. Fixed, then rebuilt.
 
-=== 6. ${D} - the vendored ggml 0.19.0 dev interface is NOT installed ===
+=== 6. ${D} - neither the vendored ggml's dev interface NOR sd.cpp's own build metadata ===
   /usr/bin/sd-cli
   /usr/bin/sd-server
   /usr/include/stable-diffusion.h
-  /usr/lib/cmake/stable-diffusion/stable-diffusion-config.cmake
-  /usr/lib/cmake/stable-diffusion/stable-diffusion-version.cmake
   /usr/lib/libstable-diffusion.so
-  /usr/lib/pkgconfig/stable-diffusion.pc
-  ggml*.h / gguf.h / cmake/ggml / libggml*.a in ${D}: 0 (0 = removed by do_install:append; they collide path-for-path with symoneural-ggml-dev,
-   which owns those paths for CANONICAL ggml 0.23.0 built at GGML_MAX_NAME=64)
+
+  ggml*.h / gguf.h / cmake/ggml / libggml*.a in ${D}: 0
+    They collide path-for-path with symoneural-ggml-dev, which owns those paths for
+    CANONICAL ggml 0.23.0 built at GGML_MAX_NAME=64. This fork is 0.19.0 at 160.
+
+  cmake/stable-diffusion + pkgconfig/stable-diffusion.pc in ${D}: 0
+    Removed for the same reason one step removed. Both point at the ggml above:
+      cmake/stable-diffusion-config.cmake.in:12
+          find_dependency(ggml REQUIRED HINTS "${SD_LIB_DIR}/cmake")
+      cmake/stable-diffusion.pc.in
+          Libs.private: -lggml -lggml-base
+    With cmake/ggml gone the config cannot resolve - or, if symoneural-ggml-dev is
+    installed, resolves to 0.23.0 and hands the consumer the wrong headers. A config
+    that silently finds the WRONG ggml is worse than no config.
+    ${PN}-dev therefore ships ONE file, stable-diffusion.h, which includes only
+    stdbool.h stddef.h stdint.h string.h and works with -lstable-diffusion.
 
 === 7. packages ===
   symoneural-stable-diffusion-cpp                2 files
   symoneural-stable-diffusion-cpp-dbg            3 files
-  symoneural-stable-diffusion-cpp-dev            4 files
+  symoneural-stable-diffusion-cpp-dev            1 files
   symoneural-stable-diffusion-cpp-doc            0 files
   symoneural-stable-diffusion-cpp-locale         0 files
   symoneural-stable-diffusion-cpp-server         1 files
@@ -79,9 +90,6 @@ symoneural-cuda S2 check: 19 NEEDED entries resolved by providers; host-driver l
   main:   /usr/lib/libstable-diffusion.so
   server: /usr/bin/sd-server
   dev:    /usr/include/stable-diffusion.h
-  dev:    /usr/lib/cmake/stable-diffusion/stable-diffusion-config.cmake
-  dev:    /usr/lib/cmake/stable-diffusion/stable-diffusion-version.cmake
-  dev:    /usr/lib/pkgconfig/stable-diffusion.pc
   sd-server is built because examples/CMakeLists.txt adds it unconditionally and
   upstream's SD_BUILD_SERVER option is commented out; R1 forbids editing the source.
   It is packaged apart and no image installs it.
@@ -91,7 +99,7 @@ symoneural-cuda S2 check: 19 NEEDED entries resolved by providers; host-driver l
     63724068  symoneural-stable-diffusion-cpp_0.0.859-r0_x86-64-v3.ipk
     37103924  symoneural-stable-diffusion-cpp-src_0.0.859-r0_x86-64-v3.ipk
       985822  symoneural-stable-diffusion-cpp-server_0.0.859-r0_x86-64-v3.ipk
-        8444  symoneural-stable-diffusion-cpp-dev_0.0.859-r0_x86-64-v3.ipk
+        6278  symoneural-stable-diffusion-cpp-dev_0.0.859-r0_x86-64-v3.ipk
 
 === 9. control plane, after the recipe existed ===
   tools/scan-acquisition.py      rc=0   101 components; stable-diffusion.cpp lock_state UNRESOLVED -> VERIFIED,
@@ -102,6 +110,11 @@ symoneural-cuda S2 check: 19 NEEDED entries resolved by providers; host-driver l
   tools/verify-acquisition.py    rc=0   CONTROL-PLANE PASS-WITH-WARNINGS, ESTATE-COMPLETENESS PASS
                                         the one new warning is ggml SINGLE-PROVIDER -> CROSS-RUNTIME-DUPLICATE,
                                         which is Phase 14 S1 appearing in the control plane exactly as designed
+  tools/check-determinism.py     rc=0   RUN_A_SHA256 == RUN_B_SHA256, 16 records, 20 tools hashed
+  tools/test-estate-operators.py rc=0   Ran 44 tests, OK - run AFTER the seven acquisition JSONs were
+                                        rewritten, because they read source-lock.json and the component
+                                        count moved 100 -> 101
+  tools/pre-publish-audit.sh     rc=0   AUDIT PASS
 
 === 10. NOT done ===
   NO RENDER HAS BEEN RUN. acquisition/model-register.json Diffuse/image row

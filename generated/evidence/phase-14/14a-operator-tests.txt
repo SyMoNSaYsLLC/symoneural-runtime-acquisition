@@ -1,0 +1,50 @@
+Preserved isolated fixtures: /tmp/claude-1000/symoneural-operator-regressions-3ok96yt0
+test_child_failure_and_per_run_logs (__main__.BuildAll.test_child_failure_and_per_run_logs) ... ok
+test_dry_run_and_missing_runtimes (__main__.BuildAll.test_dry_run_and_missing_runtimes) ... ok
+test_invalid_job_count (__main__.BuildAll.test_invalid_job_count) ... ok
+test_failed_inspection_is_fatal (__main__.CudaBoundaryQa.test_failed_inspection_is_fatal) ... ok
+test_provider_and_explicit_driver_boundary (__main__.CudaBoundaryQa.test_provider_and_explicit_driver_boundary) ... ok
+test_repeated_driver_entries_not_counted_as_providers (__main__.CudaBoundaryQa.test_repeated_driver_entries_not_counted_as_providers) ... ok
+test_unprovided_dependency_is_fatal (__main__.CudaBoundaryQa.test_unprovided_dependency_is_fatal) ... ok
+test_absent_target_version_fails (__main__.Evidence.test_absent_target_version_fails) ... ok
+test_audit_failed_subcommands_propagate (__main__.Evidence.test_audit_failed_subcommands_propagate) ... ok
+test_completeness_failure_exit (__main__.Evidence.test_completeness_failure_exit) ... ok
+test_evidence_mismatch_is_not_rebaselined (__main__.Evidence.test_evidence_mismatch_is_not_rebaselined) ... ok
+test_identity_compares_url_tree_and_recipe (__main__.Evidence.test_identity_compares_url_tree_and_recipe) ... ok
+test_missing_and_empty_evidence (__main__.Evidence.test_missing_and_empty_evidence) ... ok
+test_pkgdata_never_means_done (__main__.Evidence.test_pkgdata_never_means_done) ... ok
+test_target_implementation_version (__main__.Evidence.test_target_implementation_version) ... ok
+test_unknown_runtime_rejected (__main__.Evidence.test_unknown_runtime_rejected) ... ok
+test_zero_wheels_not_pass (__main__.Evidence.test_zero_wheels_not_pass) ... ok
+test_build_dir_option_selects_sibling_directory (__main__.Launcher.test_build_dir_option_selects_sibling_directory) ... ok
+test_child_failure_propagates (__main__.Launcher.test_child_failure_propagates) ... ok
+test_cooperating_wrapper_lock (__main__.Launcher.test_cooperating_wrapper_lock) ... ok
+test_help_and_no_arguments (__main__.Launcher.test_help_and_no_arguments) ... ok
+test_list_and_path_do_not_initialize (__main__.Launcher.test_list_and_path_do_not_initialize) ... ok
+test_probe_failure_never_initializes (__main__.Launcher.test_probe_failure_never_initializes) ... ok
+test_rejects_traversal_and_unknown_runtime (__main__.Launcher.test_rejects_traversal_and_unknown_runtime) ... ok
+test_setup_failure_never_builds (__main__.Launcher.test_setup_failure_never_builds) ... ok
+test_failed_inspection_is_fatal (__main__.NativeAuditSafety.test_failed_inspection_is_fatal) ... ok
+test_package_extraction_uses_literal_paths (__main__.NativeAuditSafety.test_package_extraction_uses_literal_paths) ... ok
+test_descendants_excludes_unrelated_node (__main__.Processes.test_descendants_excludes_unrelated_node) ... ok
+test_exact_script_and_recipe_named_grep (__main__.Processes.test_exact_script_and_recipe_named_grep) ... ok
+test_existing_build_identified_by_cwd (__main__.Processes.test_existing_build_identified_by_cwd) ... ok
+test_private_namespace_refused (__main__.Processes.test_private_namespace_refused) ... ok
+test_probe_error_fails_closed (__main__.Processes.test_probe_error_fails_closed) ... ok
+test_cleanup_command_absent (__main__.ProofSafety.test_cleanup_command_absent) ... ok
+test_empty_driver_and_false_prefix_rejected (__main__.ProofSafety.test_empty_driver_and_false_prefix_rejected) ... ok
+test_existing_roots_never_removed (__main__.ProofSafety.test_existing_roots_never_removed) ... ok
+test_new_root_private_unique (__main__.ProofSafety.test_new_root_private_unique) ... ok
+test_relative_and_source_destinations_rejected (__main__.ProofSafety.test_relative_and_source_destinations_rejected) ... ok
+test_s2_child_keeps_driver_separate_from_shell (__main__.ProofSafety.test_s2_child_keeps_driver_separate_from_shell) ... ok
+test_trace_absence_fails (__main__.ProofSafety.test_trace_absence_fails) ... ok
+test_trace_literal_paths_and_launcher_order (__main__.ProofSafety.test_trace_literal_paths_and_launcher_order) ... ok
+test_gloo_hook_flag_scope_and_missing_input (__main__.TorchRpath.test_gloo_hook_flag_scope_and_missing_input) ... ok
+test_real_elf_cleaned_and_verified_by_value (__main__.TorchRpath.test_real_elf_cleaned_and_verified_by_value) ... ok
+test_missing_and_duplicate_paths_fail (__main__.TreeIdentity.test_missing_and_duplicate_paths_fail) ... ok
+test_rebuilt_tree_matches_git_without_writes (__main__.TreeIdentity.test_rebuilt_tree_matches_git_without_writes) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 1.035s
+
+OK

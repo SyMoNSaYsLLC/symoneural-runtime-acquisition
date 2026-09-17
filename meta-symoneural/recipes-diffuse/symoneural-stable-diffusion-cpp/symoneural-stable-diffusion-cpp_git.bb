@@ -207,9 +207,27 @@ RDEPENDS:${PN}-server += "${PN}"
 # libstable-diffusion.so and has no separate consumer by design. So the honest fix is
 # not to ship its development interface at all. `rm -f`, not a FILES exclusion: an
 # excluded file still sits in ${D} and OE reports it as installed-but-not-shipped.
+# ...AND NEITHER MAY sd.cpp's OWN BUILD METADATA, for the same reason one step removed.
+# Both files sd.cpp generates for consumers point at the ggml that is no longer there:
+#   cmake/stable-diffusion-config.cmake.in:12
+#       find_dependency(ggml REQUIRED HINTS "${SD_LIB_DIR}/cmake")
+#   cmake/stable-diffusion.pc.in
+#       Libs.private: -lggml -lggml-base
+# With ${libdir}/cmake/ggml removed, the CMake config cannot resolve - and if
+# symoneural-ggml-dev happens to be installed it resolves to CANONICAL 0.23.0, handing the
+# consumer 0.23.0 headers for a library compiled at GGML_MAX_NAME=160. The .pc does the
+# same through -lggml. A config that silently finds the WRONG ggml is worse than no config.
+#
+# So ${PN}-dev ships exactly one file: stable-diffusion.h, which includes only stdbool.h,
+# stddef.h, stdint.h and string.h and is therefore usable on its own with
+# `-lstable-diffusion`. Recorded in docs/diffuse/ARCHITECTURE.md section 7 rather than left
+# for whoever first tries find_package(stable-diffusion).
 do_install:append() {
 	rm -f ${D}${includedir}/ggml*.h ${D}${includedir}/gguf.h
 	rm -rf ${D}${libdir}/cmake/ggml
 	rm -f ${D}${libdir}/libggml*.a
 	rm -f ${D}${libdir}/pkgconfig/ggml.pc
+	rm -rf ${D}${libdir}/cmake/stable-diffusion
+	rm -f ${D}${libdir}/pkgconfig/stable-diffusion.pc
+	rmdir --ignore-fail-on-non-empty ${D}${libdir}/cmake ${D}${libdir}/pkgconfig 2>/dev/null || true
 }
