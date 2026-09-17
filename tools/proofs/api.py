@@ -1,8 +1,14 @@
 """API clean-root proof body: run INSIDE the extracted image by tools/clean-root-proof.
 
-The API runtime was the one Python runtime with no consumer proof: `check-python-runtime-
-closures.py --runtime API` reads built-wheel metadata, which is a declaration, not an
-execution (R16). This file is the execution. It imports the FastAPI/Starlette/uvicorn/
+API already has a proof — `tools/api-clean-root-proof`, from an earlier phase, which covers
+the native `libsymoneural-api.so.1`, the GPU lock through the packaged library and the
+applications registry, and passes. What it does not do, and what this file adds, is three
+things: run inside the SHARED harness the other runtimes use (and so get its host-leakage
+loader trace), assert the upstream versions at the exact pins a consumer depends on, and
+exercise the first-party POLICY layer — route classes and the unit registry — rather than
+only importing it.
+
+Both are kept; they are complementary. This one imports the FastAPI/Starlette/uvicorn/
 pydantic closure AND the estate's own `symoneural_api`, then serves real requests through
 an in-process ASGI transport — no socket is bound, no port is taken, nothing touches the
 network, and `127.0.0.1:8800` is never contacted (R14).

@@ -144,3 +144,30 @@ subcommand, so it is not read back out of the shipped binary.
 
 Still open for the API runtime: LICENSE for first-party code is undeclared (`CLOSED`);
 clean A/B rebuild reproducibility NOT TESTED; `restart_count`/restart policy NOT STARTED.
+
+## Second proof, in the shared harness (2026-09-17)
+
+`tools/proofs/api.py` puts API in the same clean-root harness CLI, Common and Ravencalc
+use: `tools/clean-root-proof API symoneural-image-api`, rc=0. It does not replace
+`tools/api-clean-root-proof` (which passes, and is the only thing covering the native
+library, the GPU lock and the applications registry) — the two are complementary:
+
+| | `tools/api-clean-root-proof` | `tools/proofs/api.py` (shared harness) |
+|---|---|---|
+| upstream imports | yes | yes, **at exact pins** (fastapi 0.141.1, starlette 1.6.0, uvicorn 0.52.4, pydantic 2.13.5, pydantic-core 2.46.5, httpx 0.28.1) |
+| native `libsymoneural-api.so.1`, GPU lock, applications registry | yes | no |
+| host-leakage loader trace | no | yes — "none: no external library initialization" |
+| a request actually served | `GET /api/apps`, `/api/health` through the app | the same, plus a fresh app served 200/200/422 over `httpx.ASGITransport`, and `uvicorn Config.load()` |
+| route-class enforcement | no | 401 no token, 401 wrong token, **404** OPERATOR_ONLY vs a unit token, 403 ENTITLEMENT_REQUIRED |
+| unit registry | no | `chat.port == 8802`; no two units share a port |
+
+The exact-pin assertion exists so the API runtime and the 17 September reference-gateway
+document cannot drift apart silently: that document's `file:line` citations were made
+against these six versions, and if one moves the proof fails by name.
+
+The route-class and port checks exist because three chat-output documents dated 16–17
+September contradicted this file — they recorded 403 for operator routes and `:8081` for
+chat. This file was right; the checks now execute the answer instead of asserting it.
+Nothing is bound and `127.0.0.1:8800` is not contacted (R14).
+
+Evidence: `generated/evidence/maintenance/2026-09-17-api-clean-root-proof.txt`.
