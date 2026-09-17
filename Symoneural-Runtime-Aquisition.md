@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| Parent HEAD | `708d39cd97cb526aab7ebbeb0fb004295152d794` |
+| Parent HEAD | `ab252393a9b8f42b5110969c31baa0dd3a6962cb` |
 | Working tree | modified, uncommitted |
 | Records | `acquisition/` (15 JSON + SHA256SUMS) |
 | Scanner identity | `acquisition/control-plane.json` (20 tools hashed) |
@@ -28,8 +28,8 @@ before its description of the estate means anything.
 Acquisition FAIL reasons:
 
 - 97 provider collision(s) unresolved (58 direct-vs-OE-Core)
-- 366 vendored decision(s) unresolved
-- 429 licence file(s) without an established identifier
+- 406 vendored decision(s) unresolved
+- 568 licence file(s) without an established identifier
 - 3 explicit control-plane decisions open (FreeToken/torch, nvidia-userspace-driver-provider, nvidia-gsp-firmware-provider)
 
 This FAIL is expected and is a statement of open decisions, not a defect.
@@ -241,7 +241,8 @@ through the same release path as a runtime-linked one — hence the scope column
 
 ## Provider graph
 
-OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**
+OE-Core recipes inspected **2760**, providers indexed **2823**, collisions **104**
+(of which **58** are direct-acquisition versus an OE-Core recipe).
 
 | | |
 |---|---|
@@ -379,12 +380,28 @@ What each source **natively declares**. No SyMoNeuRaL decision is recorded.
 
 ## Unresolved decisions
 
-| Category | Identifier | Blocks |
-|---|---|---|
-| ARCHITECTURE | FreeToken/torch | Adaptive-Fabric build design |
-| VERSION-CONFLICT | sympy-mpmath-constraint | Ravencalc runtime closure PASS (sympy) |
-| BUILD-DESIGN | nvidia-userspace-driver-provider | Platform: complete fresh-machine GPU deployment from estate artifacts |
-| BUILD-DESIGN | nvidia-gsp-firmware-provider | Platform: loading the estate-built nvidia.ko on Blackwell/Ada/Ampere hardware |
+| Category | Identifier | State | Blocks |
+|---|---|---|---|
+| ARCHITECTURE | FreeToken/torch | OPEN-OWNED-BY-PHASE-19 | Adaptive-Fabric build design |
+| BUILD-DESIGN | nvidia-userspace-driver-provider | OPEN | Platform: complete fresh-machine GPU deployment from estate artifacts |
+| BUILD-DESIGN | nvidia-gsp-firmware-provider | OPEN | Platform: loading the estate-built nvidia.ko on Blackwell/Ada/Ampere hardware |
+
+### Rulings recorded (not open, still release-relevant)
+
+| Category | Identifier | State | Blocks |
+|---|---|---|---|
+| VERSION-CONFLICT | sympy-mpmath-constraint | RESOLVED-A | Ravencalc runtime closure PASS (sympy) |
+| VERIFICATION | offline-compile | RESOLVED-SCOPED | release build claim |
+| LICENCE-POSTURE | kawpowminer-gpl-distribution | DEFERRED | Crypto: Phase 17b GPU miner (kawpowminer 1.2.4) - not P7 |
+
+Derived from the scanner records at render time:
+
+- licence files unresolved: **568**
+- provider collisions unresolved: **97**
+- vendored decisions unresolved: **406**
+- vendor entries reclassified as submodule: **64**
+
+Curated counts as recorded in `unresolved.json` (hand-maintained; may lag the derived figures above):
 
 - artifact decisions pending: **41**
 - licence files unresolved: **429**
@@ -405,11 +422,15 @@ Recorded as history. Neither build is authoritative for release.
 
 ## Generated to-do tasks
 
+Open decisions only; ruled items are listed above under *Rulings recorded*.
+
 1. **[ARCHITECTURE] FreeToken/torch** — FreeToken requires torch>=2.11,<2.12; Common holds PyTorch 2.14.0, outside that range.
 
-2. **[VERSION-CONFLICT] sympy-mpmath-constraint** — sympy 1.14.0 (sympy-1.14.0 tag, built wheel METADATA) declares Requires-Dist mpmath<1.4,>=1.1.0; the estate pins mpmath 1.4.1 (c1131e2d64ab). Python imports work regardless, but the declared closure is violated and pip-style resolution would refuse it.
+2. **[BUILD-DESIGN] nvidia-userspace-driver-provider** — No estate provider for the NVIDIA driver userspace ABI (libcuda.so.1, libnvidia-ml.so.1, libnvidia-gpucomp, libnvidia-nvvm, libnvidia-ptxjitcompiler, nvidia-modprobe) at 615.71.09. The Debian profile consumes the host's NVIDIA Debian 13 packages (615.71.09-2; the P7 S2 boundary). The estate profile has none, so a fresh estate machine cannot run CUDA even with the estate-built kernel modules and kernel.
 
-3. **[BUILD-DESIGN] nvidia-userspace-driver-provider** — No estate provider for the NVIDIA driver userspace ABI (libcuda.so.1, libnvidia-ml.so.1, libnvidia-gpucomp, libnvidia-nvvm, libnvidia-ptxjitcompiler, nvidia-modprobe) at 615.71.09. The Debian profile consumes the host's NVIDIA Debian 13 packages (615.71.09-2; the P7 S2 boundary). The estate profile has none, so a fresh estate machine cannot run CUDA even with the estate-built kernel modules and kernel.
+3. **[BUILD-DESIGN] nvidia-gsp-firmware-provider** — No estate provider for the GSP firmware the open kernel modules request at load (nvidia/615.71.09/gsp_tu10x.bin, gsp_ga10x.bin, ucodes_*.bin; modinfo firmware:). Debian profile: firmware-nvidia-gsp 615.71.09-2 from NVIDIA's Debian 13 index (sha256 2f72dd12294aba56...). Estate profile: oe-core linux-firmware ships nouveau-era NVIDIA firmware, not 615.71.09 GSP.
 
-4. **[BUILD-DESIGN] nvidia-gsp-firmware-provider** — No estate provider for the GSP firmware the open kernel modules request at load (nvidia/615.71.09/gsp_tu10x.bin, gsp_ga10x.bin, ucodes_*.bin; modinfo firmware:). Debian profile: firmware-nvidia-gsp 615.71.09-2 from NVIDIA's Debian 13 index (sha256 2f72dd12294aba56...). Estate profile: oe-core linux-firmware ships nouveau-era NVIDIA firmware, not 615.71.09 GSP.
+4. **[VERIFICATION] offline-compile** (RESOLVED-SCOPED) — No component demonstrated to compile with no network after bitbake -c fetch. Enumeration is not proof.
+
+5. **[LICENCE-POSTURE] kawpowminer-gpl-distribution** (DEFERRED) — kawpowminer is GPL-3.0 (ethminer lineage). acquisition/pending-acquisitions.json has recorded it since 2026-09-13 with the note that the INCOMPATIBLE_LICENSE posture must be decided before acquisition. P7 C8 confirmed the CUDA authority (13.4.1, sm_120) would serve it; the product/distribution question is separate from P7.
 

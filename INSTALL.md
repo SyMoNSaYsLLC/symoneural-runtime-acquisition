@@ -6,23 +6,35 @@
 
 ## Why there is no release yet
 
-Two blockers, both real:
+Status as of 2026-09-15 (the full list, with evidence, is in
+`docs/PRODUCTION-VERIFICATION-2026-09-15.md`):
 
-**1. No packagegroup.** 248 `.ipk` files exist across the build directories, but
-they are loose packages, not a coherent installable unit.
-`packagegroup-symoneural-rack` is **Phase 11d**. Without it, "install SyMoNeuRaL"
-has no meaning — there is no list of what constitutes the product.
+**1. No release unit.** Packages exist for 85 of 86 target components (per the
+2026-09-14 workscope audit) and five per-runtime packagegroups exist
+(`packagegroup-symoneural-{api,cli,common,llm,ravencalc}`), but
+`packagegroup-symoneural-rack` — the tenant unit this document installs — has
+not been written, and neither has `packagegroup-symoneural-operator`
+(`DECISIONS.md` §1). Without it, "install SyMoNeuRaL" has no meaning. Its
+contents are a product decision that has not been made.
 
-**2. The built packages carry stale versions.** Every `.ipk` currently in
-`tmp/deploy/ipk/` is named `<pkg>_1.0+git-r0`. That was recipetool's placeholder
-`PV`, corrected across 22 recipes in Phase 10 by deriving each version from the
-release tag at its pinned SHA (`symoneural-fastapi` → `0.141.1`,
-`symoneural-pydantic` → `2.13.5`, and so on). **The deploy directory predates
-that fix.** Releasing those artifacts would ship packages whose versions are
-meaningless and whose dependency resolution cannot work.
+**2. No release identity.** `DISTRO` is unset in every build directory, so
+`symoneural.conf` has never been loaded; there is no `DISTRO_VERSION`, no PR
+service (every package is `-r0`, so a rebuilt package at the same `PV` is not an
+upgrade), no `MAINTAINER`, no feed signing, no SBOM or CVE configuration. The
+recipetool `1.0+git` placeholder versions noted here earlier have been corrected
+(e.g. `symoneural-pytorch_2.14.0-r0`); that blocker is gone.
 
-A release therefore requires a rebuild after the PV correction, not just an
-upload of what is on disk today.
+**3. The release gate has not started.** Phase 20 (licence manifest with no
+`Unknown`, NOTICE aggregation, `INCOMPATIBLE_LICENSE` posture, cve-check,
+offline re-proof under the pristine class, `tools/pre-publish-audit.sh`) is
+defined in `docs/` and `generated/` and nothing in it has run.
+
+**4. Not relocatable.** Absolute `/home/google/SymonSaysLLC` paths in the
+recipes, classes and every build configuration mean no one but this host can
+rebuild what a release would ship (Phase 19f).
+
+A release therefore requires the packagegroup, the distro identity and the gate
+— not an upload of what is on disk today.
 
 ## What a release will contain
 
@@ -74,8 +86,9 @@ Every package traces to a pinned commit:
 opkg info symoneural-numpy          # version, e.g. 2.5.3
 ```
 
-matched against `acquisition/source-lock.json`, which records `commit_sha` for
-all 41 acquired trees, and `submodule-lock.json` for their 85 submodules.
+matched against `acquisition/source-lock.json`, which records `commit_sha` and
+`tree_sha` for all 100 acquired trees, and `submodule-lock.json` for their 86
+submodules.
 
 ## Building instead
 

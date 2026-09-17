@@ -13,7 +13,7 @@ against the tree instead of trusting a transcript.
 Tools:
   estate_status      what is built, pinned, open — counts with paths
   phase_state        per-phase status parsed from generated/phase-*-report.md
-  open_decisions     acquisition/unresolved.json, open items only
+  open_decisions     acquisition/unresolved.json: open rows, ruled rows, release-gated rulings
   pin                a component's pinned SHA + worktree state from source-lock
   check_history      has an approach already failed? searches the transcripts
   verify_claim       R16 in one call: does an artifact actually exist on disk
@@ -29,17 +29,41 @@ def _load(p):
     with open(os.path.join(ROOT, p)) as f:
         return json.load(f)
 
+def _is_open(item):
+    """unresolved.json keeps ruled items in `items` as history (state RESOLVED-A etc.).
+    A row is open only if its state does not begin with RESOLVED. Same rule as
+    tools/generate-runtime-acquisition.py, so the two never disagree on the count."""
+    return not str(item.get("state", "OPEN")).upper().startswith("RESOLVED")
+
+def _gated(un):
+    """Rows filed under `resolved` that are NOT closed for release purposes:
+    DEFERRED (e.g. the kawpowminer GPL ruling) and RESOLVED-SCOPED (e.g. offline-compile,
+    which says 'RE-PROOF REQUIRED before any release claim')."""
+    out = []
+    for i in un.get("resolved", []):
+        st = str(i.get("state", "")).upper()
+        if st == "RESOLVED-SCOPED" or not st.startswith(("RESOLVED", "ACCEPTED", "REFERENCE-ONLY")):
+            out.append(i)
+    return out
+
 def estate_status(**_):
     sl = _load("acquisition/source-lock.json")["components"]
     un = _load("acquisition/unresolved.json")
     recipes = [p for p in glob.glob(f"{ROOT}/meta-symoneural/recipes-*/*/*.bb") if "/retired/" not in p]
-    images  = glob.glob(f"{ROOT}/Symoneural-*/build/devtool-master/tmp/work/*/symoneural-*/*/image")
+    # Every build directory, not only devtool-master (Platform has a second one).
+    staged  = glob.glob(f"{ROOT}/Symoneural-*/build/*/tmp/work/*/symoneural-*/*/image")
     dirty   = [c["source_path"] for c in sl if c.get("worktree") != "clean"]
+    open_items = [i for i in un["items"] if _is_open(i)]
     return {
         "pinned_sources": len(sl),
         "recipes": len(recipes),
-        "built_images": len(images),
-        "open_decisions": len(un["items"]),
+        # Per-recipe ${D} staging directories found under tmp/work. This is NOT a count
+        # of images (the estate has 5 image recipes); it was previously mislabelled.
+        "recipes_with_image_dir": len(staged),
+        "open_decisions": len(open_items),
+        "open_decision_ids": [i["identifier"] for i in open_items],
+        "ruled_in_items": len(un["items"]) - len(open_items),
+        "release_gated_rulings": [f'{i.get("identifier")} ({i.get("state")})' for i in _gated(un)],
         "resolved_decisions": len(un.get("resolved", [])),
         "dirty_trees": dirty or "none",
         "head": subprocess.run(["git","-C",ROOT,"rev-parse","--short","HEAD"],
@@ -53,15 +77,21 @@ def phase_state(**_):
         txt = open(p, errors="ignore").read()
         m = re.search(r"^## STATUS:\s*(.+)$", txt, re.M)
         s = re.search(r"\*\*starts after:([^*]+)\*\*", txt)
-        out[name] = {"status": (m.group(1).strip() if m else "CLOSED/none stated"),
+        # Absence of a STATUS line is not evidence of closure (R16). Say so.
+        out[name] = {"status": (m.group(1).strip() if m else "NO STATUS LINE IN REPORT — not evidence of closure"),
                      "starts_after": (s.group(1).strip() if s else "-"),
                      "lines": txt.count("\n")}
     return out
 
 def open_decisions(**_):
     d = _load("acquisition/unresolved.json")
-    return [{"id": i["identifier"], "category": i.get("category"),
-             "state": i.get("state"), "blocks": i.get("blocks")} for i in d["items"]]
+    row = lambda i: {"id": i["identifier"], "category": i.get("category"),
+                     "state": i.get("state"), "blocks": i.get("blocks")}
+    return {
+        "open": [row(i) for i in d["items"] if _is_open(i)],
+        "ruled_still_listed_in_items": [row(i) for i in d["items"] if not _is_open(i)],
+        "release_gated_rulings": [row(i) for i in _gated(d)],
+    }
 
 def pin(component: str = "", **_):
     sl = _load("acquisition/source-lock.json")["components"]
@@ -95,7 +125,7 @@ def verify_claim(path: str = "", min_bytes: int = 1, **_):
 TOOLS = {
     "estate_status":  (estate_status,  "What is built, pinned and open. Counts with evidence.", {}),
     "phase_state":    (phase_state,    "Per-phase status read from the report files on disk.", {}),
-    "open_decisions": (open_decisions, "Open control-plane decisions.", {}),
+    "open_decisions": (open_decisions, "Control-plane decisions: open, ruled-but-listed, and release-gated rulings (DEFERRED / RESOLVED-SCOPED).", {}),
     "pin":            (pin,            "A component's pinned SHA and worktree state.",
                        {"component": {"type":"string","description":"name fragment, e.g. numpy"}}),
     "check_history":  (check_history,  "Has this approach already failed here? Searches 134 session transcripts.",

@@ -32,6 +32,33 @@ gitretry() {
     done
 }
 gitretry add acquisition/source-lock.json acquisition/submodule-lock.json || exit 1
+# Scope assertion (2026-09-15). `git commit` records the WHOLE index, so anything a
+# previous step - or a person - left staged rides along under this message. Two
+# CLI ingests once had exactly that happen (see the index.lock note above). Refuse
+# unless every staged path is the ingested tree or one of the two lock files. The
+# repository also holds a live API key one `git add .` away, so an unexpected
+# staged path is treated as a hazard, not a convenience.
+# quotePath=false: with the default, a staged path holding a non-ASCII byte is
+# emitted C-quoted ("...\303\251.txt"), the leading quote defeats the ^<sp>/
+# anchor, and an in-scope upstream fixture would be refused as a stray path.
+# stderr is left on the terminal, not folded into the path list.
+staged=$(git -c core.quotePath=false diff --cached --name-only); rc=$?
+if [ $rc -ne 0 ]; then
+    echo "COMMIT REFUSED - could not read the index (rc=$rc); nothing committed"
+    exit 1
+fi
+stray=$(printf '%s\n' "$staged" | grep -vE "^(${sp//./\\.}/|acquisition/(source|submodule)-lock\.json$)"); grc=$?
+if [ $grc -ge 2 ]; then
+    echo "COMMIT REFUSED - scope check itself failed (grep rc=$grc); nothing committed"
+    exit 1
+fi
+if [ -n "$stray" ]; then
+    echo "COMMIT REFUSED - the index holds paths outside this ingest:"
+    printf '%s\n' "$stray" | head -20 | sed 's/^/  /'
+    echo "Unstage them (git restore --staged -- <path>) or commit them separately, then re-run."
+    echo "The ingested tree and both lock files remain staged; nothing committed."
+    exit 1
+fi
 msg="acquired source: $line"
 [ -n "$excl" ] && msg="$msg · $excl"
 gitretry commit -q -m "$msg

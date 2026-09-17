@@ -6,7 +6,9 @@ description: Rules, invariants and known failure modes for the SyMoNeuRaL multi-
 # SyMoNeuRaL estate
 
 A multi-runtime software estate built **from pristine upstream source** with
-BitBake/OpenEmbedded. Twelve runtimes, 42 pinned upstreams, one GPU.
+BitBake/OpenEmbedded. Thirteen runtime directories, 100 pinned upstreams
+(`acquisition/source-lock.json` is the count that is true; this line is not),
+one GPU.
 
 Everything below was paid for with a failure. Follow it exactly.
 

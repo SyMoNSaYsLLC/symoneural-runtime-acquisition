@@ -13,15 +13,20 @@
 #     meta-symoneural/tools/edit-guard || exit 1
 #
 # Exit 0 = no cooker, safe to edit. Exit 1 = a build is live, do not edit.
+# Exit 2 = the check could not be performed (e.g. a sandboxed PID namespace) -
+#          REFUSED; never read as "safe".
 #
-# Matches only the real bitbake entrypoint. Shells that merely MENTION the string
-# are excluded: a `pgrep -f` pattern also matches the command line of the shell
-# running it, which is the same self-match that deadlocked a wait loop earlier.
-live=$(pgrep -af "bin/bitbake " 2>/dev/null | grep -vE "bash -c|edit-guard|pgrep" || true)
-if [ -n "$live" ]; then
-    echo "edit-guard: REFUSING - a bitbake cooker is live:" >&2
-    echo "$live" | sed 's/^/  /' | cut -c1-120 >&2
-    echo "edit-guard: wait for it to finish, then edit." >&2
-    exit 1
+# 2026-09-15: this used to be an independent `pgrep -af "bin/bitbake "` scan.
+# That scan missed bitbake-worker and bitbake-server processes and, inside a
+# sandboxed PID namespace, found nothing at all and exited 0 - the exact
+# silent-pass R16 forbids. It now defers to the one real implementation,
+# tools/edit-guard -> tools/estate_processes.py guard, which scans /proc for
+# bitbake, bitbake-server and bitbake-worker (including python-wrapped forms)
+# and refuses (rc 2) when PID 1 is not the host init. One guard, one answer.
+here=$(cd "$(dirname -- "${BASH_SOURCE[0]}")" && pwd) || exit 2
+real="$here/../../tools/edit-guard"
+if [ ! -x "$real" ]; then
+    echo "edit-guard: REFUSING - real guard missing or not executable: $real" >&2
+    exit 2
 fi
-exit 0
+exec "$real" "$@"

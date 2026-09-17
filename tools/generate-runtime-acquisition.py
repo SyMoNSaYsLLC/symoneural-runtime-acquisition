@@ -83,14 +83,19 @@ if M["dirty"]:    af.append("%d upstream tree(s) dirty" % M["dirty"])
 if M["sub_problem"]: af.append("%d submodule(s) not at recorded commit" % M["sub_problem"])
 if M["coll_unres"]: af.append("%d provider collision(s) unresolved (%d direct-vs-OE-Core)"
                               % (M["coll_unres"], M["oe_direct"]))
-if un["counts"]["vendored_decisions_unresolved"]:
-    af.append("%d vendored decision(s) unresolved" % un["counts"]["vendored_decisions_unresolved"])
-if un["counts"]["licence_files_unresolved"]:
-    af.append("%d licence file(s) without an established identifier" % un["counts"]["licence_files_unresolved"])
+# Derived from the scanner records, not from the curated unresolved.json "counts"
+# block: that block is written by hand and lagged the records (366 vs 406 vendored,
+# 429 vs 568 licence files, 30 vs 97 collisions) while the tables below were current.
+M["vend_unres"] = sum(1 for v in vl["vendored"] if v.get("decision", "UNRESOLVED") == "UNRESOLVED")
+M["lic_unres"]  = sum(1 for f in li["files"] if f.get("status", "UNRESOLVED") == "UNRESOLVED")
+if M["vend_unres"]:
+    af.append("%d vendored decision(s) unresolved" % M["vend_unres"])
+if M["lic_unres"]:
+    af.append("%d licence file(s) without an established identifier" % M["lic_unres"])
 # A decision that has been RULED is not open. unresolved.json keeps resolved items
 # as history (sympy-mpmath-constraint is state RESOLVED-A), so counting every row
 # reported a settled ruling as an open blocker. State drives the count; the row stays.
-_open = [i for i in un["items"] if not str(i.get("state", "OPEN")).startswith("RESOLVED")]
+_open = [i for i in un["items"] if not str(i.get("state", "OPEN")).upper().startswith("RESOLVED")]
 if _open: af.append("%d explicit control-plane decisions open (%s)"
                     % (len(_open), ", ".join(i["identifier"] for i in _open)))
 ACQ_VERDICT = "PASS" if not af else "FAIL"
@@ -180,9 +185,9 @@ w("\nAll decisions are `UNRESOLVED`. A test-only vendored library must not be pu
 w("through the same release path as a runtime-linked one — hence the scope column.\n")
 
 w("\n## Provider graph\n")
-w("OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**")
-w("(of which **%d** are direct-acquisition versus an OE-Core recipe).\n"
-  % (M["oe_recipes"], M["oe_providers"], M["collisions"], M["oe_direct"]) if False else "")
+w("OE-Core recipes inspected **%d**, providers indexed **%d**, collisions **%d**"
+  % (M["oe_recipes"], M["oe_providers"], M["collisions"]))
+w("(of which **%d** are direct-acquisition versus an OE-Core recipe).\n" % M["oe_direct"])
 w("| | |\n|---|---|")
 w("| OE-Core recipes inspected | %d |" % M["oe_recipes"])
 w("| Providers indexed | %d |" % M["oe_providers"])
@@ -231,9 +236,30 @@ w("| Capability | Components |\n|---|---|")
 for k,v in sorted(CAPS.items(), key=lambda x:-x[1]): w("| %s | %d |" % (k,v))
 
 w("\n## Unresolved decisions\n")
-w("| Category | Identifier | Blocks |\n|---|---|---|")
-for i in un["items"]: w("| %s | %s | %s |" % (i["category"], i["identifier"], i["blocks"]))
+w("| Category | Identifier | State | Blocks |\n|---|---|---|---|")
+for i in _open: w("| %s | %s | %s | %s |" % (i["category"], i["identifier"], i.get("state", "OPEN"), i["blocks"]))
+# Rows that carry a ruling stay in the records as history; they are listed here so
+# the ruling is visible, but they are not counted as open. Release-relevant rows in
+# the `resolved` array are surfaced too: DEFERRED (a GPL ruling still owed) and
+# RESOLVED-SCOPED (a proof still owed). Plain RESOLVED*, ACCEPTED-* and
+# REFERENCE-ONLY rows are closed and stay out of this table.
+_ruled = [i for i in un["items"] if i not in _open]
+_gated = [i for i in un.get("resolved", [])
+          if not str(i.get("state", "")).upper().startswith(("RESOLVED", "ACCEPTED", "REFERENCE-ONLY"))
+          or str(i.get("state", "")).upper() == "RESOLVED-SCOPED"]
+if _ruled or _gated:
+    w("\n### Rulings recorded (not open, still release-relevant)\n")
+    w("| Category | Identifier | State | Blocks |\n|---|---|---|---|")
+    for i in _ruled + _gated:
+        w("| %s | %s | %s | %s |" % (i.get("category", ""), i.get("identifier", ""),
+          i.get("state", ""), i.get("blocks", "")))
 w("")
+w("Derived from the scanner records at render time:\n")
+w("- licence files unresolved: **%d**" % M["lic_unres"])
+w("- provider collisions unresolved: **%d**" % M["coll_unres"])
+w("- vendored decisions unresolved: **%d**" % M["vend_unres"])
+w("- vendor entries reclassified as submodule: **%d**" % len(vl.get("reclassified_as_submodule", [])))
+w("\nCurated counts as recorded in `unresolved.json` (hand-maintained; may lag the derived figures above):\n")
 for k,v in sorted(un["counts"].items()): w("- %s: **%d**" % (k.replace("_"," "), v))
 
 w("\n## Exceptions\n")
@@ -243,8 +269,12 @@ for e in ex["exceptions"]:
 w("\nRecorded as history. Neither build is authoritative for release.\n")
 
 w("\n## Generated to-do tasks\n")
-for n,i in enumerate(un["items"],1):
+w("Open decisions only; ruled items are listed above under *Rulings recorded*.\n")
+for n,i in enumerate(_open,1):
     w("%d. **[%s] %s** — %s\n" % (n, i["category"], i["identifier"], i["description"]))
+for n,i in enumerate(_gated, len(_open)+1):
+    w("%d. **[%s] %s** (%s) — %s\n" % (n, i.get("category", ""), i.get("identifier", ""),
+      i.get("state", ""), i.get("description", i.get("resolution", ""))[:400]))
 
 open(os.path.join(ROOT,"Symoneural-Runtime-Aquisition.md"),"w").write("\n".join(o)+"\n")
 print("report validation:")
