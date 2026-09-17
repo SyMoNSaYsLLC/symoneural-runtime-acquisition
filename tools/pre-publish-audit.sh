@@ -187,6 +187,61 @@ if run "untracked paths (git add . hazard)" c8; then
     fi
 fi
 
+# 9. a GIT REPOSITORY NESTED INSIDE THIS WORKTREE.
+#    On 17 September a clone of THIS repository (same origin, over HTTPS) was made
+#    into this repository's own working tree. It was 41 commits behind, held nothing
+#    unique, and cost 5.6 GB; had anyone run `git add .` it would also have been a
+#    second copy of the estate inside the estate. This check exists so that shape is
+#    caught by a command instead of by noticing.
+#
+#    Scope is deliberate. `find` over the whole tree is wrong twice: it takes 7 s and
+#    it reports thousands of upstream .git directories that bitbake unpacks under
+#    */build/*/tmp/work/. What matters is a repository git is NOT ignoring - that is
+#    exactly the set `git add .` could sweep in - plus anything at the top level,
+#    which is where the mistake actually landed.
+#
+#    A nested repository that IS ignored (FreeToken/, a deliberate working clone with
+#    absolute-path venv shebangs) is reported and does not fail: being in .gitignore
+#    is the record that it is on purpose. That is the rule to keep - fence it first,
+#    or the audit fails.
+_c9scan() {
+    local d p untracked rc
+    for d in */; do
+        [ -e "${d}.git" ] || continue
+        if git check-ignore -q -- "$d"; then
+            echo "FENCED  ${d%/} - nested repository, denied by .gitignore, deliberate"
+        else
+            echo "HAZARD  ${d%/} - nested repository at the top level, NOT ignored"
+        fi
+    done
+    # rc read directly, never through the pipe: git failing at 128 behind a while
+    # loop would otherwise come back as a clean scan (the R16 note at the top).
+    untracked=$(git ls-files -o --exclude-standard --directory 2>&1); rc=$?
+    if [ "$rc" -ge 2 ]; then printf '%s\n' "$untracked" >&2; return "$rc"; fi
+    while IFS= read -r p; do
+        [ -n "$p" ] && [ -d "$p" ] || continue
+        find "$p" -maxdepth 4 -name .git -print 2>/dev/null \
+          | sed -e 's|/\.git$||' -e 's|^|HAZARD  |' -e 's|$| - nested repository under an untracked path|'
+    done <<< "$untracked"
+    return 0
+}
+# both detectors can name the same directory; keep the first line per path (the
+# top-level one, whose message is the more specific of the two).
+c9() { _c9scan | awk '!seen[$2]++'; _pipe_rc "${PIPESTATUS[@]}"; }
+if run "git repositories nested in this worktree" c9; then
+    if echo "$out" | grep -q '^HAZARD'; then
+        say "git repositories nested in this worktree" "FAIL"
+        echo "$out" | sed 's/^/    /' | head -20
+        echo "    move it outside this tree, or add it to .gitignore if it is deliberate"
+        fail=1
+    elif [ -n "$out" ]; then
+        say "git repositories nested in this worktree" "$(echo "$out" | wc -l) fenced, informational"
+        echo "$out" | sed 's/^/    /' | head -10
+    else
+        say "git repositories nested in this worktree" "none"
+    fi
+fi
+
 echo
 [ $fail -eq 0 ] && echo "AUDIT PASS - safe to push" || echo "AUDIT FAIL - fix the above before pushing"
 exit $fail

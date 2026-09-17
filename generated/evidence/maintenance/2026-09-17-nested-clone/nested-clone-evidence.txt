@@ -1,0 +1,34 @@
+=== 1. same repository, two checkouts ===
+SymonSaysLLC origin : git@github.com:SyMoNSaYsLLC/symoneural-runtime-acquisition.git
+clone origin        : https://github.com/SyMoNSaYsLLC/symoneural-runtime-acquisition.git
+
+=== 2. the clone holds nothing unique ===
+--- rev-list 769b4f3ae --not HEAD (commits only the clone has) ---
+  rc=0 (no SHAs above = none)
+--- merge-base --is-ancestor 769b4f3ae HEAD ---
+  rc=0 (0 = contained)
+--- main is ahead by ---
+42
+--- clone refs ---
+  refs/heads/main 769b4f3ae
+  refs/remotes/origin/HEAD 769b4f3ae
+  refs/remotes/origin/main 769b4f3ae
+--- clone stash / status ---
+  (stash empty)
+  (status empty = pristine)
+--- clone fsck --unreachable --dangling --no-reflogs ---
+  rc=0 (no output = nothing orphaned)
+--- clone reflog ---
+  769b4f3ae refs/heads/main@{0}: clone: from https://github.com/SyMoNSaYsLLC/symoneural-runtime-acquisition.git
+  769b4f3ae refs/remotes/origin/HEAD@{0}: clone: from https://github.com/SyMoNSaYsLLC/symoneural-runtime-acquisition.git
+  769b4f3ae HEAD@{0}: clone: from https://github.com/SyMoNSaYsLLC/symoneural-runtime-acquisition.git
+
+=== 3. no residue in this repository ===
+--- gitlinks (mode 160000) in the index ---
+  (empty = none)
+--- .git/modules ---
+ls: cannot access '.git/modules': No such file or directory
+--- history ever contained it ---
+  (empty = never committed)
+--- the clone, where it now lives ---
+5.6G	/home/google/symoneural-runtime-acquisition-github-769b4f3ae
