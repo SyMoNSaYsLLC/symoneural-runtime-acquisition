@@ -1,7 +1,7 @@
 {
  "census": {
-  "method_a_count": 100,
-  "method_b_count": 100,
+  "method_a_count": 101,
+  "method_b_count": 101,
   "only_in_a": [],
   "only_in_b": [],
   "sets_identical": true
@@ -2484,6 +2484,61 @@
    "submodules": [],
    "tree_sha": "dfcfb52e0bf794f4c8c6f8479b836035a03d63a4",
    "upstream_url": "https://github.com/stratum-mining/sv2-spec",
+   "worktree": "clean",
+   "worktree_detail": []
+  },
+  {
+   "bbappend_path": "NOT-APPLICABLE",
+   "branch_context": "HEAD",
+   "category": "image",
+   "commit_sha": "7f410a3793c5bba8eb198e962ce7a3d6095f9d89",
+   "component": "stable-diffusion.cpp",
+   "declared_version_PV": "UNKNOWN",
+   "excluded": [],
+   "lock_state": "UNRESOLVED",
+   "pins_path": "Symoneural-Diffuse/src/image/.gitpins/stable-diffusion.cpp.git",
+   "raw_generated_baseline": "RAW-GENERATED-BASELINE NOT PRESERVED",
+   "recipe_LICENSE": "NOT-APPLICABLE",
+   "recipe_SRCREV": "NOT-APPLICABLE",
+   "recipe_name": "NOT-APPLICABLE",
+   "recipe_path": "NOT-APPLICABLE",
+   "recipe_retired": false,
+   "requested_tag": "UNKNOWN",
+   "runtime": "Diffuse",
+   "source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "submodule_count": 0,
+   "submodules": [
+    {
+     "commit_sha": "c4bce3d6b3f236614cca21014f076083b7270ba8",
+     "path": "examples/server/frontend",
+     "pins_path": "Symoneural-Diffuse/src/image/.gitpins/stable-diffusion.cpp.git/modules/examples/server/frontend",
+     "provenance": "PIN",
+     "tree_sha": "6b203f93d3c689f03163c877b9c6e432462b4830"
+    },
+    {
+     "commit_sha": "e20c3a14aa70ee84ca58499814206dd08d8026bc",
+     "path": "ggml",
+     "pins_path": "Symoneural-Diffuse/src/image/.gitpins/stable-diffusion.cpp.git/modules/ggml",
+     "provenance": "PIN",
+     "tree_sha": "99fd2bba9785b32baf42487b445e37d18d0198cc"
+    },
+    {
+     "commit_sha": "5bf12267eea773a32fcf4949de52b0add158a8d5",
+     "path": "thirdparty/libwebm",
+     "pins_path": "Symoneural-Diffuse/src/image/.gitpins/stable-diffusion.cpp.git/modules/thirdparty/libwebm",
+     "provenance": "PIN",
+     "tree_sha": "d7efaf6e27ccce58cdba594d813e3784aa8ac211"
+    },
+    {
+     "commit_sha": "0c9546f7efc61eac7f79ae115c3f99c91c21c443",
+     "path": "thirdparty/libwebp",
+     "pins_path": "Symoneural-Diffuse/src/image/.gitpins/stable-diffusion.cpp.git/modules/thirdparty/libwebp",
+     "provenance": "PIN",
+     "tree_sha": "7f6c4ce60e72d3a2b6f382a1c2f756a89fdc4fa2"
+    }
+   ],
+   "tree_sha": "273069f5a811df0456df82f648288f7e4e3a5fc2",
+   "upstream_url": "https://github.com/leejet/stable-diffusion.cpp",
    "worktree": "clean",
    "worktree_detail": []
   },

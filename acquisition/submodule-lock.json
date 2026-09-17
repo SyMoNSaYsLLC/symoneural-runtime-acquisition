@@ -1203,6 +1203,54 @@
    "status": "VERIFIED",
    "submodule_path": "subprojects/xsf",
    "tree_sha": "e96a8fdadf48a7815bb97c5fac23b24aa8b34bc5"
+  },
+  {
+   "commit_sha": "c4bce3d6b3f236614cca21014f076083b7270ba8",
+   "configured_url": "https://github.com/leejet/sdcpp-webui.git",
+   "gitmodules_section": "examples/server/frontend",
+   "identity": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp::examples/server/frontend",
+   "init_state": "AT-RECORDED-COMMIT",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "status": "RECORDED-AT-INGEST",
+   "submodule_path": "examples/server/frontend"
+  },
+  {
+   "commit_sha": "e20c3a14aa70ee84ca58499814206dd08d8026bc",
+   "configured_url": "https://github.com/leejet/ggml.git",
+   "gitmodules_section": "ggml",
+   "identity": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp::ggml",
+   "init_state": "AT-RECORDED-COMMIT",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "status": "RECORDED-AT-INGEST",
+   "submodule_path": "ggml"
+  },
+  {
+   "commit_sha": "5bf12267eea773a32fcf4949de52b0add158a8d5",
+   "configured_url": "https://github.com/webmproject/libwebm.git",
+   "gitmodules_section": "thirdparty/libwebm",
+   "identity": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp::thirdparty/libwebm",
+   "init_state": "AT-RECORDED-COMMIT",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "status": "RECORDED-AT-INGEST",
+   "submodule_path": "thirdparty/libwebm"
+  },
+  {
+   "commit_sha": "0c9546f7efc61eac7f79ae115c3f99c91c21c443",
+   "configured_url": "https://github.com/webmproject/libwebp.git",
+   "gitmodules_section": "thirdparty/libwebp",
+   "identity": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp::thirdparty/libwebp",
+   "init_state": "AT-RECORDED-COMMIT",
+   "owner_component": "stable-diffusion.cpp",
+   "owner_runtime": "Diffuse",
+   "owner_source_path": "Symoneural-Diffuse/src/image/source/stable-diffusion.cpp",
+   "status": "RECORDED-AT-INGEST",
+   "submodule_path": "thirdparty/libwebp"
   }
  ],
  "identity_key": "owner_source_path + submodule_path",
